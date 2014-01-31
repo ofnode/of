@@ -1,0 +1,39 @@
+#!/bin/bash
+
+yes | sudo pacman -Sy --needed \
+make                           \
+pkg-config                     \
+clang                          \
+mingw-w64-gcc                  \
+git                            \
+freeglut                       \
+glew                           \
+cairo                          \
+pixman                         \
+openssl                        \
+freeimage                      \
+freetype2                      \
+
+if grep -Fxq '[mingw-w64]' /etc/pacman.conf
+then
+    :
+else
+    echo ''                                                                            | sudo tee -a /etc/pacman.conf
+    echo '[mingw-w64]'                                                                 | sudo tee -a /etc/pacman.conf
+    echo 'SigLevel = Optional TrustAll'                                                | sudo tee -a /etc/pacman.conf
+    echo 'Server = http://downloads.sourceforge.net/project/mingw-w64-archlinux/$arch' | sudo tee -a /etc/pacman.conf
+    echo 'Server = http://amr.linuxd.org/archlinux/$repo/os/$arch'                     | sudo tee -a /etc/pacman.conf
+fi
+
+sudo pacman -Sy
+
+yaourt -S --noconfirm mingw-w64-qt5-base
+yaourt -S --noconfirm mingw-w64-glew
+yaourt -S --noconfirm mingw-w64-freeglut
+yaourt -S --noconfirm mingw-w64-cairo
+yaourt -S --noconfirm mingw-w64-freeimage
+yaourt -S --noconfirm mingw-w64-freetype
+
+yaourt -Rdd --noconfirm mingw-w64-winpthreads
+yaourt -S   --noconfirm mingw-w64-winpthreads-static
+

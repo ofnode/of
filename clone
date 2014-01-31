@@ -1,0 +1,58 @@
+#!/bin/bash
+
+BRANCH=master
+
+NORMAL=$(tput sgr0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+
+wget   https://github.com/openframeworks/openFrameworks/archive/$BRANCH.zip
+unzip  $BRANCH.zip
+rm     $BRANCH.zip
+
+cd     openFrameworks-*
+
+if git apply ../openFrameworks.patch; then
+       echo "${GREEN}openFrameworks patched successfully.${NORMAL}"
+else
+       echo "${RED}Error: openFrameworks was not patched.${NORMAL}"
+fi
+
+cd     ..
+
+mv     openFrameworks-*/libs/openFrameworks .
+
+rm -rf openFrameworks/.settings
+rm     openFrameworks/.project
+rm     openFrameworks/.cproject
+
+TESS=Dependencies/Libs/tess2
+rm -rf $TESS
+mkdir  $TESS
+mv     openFrameworks-*/libs/tess2/include $TESS
+mv     openFrameworks-*/libs/tess2/Sources $TESS
+
+KISS=Dependencies/Libs/kiss
+rm -rf $KISS
+mkdir  $KISS
+mv     openFrameworks-*/libs/kiss/include  $KISS
+mv     openFrameworks-*/libs/kiss/src      $KISS
+
+rm -rf openFrameworks-*
+
+git    clone http://github.com/glfw/glfw.git Dependencies/Libs/glfw
+cd     Dependencies/Libs/glfw
+git    checkout 89d0723ba3
+
+git    apply ../../glfw.patch
+
+cd     ../../..
+
+git    clone http://github.com/pocoproject/poco.git Dependencies/Libs/poco
+cd     Dependencies/Libs/poco
+git    checkout 4923172241
+
+git    apply ../../poco.patch
+
+cd     ../../..
+

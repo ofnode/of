@@ -1,0 +1,17 @@
+diff --git a/src/win32_window.c b/src/win32_window.c
+index 08108ed..7359ad2 100644
+--- a/src/win32_window.c
++++ b/src/win32_window.c
+@@ -29,9 +29,9 @@
+ 
+ #include <stdlib.h>
+ #include <malloc.h>
+-#include <Windows.h>
+-#include <windowsx.h>
+-#include <Shellapi.h>
++#include "/usr/x86_64-w64-mingw32/include/windows.h"
++#include "/usr/x86_64-w64-mingw32/include/windowsx.h"
++#include "/usr/x86_64-w64-mingw32/include/shellapi.h"
+ 
+ #define _GLFW_KEY_INVALID -2
+ 
