@@ -1,2 +1,8 @@
 *~
 *.pro.user
+Dependencies/Libs/glfw/
+Dependencies/Libs/kiss/
+Dependencies/Libs/poco/
+Dependencies/Libs/tess2/
+openFrameworks/
+
