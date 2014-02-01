@@ -21,7 +21,7 @@ Limitations
 Compiling:
 ---------
 
-1) ./dependencies
+1) ./get
 
 2) ./clone
 
