@@ -16,6 +16,6 @@ class App : public ofBaseApp
         void mousePressed(int x, int y, int button);
         void mouseReleased(int x, int y, int button);
         void windowResized(int w, int h);
-        void gotMessage(ofMessage msg);
+        void gotMessage(ofMessage message);
         void dragEvent(ofDragInfo dragged);
 };

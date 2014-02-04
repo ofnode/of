@@ -1,5 +1,15 @@
 
-OF_PRI = ../of.pri
+OF = ../CrossOF
+
+include($$OF/of.pri)
+
+unix {
+DESTDIR = $$PWD/bin/linux-64
+}
+
+win32 {
+DESTDIR = $$PWD/bin/mingw-64
+}
 
 TEMPLATE  = app
 CONFIG   += console
@@ -24,16 +34,7 @@ QMAKE_CFLAGS_RELEASE   = -O3
 QMAKE_CXXFLAGS_DEBUG   = -O0 -g
 QMAKE_CXXFLAGS_RELEASE = -O3
 
-include($$OF_PRI)
+HEADERS *= main.hpp
 
 SOURCES *= main.cpp
 
-HEADERS *= main.hpp
-
-unix {
-DESTDIR = $$PWD/bin/linux-64
-}
-
-win32 {
-DESTDIR = $$PWD/bin/mingw-64
-}

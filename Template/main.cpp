@@ -2,7 +2,7 @@
 
 int main()
 {
-    ofSetupOpenGL(1280, 720, OF_WINDOW);
+    ofSetupOpenGL(640, 360, OF_WINDOW);
     ofRunApp(new App());
 }
 
@@ -46,7 +46,7 @@ void App::windowResized(int w, int h)
 {
 }
 
-void App::gotMessage(ofMessage msg)
+void App::gotMessage(ofMessage message)
 {
 }
 
