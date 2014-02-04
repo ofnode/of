@@ -1,17 +1,37 @@
 diff --git a/src/win32_window.c b/src/win32_window.c
-index 08108ed..7359ad2 100644
+index 08108ed..baee916 100644
 --- a/src/win32_window.c
 +++ b/src/win32_window.c
-@@ -29,9 +29,9 @@
+@@ -29,9 +29,8 @@
  
  #include <stdlib.h>
  #include <malloc.h>
 -#include <Windows.h>
--#include <windowsx.h>
+ #include <windowsx.h>
 -#include <Shellapi.h>
-+#include "/usr/x86_64-w64-mingw32/include/windows.h"
-+#include "/usr/x86_64-w64-mingw32/include/windowsx.h"
-+#include "/usr/x86_64-w64-mingw32/include/shellapi.h"
++#include <shellapi.h>
  
  #define _GLFW_KEY_INVALID -2
  
+diff --git a/src/x11_window.c b/src/x11_window.c
+index 78082cd..d15c410 100644
+--- a/src/x11_window.c
++++ b/src/x11_window.c
+@@ -752,7 +752,7 @@ static void processEvent(XEvent *event)
+ 
+ 				// Xdnd: reply with an XDND status message
+ 				XClientMessageEvent m;
+-				memset(&m, sizeof(m), 0);
++				memset(&m, 0, sizeof(m));
+ 				m.type = ClientMessage;
+ 				m.display = event->xclient.display;
+ 				m.window = event->xclient.data.l[0];
+@@ -809,7 +809,7 @@ static void processEvent(XEvent *event)
+ 				}
+ 
+ 				XClientMessageEvent m;
+-				memset(&m, sizeof(m), 0);
++				memset(&m, 0, sizeof(m));
+ 				m.type = ClientMessage;
+ 				m.display = _glfw.x11.display;
+ 				m.window = _glfw.x11.xdnd.sourceWindow;
