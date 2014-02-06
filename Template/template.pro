@@ -1,5 +1,5 @@
 
-OF = ../CrossOF
+OF = ..
 
 include($$OF/of.pri)
 
