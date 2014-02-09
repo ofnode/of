@@ -1,0 +1,40 @@
+#!/bin/bash
+
+cd     Libs/tess2
+
+mkdir  compiled
+cd     compiled
+
+clang  -I../include -c ../Sources/bucketalloc.c
+clang  -I../include -c ../Sources/dict.c
+clang  -I../include -c ../Sources/geom.c
+clang  -I../include -c ../Sources/mesh.c
+clang  -I../include -c ../Sources/priorityq.c
+clang  -I../include -c ../Sources/sweep.c
+clang  -I../include -c ../Sources/tess.c
+ar cr  libtess2.a bucketalloc.o dict.o geom.o mesh.o priorityq.o sweep.o tess.o
+
+mv     libtess2.a ../../../Compiled/linux-64
+
+cd     ..
+rm -rf compiled
+
+mkdir  compiled
+cd     compiled
+
+x86_64-w64-mingw32-gcc    -I../include -c ../Sources/bucketalloc.c
+x86_64-w64-mingw32-gcc    -I../include -c ../Sources/dict.c
+x86_64-w64-mingw32-gcc    -I../include -c ../Sources/geom.c
+x86_64-w64-mingw32-gcc    -I../include -c ../Sources/mesh.c
+x86_64-w64-mingw32-gcc    -I../include -c ../Sources/priorityq.c
+x86_64-w64-mingw32-gcc    -I../include -c ../Sources/sweep.c
+x86_64-w64-mingw32-gcc    -I../include -c ../Sources/tess.c
+x86_64-w64-mingw32-ar cr  libtess2.a bucketalloc.o dict.o geom.o mesh.o priorityq.o sweep.o tess.o
+
+mv     libtess2.a ../../../Compiled/mingw-64
+
+cd     ..
+rm -rf compiled
+
+cd     ../../..
+

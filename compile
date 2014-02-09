@@ -4,3 +4,5 @@ cd Dependencies
 
 ./glfw
 ./poco
+./kiss
+./tess2

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+cd     Libs/kiss
+
+mkdir  compiled
+cd     compiled
+
+clang  -I../include -c ../src/kiss_fft.c
+clang  -I../include -c ../src/kiss_fftr.c
+ar cr  libkiss.a kiss_fft.o kiss_fftr.o
+
+mv     libkiss.a ../../../Compiled/linux-64
+
+cd     ..
+rm -rf compiled
+
+mkdir  compiled
+cd     compiled
+
+x86_64-w64-mingw32-gcc    -I../include -c ../src/kiss_fft.c
+x86_64-w64-mingw32-gcc    -I../include -c ../src/kiss_fftr.c
+x86_64-w64-mingw32-ar cr  libkiss.a kiss_fft.o kiss_fftr.o
+
+mv     libkiss.a ../../../Compiled/mingw-64
+
+cd     ..
+rm -rf compiled
+
+cd     ../../..
+

@@ -18,6 +18,8 @@ LIBS += $$PWD/Dependencies/Compiled/linux-64/libPocoNetSSL.a
 LIBS += $$PWD/Dependencies/Compiled/linux-64/libPocoCrypto.a
 LIBS += -Wl,--end-group
 LIBS += $$PWD/Dependencies/Compiled/linux-64/libglfw3.a
+LIBS += $$PWD/Dependencies/Compiled/linux-64/libkiss.a
+LIBS += $$PWD/Dependencies/Compiled/linux-64/libtess2.a
 
 LIBS += -lz
 LIBS += -ludev
@@ -80,6 +82,8 @@ LIBS += $$PWD/Dependencies/Compiled/mingw-64/libPocoFoundation.a
 LIBS += $$PWD/Dependencies/Compiled/mingw-64/libPocoNetSSL.a
 LIBS += $$PWD/Dependencies/Compiled/mingw-64/libPocoCrypto.a
 LIBS += $$PWD/Dependencies/Compiled/mingw-64/libglfw3.a
+LIBS += $$PWD/Dependencies/Compiled/mingw-64/libkiss.a
+LIBS += $$PWD/Dependencies/Compiled/mingw-64/libtess2.a
 
 LIBS += /usr/x86_64-w64-mingw32/lib/libwinpthread.a
 LIBS += /usr/x86_64-w64-mingw32/lib/libwinmm.a
@@ -128,36 +132,12 @@ INCLUDEPATH *= $$TESS/Sources
 INCLUDEPATH *= $$TESS/include
 INCLUDEPATH *= $$TESS
 
-HEADERS *= $$TESS/include/tesselator.h
-HEADERS *= $$TESS/Sources/geom.h
-HEADERS *= $$TESS/Sources/bucketalloc.h
-HEADERS *= $$TESS/Sources/tess.h
-HEADERS *= $$TESS/Sources/priorityq.h
-HEADERS *= $$TESS/Sources/sweep.h
-HEADERS *= $$TESS/Sources/dict.h
-HEADERS *= $$TESS/Sources/mesh.h
-
-SOURCES *= $$TESS/Sources/geom.c
-SOURCES *= $$TESS/Sources/dict.c
-SOURCES *= $$TESS/Sources/tess.c
-SOURCES *= $$TESS/Sources/sweep.c
-SOURCES *= $$TESS/Sources/priorityq.c
-SOURCES *= $$TESS/Sources/bucketalloc.c
-SOURCES *= $$TESS/Sources/mesh.c
-
 # kiss
 KISS = $$PWD/Dependencies/Libs/kiss
 
 INCLUDEPATH *= $$KISS/include
 INCLUDEPATH *= $$KISS/src
 INCLUDEPATH *= $$KISS
-
-HEADERS *= $$KISS/src/_kiss_fft_guts.h
-HEADERS *= $$KISS/include/kiss_fft.h
-HEADERS *= $$KISS/include/kiss_fftr.h
-
-SOURCES *= $$KISS/src/kiss_fftr.c
-SOURCES *= $$KISS/src/kiss_fft.c
 
 # glfw
 GLFW = $$PWD/Dependencies/Libs/glfw
