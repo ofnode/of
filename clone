@@ -45,6 +45,8 @@ git    clone http://github.com/glfw/glfw.git Dependencies/Libs/glfw
 cd     Dependencies/Libs/glfw
 git    checkout 7f4e947447
 
+cd     ../../..
+
 git    clone http://github.com/pocoproject/poco.git Dependencies/Libs/poco
 cd     Dependencies/Libs/poco
 git    checkout 4923172241
