@@ -46,7 +46,7 @@ win32 {
 # MinGW-w64
 QMAKE_CXXFLAGS += -Wno-unused-parameter
 QMAKE_CXXFLAGS += -Wno-unused-variable
-QMAKE_CXXFLAGS += -fpermissive
+QMAKE_CXXFLAGS += -Wno-extra
 
 DEFINES -= UNICODE
 DEFINES *= __MINGW32_VERSION

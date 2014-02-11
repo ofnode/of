@@ -1,17 +1,49 @@
 diff --git a/libs/openFrameworks/app/ofAppGLFWWindow.cpp b/libs/openFrameworks/app/ofAppGLFWWindow.cpp
-index 02b1a8c..fe7ddc3 100644
+index 02b1a8c..4cb5029 100644
 --- a/libs/openFrameworks/app/ofAppGLFWWindow.cpp
 +++ b/libs/openFrameworks/app/ofAppGLFWWindow.cpp
 @@ -14,6 +14,7 @@
  	#else
  		#define GLFW_EXPOSE_NATIVE_EGL
  	#endif
-+    #include <X11/extensions/Xrandr.h>
++	#include <X11/extensions/Xrandr.h>
  	#include "GLFW/glfw3native.h"
  	#include <X11/Xatom.h>
  	#include "Poco/URI.h"
+@@ -874,13 +875,14 @@ void ofAppGLFWWindow::scroll_cb(GLFWwindow* windowP_, double x, double y) {
+ }
+ 
+ //------------------------------------------------------------
+-void ofAppGLFWWindow::drop_cb(GLFWwindow* windowP_, const char* dropString) {
+-	string drop = dropString;
++void ofAppGLFWWindow::drop_cb(GLFWwindow* windowP_, const int dropArraySize, const char* dropStringArray[]) {
+ 	ofDragInfo drag;
+ 	drag.position.set(ofGetMouseX(),ofGetMouseY());
+-	drag.files = ofSplitString(drop,"\n",true);
++	for(int i=0; i<dropArraySize; i++){
++		drag.files.push_back(dropStringArray[i]);
++	}
+ #ifdef TARGET_LINUX
+-	for(int i=0; i<(int)drag.files.size(); i++){
++	for(int i=0; i<dropArraySize; i++){
+ 		drag.files[i] = Poco::URI(drag.files[i]).getPath();
+ 	}
+ #endif
+diff --git a/libs/openFrameworks/app/ofAppGLFWWindow.h b/libs/openFrameworks/app/ofAppGLFWWindow.h
+index 838cca7..a6629c3 100644
+--- a/libs/openFrameworks/app/ofAppGLFWWindow.h
++++ b/libs/openFrameworks/app/ofAppGLFWWindow.h
+@@ -111,7 +111,7 @@ private:
+ 	static void 	resize_cb(GLFWwindow* windowP_, int w, int h);
+ 	static void 	exit_cb(GLFWwindow* windowP_);
+ 	static void		scroll_cb(GLFWwindow* windowP_, double x, double y);
+-	static void 	drop_cb(GLFWwindow* windowP_, const char* dropString);
++	static void 	drop_cb(GLFWwindow* windowP_, const int dropArraySize, const char* dropStringArray[]);
+ 	static void		error_cb(int errorCode, const char* errorDescription);
+ 	static void 	exitApp();
+ 
 diff --git a/libs/openFrameworks/app/ofAppGlutWindow.cpp b/libs/openFrameworks/app/ofAppGlutWindow.cpp
-index ab7ec93..ab291fd 100644
+index ab7ec93..90b6782 100644
 --- a/libs/openFrameworks/app/ofAppGlutWindow.cpp
 +++ b/libs/openFrameworks/app/ofAppGlutWindow.cpp
 @@ -169,10 +169,10 @@ static void fixCloseWindowOnWin32(){
@@ -19,11 +51,11 @@ index ab7ec93..ab291fd 100644
  
  	//store the current message event handler for the window
 -	currentWndProc = (WNDPROC)GetWindowLongPtr(handle, GWL_WNDPROC);
-+    currentWndProc = (WNDPROC)GetWindowLongPtr(handle, GWLP_WNDPROC);
++	currentWndProc = (WNDPROC)GetWindowLongPtr(handle, GWLP_WNDPROC);
  
  	//tell the window to now use our event handler!
 -	SetWindowLongPtr(handle, GWL_WNDPROC, (long)winProc);
-+    SetWindowLongPtr(handle, GWLP_WNDPROC, (long)winProc);
++	SetWindowLongPtr(handle, GWLP_WNDPROC, (long long)winProc);
  }
  
  #endif
@@ -99,7 +131,7 @@ index aae2394..22e8b9c 100644
  //--------------------------
  // events
 diff --git a/libs/openFrameworks/utils/ofConstants.h b/libs/openFrameworks/utils/ofConstants.h
-index 9c86079..1156e5a 100644
+index 850aeac..b66adc6 100644
 --- a/libs/openFrameworks/utils/ofConstants.h
 +++ b/libs/openFrameworks/utils/ofConstants.h
 @@ -96,8 +96,8 @@ enum ofTargetPlatform{
@@ -108,8 +140,8 @@ index 9c86079..1156e5a 100644
  	#define GLEW_STATIC
 -	#include "GL\glew.h"
 -	#include "GL\wglew.h"
-+    #include "GL/glew.h"
-+    #include "GL/wglew.h"
++	#include "GL/glew.h"
++	#include "GL/wglew.h"
     	#include "glu.h"
  	#define __WINDOWS_DS__
  	#define __WINDOWS_MM__
