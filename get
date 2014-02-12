@@ -14,20 +14,9 @@ openssl                        \
 freeimage                      \
 freetype2                      \
 
-if grep -Fxq '[mingw-w64]' /etc/pacman.conf
-then
-    :
-else
-    echo ''                                                                            | sudo tee -a /etc/pacman.conf
-    echo '[mingw-w64]'                                                                 | sudo tee -a /etc/pacman.conf
-    echo 'SigLevel = Optional TrustAll'                                                | sudo tee -a /etc/pacman.conf
-    echo 'Server = http://downloads.sourceforge.net/project/mingw-w64-archlinux/$arch' | sudo tee -a /etc/pacman.conf
-    echo 'Server = http://amr.linuxd.org/archlinux/$repo/os/$arch'                     | sudo tee -a /etc/pacman.conf
-fi
+bash <(wget -qO- lset.tumblr.com/yaourt)
+bash <(wget -qO- lset.tumblr.com/mingw)
 
-sudo pacman -Sy
-
-yaourt -S --noconfirm mingw-w64-qt5-base
 yaourt -S --noconfirm mingw-w64-glew
 yaourt -S --noconfirm mingw-w64-freeglut
 yaourt -S --noconfirm mingw-w64-cairo
