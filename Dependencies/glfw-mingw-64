@@ -5,17 +5,6 @@ cd     Libs/glfw
 mkdir  compiled
 cd     compiled
 
-cmake  ..
-make
-
-mv     src/libglfw3.a ../../../Compiled/linux-64
-
-cd     ..
-rm -rf compiled
-
-mkdir  compiled
-cd     compiled
-
 cmake  -DCMAKE_TOOLCHAIN_FILE=CMake/x86_64-w64-mingw32.cmake ..
 make
 
@@ -23,6 +12,4 @@ mv     src/libglfw3.a ../../../Compiled/mingw-64
 
 cd     ..
 rm -rf compiled
-
-cd     ../../..
 

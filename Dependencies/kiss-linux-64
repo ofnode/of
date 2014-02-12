@@ -1,0 +1,16 @@
+#!/bin/bash
+
+cd     Libs/kiss
+
+mkdir  compiled
+cd     compiled
+
+clang  -I../include -c ../src/kiss_fft.c
+clang  -I../include -c ../src/kiss_fftr.c
+ar cr  libkiss.a kiss_fft.o kiss_fftr.o
+
+mv     libkiss.a ../../../Compiled/linux-64
+
+cd     ..
+rm -rf compiled
+

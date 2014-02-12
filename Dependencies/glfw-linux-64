@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cd     Libs/glfw
+
+mkdir  compiled
+cd     compiled
+
+cmake  ..
+make
+
+mv     src/libglfw3.a ../../../Compiled/linux-64
+
+cd     ..
+rm -rf compiled
+

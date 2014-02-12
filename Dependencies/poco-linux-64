@@ -1,0 +1,31 @@
+#!/bin/bash
+
+cp     poco.pocomsg.h   Libs/poco/Foundation/src/pocomsg.h
+cp     poco.Linux-clang Libs/poco/build/config/Linux-clang
+cp     poco.MinGW-w64   Libs/poco/build/config/MinGW-w64
+
+cd     Libs/poco
+
+mkdir  compiled
+cd     compiled
+
+.././configure --config=Linux-clang --static
+
+cp     ../../../poco.Makefile Makefile
+
+make
+
+cd     lib/Linux/x86_64
+
+mv     libPocoFoundation.a ../../../../../../Compiled/linux-64
+mv     libPocoXML.a        ../../../../../../Compiled/linux-64
+mv     libPocoUtil.a       ../../../../../../Compiled/linux-64
+mv     libPocoNet.a        ../../../../../../Compiled/linux-64
+mv     libPocoCrypto.a     ../../../../../../Compiled/linux-64
+mv     libPocoNetSSL.a     ../../../../../../Compiled/linux-64
+mv     libPocoZip.a        ../../../../../../Compiled/linux-64
+
+cd     ../../../..
+
+rm -rf compiled
+
