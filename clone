@@ -7,9 +7,14 @@ NORMAL=$(tput sgr0)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 
-wget   https://github.com/openframeworks/openFrameworks/archive/$BRANCH.zip
+if [ -f $BRANCH.zip ]
+then
+	echo "${GREEN}Using existing $BRANCH.zip archive.${NORMAL}"
+else
+	wget https://github.com/openframeworks/openFrameworks/archive/$BRANCH.zip
+fi
+
 unzip  $BRANCH.zip
-rm     $BRANCH.zip
 
 cd     openFrameworks-*
 

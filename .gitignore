@@ -1,5 +1,6 @@
 *~
 *.pro.user
+*.zip
 
 openFrameworks/
 Dependencies/Libs/glfw/
