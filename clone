@@ -1,9 +1,8 @@
 #!/bin/bash
 
-OF_BRANCH=94ac319274
-# See: https://github.com/openframeworks/openFrameworks/issues/2807
-GLFW_BRANCH=7f4e947447
-POCO_BRANCH=4923172241
+OF_BRANCH=453254f65e
+GLFW_BRANCH=99c98407c9
+POCO_BRANCH=fe6bf63656
 
 download_progress()
 {
@@ -31,6 +30,7 @@ download_progress()
 NORMAL=$(tput sgr0)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
 
 if [ -f $OF_BRANCH.zip ]
 then
@@ -48,12 +48,35 @@ rm -rf openFrameworks/.settings
 rm     openFrameworks/.project
 rm     openFrameworks/.cproject
 
+echo ""
+
+echo ${CYAN}of_mingw_fix.patch${NORMAL}
 patch -p1 < of_mingw_fix.patch
+echo ""
+
+echo ${CYAN}of_glew_include_path_fix.patch${NORMAL}
 patch -p1 < of_glew_include_path_fix.patch
-patch -p1 < of_freetype2_include_path_fix.patch
+echo ""
+
+echo ${CYAN}of_drag_and_drop_feature.patch${NORMAL}
 patch -p1 < of_drag_and_drop_feature.patch
+echo ""
+
+echo ${CYAN}of_scroll_feature.patch${NORMAL}
 patch -p1 < of_scroll_feature.patch
+echo ""
+
+echo ${CYAN}of_audio_video_disable.patch${NORMAL}
 patch -p1 < of_audio_video_disable.patch
+echo ""
+
+echo ${CYAN}of_compile_warning_fix.patch${NORMAL}
+patch -p1 < of_compile_warning_fix.patch
+echo ""
+
+echo ${CYAN}of_compile_error_fix.patch${NORMAL}
+patch -p1 < of_compile_error_fix.patch
+echo ""
 
 TESS=Dependencies/Libs/tess2
 rm -rf $TESS
@@ -105,7 +128,10 @@ cd     ../../..
 
 cd     Dependencies/Libs/poco
 
+echo ""
+echo ${CYAN}poco.patch${NORMAL}
 patch -p1 < ../../poco.patch
+echo ""
 
 cd     ../../..
 

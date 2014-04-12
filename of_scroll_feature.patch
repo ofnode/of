@@ -1,8 +1,6 @@
-diff --git a/openFrameworks/app/ofAppGLFWWindow.cpp b/openFrameworks/app/ofAppGLFWWindow.cpp
-index 65a4986..204041b 100644
 --- a/openFrameworks/app/ofAppGLFWWindow.cpp
 +++ b/openFrameworks/app/ofAppGLFWWindow.cpp
-@@ -871,7 +871,15 @@ void ofAppGLFWWindow::motion_cb(GLFWwindow* windowP_, double x, double y) {
+@@ -902,7 +902,15 @@ void ofAppGLFWWindow::motion_cb(GLFWwindow* windowP_, double x, double y) {
  
  //------------------------------------------------------------
  void ofAppGLFWWindow::scroll_cb(GLFWwindow* windowP_, double x, double y) {

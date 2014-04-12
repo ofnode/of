@@ -1,0 +1,24 @@
+--- a/openFrameworks/gl/ofVbo.cpp
++++ b/openFrameworks/gl/ofVbo.cpp
+@@ -327,7 +327,7 @@
+ 	}
+ #else
+ 	if(!vaoChecked){
+-		supportVAOs = ofGetGLProgrammableRenderer();// || glewIsSupported("GL_ARB_vertex_array_object"); <- this should work but has false positives on some cards like emulation in vm's
++        supportVAOs = glewIsSupported("GL_ARB_vertex_array_object");
+ 		vaoChecked = true;
+ 	}
+ #endif
+--- a/openFrameworks/app/ofAppGLFWWindow.cpp
++++ b/openFrameworks/app/ofAppGLFWWindow.cpp
+@@ -759,8 +759,8 @@
+ 				maxX = max(maxX,tempXPos + desktopMode->width);
+ 				maxY = max(maxY,tempYPos + desktopMode->height);
+ 
+-				xpos = min(xpos,temp_xpos);
+-				ypos = min(ypos,temp_ypos);
++                xpos = min(xpos,tempXPos);
++                ypos = min(ypos,tempYPos);
+ 			}
+ 
+ 			fullscreenW = maxX-minX;

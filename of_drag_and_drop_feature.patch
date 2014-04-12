@@ -1,5 +1,3 @@
-diff --git a/openFrameworks/app/ofAppGLFWWindow.cpp b/openFrameworks/app/ofAppGLFWWindow.cpp
-index 02b1a8c..4cb5029 100644
 --- a/openFrameworks/app/ofAppGLFWWindow.cpp
 +++ b/openFrameworks/app/ofAppGLFWWindow.cpp
 @@ -14,6 +14,7 @@
@@ -10,7 +8,7 @@ index 02b1a8c..4cb5029 100644
  	#include "GLFW/glfw3native.h"
  	#include <X11/Xatom.h>
  	#include "Poco/URI.h"
-@@ -874,13 +875,14 @@ void ofAppGLFWWindow::scroll_cb(GLFWwindow* windowP_, double x, double y) {
+@@ -905,13 +906,14 @@ void ofAppGLFWWindow::scroll_cb(GLFWwindow* windowP_, double x, double y) {
  }
  
  //------------------------------------------------------------
@@ -18,7 +16,7 @@ index 02b1a8c..4cb5029 100644
 -	string drop = dropString;
 +void ofAppGLFWWindow::drop_cb(GLFWwindow* windowP_, const int dropArraySize, const char* dropStringArray[]) {
  	ofDragInfo drag;
- 	drag.position.set(ofGetMouseX(),ofGetMouseY());
+ 	drag.position.set(ofGetMouseX()*instance->pixelScreenCoordScale, ofGetMouseY()*instance->pixelScreenCoordScale);
 -	drag.files = ofSplitString(drop,"\n",true);
 +	for(int i=0; i<dropArraySize; i++){
 +		drag.files.push_back(dropStringArray[i]);
@@ -29,11 +27,9 @@ index 02b1a8c..4cb5029 100644
  		drag.files[i] = Poco::URI(drag.files[i]).getPath();
  	}
  #endif
-diff --git a/openFrameworks/app/ofAppGLFWWindow.h b/openFrameworks/app/ofAppGLFWWindow.h
-index 838cca7..a6629c3 100644
 --- a/openFrameworks/app/ofAppGLFWWindow.h
 +++ b/openFrameworks/app/ofAppGLFWWindow.h
-@@ -111,7 +111,7 @@ private:
+@@ -113,7 +113,7 @@ private:
  	static void 	resize_cb(GLFWwindow* windowP_, int w, int h);
  	static void 	exit_cb(GLFWwindow* windowP_);
  	static void		scroll_cb(GLFWwindow* windowP_, double x, double y);

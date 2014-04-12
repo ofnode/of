@@ -1,5 +1,3 @@
-diff --git a/openFrameworks/app/ofAppGlutWindow.cpp b/openFrameworks/app/ofAppGlutWindow.cpp
-index ab7ec93..90b6782 100644
 --- a/openFrameworks/app/ofAppGlutWindow.cpp
 +++ b/openFrameworks/app/ofAppGlutWindow.cpp
 @@ -169,10 +169,10 @@ static void fixCloseWindowOnWin32(){
@@ -15,3 +13,20 @@ index ab7ec93..90b6782 100644
  }
  
  #endif
+--- a/openFrameworks/graphics/ofTrueTypeFont.cpp
++++ b/openFrameworks/graphics/ofTrueTypeFont.cpp
+@@ -10,10 +10,10 @@
+ #include FT_TRIGONOMETRY_H
+ #include <fontconfig/fontconfig.h>
+ #else
+-#include "freetype2/freetype/freetype.h"
+-#include "freetype2/freetype/ftglyph.h"
+-#include "freetype2/freetype/ftoutln.h"
+-#include "freetype2/freetype/fttrigon.h"
++#include "freetype2/freetype.h"
++#include "freetype2/ftglyph.h"
++#include "freetype2/ftoutln.h"
++#include "freetype2/fttrigon.h"
+ #endif
+ 
+ #include <algorithm>

@@ -1,5 +1,3 @@
-diff --git a/openFrameworks/app/ofAppRunner.cpp b/openFrameworks/app/ofAppRunner.cpp
-index 027bb79..b7f72fb 100644
 --- a/openFrameworks/app/ofAppRunner.cpp
 +++ b/openFrameworks/app/ofAppRunner.cpp
 @@ -22,9 +22,9 @@
@@ -28,8 +26,6 @@ index 027bb79..b7f72fb 100644
  
  
  	//------------------------
-diff --git a/openFrameworks/ofMain.h b/openFrameworks/ofMain.h
-index aae2394..22e8b9c 100644
 --- a/openFrameworks/ofMain.h
 +++ b/openFrameworks/ofMain.h
 @@ -68,13 +68,13 @@

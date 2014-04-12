@@ -6,29 +6,28 @@ Alternative openFrameworks distribution for Arch Linux. Cross-platform Qt Creato
 Features
 --------
 
-* Compiling fully static 64bit Windows applications from Linux using MinGW-w64 compiler.
+* Fully static 64bit Windows applications from Arch Linux using MinGW-w64 compiler.
 
-* There's no source code provided for a few dependencies in original openFrameworks distribution, CrossOF is here to solve that with custom scripts.
+* Latest openFrameworks commits with dependencies and their sources.
 
 Limitations
 -----------
-<b>No sound and video support</b> due to closed-source FMOD and QuickTime used in  Windows related code of openFrameworks.
 
 <b>Arch Linux only</b>. Dependencies are tied to AUR and official repositories.
 
-<b>Can't compile to Mac</b>. I have no Mac machine yet.
+<b>No sound and video</b>. Windows-related code of openFrameworks tied to closed-source FMOD and QuickTime.
+
+<b>Can't compile to OSX</b>. I have no Mac yet.
 
 Compiling:
 ---------
+<pre><h4>./get
 
-1) ./get
+./clone
 
-2) ./clone
+./compile
 
-3) ./compile
+Open and compile <b>of.pro</b> with Qt Creator.
 
-4) Open and compile <b>of.pro</b> with Qt Creator.
-
-5) Include <b>of.pri</b> in your project.
-
+Include <b>of.pri</b> in your project.</h4></pre>
 See template project for example.
