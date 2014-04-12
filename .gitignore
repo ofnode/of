@@ -2,6 +2,7 @@
 *.pro.user
 *.zip
 
+build/
 openFrameworks/
 Dependencies/Libs/glfw/
 Dependencies/Libs/kiss/

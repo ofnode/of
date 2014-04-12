@@ -46,6 +46,7 @@ LIBS += -lfreetype
 LIBS += -lglut
 LIBS += -lX11
 LIBS += -lXrandr
+LIBS += -lXcursor
 LIBS += -lXxf86vm
 LIBS += -lXi
 LIBS += -lfreeimage
