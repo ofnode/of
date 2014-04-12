@@ -1,0 +1,52 @@
+diff --git a/openFrameworks/app/ofAppRunner.cpp b/openFrameworks/app/ofAppRunner.cpp
+index 027bb79..b7f72fb 100644
+--- a/openFrameworks/app/ofAppRunner.cpp
++++ b/openFrameworks/app/ofAppRunner.cpp
+@@ -22,9 +22,9 @@
+ 
+ // TODO: closing seems wonky.
+ // adding this for vc2010 compile: error C3861: 'closeQuicktime': identifier not found
+-#if defined (TARGET_WIN32) || defined(TARGET_OSX)
+-	#include "ofQtUtils.h"
+-#endif
++//#if defined (TARGET_WIN32) || defined(TARGET_OSX)
++//	#include "ofQtUtils.h"
++//#endif
+ 
+ //========================================================================
+ // static variables:
+@@ -249,9 +249,9 @@ void ofExitCallback(){
+ 	#endif
+ 
+ 	// try to close quicktime, for non-linux systems:
+-	#if defined(OF_VIDEO_CAPTURE_QUICKTIME) || defined(OF_VIDEO_PLAYER_QUICKTIME)
+-	closeQuicktime();
+-	#endif
++//	#if defined(OF_VIDEO_CAPTURE_QUICKTIME) || defined(OF_VIDEO_PLAYER_QUICKTIME)
++//	closeQuicktime();
++//	#endif
+ 
+ 
+ 	//------------------------
+diff --git a/openFrameworks/ofMain.h b/openFrameworks/ofMain.h
+index aae2394..22e8b9c 100644
+--- a/openFrameworks/ofMain.h
++++ b/openFrameworks/ofMain.h
+@@ -68,13 +68,13 @@
+ 
+ //--------------------------
+ // audio
+-#include "ofSoundStream.h"
+-#include "ofSoundPlayer.h"
++//#include "ofSoundStream.h"
++//#include "ofSoundPlayer.h"
+ 
+ //--------------------------
+ // video
+-#include "ofVideoGrabber.h"
+-#include "ofVideoPlayer.h"
++//#include "ofVideoGrabber.h"
++//#include "ofVideoPlayer.h"
+ 
+ //--------------------------
+ // events

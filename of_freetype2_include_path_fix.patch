@@ -1,0 +1,19 @@
+diff --git a/openFrameworks/graphics/ofTrueTypeFont.cpp b/openFrameworks/graphics/ofTrueTypeFont.cpp
+index b475c9a..9f9bcc7 100644
+--- a/openFrameworks/graphics/ofTrueTypeFont.cpp
++++ b/openFrameworks/graphics/ofTrueTypeFont.cpp
+@@ -2,10 +2,10 @@
+ //--------------------------
+ 
+ #include "ft2build.h"
+-#include "freetype2/freetype/freetype.h"
+-#include "freetype2/freetype/ftglyph.h"
+-#include "freetype2/freetype/ftoutln.h"
+-#include "freetype2/freetype/fttrigon.h"
++#include "freetype2/freetype.h"
++#include "freetype2/ftglyph.h"
++#include "freetype2/ftoutln.h"
++#include "freetype2/fttrigon.h"
+ 
+ #ifdef TARGET_LINUX
+ #include <fontconfig/fontconfig.h>
