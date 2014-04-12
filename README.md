@@ -21,7 +21,7 @@ Limitations
 
 Compiling:
 ---------
-<pre><h4>./get
+<h4>./get
 
 ./clone
 
@@ -29,5 +29,5 @@ Compiling:
 
 Open and compile <b>of.pro</b> with Qt Creator.
 
-Include <b>of.pri</b> in your project.</h4></pre>
+Include <b>of.pri</b> in your project.</h4>
 See template project for example.
