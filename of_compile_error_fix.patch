@@ -5,7 +5,7 @@
  #else
  	if(!vaoChecked){
 -		supportVAOs = ofGetGLProgrammableRenderer();// || glewIsSupported("GL_ARB_vertex_array_object"); <- this should work but has false positives on some cards like emulation in vm's
-+        supportVAOs = glewIsSupported("GL_ARB_vertex_array_object");
++		supportVAOs = ofIsGLProgrammableRenderer();
  		vaoChecked = true;
  	}
  #endif
@@ -17,8 +17,8 @@
  
 -				xpos = min(xpos,temp_xpos);
 -				ypos = min(ypos,temp_ypos);
-+                xpos = min(xpos,tempXPos);
-+                ypos = min(ypos,tempYPos);
++				xpos = min(xpos,tempXPos);
++				ypos = min(ypos,tempYPos);
  			}
  
  			fullscreenW = maxX-minX;

@@ -5,15 +5,17 @@
  //------------------------------------------------------------
  void ofAppGLFWWindow::scroll_cb(GLFWwindow* windowP_, double x, double y) {
 -	//TODO: implement scroll events
-+    int button;
++	int button;
 +
-+    if (y == 1) {
-+        button = OF_MOUSE_BUTTON_4;
-+    } else if (y == -1) {
-+        button = OF_MOUSE_BUTTON_5;
-+    }
++	if (y == 1) {
++		button = OF_MOUSE_BUTTON_4;
++	} else if (y == -1) {
++		button = OF_MOUSE_BUTTON_5;
++	} else {
++		return;
++	}
 +
-+    ofNotifyMousePressed(ofGetMouseX(), ofGetMouseY(), button);
++	ofNotifyMousePressed(ofGetMouseX(), ofGetMouseY(), button);
  }
  
  //------------------------------------------------------------

@@ -78,6 +78,10 @@ echo ${CYAN}of_compile_error_fix.patch${NORMAL}
 patch -p1 < of_compile_error_fix.patch
 echo ""
 
+echo ${CYAN}of_clipboard_feature.patch${NORMAL}
+patch -p1 < of_clipboard_feature.patch
+echo ""
+
 TESS=Dependencies/Libs/tess2
 rm -rf $TESS
 mkdir  $TESS

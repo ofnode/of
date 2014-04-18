@@ -124,6 +124,7 @@ SOURCES *= $$OF/utils/ofFileUtils.cpp
 SOURCES *= $$OF/utils/ofXml.cpp
 SOURCES *= $$OF/utils/ofMatrixStack.cpp
 SOURCES *= $$OF/utils/ofThread.cpp
+SOURCES *= $$OF/ofMain.h
 
 # tess2
 TESS = $$PWD/Dependencies/Libs/tess2

@@ -1,0 +1,44 @@
+--- a/openFrameworks/app/ofAppBaseWindow.h
++++ b/openFrameworks/app/ofAppBaseWindow.h
+@@ -50,6 +50,9 @@ public:
+ 	
+ 	virtual void	setVerticalSync(bool enabled){};
+ 
++    virtual void    setClipboardString(const string& text) {}
++    virtual string  getClipboardString() { return ""; }
++
+ #if defined(TARGET_LINUX) && !defined(TARGET_RASPBERRY_PI)
+ 	virtual Display* getX11Display(){return NULL;}
+ 	virtual Window  getX11Window() {return 0;}
+--- a/openFrameworks/app/ofAppGLFWWindow.cpp
++++ b/openFrameworks/app/ofAppGLFWWindow.cpp
+@@ -1077,6 +1077,17 @@ void ofAppGLFWWindow::setVerticalSync(bool bVerticalSync){
+ }
+ 
+ //------------------------------------------------------------
++void ofAppGLFWWindow::setClipboardString(const string& text) {
++    glfwSetClipboardString(ofAppGLFWWindow::windowP, text.c_str());
++}
++
++//------------------------------------------------------------
++
++string ofAppGLFWWindow::getClipboardString() {
++    return glfwGetClipboardString(ofAppGLFWWindow::windowP);
++}
++
++//------------------------------------------------------------
+ void ofAppGLFWWindow::listVideoModes(){
+ 	int numModes;
+ 	const GLFWvidmode * vidModes = glfwGetVideoModes(NULL, &numModes );
+--- a/openFrameworks/app/ofAppGLFWWindow.h
++++ b/openFrameworks/app/ofAppGLFWWindow.h
+@@ -78,6 +78,9 @@ public:
+ 
+     int         getPixelScreenCoordScale();
+ 
++    void        setClipboardString(const string& text);
++    string      getClipboardString();
++
+ #if defined(TARGET_LINUX) && !defined(TARGET_RASPBERRY_PI)
+ 	Display* 	getX11Display();
+ 	Window  	getX11Window();
