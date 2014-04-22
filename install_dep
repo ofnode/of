@@ -4,6 +4,7 @@ yes | sudo pacman -Sy --needed \
 make                           \
 pkg-config                     \
 clang                          \
+ninja                          \
 git                            \
 freeglut                       \
 glew                           \

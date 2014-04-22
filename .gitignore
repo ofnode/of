@@ -1,8 +1,9 @@
 *~
-*.pro.user
+*.txt.user
 *.zip
 
-build/
+Build/
+
 openFrameworks/
 Dependencies/Libs/glfw/
 Dependencies/Libs/kiss/

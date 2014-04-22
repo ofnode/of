@@ -70,10 +70,6 @@ echo ${CYAN}of_audio_video_disable.patch${NORMAL}
 patch -p1 < of_audio_video_disable.patch
 echo ""
 
-echo ${CYAN}of_compile_warning_fix.patch${NORMAL}
-patch -p1 < of_compile_warning_fix.patch
-echo ""
-
 echo ${CYAN}of_compile_error_fix.patch${NORMAL}
 patch -p1 < of_compile_error_fix.patch
 echo ""

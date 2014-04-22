@@ -1,3 +1,4 @@
+
 #include "main.hpp"
 
 int main()
@@ -15,6 +16,10 @@ void App::update()
 }
 
 void App::draw()
+{
+}
+
+void App::exit()
 {
 }
 

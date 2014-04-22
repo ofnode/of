@@ -1,0 +1,20 @@
+#!/bin/bash
+
+mkdir Build
+
+mkdir Build/linux-64
+cd    Build/linux-64
+
+cmake -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ../..
+ninja
+
+cd ../..
+
+mkdir Build/mingw-64
+cd    Build/mingw-64
+
+cmake -G "Ninja" -DCMAKE_TOOLCHAIN_FILE=../../mingw_w64_toolchain.cmake ../..
+ninja
+
+cd ../..
+

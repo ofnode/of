@@ -26,6 +26,23 @@
  
  
  	//------------------------
+--- a/openFrameworks/utils/ofSystemUtils.cpp
++++ b/openFrameworks/utils/ofSystemUtils.cpp
+@@ -74,12 +74,12 @@
+ 
+ #if defined( TARGET_LINUX ) && defined (OF_USING_GTK)
+ #include <gtk/gtk.h>
+-#include "ofGstUtils.h"
++//#include "ofGstUtils.h"
+ 
+ static void initGTK(){
+ 	static bool initialized = false;
+ 	if(!initialized){
+-		ofGstUtils::startGstMainLoop();
++//		ofGstUtils::startGstMainLoop();
+ 	    gdk_threads_init();
+ 	int argc=0; char **argv = NULL;
+ 	gtk_init (&argc, &argv);
 --- a/openFrameworks/ofMain.h
 +++ b/openFrameworks/ofMain.h
 @@ -68,13 +68,13 @@

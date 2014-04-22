@@ -12,7 +12,7 @@
  	virtual Window  getX11Window() {return 0;}
 --- a/openFrameworks/app/ofAppGLFWWindow.cpp
 +++ b/openFrameworks/app/ofAppGLFWWindow.cpp
-@@ -1077,6 +1077,17 @@ void ofAppGLFWWindow::setVerticalSync(bool bVerticalSync){
+@@ -1079,6 +1079,17 @@ void ofAppGLFWWindow::setVerticalSync(bool bVerticalSync){
  }
  
  //------------------------------------------------------------

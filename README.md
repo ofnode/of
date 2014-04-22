@@ -1,14 +1,16 @@
 Cross-compiled openFrameworks
 =============================
 
-Alternative openFrameworks distribution for Arch Linux. Cross-platform Qt Creator projects.
+Alternative openFrameworks distribution for Arch Linux. Cross-platform CMake projects.
 
 Features
 --------
 
-* Fully static 64bit Windows applications from Arch Linux using MinGW-w64 compiler.
+ - 64bit, C++11, Clang, CMake and Ninja ready.
 
-* Latest openFrameworks commits with dependencies and their sources.
+ - Get fully static Windows applications from Arch Linux with MinGW-w64.
+
+ - Latest openFrameworks commits with dependencies and their sources.
 
 Limitations
 -----------
@@ -19,15 +21,19 @@ Limitations
 
 <b>Can't compile to OSX</b>. I have no Mac yet.
 
+[Download][1]
+---------
+
 Compiling:
 ---------
-<pre>./get
+Run:
+<pre><code>./setup</pre></code>
 
-./clone
+That's it. The process can take a while though - be patient.
 
-./compile
+Examples:
+--------
+See ```Template``` folder.
 
-Open and compile <b>of.pro</b> with Qt Creator.
 
-Include <b>of.pri</b> in your project.</pre>
-See template project for example.
+  [1]: https://github.com/procedural/crossof/releases
