@@ -27,9 +27,11 @@ Limitations
 Compiling:
 ---------
 Run:
-<pre><code>./setup</pre></code>
+<pre><code>./compile</pre></code>
 
 That's it. The process can take a while though - be patient.
+If you don't want to wait - download sources and precompiled libraries with:
+<pre><code>./setup</pre></code>
 
 Examples:
 --------

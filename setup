@@ -1,7 +1,57 @@
 #!/bin/bash
 
-./install_dep
-./clean_repos
-./clone_repos
-./compile_dep
-./compile_of
+RELEASE=7f5954e6dc
+
+download_progress()
+{
+    local flag=false c count cr=$'\r' nl=$'\n'
+    while IFS='' read -d '' -rn 1 c
+    do
+        if $flag
+        then
+            printf '%c' "$c"
+        else
+            if [[ $c != $cr && $c != $nl ]]
+            then
+                count=0
+            else
+                ((count++))
+                if ((count > 1))
+                then
+                    flag=true
+                fi
+            fi
+        fi
+    done
+}
+
+NORMAL=$(tput sgr0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
+
+if [ -f CrossOF_Binaries.tar.gz ]
+then
+	echo "${GREEN}Using existing CrossOF_Binaries.tar.gz archive.${NORMAL}"
+else
+    echo "${RED}Downloading CrossOF_Binaries.tar.gz archive.${NORMAL}"
+	wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_Binaries.tar.gz 2>&1 | download_progress
+fi
+
+if [ -f CrossOF_Sources.tar.gz ]
+then
+	echo "${GREEN}Using existing CrossOF_Sources.tar.gz archive.${NORMAL}"
+else
+    echo "${RED}Downloading CrossOF_Sources.tar.gz archive.${NORMAL}"
+	wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_Sources.tar.gz 2>&1 | download_progress
+fi
+
+echo ""
+
+echo "${GREEN}Unzipping CrossOF_Binaries.tar.gz archive.${NORMAL}"
+tar -zxvf CrossOF_Binaries.tar.gz
+
+echo "${GREEN}Unzipping CrossOF_Sources.tar.gz archive.${NORMAL}"
+tar -zxvf CrossOF_Sources.tar.gz
+
+
