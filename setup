@@ -54,4 +54,5 @@ tar -zxvf CrossOF_Binaries.tar.gz
 echo "${GREEN}Unzipping CrossOF_Sources.tar.gz archive.${NORMAL}"
 tar -zxvf CrossOF_Sources.tar.gz
 
+./clone_repos
 
