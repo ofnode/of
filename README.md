@@ -17,7 +17,7 @@ Limitations
 
 <b>Arch Linux only</b>. Dependencies are tied to AUR and official repositories.
 
-<b>No sound and video</b>. Windows-related code of openFrameworks tied to closed-source FMOD and QuickTime.
+<b>No sound and video</b>. Windows-related code of openFrameworks uses closed-source FMOD and QuickTime.
 
 <b>Can't compile to OSX</b>. I have no Mac yet.
 
