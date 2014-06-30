@@ -4,7 +4,6 @@ project(app)
 set(BIN app)
 
 set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
-set(LIBS -static-libgcc -static-libstdc++)
 
 include(../include.cmake)
 

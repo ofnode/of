@@ -1,15 +1,20 @@
 #!/bin/bash
 
-cd     Libs/glfw
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
 
-mkdir  compiled
-cd     compiled
+cd    $DIR
 
-cmake  ..
-make
+cd    Libs/glfw
+mkdir compiled
 
-mv     src/libglfw3.a ../../../Compiled/linux-64
+mkdir compiled/linux-64
+cd    compiled/linux-64
 
-cd     ..
-rm -rf compiled
+cmake -G Ninja                 \
+      -DCMAKE_C_COMPILER=clang \
+      ../..
+ninja
+
+cp    src/libglfw3.a $DIR/Compiled/linux-64
 

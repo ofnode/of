@@ -30,29 +30,33 @@ RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 CYAN=$(tput setaf 6)
 
-if [ -f CrossOF_Binaries.tar.gz ]
+
+if [ -f CrossOF_Binaries_$RELEASE.tar.gz ]
 then
-	echo "${GREEN}Using existing CrossOF_Binaries.tar.gz archive.${NORMAL}"
+    echo "${GREEN}Using existing CrossOF_Binaries_$RELEASE.tar.gz archive.${NORMAL}"
 else
-    echo "${RED}Downloading CrossOF_Binaries.tar.gz archive.${NORMAL}"
-	wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_Binaries.tar.gz 2>&1 | download_progress
+    echo "${RED}Downloading CrossOF_Binaries_$RELEASE.tar.gz archive.${NORMAL}"
+    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_Binaries_$RELEASE.tar.gz 2>&1 | download_progress
 fi
 
-if [ -f CrossOF_Sources.tar.gz ]
+
+if [ -f CrossOF_Sources_$RELEASE.tar.gz ]
 then
-	echo "${GREEN}Using existing CrossOF_Sources.tar.gz archive.${NORMAL}"
+    echo "${GREEN}Using existing CrossOF_Sources_$RELEASE.tar.gz archive.${NORMAL}"
 else
-    echo "${RED}Downloading CrossOF_Sources.tar.gz archive.${NORMAL}"
-	wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_Sources.tar.gz 2>&1 | download_progress
+    echo "${RED}Downloading CrossOF_Sources_$RELEASE.tar.gz archive.${NORMAL}"
+    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_Sources_$RELEASE.tar.gz 2>&1 | download_progress
 fi
+
 
 echo ""
+echo "${GREEN}Unzipping CrossOF_Binaries_$RELEASE.tar.gz archive.${NORMAL}"
+tar -zxvf CrossOF_Binaries_$RELEASE.tar.gz
 
-echo "${GREEN}Unzipping CrossOF_Binaries.tar.gz archive.${NORMAL}"
-tar -zxvf CrossOF_Binaries.tar.gz
+echo ""
+echo "${GREEN}Unzipping CrossOF_Sources_$RELEASE.tar.gz archive.${NORMAL}"
+tar -zxvf CrossOF_Sources_$RELEASE.tar.gz
 
-echo "${GREEN}Unzipping CrossOF_Sources.tar.gz archive.${NORMAL}"
-tar -zxvf CrossOF_Sources.tar.gz
 
-./clone_repos
+Scripts/clone_repos
 

@@ -1,8 +1,0 @@
-#!/bin/bash
-
-rm -rf openFrameworks
-
-rm -rf Dependencies/Libs/kiss
-rm -rf Dependencies/Libs/tess2
-rm -rf Dependencies/Libs/glfw
-rm -rf Dependencies/Libs/poco

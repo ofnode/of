@@ -1,0 +1,60 @@
+#!/bin/bash
+
+NORMAL=$(tput sgr0)
+GREEN=$(tput setaf 2)
+
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
+
+cd $DIR
+cd ../Dependencies
+
+
+echo ""
+echo "${GREEN}Compiling GLFW for Linux.${NORMAL}"
+
+./glfw-linux-64
+
+
+echo ""
+echo "${GREEN}Compiling GLFW for Windows.${NORMAL}"
+
+./glfw-mingw-64
+
+
+echo ""
+echo "${GREEN}Compiling POCO for Linux.${NORMAL}"
+
+./poco-linux-64
+
+
+echo ""
+echo "${GREEN}Compiling POCO for Windows.${NORMAL}"
+
+./poco-mingw-64
+
+
+echo ""
+echo "${GREEN}Compiling KISS for Linux.${NORMAL}"
+
+./kiss-linux-64
+
+
+echo ""
+echo "${GREEN}Compiling KISS for Windows.${NORMAL}"
+
+./kiss-mingw-64
+
+
+echo ""
+echo "${GREEN}Compiling TESS for Linux.${NORMAL}"
+
+./tess2-linux-64
+
+
+echo ""
+echo "${GREEN}Compiling TESS for Windows.${NORMAL}"
+
+./tess2-mingw-64
+
+

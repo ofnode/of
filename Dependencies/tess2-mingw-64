@@ -1,21 +1,26 @@
 #!/bin/bash
 
-cd     Libs/tess2
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
 
-mkdir  compiled
-cd     compiled
+cd    $DIR
 
-x86_64-w64-mingw32-gcc    -I../include -c ../Sources/bucketalloc.c
-x86_64-w64-mingw32-gcc    -I../include -c ../Sources/dict.c
-x86_64-w64-mingw32-gcc    -I../include -c ../Sources/geom.c
-x86_64-w64-mingw32-gcc    -I../include -c ../Sources/mesh.c
-x86_64-w64-mingw32-gcc    -I../include -c ../Sources/priorityq.c
-x86_64-w64-mingw32-gcc    -I../include -c ../Sources/sweep.c
-x86_64-w64-mingw32-gcc    -I../include -c ../Sources/tess.c
-x86_64-w64-mingw32-ar cr  libtess2.a bucketalloc.o dict.o geom.o mesh.o priorityq.o sweep.o tess.o
+cd    Libs/tess2
+mkdir compiled
 
-mv     libtess2.a ../../../Compiled/mingw-64
+mkdir compiled/mingw-64
+cd    compiled/mingw-64
 
-cd     ..
-rm -rf compiled
+MINGW=/opt/mxe/usr
+
+$MINGW/bin/x86_64-w64-mingw32.static-gcc   -I../../include -c ../../Sources/bucketalloc.c
+$MINGW/bin/x86_64-w64-mingw32.static-gcc   -I../../include -c ../../Sources/dict.c
+$MINGW/bin/x86_64-w64-mingw32.static-gcc   -I../../include -c ../../Sources/geom.c
+$MINGW/bin/x86_64-w64-mingw32.static-gcc   -I../../include -c ../../Sources/mesh.c
+$MINGW/bin/x86_64-w64-mingw32.static-gcc   -I../../include -c ../../Sources/priorityq.c
+$MINGW/bin/x86_64-w64-mingw32.static-gcc   -I../../include -c ../../Sources/sweep.c
+$MINGW/bin/x86_64-w64-mingw32.static-gcc   -I../../include -c ../../Sources/tess.c
+$MINGW/bin/x86_64-w64-mingw32.static-ar cr libtess2.a bucketalloc.o dict.o geom.o mesh.o priorityq.o sweep.o tess.o
+
+cp    libtess2.a $DIR/Compiled/mingw-64
 

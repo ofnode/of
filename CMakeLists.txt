@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 2.8)
 
 project(openFrameworks)
@@ -6,9 +5,7 @@ set(BIN openFrameworks)
 
 set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Compiled/linux-64)
-
+if(UNIX AND NOT APPLE)
     set(DEFINITIONS
         -DOF_USING_GTK
     )
@@ -29,21 +26,22 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
         
         "/usr/lib/glib-2.0/include"
         "/usr/lib/gtk-2.0/include"
+        
+	"/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+	"/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
     )
 endif()
 
 if(WIN32)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Compiled/mingw-64)
-    
     set(DEFINITIONS
         -D__MINGW32_VERSION
     )
     
     set(INCLUDE_DIRS
-        "/usr/x86_64-w64-mingw32/include"
-        "/usr/x86_64-w64-mingw32/include/GL"
-        "/usr/x86_64-w64-mingw32/include/cairo"
-        "/usr/x86_64-w64-mingw32/include/freetype2"
+        "/opt/mxe/usr/x86_64-w64-mingw32.static/include"
+        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/GL"
+        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/cairo"
+        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/freetype2"
     )
 endif()
 

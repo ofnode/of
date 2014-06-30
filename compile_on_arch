@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd Scripts
+
+Arch/install_dep
+
+./clean_repos
+./clone_repos
+./compile_dep
+./compile_of

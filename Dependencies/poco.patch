@@ -1,5 +1,3 @@
-diff --git a/Foundation/include/Poco/Any.h b/Foundation/include/Poco/Any.h
-index 77f7eaa..77f491e 100644
 --- a/Foundation/include/Poco/Any.h
 +++ b/Foundation/include/Poco/Any.h
 @@ -37,6 +37,10 @@
@@ -13,8 +11,6 @@ index 77f7eaa..77f491e 100644
  
  #include "Poco/Exception.h"
  #include "Poco/MetaProgramming.h"
-diff --git a/Foundation/src/Environment_WIN32.cpp b/Foundation/src/Environment_WIN32.cpp
-index a680d83..84b66f1 100644
 --- a/Foundation/src/Environment_WIN32.cpp
 +++ b/Foundation/src/Environment_WIN32.cpp
 @@ -39,6 +39,8 @@
@@ -26,8 +22,6 @@ index a680d83..84b66f1 100644
  #include <iphlpapi.h>
  
  
-diff --git a/Foundation/src/NumericString.cpp b/Foundation/src/NumericString.cpp
-index 37ecf7f..7ed1680 100644
 --- a/Foundation/src/NumericString.cpp
 +++ b/Foundation/src/NumericString.cpp
 @@ -45,7 +45,7 @@
@@ -59,8 +53,6 @@ index 37ecf7f..7ed1680 100644
  
  	std::string::size_type exPos = str.find('e');
  	std::string::size_type decPos = str.find(decSep);
-diff --git a/Net/src/NetworkInterface.cpp b/Net/src/NetworkInterface.cpp
-index c84e2d6..0f44de1 100644
 --- a/Net/src/NetworkInterface.cpp
 +++ b/Net/src/NetworkInterface.cpp
 @@ -48,8 +48,9 @@
@@ -86,4 +78,93 @@ index c84e2d6..0f44de1 100644
 +		rc = WideCharToMultiByte(CP_ACP, 0, pAddress->Description, -1, displayNameBuffer, sizeof(displayNameBuffer), NULL, NULL);
  		if (rc) displayName = displayNameBuffer;
  #endif
+ 
+--- a/Data/ODBC/include/Poco/Data/ODBC/Unicode.h
++++ b/Data/ODBC/include/Poco/Data/ODBC/Unicode.h
+@@ -458,7 +458,7 @@
+ 		cbColNameMax,
+ 		pcbColName,
+ 		pfSqlType,
+-		pcbColDef,
++		(SQLUINTEGER*)pcbColDef,
+ 		pibScale,
+ 		pfNullable);
+ }
+@@ -558,7 +558,7 @@
+ 		pcbName,
+ 		pfType,
+ 		pfSubType,
+-		pLength,
++		(SQLINTEGER*)pLength,
+ 		pPrecision,
+ 		pScale,
+ 		pNullable);
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -129,10 +129,7 @@
+ endif(CMAKE_SYSTEM MATCHES "SunOS")
+ 
+ if (CMAKE_COMPILER_IS_MINGW)
+-    add_definitions(-DWC_NO_BEST_FIT_CHARS=0x400  -DPOCO_WIN32_UTF8)
+-    add_definitions(-mno-cygwin -D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+-  link_directories(/usr/local/lib /usr/lib)
+-  include_directories(/usr/local/include /usr/include)
++  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+ endif (CMAKE_COMPILER_IS_MINGW)
+ 
+ if (CMAKE_COMPILER_IS_CYGWIN)
+--- a/Foundation/CMakeLists.txt
++++ b/Foundation/CMakeLists.txt
+@@ -11,14 +11,14 @@
+     else (X64)
+       set(sdk_bindir "${sdk_dir}/bin")
+     endif (X64)
++    find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" 
++      DOC "path to message compiler")
++    if (NOT CMAKE_MC_COMPILER)
++      message(FATAL_ERROR "message compiler not found: required to build")
++    endif (NOT CMAKE_MC_COMPILER)
++    message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
++    mark_as_advanced(CMAKE_MC_COMPILER)
+   endif ()
+-  find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" 
+-    DOC "path to message compiler")
+-  if (NOT CMAKE_MC_COMPILER)
+-    message(FATAL_ERROR "message compiler not found: required to build")
+-  endif (NOT CMAKE_MC_COMPILER)
+-  message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
+-  mark_as_advanced(CMAKE_MC_COMPILER)
+ endif(WIN32)
+   
+ set( BASE_SRCS 
+@@ -207,17 +207,19 @@
+ 
+ if (WIN32)
+   set(RES_SRCS ${CMAKE_SOURCE_DIR}/Foundation/include/Poco/pocomsg.h)
+-  set_source_files_properties(${RES_SRCS} PROPERTIES GENERATED true)
+-  add_custom_command(
+-    OUTPUT ${RES_SRCS}
+-    DEPENDS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
+-    COMMAND ${CMAKE_MC_COMPILER}
+-    ARGS 
+-         -h ${CMAKE_SOURCE_DIR}/Foundation/src
+-         -r ${CMAKE_SOURCE_DIR}/Foundation/src
+-         ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
+-    VERBATIM # recommended: p260
+-  )
++  if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
++    set_source_files_properties(${RES_SRCS} PROPERTIES GENERATED true)
++    add_custom_command(
++      OUTPUT ${RES_SRCS}
++      DEPENDS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
++      COMMAND ${CMAKE_MC_COMPILER}
++      ARGS 
++           -h ${CMAKE_SOURCE_DIR}/Foundation/src
++           -r ${CMAKE_SOURCE_DIR}/Foundation/src
++           ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
++      VERBATIM # recommended: p260
++    )
++  endif ()
+   list(APPEND WIN_SRCS ${RES_SRCS})
+ endif (WIN32)
  

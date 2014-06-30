@@ -1,38 +1,14 @@
 *~
-*.txt.user
+*.a
 *.zip
 *.tar.gz
+*.txt.user
 
-Build/
+openFrameworks
+openFrameworks-*
 
-openFrameworks/
-Dependencies/Libs/glfw/
-Dependencies/Libs/kiss/
-Dependencies/Libs/poco/
-Dependencies/Libs/tess2/
-
-Compiled/linux-64/libopenFrameworks.a
-Compiled/mingw-64/libopenFrameworks.a
-
-Dependencies/Compiled/linux-64/libPocoCrypto.a
-Dependencies/Compiled/linux-64/libPocoFoundation.a
-Dependencies/Compiled/linux-64/libPocoNet.a
-Dependencies/Compiled/linux-64/libPocoNetSSL.a
-Dependencies/Compiled/linux-64/libPocoUtil.a
-Dependencies/Compiled/linux-64/libPocoXML.a
-Dependencies/Compiled/linux-64/libPocoZip.a
-Dependencies/Compiled/linux-64/libglfw3.a
-Dependencies/Compiled/linux-64/libkiss.a
-Dependencies/Compiled/linux-64/libtess2.a
-
-Dependencies/Compiled/mingw-64/libPocoCrypto.a
-Dependencies/Compiled/mingw-64/libPocoFoundation.a
-Dependencies/Compiled/mingw-64/libPocoNet.a
-Dependencies/Compiled/mingw-64/libPocoNetSSL.a
-Dependencies/Compiled/mingw-64/libPocoUtil.a
-Dependencies/Compiled/mingw-64/libPocoXML.a
-Dependencies/Compiled/mingw-64/libPocoZip.a
-Dependencies/Compiled/mingw-64/libglfw3.a
-Dependencies/Compiled/mingw-64/libkiss.a
-Dependencies/Compiled/mingw-64/libtess2.a
+Dependencies/Libs/glfw
+Dependencies/Libs/kiss
+Dependencies/Libs/poco
+Dependencies/Libs/tess2
 

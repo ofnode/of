@@ -1,0 +1,29 @@
+#!/bin/bash
+
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
+
+cd $DIR
+cd ..
+
+chmod +x setup
+chmod +x compile_on_arch
+chmod +x compile_on_ubuntu
+
+chmod +x Scripts/clean_all
+chmod +x Scripts/clean_repos
+chmod +x Scripts/clone_repos
+chmod +x Scripts/compile_dep
+chmod +x Scripts/compile_of
+chmod +x Scripts/Arch/install_dep
+chmod +x Scripts/Ubuntu/install_dep
+
+chmod +x Dependencies/glfw-linux-64
+chmod +x Dependencies/glfw-mingw-64
+chmod +x Dependencies/kiss-linux-64
+chmod +x Dependencies/kiss-mingw-64
+chmod +x Dependencies/poco-linux-64
+chmod +x Dependencies/poco-mingw-64
+chmod +x Dependencies/tess2-linux-64
+chmod +x Dependencies/tess2-mingw-64
+

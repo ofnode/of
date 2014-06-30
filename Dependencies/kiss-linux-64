@@ -1,16 +1,19 @@
 #!/bin/bash
 
-cd     Libs/kiss
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
 
-mkdir  compiled
-cd     compiled
+cd    $DIR
 
-clang  -I../include -c ../src/kiss_fft.c
-clang  -I../include -c ../src/kiss_fftr.c
-ar cr  libkiss.a kiss_fft.o kiss_fftr.o
+cd    Libs/kiss
+mkdir compiled
 
-mv     libkiss.a ../../../Compiled/linux-64
+mkdir compiled/linux-64
+cd    compiled/linux-64
 
-cd     ..
-rm -rf compiled
+clang -I../../include -c ../../src/kiss_fft.c
+clang -I../../include -c ../../src/kiss_fftr.c
+ar cr libkiss.a kiss_fft.o kiss_fftr.o
+
+cp    libkiss.a $DIR/Compiled/linux-64
 

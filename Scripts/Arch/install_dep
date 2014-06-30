@@ -1,0 +1,40 @@
+#!/bin/bash
+
+NORMAL=$(tput sgr0)
+GREEN=$(tput setaf 2)
+
+echo "${GREEN}Installing Arch Linux dependencies.${NORMAL}"
+
+yes | sudo pacman -Syu
+
+yes | sudo pacman -Sy --needed \
+make                           \
+pkg-config                     \
+clang                          \
+ninja                          \
+git                            \
+freeglut                       \
+glew                           \
+cairo                          \
+pixman                         \
+openssl                        \
+freeimage                      \
+freetype2
+
+yes | sudo pacman -Sy --needed \
+    autoconf automake bash bison bzip2 cmake flex gettext \
+    git gcc gperf intltool libffi libtool openssl wget xz \
+    coreutils patch pkg-config perl perl-xml-parser scons \
+    sed make unzip gettext
+
+echo ""
+if [ -d /opt/mxe ]
+then
+    echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
+else
+    echo "${RED}Setting up /opt/mxe folder.${NORMAL}"
+    sudo git clone https://github.com/mxe/mxe.git /opt/mxe
+fi
+cd /opt/mxe
+sudo make MXE_TARGETS=x86_64-w64-mingw32.static mingw-w64 winpthreads openssl glew freeglut cairo freeimage freetype
+

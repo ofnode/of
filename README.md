@@ -1,41 +1,60 @@
 Cross-compiled openFrameworks
 =============================
 
-Alternative openFrameworks distribution for Arch Linux. Cross-platform CMake projects.
+Alternative openFrameworks distribution for Arch Linux and Ubuntu. Cross-platform CMake projects.
 
 Features
 --------
 
- - 64bit, C++11, Clang, CMake and Ninja ready.
+ - 64-bit, C++11, Clang, CMake and Ninja ready.
 
- - Get fully static Windows applications from Arch Linux with MinGW-w64.
+ - Get fully static Windows applications from Arch Linux or Ubuntu.
 
  - Latest openFrameworks commits with dependencies and their sources.
 
 Limitations
 -----------
 
-<b>Arch Linux only</b>. Dependencies are tied to AUR and official repositories.
+<b>Arch Linux and Ubuntu only</b>. Dependencies are tied to AUR and Ubuntu for now.
 
-<b>No sound and video</b>. Windows-related code of openFrameworks uses closed-source FMOD and QuickTime.
+<b>No sound and video features</b>. openFrameworks uses closed-source FMOD and QuickTime libraries which are not acceptable for this project.
 
 <b>Can't compile to OSX</b>. I have no Mac yet.
 
-[Download][1]
----------
+Installing:
+----------
+Install dependencies either with:
+<pre><code>Scripts/Arch/install_dep</pre></code>
+
+Or:
+<pre><code>Scripts/Ubuntu/install_dep</pre></code>
+
+And run:
+<pre><code>./setup</pre></code>
 
 Compiling:
 ---------
 Run:
-<pre><code>./compile</pre></code>
+<pre><code>./compile_on_arch</pre></code>
 
-That's it. The process can take a while though - be patient.
-If you don't want to wait - download sources and precompiled libraries with:
-<pre><code>./setup</pre></code>
+Or:
+<pre><code>./compile_on_ubuntu</pre></code>
+
+And wait it to finish. The process can take a while though - be patient.
 
 Examples:
 --------
 See ```Template``` folder.
 
+To compile it for Linux:
+```bash
+cmake . -G Ninja
+ninja
+```
 
-  [1]: https://github.com/procedural/crossof/releases
+To compile it for Windows:
+```bash
+cmake . -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake
+ninja
+```
+

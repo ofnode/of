@@ -1,5 +1,4 @@
-
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+if(UNIX AND NOT APPLE)
     set(CROSSOF_INCLUDE_DIRS
         "/usr/include/atk-1.0"
         "/usr/include/cairo"
@@ -16,94 +15,110 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
         
         "/usr/lib/glib-2.0/include"
         "/usr/lib/gtk-2.0/include"
+        
+	"/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+	"/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
     )
     
     set(CROSSOF_LIBRARIES
+	-static-libgcc
+	-static-libstdc++
+        -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/linux-64"
+        -L"${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64"
+        -Wl,-Bstatic
         -Wl,--start-group
-        "${CMAKE_CURRENT_LIST_DIR}/Compiled/linux-64/libopenFrameworks.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/libPocoNet.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/libPocoXML.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/libPocoUtil.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/libPocoFoundation.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/libPocoNetSSL.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/libPocoCrypto.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/libglfw3.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/libkiss.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/libtess2.a"
-        z
-        udev
-        m
-        pthread
-        ssl
-        crypto
-        GLEW
-        GLU
-        GL
+        openFrameworks
+        PocoNet
+        PocoXML
+        PocoUtil
+        PocoFoundation
+        PocoNetSSL
+        PocoCrypto
+        glfw3
+        kiss
+        tess2
+        -Wl,--end-group
+        -Wl,-Bdynamic
+        gdk_pixbuf-2.0
+        pangocairo-1.0
+        pangoft2-1.0
+        gobject-2.0
         gtk-x11-2.0
         gdk-x11-2.0
-        pangocairo-1.0
-        atk-1.0
-        cairo
-        gdk_pixbuf-2.0
-        gio-2.0
-        pangoft2-1.0
-        pango-1.0
-        gobject-2.0
-        glib-2.0
         fontconfig
-        freetype
-        glut
-        X11
-        Xrandr
-        Xcursor
-        Xxf86vm
-        Xi
         freeimage
-        -Wl,--end-group
+        pango-1.0
+        freetype
+        glib-2.0
+        gio-2.0
+        atk-1.0
+        pthread
+        Xxf86vm
+        Xcursor
+        crypto
+        Xrandr
+        cairo
+        udev
+        glut
+        GLEW
+        GLU
+        ssl
+        X11
+        Xi
+        GL
+        m
+        z
     )
 endif()
 
 if(WIN32)
     set(CROSSOF_INCLUDE_DIRS
-        "/usr/x86_64-w64-mingw32/include"
-        "/usr/x86_64-w64-mingw32/include/GL"
-        "/usr/x86_64-w64-mingw32/include/cairo"
-        "/usr/x86_64-w64-mingw32/include/freetype2"
+        "/opt/mxe/usr/x86_64-w64-mingw32.static/include"
+        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/GL"
+        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/cairo"
+        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/freetype2"
     )
 
     set(CROSSOF_LIBRARIES
         -static-libgcc
         -static-libstdc++
+        -L"/opt/mxe/usr/x86_64-w64-mingw32.static/lib"
+        -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/mingw-64"
+        -L"${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64"
+        -Wl,-Bstatic
         -Wl,--start-group
-        "${CMAKE_CURRENT_LIST_DIR}/Compiled/mingw-64/libopenFrameworks.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/libPocoNet.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/libPocoXML.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/libPocoUtil.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/libPocoFoundation.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/libPocoNetSSL.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/libPocoCrypto.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/libglfw3.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/libkiss.a"
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/libtess2.a"
-        "/usr/x86_64-w64-mingw32/lib/libwinpthread.a"
-        "/usr/x86_64-w64-mingw32/lib/libwinmm.a"
-        "/usr/x86_64-w64-mingw32/lib/libws2_32.a"
-        "/usr/x86_64-w64-mingw32/lib/libwsock32.a"
-        "/usr/x86_64-w64-mingw32/lib/libiphlpapi.a"
-        "/usr/x86_64-w64-mingw32/lib/libgdi32.a"
-        "/usr/x86_64-w64-mingw32/lib/libopengl32.a"
-        "/usr/x86_64-w64-mingw32/lib/libz.a"
-        "/usr/x86_64-w64-mingw32/lib/libm.a"
-        "/usr/x86_64-w64-mingw32/lib/libpthread.a"
-        "/usr/x86_64-w64-mingw32/lib/libssl.a"
-        "/usr/x86_64-w64-mingw32/lib/libcrypto.a"
-        "/usr/x86_64-w64-mingw32/lib/libglew32.a"
-        "/usr/x86_64-w64-mingw32/lib/libglu32.a"
-        "/usr/x86_64-w64-mingw32/lib/libcairo.a"
-        "/usr/x86_64-w64-mingw32/lib/libpixman-1.a"
-        "/usr/x86_64-w64-mingw32/lib/libfontconfig.a"
-        "/usr/x86_64-w64-mingw32/lib/libfreetype.a"
-        "/usr/x86_64-w64-mingw32/lib/libFreeImage.a"
+        openFrameworks
+        PocoNet
+        PocoXML
+        PocoUtil
+        PocoFoundation
+        PocoNetSSL
+        PocoCrypto
+        glfw3
+        kiss
+        tess2
+        fontconfig
+        freeimage
+        glib-2.0
+        harfbuzz
+        freetype
+        pixman-1
+        iphlpapi
+        opengl32
+        wsock32
+        glew32s
+        ws2_32
+        crypto
+        glu32
+        cairo
+        iconv
+        gdi32
+        winmm
+        intl
+        bz2
+        ssl
+        m
+        z
         -Wl,--end-group
     )
 endif()
@@ -168,6 +183,6 @@ set(CROSSOF_DEFINITIONS
     -DPOCO_STATIC
 )
 
-add_definitions    (${CROSSOF_DEFINITIONS} )
+add_definitions(${CROSSOF_DEFINITIONS})
 include_directories(${CROSSOF_INCLUDE_DIRS})
 

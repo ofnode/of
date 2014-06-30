@@ -1,16 +1,21 @@
 #!/bin/bash
 
-cd     Libs/kiss
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
 
-mkdir  compiled
-cd     compiled
+cd    $DIR
 
-x86_64-w64-mingw32-gcc    -I../include -c ../src/kiss_fft.c
-x86_64-w64-mingw32-gcc    -I../include -c ../src/kiss_fftr.c
-x86_64-w64-mingw32-ar cr  libkiss.a kiss_fft.o kiss_fftr.o
+cd    Libs/kiss
+mkdir compiled
 
-mv     libkiss.a ../../../Compiled/mingw-64
+mkdir compiled/mingw-64
+cd    compiled/mingw-64
 
-cd     ..
-rm -rf compiled
+MINGW=/opt/mxe/usr
+
+$MINGW/bin/x86_64-w64-mingw32.static-gcc   -I../../include -c ../../src/kiss_fft.c
+$MINGW/bin/x86_64-w64-mingw32.static-gcc   -I../../include -c ../../src/kiss_fftr.c
+$MINGW/bin/x86_64-w64-mingw32.static-ar cr libkiss.a kiss_fft.o kiss_fftr.o
+
+cp    libkiss.a $DIR/Compiled/mingw-64
 

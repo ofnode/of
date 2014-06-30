@@ -1,0 +1,17 @@
+#!/bin/bash
+
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
+
+cd $DIR
+cd ..
+
+rm -rf openFrameworks
+rm -rf openFrameworks-*
+
+rm -rf Dependencies/Libs/glfw
+rm -rf Dependencies/Libs/kiss
+rm -rf Dependencies/Libs/poco
+rm -rf Dependencies/Libs/tess2
+
+find . -name "*.a" -type f -delete

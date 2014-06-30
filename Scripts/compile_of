@@ -1,0 +1,38 @@
+#!/bin/bash
+
+NORMAL=$(tput sgr0)
+GREEN=$(tput setaf 2)
+
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
+
+cd $DIR
+cd ..
+
+echo  ""
+echo  "${GREEN}Compiling openFrameworks for Linux.${NORMAL}"
+
+cd    Compiled/linux-64
+
+cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ../..
+ninja
+
+cd    ../..
+
+echo  ""
+echo  "${GREEN}Compiling openFrameworks for Windows.${NORMAL}"
+
+cd    Compiled/mingw-64
+
+MINGW=/opt/mxe/usr
+
+cmake -G Ninja                                                      \
+      -DCMAKE_SYSTEM_NAME=Windows                                   \
+      -DCMAKE_C_COMPILER=$MINGW/bin/x86_64-w64-mingw32.static-gcc   \
+      -DCMAKE_CXX_COMPILER=$MINGW/bin/x86_64-w64-mingw32.static-g++ \
+      -DCMAKE_FIND_ROOT_PATH=$MINGW/x86_64-w64-mingw32.static       \
+      ../..
+ninja
+
+echo  ""
+echo  "${GREEN}All done!${NORMAL}"

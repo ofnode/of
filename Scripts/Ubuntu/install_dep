@@ -1,0 +1,50 @@
+#!/bin/bash
+
+NORMAL=$(tput sgr0)
+GREEN=$(tput setaf 2)
+
+echo "${GREEN}Installing Ubuntu dependencies.${NORMAL}"
+
+sudo apt-get update
+sudo apt-get -y upgrade
+
+sudo apt-get -y install \
+build-essential         \
+xorg-dev                \
+clang                   \
+ninja-build             \
+git                     \
+freeglut3-dev           \
+libglew-dev             \
+libcairo2-dev           \
+libssl-dev              \
+libfreeimage-dev        \
+libfreetype6-dev        \
+libxmu-dev              \
+libxxf86vm-dev          \
+libgl1-mesa-dev         \
+libglu1-mesa-dev        \
+libraw1394-dev          \
+libudev-dev             \
+libdrm-dev              \
+libusb-1.0-0-dev        \
+libgtk2.0-dev
+
+sudo apt-get -y install \
+    autoconf automake bash bison bzip2 cmake flex gettext \
+    git g++ gperf intltool libffi-dev libtool libltdl-dev \
+    libssl-dev libxml-parser-perl make openssl patch perl \
+    pkg-config python ruby scons sed unzip wget autopoint \
+    xz-utils
+
+echo ""
+if [ -d /opt/mxe ]
+then
+    echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
+else
+    echo "${RED}Setting up /opt/mxe folder.${NORMAL}"
+    sudo git clone https://github.com/mxe/mxe.git /opt/mxe
+fi
+cd /opt/mxe
+sudo make MXE_TARGETS=x86_64-w64-mingw32.static mingw-w64 winpthreads openssl glew freeglut cairo freeimage freetype
+
