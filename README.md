@@ -15,7 +15,7 @@ Features
 Limitations
 -----------
 
-<b>Arch Linux and Ubuntu only</b>. Dependencies are tied to AUR and Ubuntu for now.
+<b>Arch Linux and Ubuntu for now</b>. Dependencies are available only for these systems, but it is possible to compile it on any Linux distro.
 
 <b>No sound and video features</b>. openFrameworks uses closed-source FMOD and QuickTime libraries which are not acceptable for this project.
 
