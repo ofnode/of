@@ -1,8 +1,8 @@
 #!/bin/bash
 
-OF_BRANCH=453254f65e
-GLFW_BRANCH=99c98407c9
-POCO_BRANCH=fe6bf63656
+OF_BRANCH=3848dd7d53
+GLFW_BRANCH=896d040c68
+POCO_BRANCH=fb06f5b8aa
 
 download_progress()
 {
@@ -70,10 +70,6 @@ echo   ${CYAN}of_glew_include_path_fix.patch${NORMAL}
 patch  -p1 < Patches/of_glew_include_path_fix.patch
 
 echo   ""
-echo   ${CYAN}of_drag_and_drop_feature.patch${NORMAL}
-patch  -p1 < Patches/of_drag_and_drop_feature.patch
-
-echo   ""
 echo   ${CYAN}of_scroll_feature.patch${NORMAL}
 patch  -p1 < Patches/of_scroll_feature.patch
 
@@ -82,12 +78,16 @@ echo   ${CYAN}of_audio_video_disable.patch${NORMAL}
 patch  -p1 < Patches/of_audio_video_disable.patch
 
 echo   ""
-echo   ${CYAN}of_compile_error_fix.patch${NORMAL}
-patch  -p1 < Patches/of_compile_error_fix.patch
-
-echo   ""
 echo   ${CYAN}of_clipboard_feature.patch${NORMAL}
 patch  -p1 < Patches/of_clipboard_feature.patch
+
+echo   ""
+echo   ${CYAN}of_glfw_mismatch_fix.patch${NORMAL}
+patch  -p1 < Patches/of_glfw_mismatch_fix.patch
+
+echo   ""
+echo   ${CYAN}of_compile_error_fix.patch${NORMAL}
+patch  -p1 < Patches/of_compile_error_fix.patch
 
 
 

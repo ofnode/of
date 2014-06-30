@@ -1,6 +1,6 @@
 --- a/Foundation/include/Poco/Any.h
 +++ b/Foundation/include/Poco/Any.h
-@@ -37,6 +37,10 @@
+@@ -17,6 +17,10 @@
  #ifndef Foundation_Any_INCLUDED
  #define Foundation_Any_INCLUDED
  
@@ -13,7 +13,7 @@
  #include "Poco/MetaProgramming.h"
 --- a/Foundation/src/Environment_WIN32.cpp
 +++ b/Foundation/src/Environment_WIN32.cpp
-@@ -39,6 +39,8 @@
+@@ -19,6 +19,8 @@
  #include <sstream>
  #include <cstring>
  #include "Poco/UnWindows.h"
@@ -24,7 +24,7 @@
  
 --- a/Foundation/src/NumericString.cpp
 +++ b/Foundation/src/NumericString.cpp
-@@ -45,7 +45,7 @@
+@@ -31,7 +31,7 @@
  // --- double conversion ---
  
  #include "Poco/NumericString.h"
@@ -33,7 +33,7 @@
  #include "Poco/String.h"
  #include <memory>
  #include <cctype>
-@@ -60,8 +60,8 @@ void pad(std::string& str, int precision, int width, char prefix = ' ', char dec
+@@ -46,8 +46,8 @@ void pad(std::string& str, int precision, int width, char prefix = ' ', char dec
  	/// Used only internally.
  {
  	// these cases should never happen, if they do, it's a library bug
@@ -44,7 +44,7 @@
  
  	std::string::size_type decSepPos = str.find(decSep);
  	if (decSepPos == std::string::npos)
-@@ -99,7 +99,7 @@ void insertThousandSep(std::string& str, char thSep, char decSep = '.')
+@@ -85,7 +85,7 @@ void insertThousandSep(std::string& str, char thSep, char decSep = '.')
  	/// Inserts thousand separators.
  	/// Used only internally.
  {
@@ -55,7 +55,7 @@
  	std::string::size_type decPos = str.find(decSep);
 --- a/Net/src/NetworkInterface.cpp
 +++ b/Net/src/NetworkInterface.cpp
-@@ -48,8 +48,9 @@
+@@ -28,8 +28,9 @@
  #if defined(POCO_OS_FAMILY_WINDOWS)
  	#if defined(POCO_WIN32_UTF8)
  		#include "Poco/UnicodeConverter.h"
@@ -66,7 +66,7 @@
  	#include <iphlpapi.h>
  	#include <ipifcons.h>
  #endif
-@@ -1051,10 +1052,10 @@ NetworkInterface::Map NetworkInterface::map(bool ipOnly, bool upOnly)
+@@ -1105,10 +1105,10 @@ NetworkInterface::Map NetworkInterface::map(bool ipOnly, bool upOnly)
  		Poco::UnicodeConverter::toUTF8(pAddress->Description, displayName);
  #else
  		char nameBuffer[1024];
@@ -81,7 +81,7 @@
  
 --- a/Data/ODBC/include/Poco/Data/ODBC/Unicode.h
 +++ b/Data/ODBC/include/Poco/Data/ODBC/Unicode.h
-@@ -458,7 +458,7 @@
+@@ -438,7 +438,7 @@
  		cbColNameMax,
  		pcbColName,
  		pfSqlType,
@@ -90,7 +90,7 @@
  		pibScale,
  		pfNullable);
  }
-@@ -558,7 +558,7 @@
+@@ -538,7 +538,7 @@
  		pcbName,
  		pfType,
  		pfSubType,
@@ -115,55 +115,34 @@
  if (CMAKE_COMPILER_IS_CYGWIN)
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
-@@ -11,14 +11,14 @@
-     else (X64)
-       set(sdk_bindir "${sdk_dir}/bin")
+@@ -15,6 +15,7 @@
+       set(kit_bindir "${kit_dir}/bin/x86")
      endif (X64)
-+    find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" 
-+      DOC "path to message compiler")
-+    if (NOT CMAKE_MC_COMPILER)
-+      message(FATAL_ERROR "message compiler not found: required to build")
-+    endif (NOT CMAKE_MC_COMPILER)
-+    message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
-+    mark_as_advanced(CMAKE_MC_COMPILER)
    endif ()
--  find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" 
--    DOC "path to message compiler")
--  if (NOT CMAKE_MC_COMPILER)
--    message(FATAL_ERROR "message compiler not found: required to build")
--  endif (NOT CMAKE_MC_COMPILER)
--  message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
--  mark_as_advanced(CMAKE_MC_COMPILER)
++  if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
+   find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" "${kit_bindir}"
+     DOC "path to message compiler")
+   if (NOT CMAKE_MC_COMPILER)
+@@ -22,6 +23,7 @@
+   endif (NOT CMAKE_MC_COMPILER)
+   message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
+   mark_as_advanced(CMAKE_MC_COMPILER)
++  endif ()
  endif(WIN32)
    
  set( BASE_SRCS 
-@@ -207,17 +207,19 @@
+@@ -210,6 +212,7 @@
  
  if (WIN32)
-   set(RES_SRCS ${CMAKE_SOURCE_DIR}/Foundation/include/Poco/pocomsg.h)
--  set_source_files_properties(${RES_SRCS} PROPERTIES GENERATED true)
--  add_custom_command(
--    OUTPUT ${RES_SRCS}
--    DEPENDS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
--    COMMAND ${CMAKE_MC_COMPILER}
--    ARGS 
--         -h ${CMAKE_SOURCE_DIR}/Foundation/src
--         -r ${CMAKE_SOURCE_DIR}/Foundation/src
--         ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
--    VERBATIM # recommended: p260
--  )
+   set(RES_SRCS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.h)
 +  if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
-+    set_source_files_properties(${RES_SRCS} PROPERTIES GENERATED true)
-+    add_custom_command(
-+      OUTPUT ${RES_SRCS}
-+      DEPENDS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
-+      COMMAND ${CMAKE_MC_COMPILER}
-+      ARGS 
-+           -h ${CMAKE_SOURCE_DIR}/Foundation/src
-+           -r ${CMAKE_SOURCE_DIR}/Foundation/src
-+           ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
-+      VERBATIM # recommended: p260
-+    )
+   set_source_files_properties(${RES_SRCS} PROPERTIES GENERATED true)
+   add_custom_command(
+     OUTPUT ${RES_SRCS}
+@@ -221,6 +224,7 @@
+          ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
+     VERBATIM # recommended: p260
+   )
 +  endif ()
    list(APPEND WIN_SRCS ${RES_SRCS})
  endif (WIN32)

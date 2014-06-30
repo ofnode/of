@@ -11,14 +11,11 @@
  #endif
 --- a/openFrameworks/app/ofAppGLFWWindow.cpp
 +++ b/openFrameworks/app/ofAppGLFWWindow.cpp
-@@ -759,8 +759,8 @@
- 				maxX = max(maxX,tempXPos + desktopMode->width);
- 				maxY = max(maxY,tempYPos + desktopMode->height);
- 
--				xpos = min(xpos,temp_xpos);
--				ypos = min(ypos,temp_ypos);
-+				xpos = min(xpos,tempXPos);
-+				ypos = min(ypos,tempYPos);
- 			}
- 
- 			fullscreenW = maxX-minX;
+@@ -14,6 +14,7 @@
+ 	#else
+ 		#define GLFW_EXPOSE_NATIVE_EGL
+ 	#endif
++	#include <X11/extensions/Xrandr.h>
+ 	#include "GLFW/glfw3native.h"
+ 	#include <X11/Xatom.h>
+ 	#include "Poco/URI.h"

@@ -1,5 +1,5 @@
-Cross-compiled openFrameworks
-=============================
+Cross-compiled [openFrameworks][1]
+==================================
 
 Alternative openFrameworks distribution for Arch Linux and Ubuntu. Cross-platform CMake projects.
 
@@ -10,7 +10,7 @@ Features
 
  - Get fully static Windows applications from Arch Linux or Ubuntu.
 
- - Latest openFrameworks commits with dependencies and their sources.
+ - Latest openFrameworks versions with dependencies and their sources.
 
 Limitations
 -----------
@@ -48,7 +48,7 @@ See ```Template``` folder.
 
 To compile it for Linux:
 ```bash
-cmake . -G Ninja
+cmake . -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
@@ -57,4 +57,7 @@ To compile it for Windows:
 cmake . -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake
 ninja
 ```
+
+
+  [1]: https://github.com/openframeworks/openFrameworks
 

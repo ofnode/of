@@ -3,12 +3,16 @@
 *.zip
 *.tar.gz
 *.txt.user
+.ninja_log
+.ninja_deps
 
 openFrameworks
 openFrameworks-*
+
+Compiled/linux-64/*
+Compiled/mingw-64/*
 
 Dependencies/Libs/glfw
 Dependencies/Libs/kiss
 Dependencies/Libs/poco
 Dependencies/Libs/tess2
-
