@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RELEASE=7196f212bd
+RELEASE=23bc3b9774
 
 download_progress()
 {
