@@ -1,7 +1,7 @@
 #!/bin/bash
 
-OF_BRANCH=3848dd7d53
-GLFW_BRANCH=896d040c68
+OF_BRANCH=d6e84fd9d3
+GLFW_BRANCH=0a6cb34815
 POCO_BRANCH=fb06f5b8aa
 
 download_progress()
@@ -82,10 +82,6 @@ echo   ${CYAN}of_clipboard_feature.patch${NORMAL}
 patch  -p1 < Patches/of_clipboard_feature.patch
 
 echo   ""
-echo   ${CYAN}of_glfw_mismatch_fix.patch${NORMAL}
-patch  -p1 < Patches/of_glfw_mismatch_fix.patch
-
-echo   ""
 echo   ${CYAN}of_compile_error_fix.patch${NORMAL}
 patch  -p1 < Patches/of_compile_error_fix.patch
 
@@ -115,7 +111,7 @@ then
        echo "${GREEN}Using existing $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
 else
        echo "${RED}Downloading $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
-       wget --progress=bar:force https://github.com/glfw/glfw/archive/$GLFW_BRANCH.zip 2>&1 | download_progress
+       wget --progress=bar:force https://github.com/arturoc/glfw/archive/$GLFW_BRANCH.zip 2>&1 | download_progress
 fi
 
 unzip -q $GLFW_BRANCH.zip
