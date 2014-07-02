@@ -120,6 +120,7 @@ if(WIN32)
         m
         z
         -Wl,--end-group
+        -mwindows
     )
 endif()
 
