@@ -31,6 +31,9 @@ GREEN=$(tput setaf 2)
 CYAN=$(tput setaf 6)
 
 
+Scripts/clean_repos
+
+
 if [ -f CrossOF_Binaries_$RELEASE.tar.gz ]
 then
     echo "${GREEN}Using existing CrossOF_Binaries_$RELEASE.tar.gz archive.${NORMAL}"
@@ -53,8 +56,13 @@ if [ -f CrossOF_MXE_$RELEASE.tar.gz ]
 then
     echo "${GREEN}Using existing CrossOF_MXE_$RELEASE.tar.gz archive.${NORMAL}"
 else
-    echo "${RED}Downloading CrossOF_MXE_$RELEASE.tar.gz archive.${NORMAL}"
-    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_MXE_$RELEASE.tar.gz 2>&1 | download_progress
+    if [ -d /opt/mxe ]
+    then
+        :
+    else
+        echo "${RED}Downloading CrossOF_MXE_$RELEASE.tar.gz archive.${NORMAL}"
+        wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_MXE_$RELEASE.tar.gz 2>&1 | download_progress
+    fi
 fi
 
 
@@ -77,7 +85,6 @@ else
 fi
 
 
-Scripts/clean_repos
 Scripts/clone_repos
 
 
