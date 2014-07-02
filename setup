@@ -49,6 +49,15 @@ else
 fi
 
 
+if [ -f CrossOF_MXE_$RELEASE.tar.gz ]
+then
+    echo "${GREEN}Using existing CrossOF_MXE_$RELEASE.tar.gz archive.${NORMAL}"
+else
+    echo "${RED}Downloading CrossOF_MXE_$RELEASE.tar.gz archive.${NORMAL}"
+    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_MXE_$RELEASE.tar.gz 2>&1 | download_progress
+fi
+
+
 echo ""
 echo "${GREEN}Unzipping CrossOF_Binaries_$RELEASE.tar.gz archive.${NORMAL}"
 tar -zxvf CrossOF_Binaries_$RELEASE.tar.gz
@@ -58,5 +67,17 @@ echo "${GREEN}Unzipping CrossOF_Sources_$RELEASE.tar.gz archive.${NORMAL}"
 tar -zxvf CrossOF_Sources_$RELEASE.tar.gz
 
 
+echo ""
+if [ -d /opt/mxe ]
+then
+    echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
+else
+    echo "${GREEN}Unzipping CrossOF_MXE_$RELEASE.tar.gz archive to /opt folder.${NORMAL}"
+    sudo tar -zxvf CrossOF_MXE_$RELEASE.tar.gz -C /opt
+fi
+
+
+Scripts/clean_repos
 Scripts/clone_repos
+
 

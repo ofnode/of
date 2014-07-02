@@ -23,14 +23,17 @@ Limitations
 
 Installing:
 ----------
-Install dependencies either with:
+Run:
+<pre><code>./setup</pre></code>
+
+And install dependencies either with:
 <pre><code>Scripts/Arch/install_dep</pre></code>
 
 Or:
 <pre><code>Scripts/Ubuntu/install_dep</pre></code>
 
-And run:
-<pre><code>./setup</pre></code>
+**WARNING**: Summary size of CrossOF's sources, binaries and MXE pre-built libraries is ~ **950 MB**. 
+If you have slow/capped internet access, but your computer is powerful enough, it's better to compile CrossOF and MXE libraries by yourself with scripts mentioned below.
 
 Compiling:
 ---------
