@@ -37,13 +37,6 @@ if(UNIX AND NOT APPLE)
         glfw3
         kiss
         tess2
-        fontconfig
-        freetype
-        pixman-1
-        cairo
-        png
-        GLU
-        ssl
         m
         z
         -Wl,--end-group
@@ -54,8 +47,11 @@ if(UNIX AND NOT APPLE)
         gobject-2.0
         gtk-x11-2.0
         gdk-x11-2.0
+        fontconfig
         freeimage
         pango-1.0
+        pixman-1
+        freetype
         glib-2.0
         gio-2.0
         atk-1.0
@@ -64,8 +60,12 @@ if(UNIX AND NOT APPLE)
         Xcursor
         crypto
         Xrandr
+        png12
+        cairo
         udev
         GLEW
+        GLU
+        ssl
         X11
         Xi
         GL
