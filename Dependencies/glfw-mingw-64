@@ -6,15 +6,16 @@ DIR=`dirname $FILE`
 cd    $DIR
 
 cd    Libs/glfw
-mkdir compiled
 
-mkdir compiled/mingw-64
-cd    compiled/mingw-64
+mkdir -p compiled/mingw-64
+cd       compiled/mingw-64
 
 MINGW=/opt/mxe/usr
 
-cmake -G Ninja \
+cmake -G Ninja                  \
       -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
+      -DGLFW_BUILD_TESTS=OFF    \
+      -DGLFW_BUILD_EXAMPLES=OFF \
       ../..
 ninja
 

@@ -6,10 +6,9 @@ DIR=`dirname $FILE`
 cd     $DIR
 
 cd     Libs/tess2
-mkdir  compiled
 
-mkdir  compiled/linux-64
-cd     compiled/linux-64
+mkdir -p compiled/linux-64
+cd       compiled/linux-64
 
 clang  -I../../include -c ../../Sources/bucketalloc.c
 clang  -I../../include -c ../../Sources/dict.c

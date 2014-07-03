@@ -1,0 +1,33 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -97,7 +97,7 @@
+ include(FindOpenSSL)
+ #include(CMakeDetermineCompilerId)
+ 
+-include(FindMySQL)
++#include(FindMySQL)
+ 
+ #include(FindAPR)
+ #include(FindApache2)
+@@ -157,9 +157,9 @@
+ 
+ add_subdirectory(Foundation)
+ add_subdirectory(XML)
+-add_subdirectory(JSON)
+-add_subdirectory(MongoDB)
+-add_subdirectory(PDF)
++#add_subdirectory(JSON)
++#add_subdirectory(MongoDB)
++#add_subdirectory(PDF)
+ add_subdirectory(Util)
+ add_subdirectory(Net)
+ #add_subdirectory(Web)
+@@ -171,7 +171,7 @@
+     add_subdirectory(Crypto)
+ endif(OPENSSL_FOUND)
+ 
+-add_subdirectory(Data)
++#add_subdirectory(Data)
+ #add_subdirectory(WebWidgets)
+ add_subdirectory(Zip)
+ 

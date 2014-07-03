@@ -6,13 +6,14 @@ DIR=`dirname $FILE`
 cd    $DIR
 
 cd    Libs/glfw
-mkdir compiled
 
-mkdir compiled/linux-64
-cd    compiled/linux-64
+mkdir -p compiled/linux-64
+cd       compiled/linux-64
 
-cmake -G Ninja                 \
-      -DCMAKE_C_COMPILER=clang \
+cmake -G Ninja                  \
+      -DCMAKE_C_COMPILER=clang  \
+      -DGLFW_BUILD_TESTS=OFF    \
+      -DGLFW_BUILD_EXAMPLES=OFF \
       ../..
 ninja
 

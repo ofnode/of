@@ -6,10 +6,9 @@ DIR=`dirname $FILE`
 cd    $DIR
 
 cd    Libs/kiss
-mkdir compiled
 
-mkdir compiled/linux-64
-cd    compiled/linux-64
+mkdir -p compiled/linux-64
+cd       compiled/linux-64
 
 clang -I../../include -c ../../src/kiss_fft.c
 clang -I../../include -c ../../src/kiss_fftr.c

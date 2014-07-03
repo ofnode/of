@@ -147,6 +147,10 @@ echo   ""
 echo   ${CYAN}poco.patch${NORMAL}
 patch  -p1 < ../../poco.patch
 
+echo   ""
+echo   ${CYAN}poco_cmake.patch${NORMAL}
+patch  -p1 < ../../poco_cmake.patch
+
 cd     ../../..
 
 

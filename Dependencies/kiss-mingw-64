@@ -6,10 +6,9 @@ DIR=`dirname $FILE`
 cd    $DIR
 
 cd    Libs/kiss
-mkdir compiled
 
-mkdir compiled/mingw-64
-cd    compiled/mingw-64
+mkdir -p compiled/mingw-64
+cd       compiled/mingw-64
 
 MINGW=/opt/mxe/usr
 
