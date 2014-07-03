@@ -25,7 +25,7 @@ yes | sudo pacman -Sy --needed \
     autoconf automake bash bison bzip2 cmake flex gettext \
     git gcc gperf intltool libffi libtool openssl wget xz \
     coreutils patch pkg-config perl perl-xml-parser scons \
-    sed make unzip gettext
+    sed make unzip gettext ruby
 
 echo ""
 if [ -d /opt/mxe ]
