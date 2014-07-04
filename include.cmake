@@ -16,13 +16,14 @@ if(UNIX AND NOT APPLE)
         "/usr/lib/glib-2.0/include"
         "/usr/lib/gtk-2.0/include"
         
-	"/usr/lib/x86_64-linux-gnu/glib-2.0/include"
-	"/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
+        "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+        "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
     )
     
     set(CROSSOF_LIBRARIES
-	-static-libgcc
-	-static-libstdc++
+        -static-libgcc
+        -static-libstdc++
+        -Wl,-rpath,'$$ORIGIN'
         -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/linux-64"
         -L"${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64"
         -Wl,-Bstatic
@@ -37,8 +38,6 @@ if(UNIX AND NOT APPLE)
         glfw3
         kiss
         tess2
-        m
-        z
         -Wl,--end-group
         -Wl,-Bdynamic
         gdk_pixbuf-2.0
@@ -69,6 +68,8 @@ if(UNIX AND NOT APPLE)
         X11
         Xi
         GL
+        m
+        z
     )
 endif()
 
@@ -81,6 +82,7 @@ if(WIN32)
     )
 
     set(CROSSOF_LIBRARIES
+        -mwindows
         -static-libgcc
         -static-libstdc++
         -L"/opt/mxe/usr/x86_64-w64-mingw32.static/lib"
@@ -121,7 +123,6 @@ if(WIN32)
         m
         z
         -Wl,--end-group
-        -mwindows
     )
 endif()
 
