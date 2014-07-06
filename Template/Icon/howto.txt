@@ -1,0 +1,18 @@
+1) Install ImageMagick and Gimp
+2) Place "Icon" folder to the folder where CMakeLists.txt is located
+3) Place your custom "icon.png" file into the folder
+4) Run ./icon.sh to generate Windows resource file for your "icon.png"
+5) After linking libraries to target add these lines to your CMakeLists.txt:
+
+set(ICON ${CMAKE_CURRENT_SOURCE_DIR}/Icon/icon.res)
+set_target_properties(${BIN} PROPERTIES LINK_FLAGS ${ICON})
+
+6) Open icon.png with Gimp and go to "File" -> "Export as..."
+7) Enter filename "ofIcon.c" and hit enter
+8) Disable "Use GLib types (guint8*)" bool
+9) Enable "Use 1 byte Run-Length-Encoding"
+10) Hit Export button
+11) Rename generated "ofIcon.c" to "ofIcon.h"
+12) Open it and rename "gimp_image" struct to "ofIcon"
+13) Replace "crossof/openFrameworks/app/ofIcon.h" with resulted "ofIcon.h" file
+14) Recompile the openFrameworks library with "Scripts/compile_of" script

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(openFrameworks)
 set(BIN openFrameworks)
 
-set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
+set(CMAKE_CXX_FLAGS "-O3 -std=gnu++11")
 
 if(UNIX AND NOT APPLE)
     set(DEFINITIONS
