@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RELEASE=23bc3b9774
+RELEASE=56b60b9770
 MXE_RELEASE=23bc3b9774
 
 download_progress()
