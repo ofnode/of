@@ -53,7 +53,7 @@ else
 fi
 
 
-if [ -f CrossOF_MXE_$RELEASE.tar.gz ]
+if [ -f CrossOF_MXE_$MXE_RELEASE.tar.gz ]
 then
     echo "${GREEN}Using existing CrossOF_MXE_$MXE_RELEASE.tar.gz archive.${NORMAL}"
 else
