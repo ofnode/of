@@ -1,8 +1,5 @@
 #!/bin/bash
 
-RELEASE=56b60b9770
-MXE_RELEASE=23bc3b9774
-
 download_progress()
 {
     local flag=false c count cr=$'\r' nl=$'\n'
@@ -35,45 +32,45 @@ CYAN=$(tput setaf 6)
 Scripts/clean_repos
 
 
-if [ -f CrossOF_Binaries_$RELEASE.tar.gz ]
+if [ -f CrossOF_Binaries.tar.gz ]
 then
-    echo "${GREEN}Using existing CrossOF_Binaries_$RELEASE.tar.gz archive.${NORMAL}"
+    echo "${GREEN}Using existing CrossOF_Binaries.tar.gz archive.${NORMAL}"
 else
-    echo "${RED}Downloading CrossOF_Binaries_$RELEASE.tar.gz archive.${NORMAL}"
-    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_Binaries_$RELEASE.tar.gz 2>&1 | download_progress
+    echo "${RED}Downloading CrossOF_Binaries.tar.gz archive.${NORMAL}"
+    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/master/CrossOF_Binaries.tar.gz 2>&1 | download_progress
 fi
 
 
-if [ -f CrossOF_Sources_$RELEASE.tar.gz ]
+if [ -f CrossOF_Sources.tar.gz ]
 then
-    echo "${GREEN}Using existing CrossOF_Sources_$RELEASE.tar.gz archive.${NORMAL}"
+    echo "${GREEN}Using existing CrossOF_Sources.tar.gz archive.${NORMAL}"
 else
-    echo "${RED}Downloading CrossOF_Sources_$RELEASE.tar.gz archive.${NORMAL}"
-    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$RELEASE/CrossOF_Sources_$RELEASE.tar.gz 2>&1 | download_progress
+    echo "${RED}Downloading CrossOF_Sources.tar.gz archive.${NORMAL}"
+    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/master/CrossOF_Sources.tar.gz 2>&1 | download_progress
 fi
 
 
-if [ -f CrossOF_MXE_$MXE_RELEASE.tar.gz ]
+if [ -f CrossOF_MXE.tar.gz ]
 then
-    echo "${GREEN}Using existing CrossOF_MXE_$MXE_RELEASE.tar.gz archive.${NORMAL}"
+    echo "${GREEN}Using existing CrossOF_MXE.tar.gz archive.${NORMAL}"
 else
     if [ -d /opt/mxe ]
     then
         echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
     else
-        echo "${RED}Downloading CrossOF_MXE_$MXE_RELEASE.tar.gz archive.${NORMAL}"
-        wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$MXE_RELEASE/CrossOF_MXE_$MXE_RELEASE.tar.gz 2>&1 | download_progress
+        echo "${RED}Downloading CrossOF_MXE.tar.gz archive.${NORMAL}"
+        wget --progress=bar:force https://github.com/procedural/crossof/releases/download/master/CrossOF_MXE.tar.gz 2>&1 | download_progress
     fi
 fi
 
 
 echo ""
-echo "${GREEN}Unzipping CrossOF_Binaries_$RELEASE.tar.gz archive.${NORMAL}"
-tar -zxvf CrossOF_Binaries_$RELEASE.tar.gz
+echo "${GREEN}Unzipping CrossOF_Binaries.tar.gz archive.${NORMAL}"
+tar -zxvf CrossOF_Binaries.tar.gz
 
 echo ""
-echo "${GREEN}Unzipping CrossOF_Sources_$RELEASE.tar.gz archive.${NORMAL}"
-tar -zxvf CrossOF_Sources_$RELEASE.tar.gz
+echo "${GREEN}Unzipping CrossOF_Sources.tar.gz archive.${NORMAL}"
+tar -zxvf CrossOF_Sources.tar.gz
 
 
 echo ""
@@ -81,8 +78,8 @@ if [ -d /opt/mxe ]
 then
     :
 else
-    echo "${GREEN}Unzipping CrossOF_MXE_$MXE_RELEASE.tar.gz archive to /opt folder.${NORMAL}"
-    sudo tar -zxvf CrossOF_MXE_$MXE_RELEASE.tar.gz -C /opt
+    echo "${GREEN}Unzipping CrossOF_MXE.tar.gz archive to /opt folder.${NORMAL}"
+    sudo tar -zxvf CrossOF_MXE.tar.gz -C /opt
 fi
 
 
