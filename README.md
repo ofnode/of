@@ -32,7 +32,7 @@ And install dependencies either with:
 Or:
 <pre><code>Scripts/Ubuntu/install_dep</pre></code>
 
-**WARNING**: Size of pre-compiled MXE libraries is **683 MB**. If you have slow/capped internet access, but your computer is fast enough, it's better to compile MXE libraries by yourself running ```install_dep``` script before ```setup```.
+**WARNING**: The size of pre-compiled MXE is **683 MB**. If you have slow/capped internet access, but your computer is fast enough, it's better to compile MXE libraries by yourself running ```install_dep``` before ```setup```.
 
 Compiling:
 ---------
