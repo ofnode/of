@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OF_BRANCH=d6e84fd9d3
+OF_BRANCH=2ff7f6f57b
 GLFW_BRANCH=0a6cb34815
 POCO_BRANCH=fb06f5b8aa
 

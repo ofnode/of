@@ -9,9 +9,12 @@ cd ..
 rm -rf openFrameworks
 rm -rf openFrameworks-*
 
+rm -rf Dependencies/Archive/glfw/glfw-*
+rm -rf Dependencies/Archive/poco/poco-*
+
 rm -rf Dependencies/Libs/glfw
-rm -rf Dependencies/Libs/kiss
 rm -rf Dependencies/Libs/poco
+rm -rf Dependencies/Libs/kiss
 rm -rf Dependencies/Libs/tess2
 
 find . -name "*.a" -type f -delete

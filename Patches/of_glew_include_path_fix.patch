@@ -1,6 +1,6 @@
 --- a/openFrameworks/utils/ofConstants.h
 +++ b/openFrameworks/utils/ofConstants.h
-@@ -96,8 +96,8 @@ enum ofTargetPlatform{
+@@ -103,8 +103,8 @@ enum ofTargetPlatform{
  
  	#include <windows.h>
  	#define GLEW_STATIC
