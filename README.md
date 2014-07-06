@@ -32,8 +32,7 @@ And install dependencies either with:
 Or:
 <pre><code>Scripts/Ubuntu/install_dep</pre></code>
 
-**WARNING**: Summary size of CrossOF's sources, binaries and MXE pre-built libraries is ~ **950 MB**. 
-If you have slow/capped internet access, but your computer is powerful enough, it's better to compile CrossOF and MXE libraries by yourself with scripts mentioned below.
+**WARNING**: Size of MXE pre-built libraries is **683 MB**. If you have slow/capped internet access, but your computer is fast enough, it's better to compile MXE libraries by yourself running ```install_dep``` script before ```setup```.
 
 Compiling:
 ---------
