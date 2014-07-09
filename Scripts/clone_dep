@@ -1,6 +1,5 @@
 #!/bin/bash
 
-OF_BRANCH=2ff7f6f57b
 GLFW_BRANCH=0a6cb34815
 POCO_BRANCH=fb06f5b8aa
 
@@ -39,67 +38,6 @@ DIR=`dirname $FILE`
 
 cd $DIR
 cd ..
-
-
-
-echo   ""
-if [ -f $OF_BRANCH.zip ]
-then
-       echo "${GREEN}Using existing $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
-else
-       echo "${RED}Downloading $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
-       wget --progress=bar:force https://github.com/openframeworks/openFrameworks/archive/$OF_BRANCH.zip 2>&1 | download_progress
-fi
-
-unzip  -q $OF_BRANCH.zip
-
-mv     openFrameworks-*/libs/openFrameworks .
-
-rm -rf openFrameworks/.settings
-rm     openFrameworks/.project
-rm     openFrameworks/.cproject
-
-
-
-echo   ""
-echo   ${CYAN}of_mingw_fix.patch${NORMAL}
-patch  -p1 < Patches/of_mingw_fix.patch
-
-echo   ""
-echo   ${CYAN}of_glew_include_path_fix.patch${NORMAL}
-patch  -p1 < Patches/of_glew_include_path_fix.patch
-
-echo   ""
-echo   ${CYAN}of_scroll_feature.patch${NORMAL}
-patch  -p1 < Patches/of_scroll_feature.patch
-
-echo   ""
-echo   ${CYAN}of_audio_video_disable.patch${NORMAL}
-patch  -p1 < Patches/of_audio_video_disable.patch
-
-echo   ""
-echo   ${CYAN}of_clipboard_feature.patch${NORMAL}
-patch  -p1 < Patches/of_clipboard_feature.patch
-
-echo   ""
-echo   ${CYAN}of_compile_error_fix.patch${NORMAL}
-patch  -p1 < Patches/of_compile_error_fix.patch
-
-
-
-TESS=Dependencies/Libs/tess2
-rm -rf $TESS
-mkdir  $TESS
-mv     openFrameworks-*/libs/tess2/include $TESS
-mv     openFrameworks-*/libs/tess2/Sources $TESS
-
-KISS=Dependencies/Libs/kiss
-rm -rf $KISS
-mkdir  $KISS
-mv     openFrameworks-*/libs/kiss/include  $KISS
-mv     openFrameworks-*/libs/kiss/src      $KISS
-
-rm -rf openFrameworks-*
 
 
 
@@ -152,6 +90,4 @@ echo   ${CYAN}poco_cmake.patch${NORMAL}
 patch  -p1 < ../../poco_cmake.patch
 
 cd     ../../..
-
-
 

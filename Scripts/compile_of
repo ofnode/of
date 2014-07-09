@@ -12,7 +12,8 @@ cd ..
 echo  ""
 echo  "${GREEN}Compiling openFrameworks for Linux.${NORMAL}"
 
-cd    Compiled/linux-64
+mkdir -p Compiled/linux-64
+cd       Compiled/linux-64
 
 cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ../..
 ninja
@@ -22,7 +23,8 @@ cd    ../..
 echo  ""
 echo  "${GREEN}Compiling openFrameworks for Windows.${NORMAL}"
 
-cd    Compiled/mingw-64
+mkdir -p Compiled/mingw-64
+cd       Compiled/mingw-64
 
 MINGW=/opt/mxe/usr
 

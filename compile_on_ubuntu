@@ -4,7 +4,9 @@ cd Scripts
 
 Ubuntu/install_dep
 
-./clean_repos
-./clone_repos
+./clean_dep
+./clean_of
+./clone_dep
+./clone_of
 ./compile_dep
 ./compile_of

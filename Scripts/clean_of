@@ -1,0 +1,15 @@
+#!/bin/bash
+
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
+
+cd $DIR
+cd ..
+
+rm -rf Compiled/*
+
+rm -rf openFrameworks
+rm -rf openFrameworks-*
+
+rm -rf Dependencies/Libs/kiss
+rm -rf Dependencies/Libs/tess2
