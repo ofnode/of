@@ -1,7 +1,5 @@
 #!/bin/bash
 
-OF_BRANCH=2ff7f6f57b
-
 download_progress()
 {
     local flag=false c count cr=$'\r' nl=$'\n'
@@ -38,6 +36,8 @@ DIR=`dirname $FILE`
 cd $DIR
 cd ..
 
+source commits
+
 
 
 echo   ""
@@ -46,7 +46,7 @@ then
        echo "${GREEN}Using existing $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
 else
        echo "${RED}Downloading $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
-       wget --progress=bar:force https://github.com/openframeworks/openFrameworks/archive/$OF_BRANCH.zip 2>&1 | download_progress
+       wget --progress=bar:force $OF_REPO 2>&1 | download_progress
 fi
 
 unzip  -q $OF_BRANCH.zip
@@ -58,31 +58,7 @@ rm     openFrameworks/.project
 rm     openFrameworks/.cproject
 
 
-
-echo   ""
-echo   ${CYAN}of_mingw_fix.patch${NORMAL}
-patch  -p1 < Patches/of_mingw_fix.patch
-
-echo   ""
-echo   ${CYAN}of_glew_include_path_fix.patch${NORMAL}
-patch  -p1 < Patches/of_glew_include_path_fix.patch
-
-echo   ""
-echo   ${CYAN}of_scroll_feature.patch${NORMAL}
-patch  -p1 < Patches/of_scroll_feature.patch
-
-echo   ""
-echo   ${CYAN}of_audio_video_disable.patch${NORMAL}
-patch  -p1 < Patches/of_audio_video_disable.patch
-
-echo   ""
-echo   ${CYAN}of_clipboard_feature.patch${NORMAL}
-patch  -p1 < Patches/of_clipboard_feature.patch
-
-echo   ""
-echo   ${CYAN}of_compile_error_fix.patch${NORMAL}
-patch  -p1 < Patches/of_compile_error_fix.patch
-
+Scripts/patch_of
 
 
 TESS=Dependencies/Libs/tess2

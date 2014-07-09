@@ -1,8 +1,5 @@
 #!/bin/bash
 
-GLFW_BRANCH=0a6cb34815
-POCO_BRANCH=fb06f5b8aa
-
 download_progress()
 {
     local flag=false c count cr=$'\r' nl=$'\n'
@@ -39,6 +36,8 @@ DIR=`dirname $FILE`
 cd $DIR
 cd ..
 
+source commits
+
 
 
 cd     Dependencies/Archive/glfw
@@ -49,7 +48,7 @@ then
        echo "${GREEN}Using existing $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
 else
        echo "${RED}Downloading $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
-       wget --progress=bar:force https://github.com/arturoc/glfw/archive/$GLFW_BRANCH.zip 2>&1 | download_progress
+       wget --progress=bar:force $GLFW_REPO 2>&1 | download_progress
 fi
 
 unzip -q $GLFW_BRANCH.zip
@@ -69,7 +68,7 @@ then
        echo "${GREEN}Using existing $POCO_BRANCH.zip archive for POCO.${NORMAL}"
 else
        echo "${RED}Downloading $POCO_BRANCH.zip archive for POCO.${NORMAL}"
-       wget --progress=bar:force https://github.com/pocoproject/poco/archive/$POCO_BRANCH.zip 2>&1 | download_progress
+       wget --progress=bar:force $POCO_REPO 2>&1 | download_progress
 fi
 
 unzip  -q $POCO_BRANCH.zip

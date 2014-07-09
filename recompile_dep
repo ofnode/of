@@ -1,0 +1,12 @@
+#!/bin/bash
+
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
+
+cd $DIR
+
+cd Scripts
+
+./clean_dep
+./clone_dep
+./compile_dep

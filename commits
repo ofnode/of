@@ -1,0 +1,9 @@
+#!/bin/bash
+
+OF_BRANCH=78ef14dd5b
+GLFW_BRANCH=0a6cb34815
+POCO_BRANCH=fb06f5b8aa
+
+OF_REPO=https://github.com/openframeworks/openFrameworks/archive/$OF_BRANCH.zip
+GLFW_REPO=https://github.com/arturoc/glfw/archive/$GLFW_BRANCH.zip
+POCO_REPO=https://github.com/pocoproject/poco/archive/$POCO_BRANCH.zip

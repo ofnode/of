@@ -1,0 +1,31 @@
+#!/bin/bash
+
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
+
+cd $DIR
+cd ..
+
+echo   ""
+echo   ${CYAN}of_mingw_fix.patch${NORMAL}
+patch  -p1 < Patches/of_mingw_fix.patch
+
+echo   ""
+echo   ${CYAN}of_glew_include_path_fix.patch${NORMAL}
+patch  -p1 < Patches/of_glew_include_path_fix.patch
+
+echo   ""
+echo   ${CYAN}of_scroll_feature.patch${NORMAL}
+patch  -p1 < Patches/of_scroll_feature.patch
+
+echo   ""
+echo   ${CYAN}of_audio_video_disable.patch${NORMAL}
+patch  -p1 < Patches/of_audio_video_disable.patch
+
+echo   ""
+echo   ${CYAN}of_clipboard_feature.patch${NORMAL}
+patch  -p1 < Patches/of_clipboard_feature.patch
+
+echo   ""
+echo   ${CYAN}of_compile_error_fix.patch${NORMAL}
+patch  -p1 < Patches/of_compile_error_fix.patch
