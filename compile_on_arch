@@ -1,5 +1,10 @@
 #!/bin/bash
 
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
+
+cd $DIR
+
 cd Scripts
 
 Arch/install_dep

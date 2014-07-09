@@ -9,6 +9,8 @@ DIR=`dirname $FILE`
 cd $DIR
 cd ..
 
+rm -rf Compiled/*
+
 echo  ""
 echo  "${GREEN}Compiling openFrameworks for Linux.${NORMAL}"
 

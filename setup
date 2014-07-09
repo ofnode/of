@@ -29,7 +29,14 @@ GREEN=$(tput setaf 2)
 CYAN=$(tput setaf 6)
 
 
-Scripts/clean_repos
+FILE=$(readlink -f $0)
+DIR=`dirname $FILE`
+
+cd $DIR
+
+
+Scripts/clean_dep
+Scripts/clean_of
 
 
 if [ -f CrossOF_Binaries.tar.gz ]
@@ -83,6 +90,7 @@ else
 fi
 
 
-Scripts/clone_repos
+Scripts/clone_dep
+Scripts/clone_of
 
 
