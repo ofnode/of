@@ -1,5 +1,10 @@
 #!/bin/bash
 
+NORMAL=$(tput sgr0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
+
 FILE=$(readlink -f $0)
 DIR=`dirname $FILE`
 
