@@ -11,6 +11,7 @@ yes | sudo pacman -Sy --needed \
 make                           \
 pkg-config                     \
 clang                          \
+cmake                          \
 ninja                          \
 git                            \
 freeglut                       \

@@ -12,6 +12,7 @@ sudo apt-get -y install \
 build-essential         \
 xorg-dev                \
 clang                   \
+cmake                   \
 ninja-build             \
 git                     \
 freeglut3-dev           \
