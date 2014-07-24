@@ -34,3 +34,12 @@ patch  -p1 < Patches/of_clipboard_feature.patch
 echo   ""
 echo   ${CYAN}of_compile_error_fix.patch${NORMAL}
 patch  -p1 < Patches/of_compile_error_fix.patch
+
+echo   ""
+echo   ${CYAN}of_undo_commit_61932bb.patch${NORMAL}
+patch  -p1 < Patches/of_undo_commit_61932bb.patch
+
+echo   ""
+echo   ${CYAN}of_remove_deprecated_registers.patch${NORMAL}
+patch  -p1 < Patches/of_remove_deprecated_registers.patch
+
