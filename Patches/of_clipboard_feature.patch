@@ -12,7 +12,7 @@
  	virtual Window  getX11Window() {return 0;}
 --- a/openFrameworks/app/ofAppGLFWWindow.cpp
 +++ b/openFrameworks/app/ofAppGLFWWindow.cpp
-@@ -1079,6 +1079,17 @@ void ofAppGLFWWindow::setVerticalSync(bool bVerticalSync){
+@@ -1086,6 +1086,17 @@ void ofAppGLFWWindow::setVerticalSync(bool bVerticalSync){
  }
  
  //------------------------------------------------------------
@@ -32,7 +32,7 @@
  	const GLFWvidmode * vidModes = glfwGetVideoModes(NULL, &numModes );
 --- a/openFrameworks/app/ofAppGLFWWindow.h
 +++ b/openFrameworks/app/ofAppGLFWWindow.h
-@@ -81,6 +81,9 @@ public:
+@@ -82,6 +82,9 @@ public:
  
      int         getPixelScreenCoordScale();
  
