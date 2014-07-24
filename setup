@@ -72,11 +72,11 @@ fi
 
 
 echo ""
-echo "${GREEN}Unzipping CrossOF_Binaries.tar.gz archive.${NORMAL}"
+echo "${GREEN}Extracting CrossOF_Binaries.tar.gz archive.${NORMAL}"
 tar -zxvf CrossOF_Binaries.tar.gz
 
 echo ""
-echo "${GREEN}Unzipping CrossOF_Sources.tar.gz archive.${NORMAL}"
+echo "${GREEN}Extracting CrossOF_Sources.tar.gz archive.${NORMAL}"
 tar -zxvf CrossOF_Sources.tar.gz
 
 
@@ -85,7 +85,7 @@ if [ -d /opt/mxe ]
 then
     :
 else
-    echo "${GREEN}Unzipping CrossOF_MXE.tar.gz archive to /opt folder.${NORMAL}"
+    echo "${GREEN}Extracting CrossOF_MXE.tar.gz archive to /opt folder.${NORMAL}"
     sudo tar -zxvf CrossOF_MXE.tar.gz -C /opt
 fi
 
