@@ -1,108 +1,104 @@
+--- a/openFrameworks/ofMain.h
++++ b/openFrameworks/ofMain.h
+@@ -77,8 +77,10 @@
+ 
+ //--------------------------
+ // video
++#ifndef TARGET_NO_VIDEO
+ #include "ofVideoGrabber.h"
+ #include "ofVideoPlayer.h"
++#endif
+ 
+ //--------------------------
+ // events
 --- a/openFrameworks/app/ofAppRunner.cpp
 +++ b/openFrameworks/app/ofAppRunner.cpp
-@@ -21,9 +21,9 @@
+@@ -21,7 +21,7 @@
  
  // TODO: closing seems wonky.
  // adding this for vc2010 compile: error C3861: 'closeQuicktime': identifier not found
 -#if defined (TARGET_WIN32) || defined(TARGET_OSX)
--	#include "ofQtUtils.h"
--#endif
-+//#if defined (TARGET_WIN32) || defined(TARGET_OSX)
-+//	#include "ofQtUtils.h"
-+//#endif
++#if !defined(TARGET_NO_VIDEO) && (defined(TARGET_WIN32) || defined(TARGET_OSX))
+ 	#include "ofQtUtils.h"
+ #endif
  
- //========================================================================
- // static variables:
-@@ -337,9 +337,9 @@ void ofExitCallback(){
+@@ -337,7 +337,7 @@
  	#endif
  
  	// try to close quicktime, for non-linux systems:
 -	#if defined(OF_VIDEO_CAPTURE_QUICKTIME) || defined(OF_VIDEO_PLAYER_QUICKTIME)
--	closeQuicktime();
--	#endif
-+//	#if defined(OF_VIDEO_CAPTURE_QUICKTIME) || defined(OF_VIDEO_PLAYER_QUICKTIME)
-+//	closeQuicktime();
-+//	#endif
++	#if !defined(TARGET_NO_VIDEO) && (defined(OF_VIDEO_CAPTURE_QUICKTIME) || defined(OF_VIDEO_PLAYER_QUICKTIME))
+ 	closeQuicktime();
+ 	#endif
  
- 
- 	//------------------------
---- a/openFrameworks/ofMain.h
-+++ b/openFrameworks/ofMain.h
-@@ -71,14 +71,14 @@
- //--------------------------
- // audio
- #ifndef TARGET_NO_SOUND
--#include "ofSoundStream.h"
--#include "ofSoundPlayer.h"
-+//#include "ofSoundStream.h"
-+//#include "ofSoundPlayer.h"
- #endif
- 
- //--------------------------
- // video
--#include "ofVideoGrabber.h"
--#include "ofVideoPlayer.h"
-+//#include "ofVideoGrabber.h"
-+//#include "ofVideoPlayer.h"
- 
- //--------------------------
- // events
 --- a/openFrameworks/utils/ofSystemUtils.cpp
 +++ b/openFrameworks/utils/ofSystemUtils.cpp
-@@ -74,7 +74,6 @@
+@@ -74,7 +74,9 @@
  
  #if defined( TARGET_LINUX ) && defined (OF_USING_GTK)
  #include <gtk/gtk.h>
--#include "ofGstUtils.h"
++#ifndef TARGET_NO_VIDEO
+ #include "ofGstUtils.h"
++#endif
  #include "Poco/Condition.h"
  
  #if GTK_MAJOR_VERSION>=3
-@@ -196,7 +195,6 @@
+@@ -196,7 +198,9 @@
  		#endif
  		int argc=0; char **argv = NULL;
  		gtk_init (&argc, &argv);
--		ofGstUtils::startGstMainLoop();
++#		ifndef TARGET_NO_VIDEO
+ 		ofGstUtils::startGstMainLoop();
++#		endif
  		initialized = true;
  	}
  
-@@ -208,13 +206,6 @@
+@@ -208,6 +212,7 @@
  	dialogData.action = action;
  	dialogData.windowTitle = windowTitle;
  	dialogData.defaultName = defaultName;
--	dialogData.done = false;
--
--	g_main_context_invoke(g_main_loop_get_context(ofGstUtils::getGstMainLoop()), &file_dialog_gtk, &dialogData);
--	if(!dialogData.done){
--		dialogData.mutex.lock();
--		dialogData.condition.wait(dialogData.mutex);
--	}
++#	ifndef TARGET_NO_VIDEO
+ 	dialogData.done = false;
+ 
+ 	g_main_context_invoke(g_main_loop_get_context(ofGstUtils::getGstMainLoop()), &file_dialog_gtk, &dialogData);
+@@ -215,6 +220,7 @@
+ 		dialogData.mutex.lock();
+ 		dialogData.condition.wait(dialogData.mutex);
+ 	}
++#	endif
  	return dialogData.results;
  }
  
-@@ -282,12 +273,6 @@
+@@ -282,12 +288,14 @@
  		initGTK();
  		TextDialogData dialogData;
  		dialogData.text = errorMessage;
--		dialogData.done = false;
--		g_main_context_invoke(g_main_loop_get_context(ofGstUtils::getGstMainLoop()), &alert_dialog_gtk, &dialogData);
--		if(!dialogData.done){
--			dialogData.mutex.lock();
--			dialogData.condition.wait(dialogData.mutex);
--		}
++#		ifndef TARGET_NO_VIDEO
+ 		dialogData.done = false;
+ 		g_main_context_invoke(g_main_loop_get_context(ofGstUtils::getGstMainLoop()), &alert_dialog_gtk, &dialogData);
+ 		if(!dialogData.done){
+ 			dialogData.mutex.lock();
+ 			dialogData.condition.wait(dialogData.mutex);
+ 		}
++#		endif
  	#endif
  
  	#ifdef TARGET_ANDROID
-@@ -595,13 +580,7 @@
+@@ -595,13 +603,17 @@
  	initGTK();
  	TextDialogData dialogData;
  	dialogData.text = text;
--	dialogData.done = false;
++#	ifndef TARGET_NO_VIDEO
+ 	dialogData.done = false;
++#	endif
  	dialogData.question = question;
--	g_main_context_invoke(g_main_loop_get_context(ofGstUtils::getGstMainLoop()), &text_dialog_gtk, &dialogData);
--	if(!dialogData.done){
--		dialogData.mutex.lock();
--		dialogData.condition.wait(dialogData.mutex);
--	}
++#	ifndef TARGET_NO_VIDEO
+ 	g_main_context_invoke(g_main_loop_get_context(ofGstUtils::getGstMainLoop()), &text_dialog_gtk, &dialogData);
+ 	if(!dialogData.done){
+ 		dialogData.mutex.lock();
+ 		dialogData.condition.wait(dialogData.mutex);
+ 	}
++#	endif
  	text = dialogData.text;
  #endif
  

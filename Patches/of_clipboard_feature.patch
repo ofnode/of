@@ -4,8 +4,8 @@
  	
  	virtual void	setVerticalSync(bool enabled){};
  
-+    virtual void    setClipboardString(const string& text) {}
-+    virtual string  getClipboardString() { return ""; }
++	virtual void    setClipboardString(const string& text) {}
++	virtual string  getClipboardString() { return ""; }
 +
  #if defined(TARGET_LINUX) && !defined(TARGET_RASPBERRY_PI)
  	virtual Display* getX11Display(){return NULL;}
@@ -17,13 +17,13 @@
  
  //------------------------------------------------------------
 +void ofAppGLFWWindow::setClipboardString(const string& text) {
-+    glfwSetClipboardString(ofAppGLFWWindow::windowP, text.c_str());
++	glfwSetClipboardString(ofAppGLFWWindow::windowP, text.c_str());
 +}
 +
 +//------------------------------------------------------------
 +
 +string ofAppGLFWWindow::getClipboardString() {
-+    return glfwGetClipboardString(ofAppGLFWWindow::windowP);
++	return glfwGetClipboardString(ofAppGLFWWindow::windowP);
 +}
 +
 +//------------------------------------------------------------
