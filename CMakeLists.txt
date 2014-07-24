@@ -6,6 +6,10 @@ set(BIN openFrameworks)
 set(CMAKE_CXX_FLAGS "-O3 -std=gnu++11")
 
 if(UNIX AND NOT APPLE)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+        "${PROJECT_SOURCE_DIR}/Compiled/linux-64"
+    )
+
     set(DEFINITIONS
         -DOF_USING_GTK
     )
@@ -33,6 +37,10 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if(WIN32)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+        "${PROJECT_SOURCE_DIR}/Compiled/mingw-64"
+    )
+
     set(DEFINITIONS
         -D__MINGW32_VERSION
     )
@@ -175,4 +183,3 @@ set(SOURCES
 add_definitions(${DEFINITIONS})
 include_directories(${INCLUDE_DIRS})
 add_library(${BIN} STATIC ${SOURCES})
-
