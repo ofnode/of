@@ -6,6 +6,7 @@ DIR=`dirname $FILE`
 cd $DIR
 cd ..
 
+chmod +x pack
 chmod +x setup
 chmod +x commits
 chmod +x compile_on_arch

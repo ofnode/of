@@ -1,8 +1,8 @@
 #!/bin/bash
 
-OF_BRANCH=b091db2a76
-GLFW_BRANCH=0a6cb34815
-POCO_BRANCH=fb06f5b8aa
+OF_BRANCH=5f79889
+GLFW_BRANCH=0a6cb34
+POCO_BRANCH=814baaf
 
 OF_REPO=https://github.com/openframeworks/openFrameworks/archive/$OF_BRANCH.zip
 GLFW_REPO=https://github.com/arturoc/glfw/archive/$GLFW_BRANCH.zip

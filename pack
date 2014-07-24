@@ -1,0 +1,12 @@
+#!/bin/bash
+
+tar -zcvf CrossOF_Sources.tar.gz    \
+    *.zip                           \
+    Dependencies/Archive/glfw/*.zip \
+    Dependencies/Archive/poco/*.zip
+
+tar -zcvf CrossOF_Binaries.tar.gz      \
+    Compiled/linux-64/*.a              \
+    Compiled/mingw-64/*.a              \
+    Dependencies/Compiled/linux-64/*.a \
+    Dependencies/Compiled/mingw-64/*.a

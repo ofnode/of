@@ -1,33 +1,66 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -97,7 +97,7 @@
- include(FindOpenSSL)
- #include(CMakeDetermineCompilerId)
+@@ -130,10 +130,7 @@
+ endif(CMAKE_SYSTEM MATCHES "SunOS")
  
--include(FindMySQL)
-+#include(FindMySQL)
+ if (CMAKE_COMPILER_IS_MINGW)
+-    add_definitions(-DWC_NO_BEST_FIT_CHARS=0x400  -DPOCO_WIN32_UTF8)
+-    add_definitions(-mno-cygwin -D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+-  link_directories(/usr/local/lib /usr/lib)
+-  include_directories(/usr/local/include /usr/include)
++  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+ endif (CMAKE_COMPILER_IS_MINGW)
  
- #include(FindAPR)
- #include(FindApache2)
-@@ -157,9 +157,9 @@
+ if (CMAKE_COMPILER_IS_CYGWIN)
+@@ -161,9 +158,6 @@
  
  add_subdirectory(Foundation)
  add_subdirectory(XML)
 -add_subdirectory(JSON)
 -add_subdirectory(MongoDB)
 -add_subdirectory(PDF)
-+#add_subdirectory(JSON)
-+#add_subdirectory(MongoDB)
-+#add_subdirectory(PDF)
  add_subdirectory(Util)
  add_subdirectory(Net)
- #add_subdirectory(Web)
-@@ -171,7 +171,7 @@
+ 
+@@ -175,7 +169,6 @@
      add_subdirectory(Crypto)
  endif(OPENSSL_FOUND)
  
 -add_subdirectory(Data)
-+#add_subdirectory(Data)
- #add_subdirectory(WebWidgets)
+ add_subdirectory(SevenZip)
  add_subdirectory(Zip)
+ 
+--- a/Foundation/CMakeLists.txt
++++ b/Foundation/CMakeLists.txt
+@@ -15,6 +15,7 @@
+       set(kit_bindir "${kit_dir}/bin/x86")
+     endif (X64)
+   endif ()
++  if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
+   find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" "${kit_bindir}"
+     DOC "path to message compiler")
+   if (NOT CMAKE_MC_COMPILER)
+@@ -22,6 +23,7 @@
+   endif (NOT CMAKE_MC_COMPILER)
+   message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
+   mark_as_advanced(CMAKE_MC_COMPILER)
++  endif ()
+ endif(WIN32)
+ 
+ set( BASE_SRCS
+@@ -235,6 +237,7 @@
+ 
+ if (WIN32)
+     set(RES_SRCS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.h)
++    if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
+     set_source_files_properties(${RES_SRCS} PROPERTIES GENERATED true)
+     add_custom_command(
+         OUTPUT ${RES_SRCS}
+@@ -246,6 +249,7 @@
+             ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
+         VERBATIM # recommended: p260
+     )
++    endif ()
+     list(APPEND WIN_SRCS ${RES_SRCS})
+ endif (WIN32)
  
