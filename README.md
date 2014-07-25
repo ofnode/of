@@ -10,12 +10,12 @@ Features
 
  - Get fully static Windows applications from Arch Linux or Ubuntu.
 
- - Latest openFrameworks versions with dependencies and their sources.
+ - Latest openFrameworks versions with precompiled libraries and sources.
 
 Limitations
 -----------
 
-<b>Arch Linux and Ubuntu for now</b>. Dependencies are available only for these systems, but it is possible to compile it on any Linux distro.
+<b>Arch Linux and Ubuntu for now</b>. Install scripts for external dependencies are available only for these systems, but it's possible to add one for your Linux distro.
 
 <b>No sound and video features</b>. openFrameworks uses closed-source FMOD and QuickTime libraries which are not acceptable for this project.
 
@@ -26,13 +26,11 @@ Installing:
 Run:
 <pre><code>./setup</pre></code>
 
-And install dependencies either with:
-<pre><code>Scripts/Arch/install_dep</pre></code>
+And install dependencies with:
+<pre><code>Scripts/Arch/*</pre></code>
 
 Or:
-<pre><code>Scripts/Ubuntu/install_dep</pre></code>
-
-**WARNING**: The size of pre-compiled MXE is **609 MB**. If you have slow/capped internet access, but your computer is fast enough, it's better to compile MXE libraries by yourself running ```install_dep``` before ```setup```.
+<pre><code>Scripts/Ubuntu/*</pre></code>
 
 Compiling:
 ---------
@@ -42,7 +40,7 @@ Run:
 Or:
 <pre><code>./compile_on_ubuntu</pre></code>
 
-And wait it to finish. The process can take a while though - be patient.
+And wait it to finish.
 
 Examples:
 --------
