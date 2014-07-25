@@ -8,38 +8,21 @@ CYAN=$(tput setaf 6)
 FILE=$(readlink -f $0)
 DIR=`dirname $FILE`
 
+function apply() {
+    echo   ""
+    echo   ${CYAN}$1${NORMAL}
+    patch  -p1 < Patches/$1
+}
+
 cd $DIR
 cd ..
 
-echo   ""
-echo   ${CYAN}of_mingw_fix.patch${NORMAL}
-patch  -p1 < Patches/of_mingw_fix.patch
-
-echo   ""
-echo   ${CYAN}of_glew_include_path_fix.patch${NORMAL}
-patch  -p1 < Patches/of_glew_include_path_fix.patch
-
-echo   ""
-echo   ${CYAN}of_scroll_feature.patch${NORMAL}
-patch  -p1 < Patches/of_scroll_feature.patch
-
-echo   ""
-echo   ${CYAN}of_audio_video_disable.patch${NORMAL}
-patch  -p1 < Patches/of_audio_video_disable.patch
-
-echo   ""
-echo   ${CYAN}of_clipboard_feature.patch${NORMAL}
-patch  -p1 < Patches/of_clipboard_feature.patch
-
-echo   ""
-echo   ${CYAN}of_compile_error_fix.patch${NORMAL}
-patch  -p1 < Patches/of_compile_error_fix.patch
-
-echo   ""
-echo   ${CYAN}of_undo_commit_61932bb.patch${NORMAL}
-patch  -p1 < Patches/of_undo_commit_61932bb.patch
-
-echo   ""
-echo   ${CYAN}of_remove_deprecated_registers.patch${NORMAL}
-patch  -p1 < Patches/of_remove_deprecated_registers.patch
+apply of_audio_video_disable.patch
+apply of_mingw_fix.patch
+apply of_glew_include_path_fix.patch
+apply of_scroll_feature.patch
+apply of_clipboard_feature.patch
+apply of_compile_error_fix.patch
+apply of_remove_deprecated_registers.patch
+apply of_undo_commit_61932bb.patch
 
