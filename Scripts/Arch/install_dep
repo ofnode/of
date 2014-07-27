@@ -8,19 +8,24 @@ echo "${GREEN}Installing Arch Linux dependencies.${NORMAL}"
 yes | sudo pacman -Syu
 
 yes | sudo pacman -Sy --needed \
+git                            \
 make                           \
 pkg-config                     \
+xorg-server-devel              \
+libxcursor                     \
+libxrandr                      \
+libxi                          \
 clang                          \
 cmake                          \
 ninja                          \
-git                            \
-freeglut                       \
-glew                           \
-cairo                          \
-pixman                         \
 openssl                        \
+libpng12                       \
+cairo                          \
+glew                           \
+freeglut                       \
 freeimage                      \
-freetype2
+freetype2                      \
+fontconfig
 
 yes | sudo pacman -Sy --needed \
     autoconf automake bash bison bzip2 cmake flex gettext \
@@ -36,6 +41,16 @@ else
     echo "${RED}Setting up /opt/mxe folder.${NORMAL}"
     sudo git clone https://github.com/mxe/mxe.git /opt/mxe
 fi
+
 cd /opt/mxe
-sudo make MXE_TARGETS=x86_64-w64-mingw32.static mingw-w64 winpthreads openssl glew freeglut cairo freeimage freetype
+
+sudo make MXE_TARGETS=x86_64-w64-mingw32.static \
+mingw-w64   \
+winpthreads \
+openssl     \
+cairo       \
+glew        \
+freeglut    \
+freeimage   \
+freetype
 

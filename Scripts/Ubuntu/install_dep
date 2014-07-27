@@ -9,27 +9,22 @@ sudo apt-get update
 sudo apt-get -y upgrade
 
 sudo apt-get -y install \
+git                     \
 build-essential         \
 xorg-dev                \
+libgtk2.0-dev           \
+libudev-dev             \
 clang                   \
 cmake                   \
 ninja-build             \
-git                     \
-freeglut3-dev           \
-libglew-dev             \
-libcairo2-dev           \
 libssl-dev              \
+libpng12-dev            \
+libcairo2-dev           \
+libglew-dev             \
+freeglut3-dev           \
 libfreeimage-dev        \
 libfreetype6-dev        \
-libxmu-dev              \
-libxxf86vm-dev          \
-libgl1-mesa-dev         \
-libglu1-mesa-dev        \
-libraw1394-dev          \
-libudev-dev             \
-libdrm-dev              \
-libusb-1.0-0-dev        \
-libgtk2.0-dev
+libfontconfig-dev
 
 sudo apt-get -y install \
     autoconf automake bash bison bzip2 cmake flex gettext \
@@ -46,6 +41,16 @@ else
     echo "${RED}Setting up /opt/mxe folder.${NORMAL}"
     sudo git clone https://github.com/mxe/mxe.git /opt/mxe
 fi
+
 cd /opt/mxe
-sudo make MXE_TARGETS=x86_64-w64-mingw32.static mingw-w64 winpthreads openssl glew freeglut cairo freeimage freetype
+
+sudo make MXE_TARGETS=x86_64-w64-mingw32.static \
+mingw-w64   \
+winpthreads \
+openssl     \
+cairo       \
+glew        \
+freeglut    \
+freeimage   \
+freetype
 

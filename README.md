@@ -1,21 +1,21 @@
 Cross-compiled [openFrameworks][1]
 ==================================
 
-Alternative openFrameworks distribution for Arch Linux and Ubuntu. Cross-platform CMake projects.
+Alternative openFrameworks distribution for Arch Linux, Fedora and Ubuntu.
 
 Features
 --------
 
  - 64-bit, C++11, Clang, CMake and Ninja ready.
 
- - Get fully static Windows applications from Arch Linux or Ubuntu.
+ - Get fully static Windows applications from Linux.
 
  - Latest openFrameworks versions with precompiled libraries and sources.
 
 Limitations
 -----------
 
-<b>Arch Linux and Ubuntu for now</b>. Install scripts for external dependencies are available only for these systems, but it's possible to add one for your Linux distro.
+<b>Arch Linux, Fedora and Ubuntu for now</b>. Install scripts for external dependencies are available only for these systems, but it's possible to add one for your Linux distro.
 
 <b>No sound and video features</b>. openFrameworks uses closed-source FMOD and QuickTime libraries which are not acceptable for this project.
 
@@ -23,22 +23,11 @@ Limitations
 
 Installing:
 ----------
-Run:
-<pre><code>./setup</pre></code>
-
-And install dependencies with:
-<pre><code>Scripts/Arch/*</pre></code>
-
-Or:
-<pre><code>Scripts/Ubuntu/*</pre></code>
+Run ```./setup``` to download precompiled openFrameworks libraries and then install system dependencies with ```Scripts/Arch/*```, ```Scripts/Fedora/*``` or ```Scripts/Ubuntu/*```
 
 Compiling:
 ---------
-Run:
-<pre><code>./compile_on_arch</pre></code>
-
-Or:
-<pre><code>./compile_on_ubuntu</pre></code>
+Run ```./compile_on_arch```, ```./compile_on_fedora``` or ```./compile_on_ubuntu```
 
 And wait it to finish.
 

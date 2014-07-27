@@ -10,6 +10,7 @@ chmod +x pack
 chmod +x setup
 chmod +x commits
 chmod +x compile_on_arch
+chmod +x compile_on_fedora
 chmod +x compile_on_ubuntu
 chmod +x recompile_dep
 chmod +x recompile_of
@@ -22,6 +23,7 @@ chmod +x Scripts/patch_of
 chmod +x Scripts/compile_dep
 chmod +x Scripts/compile_of
 chmod +x Scripts/Arch/install_dep
+chmod +x Scripts/Fedora/install_dep
 chmod +x Scripts/Ubuntu/install_dep
 
 chmod +x Dependencies/glfw-linux-64

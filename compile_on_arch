@@ -7,7 +7,7 @@ cd $DIR
 
 cd Scripts
 
-Arch/install_dep
+Arch/*
 
 ./clean_dep
 ./clean_of

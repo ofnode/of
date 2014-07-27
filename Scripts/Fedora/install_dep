@@ -1,0 +1,66 @@
+#!/bin/bash
+
+NORMAL=$(tput sgr0)
+GREEN=$(tput setaf 2)
+
+echo "${GREEN}Installing Fedora dependencies.${NORMAL}"
+
+sudo yum -y install dnf
+
+grep -q -F 'metadata_timer_sync=0' /etc/dnf/dnf.conf || \
+echo 'metadata_timer_sync=0' | sudo tee -a /etc/dnf/dnf.conf
+
+sudo dnf -y update
+
+sudo dnf -y install   \
+git                   \
+make                  \
+pkgconfig             \
+libstdc++-static      \
+xorg-x11-server-devel \
+libXcursor-devel      \
+libXrandr-devel       \
+libXi-devel           \
+gtk2-devel            \
+libudev-devel         \
+clang                 \
+cmake                 \
+ninja-build           \
+openssl-devel         \
+libpng12-devel        \
+cairo-devel           \
+glew-devel            \
+freeglut-devel        \
+freeimage-devel       \
+freetype-devel        \
+fontconfig-devel
+
+sudo ln -s /usr/bin/ninja-build /usr/bin/ninja
+
+sudo dnf -y install \
+    autoconf automake bash bison bzip2 cmake flex \
+    gcc-c++ gettext git intltool make sed wget xz \
+    libffi-devel libtool openssl-devel patch perl \
+    pkgconfig scons unzip gperf ruby
+
+echo ""
+if [ -d /opt/mxe ]
+then
+    echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
+else
+    echo "${RED}Setting up /opt/mxe folder.${NORMAL}"
+    sudo git clone https://github.com/mxe/mxe.git /opt/mxe
+fi
+
+cd /opt/mxe
+
+sudo make MXE_TARGETS=x86_64-w64-mingw32.static \
+mingw-w64   \
+winpthreads \
+openssl     \
+cairo       \
+glew        \
+freeglut    \
+freeimage   \
+freetype
+

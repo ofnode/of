@@ -15,24 +15,26 @@ if(UNIX AND NOT APPLE)
     )
     
     set(INCLUDE_DIRS
-        "/usr/include/atk-1.0"
         "/usr/include/cairo"
         "/usr/include/freetype2"
-        "/usr/include/GL"
+
+        "/usr/include/atk-1.0"
         "/usr/include/gdk-pixbuf-2.0"
+        "/usr/include/pango-1.0"
         "/usr/include/glib-2.0"
         "/usr/include/gtk-2.0"
-        "/usr/include/harfbuzz"
-        "/usr/include/libdrm"
-        "/usr/include/libpng16"
-        "/usr/include/pango-1.0"
-        "/usr/include/pixman-1"
-        
+
+        # Arch Linux
         "/usr/lib/glib-2.0/include"
         "/usr/lib/gtk-2.0/include"
         
-	"/usr/lib/x86_64-linux-gnu/glib-2.0/include"
-	"/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
+        # Fedora
+        "/usr/lib64/glib-2.0/include"
+        "/usr/lib64/gtk-2.0/include"
+
+        # Ubuntu
+        "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+        "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
     )
 endif()
 
