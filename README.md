@@ -23,7 +23,7 @@ Limitations
 
 Installing:
 ----------
-Run ```./setup``` to download precompiled openFrameworks libraries and then install system dependencies with ```Scripts/Arch/*```, ```Scripts/Fedora/*``` or ```Scripts/Ubuntu/*```
+Install ```wget``` package for your distro, run ```./setup``` to download precompiled openFrameworks libraries and install system dependencies with ```Scripts/Arch/*```, ```Scripts/Fedora/*``` or ```Scripts/Ubuntu/*```
 
 Compiling:
 ---------
