@@ -37,13 +37,13 @@ See ```Template``` folder.
 
 To compile it for Linux:
 ```bash
-cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ .
+cmake -G Ninja -DCMAKE_CXX_COMPILER=clang++ .
 ninja
 ```
 
 To compile it for Windows:
 ```bash
-cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake .
+cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/mingw.cmake .
 ninja
 ```
 

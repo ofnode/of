@@ -64,3 +64,5 @@ freeglut    \
 freeimage   \
 freetype
 
+sudo ln -s /opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake /opt/mxe/mingw.cmake
+
