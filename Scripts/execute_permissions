@@ -34,3 +34,6 @@ chmod +x Dependencies/kiss-linux-64
 chmod +x Dependencies/kiss-mingw-64
 chmod +x Dependencies/tess2-linux-64
 chmod +x Dependencies/tess2-mingw-64
+
+chmod +x Template/Icon/icon.sh
+
