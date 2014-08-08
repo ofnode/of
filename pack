@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd `dirname $(readlink -f $0)`
+
 tar -zcvf CrossOF_Sources.tar.gz    \
     *.zip                           \
     Dependencies/Archive/glfw/*.zip \

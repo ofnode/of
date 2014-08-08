@@ -1,9 +1,8 @@
 #!/bin/bash
 
-FILE=$(readlink -f $0)
-DIR=`dirname $FILE`
+cd `dirname $(readlink -f $0)`
 
-cd    $DIR
+DIR=`pwd`
 
 cd    Libs/tess2
 

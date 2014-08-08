@@ -1,15 +1,12 @@
 #!/bin/bash
 
-NORMAL=$(tput sgr0)
-GREEN=$(tput setaf 2)
-
-FILE=$(readlink -f $0)
-DIR=`dirname $FILE`
-
-cd $DIR
+cd `dirname $(readlink -f $0)`
 cd ..
 
+source pretty
+
 rm -rf Compiled/*
+
 
 echo  ""
 echo  "${GREEN}Compiling openFrameworks for Linux.${NORMAL}"
@@ -21,6 +18,7 @@ cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ../..
 ninja
 
 cd    ../..
+
 
 echo  ""
 echo  "${GREEN}Compiling openFrameworks for Windows.${NORMAL}"
@@ -38,5 +36,7 @@ cmake -G Ninja                                                      \
       ../..
 ninja
 
+
 echo  ""
 echo  "${GREEN}All done!${NORMAL}"
+

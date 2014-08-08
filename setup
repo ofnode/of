@@ -1,39 +1,8 @@
 #!/bin/bash
 
-download_progress()
-{
-    local flag=false c count cr=$'\r' nl=$'\n'
-    while IFS='' read -d '' -rn 1 c
-    do
-        if $flag
-        then
-            printf '%c' "$c"
-        else
-            if [[ $c != $cr && $c != $nl ]]
-            then
-                count=0
-            else
-                ((count++))
-                if ((count > 1))
-                then
-                    flag=true
-                fi
-            fi
-        fi
-    done
-}
+cd `dirname $(readlink -f $0)`
 
-NORMAL=$(tput sgr0)
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-CYAN=$(tput setaf 6)
-
-
-FILE=$(readlink -f $0)
-DIR=`dirname $FILE`
-
-cd $DIR
-
+source pretty
 
 Scripts/clean_dep
 Scripts/clean_of

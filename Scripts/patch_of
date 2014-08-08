@@ -1,21 +1,15 @@
 #!/bin/bash
 
-NORMAL=$(tput sgr0)
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-CYAN=$(tput setaf 6)
+cd `dirname $(readlink -f $0)`
+cd ..
 
-FILE=$(readlink -f $0)
-DIR=`dirname $FILE`
+source pretty
 
 function apply() {
     echo   ""
     echo   ${CYAN}$1${NORMAL}
     patch  -p1 < Patches/$1
 }
-
-cd $DIR
-cd ..
 
 apply of_audio_video_disable.patch
 apply of_mingw_fix.patch

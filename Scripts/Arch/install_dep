@@ -1,7 +1,9 @@
 #!/bin/bash
 
-NORMAL=$(tput sgr0)
-GREEN=$(tput setaf 2)
+cd `dirname $(readlink -f $0)`
+cd ../..
+
+source pretty
 
 echo "${GREEN}Installing Arch Linux dependencies.${NORMAL}"
 

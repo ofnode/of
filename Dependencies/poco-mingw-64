@@ -1,9 +1,8 @@
 #!/bin/bash
 
-FILE=$(readlink -f $0)
-DIR=`dirname $FILE`
+cd `dirname $(readlink -f $0)`
 
-cd     $DIR
+DIR=`pwd`
 
 cp     pocomsg.h Libs/poco/Foundation/src/pocomsg.h
 cp     pocomsg.h Libs/poco/Foundation/include/Poco/pocomsg.h
@@ -13,9 +12,7 @@ cd     Libs/poco
 mkdir -p compiled/mingw-64
 cd       compiled/mingw-64
 
-MINGW=/opt/mxe/usr
-
-export OPENSSL_ROOT_DIR=$MINGW
+export OPENSSL_ROOT_DIR=/opt/mxe/usr
 
 cmake  -G Ninja                \
        -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \

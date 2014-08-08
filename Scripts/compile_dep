@@ -1,13 +1,11 @@
 #!/bin/bash
 
-NORMAL=$(tput sgr0)
-GREEN=$(tput setaf 2)
+cd `dirname $(readlink -f $0)`
+cd ..
 
-FILE=$(readlink -f $0)
-DIR=`dirname $FILE`
+source pretty
 
-cd $DIR
-cd ../Dependencies
+cd Dependencies
 
 
 echo ""
