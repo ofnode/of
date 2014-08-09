@@ -201,7 +201,7 @@ set(DEBUG_FLAGS "
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
-set(CMAKE_C_FLAGS   "-std=c++11")
+set(CMAKE_C_FLAGS   "-std=c11"  )
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} -O2 ${DEBUG_FLAGS} -fcolor-diagnostics")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
 set(CMAKE_C_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG}  )
