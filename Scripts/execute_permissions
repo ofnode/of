@@ -6,7 +6,7 @@ cd ..
 chmod +x pack
 chmod +x setup
 chmod +x commits
-chmod +x compile_on_arch
+chmod +x compile_on_archlinux
 chmod +x compile_on_fedora
 chmod +x compile_on_ubuntu
 chmod +x recompile_dep
@@ -19,9 +19,6 @@ chmod +x Scripts/clone_of
 chmod +x Scripts/patch_of
 chmod +x Scripts/compile_dep
 chmod +x Scripts/compile_of
-chmod +x Scripts/Arch/install_dep
-chmod +x Scripts/Fedora/install_dep
-chmod +x Scripts/Ubuntu/install_dep
 
 chmod +x Dependencies/glfw-linux-64
 chmod +x Dependencies/glfw-mingw-64
@@ -32,5 +29,11 @@ chmod +x Dependencies/kiss-mingw-64
 chmod +x Dependencies/tess2-linux-64
 chmod +x Dependencies/tess2-mingw-64
 
+chmod +x Install/archlinux_dependencies
+chmod +x Install/fedora_dependencies
+chmod +x Install/ubuntu_dependencies
+
+chmod +x Template/analyse.sh
+chmod +x Template/sanitize.sh
 chmod +x Template/Icon/icon.sh
 

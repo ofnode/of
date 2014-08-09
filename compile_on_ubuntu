@@ -2,9 +2,7 @@
 
 cd `dirname $(readlink -f $0)`
 
-cd Scripts
-
-Ubuntu/*
+Install/ubuntu_dependencies
 
 ./clean_dep
 ./clean_of

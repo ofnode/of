@@ -3,7 +3,9 @@ cmake_minimum_required(VERSION 2.8)
 project(openFrameworks)
 set(BIN openFrameworks)
 
-set(CMAKE_CXX_FLAGS "-O3 -std=gnu++11")
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif()
 
 if(UNIX AND NOT APPLE)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
@@ -183,6 +185,35 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/utils/ofThread.cpp"
 )
 
-add_definitions(${DEFINITIONS})
 include_directories(${INCLUDE_DIRS})
-add_library(${BIN} STATIC ${SOURCES})
+
+add_definitions(${DEFINITIONS})
+
+set(DEBUG_FLAGS "
+    -g
+    -Wall
+    -Wextra
+    -fsanitize=address
+    -fno-omit-frame-pointer
+    -Wno-unused-parameter
+")
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(CPP_COLORED_DIAG -fcolor-diagnostics)
+endif()
+
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+    set(CCC_COLORED_DIAG -fcolor-diagnostics)
+endif()
+
+string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
+
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CPP_COLORED_DIAG}")
+set(CMAKE_C_FLAGS   "-std=c++11 ${CCC_COLORED_DIAG}")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} -O2 ${DEBUG_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_C_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG}  )
+set(CMAKE_C_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
+
+add_library(${BIN}-${CMAKE_BUILD_TYPE} STATIC ${SOURCES})
+

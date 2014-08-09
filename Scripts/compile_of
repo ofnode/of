@@ -5,35 +5,38 @@ cd ..
 
 source pretty
 
-rm -rf Compiled/*
+OF=`pwd`
+ANALYSE=$(dirname `readlink -f /usr/bin/scan-build`)
 
 
 echo  ""
-echo  "${GREEN}Compiling openFrameworks for Linux.${NORMAL}"
+echo  "${GREEN}Compiling Debug version of openFrameworks for Linux.${NORMAL}"
 
-mkdir -p Compiled/linux-64
-cd       Compiled/linux-64
+mkdir -p $OF/Compiled/linux-64/Debug-Build
+cd       $OF/Compiled/linux-64/Debug-Build
 
-cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ../..
+cmake $OF -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug \
+-DCMAKE_CXX_COMPILER=$ANALYSE/c++-analyzer -DCMAKE_C_COMPILER=$ANALYSE/ccc-analyzer
+scan-build -analyze-headers --use-cc=clang --use-c++=clang++ ninja | tee result.txt
+
+
+echo  ""
+echo  "${GREEN}Compiling Release version of openFrameworks for Linux.${NORMAL}"
+
+mkdir -p $OF/Compiled/linux-64/Release-Build
+cd       $OF/Compiled/linux-64/Release-Build
+
+cmake $OF -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 
-cd    ../..
-
 
 echo  ""
-echo  "${GREEN}Compiling openFrameworks for Windows.${NORMAL}"
+echo  "${GREEN}Compiling Release version of openFrameworks for Windows.${NORMAL}"
 
-mkdir -p Compiled/mingw-64
-cd       Compiled/mingw-64
+mkdir -p $OF/Compiled/mingw-64/Release-Build
+cd       $OF/Compiled/mingw-64/Release-Build
 
-MINGW=/opt/mxe/usr
-
-cmake -G Ninja                                                      \
-      -DCMAKE_SYSTEM_NAME=Windows                                   \
-      -DCMAKE_C_COMPILER=$MINGW/bin/x86_64-w64-mingw32.static-gcc   \
-      -DCMAKE_CXX_COMPILER=$MINGW/bin/x86_64-w64-mingw32.static-g++ \
-      -DCMAKE_FIND_ROOT_PATH=$MINGW/x86_64-w64-mingw32.static       \
-      ../..
+cmake $OF -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/mingw.cmake
 ninja
 
 

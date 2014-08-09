@@ -1,3 +1,7 @@
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif()
+
 if(UNIX AND NOT APPLE)
     set(CROSSOF_INCLUDE_DIRS
         "/usr/include/cairo"
@@ -27,7 +31,7 @@ if(UNIX AND NOT APPLE)
         -L"${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64"
         -Wl,-Bstatic
         -Wl,--start-group
-        openFrameworks
+        openFrameworks-${CMAKE_BUILD_TYPE}
         PocoNet
         PocoXML
         PocoUtil
@@ -89,7 +93,7 @@ if(WIN32)
         -L"${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64"
         -Wl,-Bstatic
         -Wl,--start-group
-        openFrameworks
+        openFrameworks-${CMAKE_BUILD_TYPE}
         PocoNet
         PocoXML
         PocoUtil
@@ -181,12 +185,37 @@ set(CROSSOF_INCLUDE_DIRS ${CROSSOF_INCLUDE_DIRS}
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2/Sources"
 )
 
-set(CROSSOF_DEFINITIONS
+include_directories(${CROSSOF_INCLUDE_DIRS})
+
+add_definitions(
     -DTARGET_NO_SOUND
     -DTARGET_NO_VIDEO
     -DPOCO_STATIC
 )
 
-add_definitions(${CROSSOF_DEFINITIONS})
-include_directories(${CROSSOF_INCLUDE_DIRS})
+set(DEBUG_FLAGS "
+    -g
+    -Wall
+    -Wextra
+    -fsanitize=address
+    -fno-omit-frame-pointer
+    -Wno-unused-parameter
+")
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(CPP_COLORED_DIAG -fcolor-diagnostics)
+endif()
+
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+    set(CCC_COLORED_DIAG -fcolor-diagnostics)
+endif()
+
+string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
+
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CPP_COLORED_DIAG}")
+set(CMAKE_C_FLAGS   "-std=c++11 ${CCC_COLORED_DIAG}")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} -O2 ${DEBUG_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_C_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG}  )
+set(CMAKE_C_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
 

@@ -1,13 +1,20 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(testApp)
-set(BIN testApp)
+project(App)
+set(APP App)
 
-set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
+  ${CMAKE_CURRENT_SOURCE_DIR}/App)
 
 include(../include.cmake)
 
 set(SOURCES main.cpp testApp.cpp)
 
-add_executable(${BIN} ${SOURCES})
-target_link_libraries(${BIN} ${CROSSOF_LIBRARIES})
+add_executable(
+    ${APP}-${CMAKE_BUILD_TYPE}
+    ${SOURCES}
+)
+target_link_libraries(
+    ${APP}-${CMAKE_BUILD_TYPE}
+    ${CROSSOF_LIBRARIES}
+)

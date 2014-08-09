@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd `dirname $(readlink -f $0)`
-cd ../..
+cd ..
 
 source pretty
 
@@ -18,6 +18,7 @@ libxcursor                     \
 libxrandr                      \
 libxi                          \
 clang                          \
+clang-analyzer                 \
 cmake                          \
 ninja                          \
 openssl                        \

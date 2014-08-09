@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd `dirname $(readlink -f $0)`
-cd ../..
+cd ..
 
 source pretty
 
@@ -26,6 +26,7 @@ libXi-devel           \
 gtk2-devel            \
 libudev-devel         \
 clang                 \
+clang-analyzer        \
 cmake                 \
 ninja-build           \
 openssl-devel         \
