@@ -198,19 +198,11 @@ set(DEBUG_FLAGS "
     -Wno-unused-parameter
 ")
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(CPP_COLORED_DIAG -fcolor-diagnostics)
-endif()
-
-if("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
-    set(CCC_COLORED_DIAG -fcolor-diagnostics)
-endif()
-
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
 
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CPP_COLORED_DIAG}")
-set(CMAKE_C_FLAGS   "-std=c++11 ${CCC_COLORED_DIAG}")
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} -O2 ${DEBUG_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_C_FLAGS   "-std=c++11")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} -O2 ${DEBUG_FLAGS} -fcolor-diagnostics")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
 set(CMAKE_C_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG}  )
 set(CMAKE_C_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
