@@ -33,7 +33,7 @@ chmod +x Install/archlinux_dependencies
 chmod +x Install/fedora_dependencies
 chmod +x Install/ubuntu_dependencies
 
-chmod +x Template/analyse.sh
+chmod +x Template/analyze.sh
 chmod +x Template/sanitize.sh
 chmod +x Template/Icon/icon.sh
 
