@@ -59,4 +59,4 @@ To debug application, run `analyse.sh` and `sanitize.sh` scripts.
 
 
   [1]: https://github.com/openframeworks/openFrameworks
-  [2]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html
+  [2]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
