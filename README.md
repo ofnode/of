@@ -12,7 +12,7 @@ Features
 
  - Generate project file for your favorite editor with [CMake Generator][2].
 
- - Debug with Clang Static Analyser and Clang Address / Leak Sanitizer.
+ - Debug with Clang Static Analyzer and Clang Address / Leak Sanitizer.
 
  - Latest openFrameworks versions with precompiled libraries and sources.
 
