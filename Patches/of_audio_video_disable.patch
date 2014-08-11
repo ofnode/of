@@ -22,7 +22,7 @@
  	#include "ofQtUtils.h"
  #endif
  
-@@ -353,7 +353,7 @@
+@@ -355,7 +355,7 @@
  	#endif
  
  	// try to close quicktime, for non-linux systems:
@@ -61,7 +61,7 @@
  	dialogData.done = false;
  
  	g_main_context_invoke(g_main_loop_get_context(ofGstUtils::getGstMainLoop()), &file_dialog_gtk, &dialogData);
-@@ -215,6 +220,7 @@
+@@ -215,6 +215,7 @@
  		dialogData.mutex.lock();
  		dialogData.condition.wait(dialogData.mutex);
  	}
@@ -69,7 +69,7 @@
  	return dialogData.results;
  }
  
-@@ -282,12 +288,14 @@
+@@ -276,12 +276,14 @@
  		initGTK();
  		TextDialogData dialogData;
  		dialogData.text = errorMessage;
@@ -84,7 +84,7 @@
  	#endif
  
  	#ifdef TARGET_ANDROID
-@@ -595,13 +603,17 @@
+@@ -590,13 +590,17 @@
  	initGTK();
  	TextDialogData dialogData;
  	dialogData.text = text;
