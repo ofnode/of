@@ -51,10 +51,8 @@ tar -zxvf CrossOF_Sources.tar.gz
 
 
 echo ""
-if [ -d /opt/mxe ]
+if [ ! -d /opt/mxe ]
 then
-    :
-else
     echo "${GREEN}Extracting CrossOF_MXE.tar.gz archive to /opt folder.${NORMAL}"
     sudo tar -zxvf CrossOF_MXE.tar.gz -C /opt
 fi
