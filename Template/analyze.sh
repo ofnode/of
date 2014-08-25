@@ -2,9 +2,9 @@
 
 cd `dirname $(readlink -f $0)`
 
-rm -rf Debug-Build
-mkdir  Debug-Build
-cd     Debug-Build
+rm -rf Debug_Build
+mkdir  Debug_Build
+cd     Debug_Build
 
 ANALYSE=$(dirname `readlink -f /usr/bin/scan-build`)
 

@@ -20,11 +20,9 @@ clang                   \
 cmake                   \
 ninja-build             \
 libssl-dev              \
-libpng12-dev            \
 libcairo2-dev           \
 libglew-dev             \
 freeglut3-dev           \
-libfreeimage-dev        \
 libfreetype6-dev        \
 libfontconfig-dev
 
@@ -36,12 +34,12 @@ sudo apt-get -y install \
     xz-utils
 
 echo ""
-if [ -d /opt/mxe ]
+if [ ! -d /opt/mxe ]
 then
-    echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
-else
     echo "${RED}Setting up /opt/mxe folder.${NORMAL}"
     sudo git clone https://github.com/mxe/mxe.git /opt/mxe
+else
+    echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
 fi
 
 cd /opt/mxe
@@ -53,7 +51,6 @@ openssl     \
 cairo       \
 glew        \
 freeglut    \
-freeimage   \
 freetype
 
 sudo ln -s /opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake /opt/mxe/mingw.cmake

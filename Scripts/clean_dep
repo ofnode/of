@@ -8,3 +8,4 @@ rm -rf Dependencies/Archive/poco/poco-*
 
 rm -rf Dependencies/Libs/glfw
 rm -rf Dependencies/Libs/poco
+rm -rf Dependencies/Libs/freeimage

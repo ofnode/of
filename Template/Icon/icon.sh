@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd `dirname $(readlink -f $0)`
+
 convert icon.png \
         \( -clone 0 -resize 16x16   \) \
         \( -clone 0 -resize 32x32   \) \

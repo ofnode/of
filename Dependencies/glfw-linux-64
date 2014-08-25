@@ -2,19 +2,19 @@
 
 cd `dirname $(readlink -f $0)`
 
-DIR=`pwd`
+DEPS=`pwd`
 
 cd    Libs/glfw
 
 mkdir -p compiled/linux-64
 cd       compiled/linux-64
 
-cmake -G Ninja                  \
-      -DCMAKE_C_COMPILER=clang  \
+cmake -DCMAKE_C_COMPILER=clang  \
       -DGLFW_BUILD_TESTS=OFF    \
       -DGLFW_BUILD_EXAMPLES=OFF \
+      -G Ninja                  \
       ../..
 ninja
 
-cp    src/libglfw3.a $DIR/Compiled/linux-64
+cp    src/libglfw3.a $DEPS/Compiled/linux-64
 

@@ -2,7 +2,7 @@
 
 cd `dirname $(readlink -f $0)`
 
-DIR=`pwd`
+DEPS=`pwd`
 
 cp     pocomsg.h Libs/poco/Foundation/src/pocomsg.h
 cp     pocomsg.h Libs/poco/Foundation/include/Poco/pocomsg.h
@@ -14,21 +14,21 @@ cd       compiled/mingw-64
 
 export OPENSSL_ROOT_DIR=/opt/mxe/usr
 
-cmake  -G Ninja                \
-       -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
+cmake  -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
        -DPOCO_STATIC=ON        \
        -DCMAKE_BUILD_TYPE=None \
        -DCMAKE_CXX_FLAGS="-O3 -std=c++11 -fpermissive -DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
+       -G Ninja                \
        ../..
 ninja
 
 cd     lib
 
-cp     libPocoFoundation.a $DIR/Compiled/mingw-64
-cp     libPocoXML.a        $DIR/Compiled/mingw-64
-cp     libPocoUtil.a       $DIR/Compiled/mingw-64
-cp     libPocoNet.a        $DIR/Compiled/mingw-64
-cp     libPocoCrypto.a     $DIR/Compiled/mingw-64
-cp     libPocoNetSSL.a     $DIR/Compiled/mingw-64
-cp     libPocoZip.a        $DIR/Compiled/mingw-64
+cp     libPocoFoundation.a $DEPS/Compiled/mingw-64
+cp     libPocoXML.a        $DEPS/Compiled/mingw-64
+cp     libPocoUtil.a       $DEPS/Compiled/mingw-64
+cp     libPocoNet.a        $DEPS/Compiled/mingw-64
+cp     libPocoCrypto.a     $DEPS/Compiled/mingw-64
+cp     libPocoNetSSL.a     $DEPS/Compiled/mingw-64
+cp     libPocoZip.a        $DEPS/Compiled/mingw-64
 

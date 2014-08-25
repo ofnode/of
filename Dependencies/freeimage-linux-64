@@ -1,0 +1,25 @@
+#!/bin/bash
+
+cd `dirname $(readlink -f $0)`
+
+DEPS=`pwd`
+
+cd    Libs/freeimage
+
+mkdir -p compiled/linux-64
+cd       compiled/linux-64
+
+cmake -DCMAKE_CXX_COMPILER=clang++ \
+      -DCMAKE_C_COMPILER=clang     \
+      -G Ninja                     \
+      ../..
+ninja
+
+cp    lib/libfreeimage.a $DEPS/Compiled/linux-64
+cp    lib/libopenjpeg.a  $DEPS/Compiled/linux-64
+cp    lib/libopenexr.a   $DEPS/Compiled/linux-64
+cp    lib/librawlite.a   $DEPS/Compiled/linux-64
+cp    lib/libzlib.a      $DEPS/Compiled/linux-64
+cp    lib/libtiff.a      $DEPS/Compiled/linux-64
+cp    lib/libjpeg.a      $DEPS/Compiled/linux-64
+cp    lib/libpng.a       $DEPS/Compiled/linux-64

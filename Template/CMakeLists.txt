@@ -1,20 +1,25 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(App)
-set(APP App)
+project(testApp)
+
+include(../include.cmake)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
   ${CMAKE_CURRENT_SOURCE_DIR}/App)
 
-include(../include.cmake)
+set(APP App_${CMAKE_BUILD_TYPE})
 
-set(SOURCES main.cpp testApp.cpp)
+set(SOURCES
+    main.cpp
+    testApp.cpp
+)
 
 add_executable(
-    ${APP}-${CMAKE_BUILD_TYPE}
+    ${APP}
     ${SOURCES}
 )
+
 target_link_libraries(
-    ${APP}-${CMAKE_BUILD_TYPE}
+    ${APP}
     ${CROSSOF_LIBRARIES}
 )

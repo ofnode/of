@@ -2,29 +2,29 @@
 
 cd `dirname $(readlink -f $0)`
 
-DIR=`pwd`
+DEPS=`pwd`
 
 cd     Libs/poco
 
 mkdir -p compiled/linux-64
 cd       compiled/linux-64
 
-cmake  -G Ninja                     \
-       -DCMAKE_C_COMPILER=clang     \
+cmake  -DCMAKE_C_COMPILER=clang     \
        -DCMAKE_CXX_COMPILER=clang++ \
        -DCMAKE_BUILD_TYPE=None      \
        -DCMAKE_CXX_FLAGS="-O3 -std=c++11 -DPOCO_ENABLE_CPP11 -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
        -DPOCO_STATIC=ON             \
+       -G Ninja                     \
        ../..
 ninja
 
 cd     lib
 
-cp     libPocoFoundation.a $DIR/Compiled/linux-64
-cp     libPocoXML.a        $DIR/Compiled/linux-64
-cp     libPocoUtil.a       $DIR/Compiled/linux-64
-cp     libPocoNet.a        $DIR/Compiled/linux-64
-cp     libPocoCrypto.a     $DIR/Compiled/linux-64
-cp     libPocoNetSSL.a     $DIR/Compiled/linux-64
-cp     libPocoZip.a        $DIR/Compiled/linux-64
+cp     libPocoFoundation.a $DEPS/Compiled/linux-64
+cp     libPocoXML.a        $DEPS/Compiled/linux-64
+cp     libPocoUtil.a       $DEPS/Compiled/linux-64
+cp     libPocoNet.a        $DEPS/Compiled/linux-64
+cp     libPocoCrypto.a     $DEPS/Compiled/linux-64
+cp     libPocoNetSSL.a     $DEPS/Compiled/linux-64
+cp     libPocoZip.a        $DEPS/Compiled/linux-64
 

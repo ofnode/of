@@ -8,12 +8,12 @@ source pretty
 
 
 echo   ""
-if [ -f $OF_BRANCH.zip ]
+if [ ! -f $OF_BRANCH.zip ]
 then
-       echo "${GREEN}Using existing $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
-else
        echo "${RED}Downloading $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
        wget --progress=bar:force $OF_REPO 2>&1 | download_progress
+else
+       echo "${GREEN}Using existing $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
 fi
 
 unzip  -q $OF_BRANCH.zip
@@ -21,20 +21,20 @@ unzip  -q $OF_BRANCH.zip
 mv     openFrameworks-*/libs/openFrameworks .
 
 rm -rf openFrameworks/.settings
-rm     openFrameworks/.project
 rm     openFrameworks/.cproject
+rm     openFrameworks/.project
 
 
 Scripts/patch_of
 
-
 TESS=Dependencies/Libs/tess2
+KISS=Dependencies/Libs/kiss
+
 rm -rf $TESS
 mkdir  $TESS
 mv     openFrameworks-*/libs/tess2/include $TESS
 mv     openFrameworks-*/libs/tess2/Sources $TESS
 
-KISS=Dependencies/Libs/kiss
 rm -rf $KISS
 mkdir  $KISS
 mv     openFrameworks-*/libs/kiss/include  $KISS

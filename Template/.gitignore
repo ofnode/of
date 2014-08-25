@@ -1,6 +1,6 @@
 App
 Build
-Linux-Build
-Debug-Build
-Windows-Build
-Release-Build
+Linux_Build
+Debug_Build
+Windows_Build
+Release_Build

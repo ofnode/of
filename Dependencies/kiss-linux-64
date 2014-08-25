@@ -2,16 +2,18 @@
 
 cd `dirname $(readlink -f $0)`
 
-DIR=`pwd`
+DEPS=`pwd`
 
 cd    Libs/kiss
+
+KISS=`pwd`
 
 mkdir -p compiled/linux-64
 cd       compiled/linux-64
 
-clang -I../../include -c ../../src/kiss_fft.c
-clang -I../../include -c ../../src/kiss_fftr.c
+clang -I$KISS/include -c $KISS/src/kiss_fft.c
+clang -I$KISS/include -c $KISS/src/kiss_fftr.c
 ar cr libkiss.a kiss_fft.o kiss_fftr.o
 
-cp    libkiss.a $DIR/Compiled/linux-64
+cp    libkiss.a $DEPS/Compiled/linux-64
 

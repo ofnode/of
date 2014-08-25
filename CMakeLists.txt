@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(openFrameworks)
-set(BIN openFrameworks)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
@@ -15,29 +14,15 @@ if(UNIX AND NOT APPLE)
     set(DEFINITIONS
         -DOF_USING_GTK
     )
-    
+
+    find_package(GTK2 REQUIRED)
+    find_package(OpenGL REQUIRED)
+
     set(INCLUDE_DIRS
-        "/usr/include/cairo"
-        "/usr/include/freetype2"
-
-        "/usr/include/atk-1.0"
-        "/usr/include/gdk-pixbuf-2.0"
-        "/usr/include/pango-1.0"
-        "/usr/include/glib-2.0"
-        "/usr/include/gtk-2.0"
-
-        # Arch Linux
-        "/usr/lib/glib-2.0/include"
-        "/usr/lib/gtk-2.0/include"
-        
-        # Fedora
-        "/usr/lib64/glib-2.0/include"
-        "/usr/lib64/gtk-2.0/include"
-
-        # Ubuntu
-        "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
-        "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
+        ${GTK2_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIR}
     )
+
 endif()
 
 if(WIN32)
@@ -57,7 +42,8 @@ if(WIN32)
     )
 endif()
 
-set(DEFINITIONS ${DEFINITIONS}
+set(DEFINITIONS
+  ${DEFINITIONS}
     -DTARGET_NO_SOUND
     -DTARGET_NO_VIDEO
     -DFREEIMAGE_LIB
@@ -65,7 +51,8 @@ set(DEFINITIONS ${DEFINITIONS}
     -DPOCO_NO_AUTOMATIC_LIB_INIT
 )
 
-set(INCLUDE_DIRS ${INCLUDE_DIRS}
+set(INCLUDE_DIRS
+  ${INCLUDE_DIRS}
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/3d"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/app"
@@ -76,15 +63,15 @@ set(INCLUDE_DIRS ${INCLUDE_DIRS}
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/math"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/types"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/utils"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw/include/GLFW"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/kiss"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/kiss/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/kiss/src"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Crypto/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Crypto/include/Poco"
@@ -105,17 +92,17 @@ set(INCLUDE_DIRS ${INCLUDE_DIRS}
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Util/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Util/include/Poco"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Util/include/Poco/Util"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/XML/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/XML/include/Poco"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/XML/include/Poco/DOM"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/XML/include/Poco/SAX"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/XML/include/Poco/XML"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Zip/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Zip/include/Poco"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Zip/include/Poco/Zip"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2/Sources"
@@ -128,17 +115,17 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/3d/ofCamera.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/3d/of3dUtils.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/3d/ofEasyCam.cpp"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/app/ofAppRunner.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/app/ofAppGlutWindow.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/app/ofAppNoWindow.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/app/ofAppGLFWWindow.cpp"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/communication/ofSerial.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/communication/ofArduino.cpp"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/events/ofEvents.cpp"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/gl/ofGLProgrammableRenderer.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/gl/ofFbo.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/gl/ofMaterial.cpp"
@@ -149,7 +136,7 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/gl/ofGLRenderer.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/gl/ofLight.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/gl/ofVbo.cpp"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/graphics/ofTessellator.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/graphics/ofCairoRenderer.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/graphics/ofImage.cpp"
@@ -161,20 +148,20 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/graphics/ofPath.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/graphics/ofBitmapFont.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/graphics/ofPolyline.cpp"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/math/ofQuaternion.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/math/ofVec2f.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/math/ofMatrix4x4.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/math/ofVec4f.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/math/ofMath.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/math/ofMatrix3x3.cpp"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/types/ofBaseTypes.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/types/ofRectangle.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/types/ofParameterGroup.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/types/ofColor.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/types/ofParameter.cpp"
-    
+
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/utils/ofURLFileLoader.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/utils/ofUtils.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/utils/ofLog.cpp"
@@ -186,7 +173,6 @@ set(SOURCES
 )
 
 include_directories(${INCLUDE_DIRS})
-
 add_definitions(${DEFINITIONS})
 
 set(DEBUG_FLAGS "
@@ -194,18 +180,21 @@ set(DEBUG_FLAGS "
     -Wall
     -Wextra
     -fsanitize=address
-    -fno-omit-frame-pointer
+    -fcolor-diagnostics
     -Wno-unused-parameter
+    -fno-omit-frame-pointer
 ")
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
-set(CMAKE_C_FLAGS   "-std=c11"  )
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} -O2 ${DEBUG_FLAGS} -fcolor-diagnostics")
-set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS}   -O2 ${DEBUG_FLAGS} -fcolor-diagnostics")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
-set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS}   -O3")
+set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
+set(CMAKE_C_FLAGS   "-O3 -std=c11"  )
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}")
+set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS}"  )
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} ${DEBUG_FLAGS}")
+set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS}   ${DEBUG_FLAGS}")
 
-add_library(${BIN}-${CMAKE_BUILD_TYPE} STATIC ${SOURCES})
+set(BIN openFrameworks_${CMAKE_BUILD_TYPE})
+
+add_library(${BIN} STATIC ${SOURCES})
 

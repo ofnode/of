@@ -9,35 +9,35 @@ Scripts/clean_dep
 Scripts/clean_of
 
 
-if [ -f CrossOF_Binaries.tar.gz ]
+if [ ! -f CrossOF_Binaries.tar.gz ]
 then
-    echo "${GREEN}Using existing CrossOF_Binaries.tar.gz archive.${NORMAL}"
-else
     echo "${RED}Downloading CrossOF_Binaries.tar.gz archive.${NORMAL}"
     wget --progress=bar:force https://github.com/procedural/crossof/releases/download/master/CrossOF_Binaries.tar.gz 2>&1 | download_progress
+else
+    echo "${GREEN}Using existing CrossOF_Binaries.tar.gz archive.${NORMAL}"
 fi
 
 
-if [ -f CrossOF_Sources.tar.gz ]
+if [ ! -f CrossOF_Sources.tar.gz ]
 then
-    echo "${GREEN}Using existing CrossOF_Sources.tar.gz archive.${NORMAL}"
-else
     echo "${RED}Downloading CrossOF_Sources.tar.gz archive.${NORMAL}"
     wget --progress=bar:force https://github.com/procedural/crossof/releases/download/master/CrossOF_Sources.tar.gz 2>&1 | download_progress
+else
+    echo "${GREEN}Using existing CrossOF_Sources.tar.gz archive.${NORMAL}"
 fi
 
 
-if [ -f CrossOF_MXE.tar.gz ]
+if [ ! -f CrossOF_MXE.tar.gz ]
 then
-    echo "${GREEN}Using existing CrossOF_MXE.tar.gz archive.${NORMAL}"
-else
-    if [ -d /opt/mxe ]
+    if [ ! -d /opt/mxe ]
     then
-        echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
-    else
         echo "${RED}Downloading CrossOF_MXE.tar.gz archive.${NORMAL}"
         wget --progress=bar:force https://github.com/procedural/crossof/releases/download/master/CrossOF_MXE.tar.gz 2>&1 | download_progress
+    else
+        echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
     fi
+else
+    echo "${GREEN}Using existing CrossOF_MXE.tar.gz archive.${NORMAL}"
 fi
 
 

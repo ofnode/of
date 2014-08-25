@@ -3,108 +3,193 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(UNIX AND NOT APPLE)
-    set(CROSSOF_INCLUDE_DIRS
-        "/usr/include/cairo"
-        "/usr/include/freetype2"
 
-        "/usr/include/atk-1.0"
-        "/usr/include/gdk-pixbuf-2.0"
-        "/usr/include/pango-1.0"
-        "/usr/include/glib-2.0"
-        "/usr/include/gtk-2.0"
-
-        "/usr/lib/glib-2.0/include"
-        "/usr/lib/gtk-2.0/include"
-        
-        "/usr/lib64/glib-2.0/include"
-        "/usr/lib64/gtk-2.0/include"
-
-        "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
-        "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
-    )
-    
+    # Search path for .so
     set(CROSSOF_LIBRARIES
+        -Wl,-rpath,'$$ORIGIN'
+    )
+
+    # Static C and C++
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
         -static-libgcc
         -static-libstdc++
-        -Wl,-rpath,'$$ORIGIN'
+    )
+
+    # Link directories
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
         -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/linux-64"
         -L"${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64"
+    )
+
+    # Static OF
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        -Wl,-Bstatic
+        openFrameworks_${CMAKE_BUILD_TYPE}
+        kiss
+        tess2
+        -Wl,-Bdynamic
+    )
+
+    # Static GLFW
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        -Wl,-Bstatic
+        glfw3
+        -Wl,-Bdynamic
+    )
+
+    # Static POCO
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
         -Wl,-Bstatic
         -Wl,--start-group
-        openFrameworks-${CMAKE_BUILD_TYPE}
         PocoNet
         PocoXML
         PocoUtil
         PocoFoundation
         PocoNetSSL
         PocoCrypto
-        glfw3
-        kiss
-        tess2
         -Wl,--end-group
         -Wl,-Bdynamic
-        gdk_pixbuf-2.0
-        pangocairo-1.0
-        pangoft2-1.0
-        gobject-2.0
-        gtk-x11-2.0
-        gdk-x11-2.0
-        fontconfig
-        freeimage
-        pango-1.0
-        pixman-1
-        freetype
-        glib-2.0
-        gio-2.0
-        atk-1.0
-        pthread
-        Xxf86vm
-        Xcursor
-        crypto
-        Xrandr
-        png12
-        cairo
-        udev
-        GLEW
-        GLU
-        ssl
-        X11
-        Xi
-        GL
-        m
-        z
     )
+
+    # Static FreeImage
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        -Wl,-Bstatic
+        -Wl,--start-group
+        freeimage
+        openjpeg
+        openexr
+        rawlite
+        tiff
+        jpeg
+        zlib
+        png
+        -Wl,--end-group
+        -Wl,-Bdynamic
+    )
+
+    # Dynamic dependencies
+    find_package(X11 REQUIRED)
+    find_package(GTK2 REQUIRED)
+    find_package(GLEW REQUIRED)
+    find_package(OpenGL REQUIRED)
+    find_package(OpenSSL REQUIRED)
+    find_package(Threads REQUIRED)
+
+    set(CROSSOF_DEFINITIONS
+        ${GTK2_DEFINITIONS}
+    )
+
+    set(CROSSOF_INCLUDE_DIRS
+        ${X11_INCLUDE_DIR}
+        ${GTK2_INCLUDE_DIRS}
+        ${GLEW_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIR}
+        ${OPENSSL_INCLUDE_DIR}
+    )
+
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        ${X11_LIBRARIES}
+        ${X11_Xi_LIB}
+        ${X11_Xrandr_LIB}
+        ${X11_Xcursor_LIB}
+        ${X11_Xxf86vm_LIB}
+        ${GTK2_LIBRARIES}
+        ${GLEW_LIBRARIES}
+        ${OPENGL_LIBRARIES}
+        ${OPENSSL_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+    )
+
 endif()
 
 if(WIN32)
-    set(CROSSOF_INCLUDE_DIRS
-        "/opt/mxe/usr/x86_64-w64-mingw32.static/include"
-        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/GL"
-        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/cairo"
-        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/freetype2"
-    )
 
+    # Path to MXE compiler folder
+    set(MXE /opt/mxe/usr/x86_64-w64-mingw32.static)
+
+    # Hide console window
     set(CROSSOF_LIBRARIES
         -mwindows
+    )
+
+    # Static C and C++
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
         -static-libgcc
         -static-libstdc++
-        -L"/opt/mxe/usr/x86_64-w64-mingw32.static/lib"
+    )
+
+    # Link directories
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        -L"${MXE}/lib"
         -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/mingw-64"
         -L"${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64"
+    )
+
+    # Static OF
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        -Wl,-Bstatic
+        openFrameworks_${CMAKE_BUILD_TYPE}
+        kiss
+        tess2
+        -Wl,-Bdynamic
+    )
+
+    # Static GLFW
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        -Wl,-Bstatic
+        glfw3
+        -Wl,-Bdynamic
+    )
+
+    # Static POCO
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
         -Wl,-Bstatic
         -Wl,--start-group
-        openFrameworks-${CMAKE_BUILD_TYPE}
         PocoNet
         PocoXML
         PocoUtil
         PocoFoundation
         PocoNetSSL
         PocoCrypto
-        glfw3
-        kiss
-        tess2
-        fontconfig
+        -Wl,--end-group
+        -Wl,-Bdynamic
+    )
+
+    # Static FreeImage
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        -Wl,-Bstatic
+        -Wl,--start-group
         freeimage
+        openjpeg
+        openexr
+        rawlite
+        tiff
+        jpeg
+        zlib
+        png
+        -Wl,--end-group
+        -Wl,-Bdynamic
+    )
+
+    # Static dependencies
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        -Wl,-Bstatic
+        -Wl,--start-group
+        fontconfig
         glib-2.0
         harfbuzz
         freetype
@@ -126,10 +211,20 @@ if(WIN32)
         m
         z
         -Wl,--end-group
+        -Wl,-Bdynamic
     )
+
+    set(CROSSOF_INCLUDE_DIRS
+        "${MXE}/include"
+        "${MXE}/include/GL"
+        "${MXE}/include/cairo"
+        "${MXE}/include/freetype2"
+    )
+
 endif()
 
-set(CROSSOF_INCLUDE_DIRS ${CROSSOF_INCLUDE_DIRS}
+set(CROSSOF_INCLUDE_DIRS
+  ${CROSSOF_INCLUDE_DIRS}
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks"
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks/3d"
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks/app"
@@ -140,15 +235,15 @@ set(CROSSOF_INCLUDE_DIRS ${CROSSOF_INCLUDE_DIRS}
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks/math"
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks/types"
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks/utils"
-    
+
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw/include"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw/include/GLFW"
-    
+
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/kiss"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/kiss/include"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/kiss/src"
-    
+
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Crypto/include"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Crypto/include/Poco"
@@ -169,45 +264,48 @@ set(CROSSOF_INCLUDE_DIRS ${CROSSOF_INCLUDE_DIRS}
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Util/include"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Util/include/Poco"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Util/include/Poco/Util"
-    
+
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/XML/include"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/XML/include/Poco"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/XML/include/Poco/DOM"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/XML/include/Poco/SAX"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/XML/include/Poco/XML"
-    
+
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Zip/include"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Zip/include/Poco"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Zip/include/Poco/Zip"
-    
+
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2/include"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2/Sources"
 )
 
-include_directories(${CROSSOF_INCLUDE_DIRS})
-
-add_definitions(
+set(CROSSOF_DEFINITIONS
+  ${CROSSOF_DEFINITIONS}
     -DTARGET_NO_SOUND
     -DTARGET_NO_VIDEO
     -DPOCO_STATIC
 )
+
+include_directories(${CROSSOF_INCLUDE_DIRS})
+add_definitions(${CROSSOF_DEFINITIONS})
 
 set(DEBUG_FLAGS "
     -g
     -Wall
     -Wextra
     -fsanitize=address
-    -fno-omit-frame-pointer
+    -fcolor-diagnostics
     -Wno-unused-parameter
+    -fno-omit-frame-pointer
 ")
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
-set(CMAKE_C_FLAGS   "-std=c11"  )
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} -O2 ${DEBUG_FLAGS} -fcolor-diagnostics")
-set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS}   -O2 ${DEBUG_FLAGS} -fcolor-diagnostics")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
-set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS}   -O3")
+set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
+set(CMAKE_C_FLAGS   "-O3 -std=c11"  )
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}")
+set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS}"  )
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} ${DEBUG_FLAGS}")
+set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS}   ${DEBUG_FLAGS}")
 

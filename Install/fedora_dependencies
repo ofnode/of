@@ -30,11 +30,9 @@ clang-analyzer        \
 cmake                 \
 ninja-build           \
 openssl-devel         \
-libpng12-devel        \
 cairo-devel           \
 glew-devel            \
 freeglut-devel        \
-freeimage-devel       \
 freetype-devel        \
 fontconfig-devel
 
@@ -47,12 +45,12 @@ sudo dnf -y install \
     pkgconfig scons unzip gperf ruby
 
 echo ""
-if [ -d /opt/mxe ]
+if [ ! -d /opt/mxe ]
 then
-    echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
-else
     echo "${RED}Setting up /opt/mxe folder.${NORMAL}"
     sudo git clone https://github.com/mxe/mxe.git /opt/mxe
+else
+    echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
 fi
 
 cd /opt/mxe
@@ -64,7 +62,6 @@ openssl     \
 cairo       \
 glew        \
 freeglut    \
-freeimage   \
 freetype
 
 sudo ln -s /opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake /opt/mxe/mingw.cmake

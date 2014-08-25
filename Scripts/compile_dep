@@ -9,6 +9,30 @@ cd Dependencies
 
 
 echo ""
+echo "${GREEN}Compiling KISS for Linux.${NORMAL}"
+
+./kiss-linux-64
+
+
+echo ""
+echo "${GREEN}Compiling KISS for Windows.${NORMAL}"
+
+./kiss-mingw-64
+
+
+echo ""
+echo "${GREEN}Compiling TESS for Linux.${NORMAL}"
+
+./tess2-linux-64
+
+
+echo ""
+echo "${GREEN}Compiling TESS for Windows.${NORMAL}"
+
+./tess2-mingw-64
+
+
+echo ""
 echo "${GREEN}Compiling GLFW for Linux.${NORMAL}"
 
 ./glfw-linux-64
@@ -33,26 +57,14 @@ echo "${GREEN}Compiling POCO for Windows.${NORMAL}"
 
 
 echo ""
-echo "${GREEN}Compiling KISS for Linux.${NORMAL}"
+echo "${GREEN}Compiling FreeImage for Linux.${NORMAL}"
 
-./kiss-linux-64
-
-
-echo ""
-echo "${GREEN}Compiling KISS for Windows.${NORMAL}"
-
-./kiss-mingw-64
+./freeimage-linux-64
 
 
 echo ""
-echo "${GREEN}Compiling TESS for Linux.${NORMAL}"
+echo "${GREEN}Compiling FreeImage for Windows.${NORMAL}"
 
-./tess2-linux-64
-
-
-echo ""
-echo "${GREEN}Compiling TESS for Windows.${NORMAL}"
-
-./tess2-mingw-64
+./freeimage-mingw-64
 
 

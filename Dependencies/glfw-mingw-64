@@ -2,19 +2,19 @@
 
 cd `dirname $(readlink -f $0)`
 
-DIR=`pwd`
+DEPS=`pwd`
 
 cd    Libs/glfw
 
 mkdir -p compiled/mingw-64
 cd       compiled/mingw-64
 
-cmake -G Ninja                  \
-      -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
+cmake -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
       -DGLFW_BUILD_TESTS=OFF    \
       -DGLFW_BUILD_EXAMPLES=OFF \
+      -G Ninja                  \
       ../..
 ninja
 
-cp    src/libglfw3.a $DIR/Compiled/mingw-64
+cp    src/libglfw3.a $DEPS/Compiled/mingw-64
 

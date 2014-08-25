@@ -6,54 +6,63 @@ cd ..
 source commits
 source pretty
 
+cd Dependencies
+DEPS=`pwd`
+cd ..
 
-cd     Dependencies/Archive/glfw
+
+
+cd     $DEPS/Libs
+git    clone https://github.com/procedural/FreeImage.git freeimage
+cd     freeimage
+git    submodule init
+git    submodule update
+
+
+
+cd     $DEPS/Archive/glfw
 
 echo   ""
-if [ -f $GLFW_BRANCH.zip ]
+if [ ! -f $GLFW_BRANCH.zip ]
 then
-       echo "${GREEN}Using existing $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
-else
        echo "${RED}Downloading $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
        wget --progress=bar:force $GLFW_REPO 2>&1 | download_progress
+else
+       echo "${GREEN}Using existing $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
 fi
 
 unzip -q $GLFW_BRANCH.zip
 
-mv     glfw-* ../../Libs/glfw
+mv     glfw-* $DEPS/Libs/glfw
 rm -rf glfw-*
 
-cd     ../../..
 
 
-
-cd     Dependencies/Archive/poco
+cd     $DEPS/Archive/poco
 
 echo   ""
-if [ -f $POCO_BRANCH.zip ]
+if [ ! -f $POCO_BRANCH.zip ]
 then
-       echo "${GREEN}Using existing $POCO_BRANCH.zip archive for POCO.${NORMAL}"
-else
        echo "${RED}Downloading $POCO_BRANCH.zip archive for POCO.${NORMAL}"
        wget --progress=bar:force $POCO_REPO 2>&1 | download_progress
+else
+       echo "${GREEN}Using existing $POCO_BRANCH.zip archive for POCO.${NORMAL}"
 fi
 
 unzip  -q $POCO_BRANCH.zip
 
-mv     poco-* ../../Libs/poco
+mv     poco-* $DEPS/Libs/poco
 rm -rf poco-*
 
-cd     ../../..
-
-cd     Dependencies/Libs/poco
+cd     $DEPS/Libs/poco
 
 echo   ""
 echo   ${CYAN}poco.patch${NORMAL}
-patch  -p1 < ../../poco.patch
+patch  -p1 < $DEPS/poco.patch
 
 echo   ""
 echo   ${CYAN}poco_cmake.patch${NORMAL}
-patch  -p1 < ../../poco_cmake.patch
+patch  -p1 < $DEPS/poco_cmake.patch
 
-cd     ../../..
+
 
