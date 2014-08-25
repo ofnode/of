@@ -10,7 +10,7 @@ Features
 
  - Get fully static 64-bit Windows applications from Linux.
 
- - Generate project file for your favorite editor with [CMake Generator][2].
+ - Generate project file for your favorite editor with [CMake Generators][2].
 
  - Debug with Clang Static Analyzer and Clang Address / Leak Sanitizer.
 
