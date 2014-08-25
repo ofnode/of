@@ -19,7 +19,6 @@ cp    lib/libfreeimage.a $DEPS/Compiled/linux-64
 cp    lib/libopenjpeg.a  $DEPS/Compiled/linux-64
 cp    lib/libopenexr.a   $DEPS/Compiled/linux-64
 cp    lib/librawlite.a   $DEPS/Compiled/linux-64
-cp    lib/libzlib.a      $DEPS/Compiled/linux-64
 cp    lib/libtiff.a      $DEPS/Compiled/linux-64
 cp    lib/libjpeg.a      $DEPS/Compiled/linux-64
 cp    lib/libpng.a       $DEPS/Compiled/linux-64

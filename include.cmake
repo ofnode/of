@@ -67,7 +67,6 @@ if(UNIX AND NOT APPLE)
         rawlite
         tiff
         jpeg
-        zlib
         png
         -Wl,--end-group
         -Wl,-Bdynamic
@@ -75,6 +74,7 @@ if(UNIX AND NOT APPLE)
 
     # Dynamic dependencies
     find_package(X11 REQUIRED)
+    find_package(ZLIB REQUIRED)
     find_package(GTK2 REQUIRED)
     find_package(GLEW REQUIRED)
     find_package(OpenGL REQUIRED)
@@ -87,6 +87,7 @@ if(UNIX AND NOT APPLE)
 
     set(CROSSOF_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
+        ${ZLIB_INCLUDE_DIRS}
         ${GTK2_INCLUDE_DIRS}
         ${GLEW_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
@@ -100,6 +101,7 @@ if(UNIX AND NOT APPLE)
         ${X11_Xrandr_LIB}
         ${X11_Xcursor_LIB}
         ${X11_Xxf86vm_LIB}
+        ${ZLIB_LIBRARIES}
         ${GTK2_LIBRARIES}
         ${GLEW_LIBRARIES}
         ${OPENGL_LIBRARIES}
@@ -178,7 +180,6 @@ if(WIN32)
         rawlite
         tiff
         jpeg
-        zlib
         png
         -Wl,--end-group
         -Wl,-Bdynamic
