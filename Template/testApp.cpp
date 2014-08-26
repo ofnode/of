@@ -16,11 +16,11 @@ void testApp::exit()
 {
 }
 
-void testApp::keyPressed(ofKeyEventArgs& key)
+void testApp::keyPressed(ofKeyEventArgs& pressed)
 {
 }
 
-void testApp::keyReleased(ofKeyEventArgs& key)
+void testApp::keyReleased(ofKeyEventArgs& released)
 {
 }
 
