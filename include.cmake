@@ -243,13 +243,17 @@ set(CROSSOF_INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks/types"
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks/utils"
 
-    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw"
-    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw/include"
-    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw/include/GLFW"
-
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/kiss"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/kiss/include"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/kiss/src"
+
+    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2"
+    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2/include"
+    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2/Sources"
+
+    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw"
+    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw/include"
+    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw/include/GLFW"
 
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Crypto/include"
@@ -282,9 +286,7 @@ set(CROSSOF_INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Zip/include/Poco"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/poco/Zip/include/Poco/Zip"
 
-    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2"
-    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2/include"
-    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2/Sources"
+    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/freeimage"
 )
 
 set(CROSSOF_DEFINITIONS

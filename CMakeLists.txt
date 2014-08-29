@@ -58,11 +58,6 @@ set(DEFINITIONS
 
 set(INCLUDE_DIRS
   ${INCLUDE_DIRS}
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/freeimage"
-)
-
-set(INCLUDE_DIRS
-  ${INCLUDE_DIRS}
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/3d"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/app"
@@ -74,13 +69,17 @@ set(INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/types"
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/utils"
 
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw/include/GLFW"
-
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/kiss"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/kiss/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/kiss/src"
+
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2/Sources"
+
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw/include/GLFW"
 
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Crypto/include"
@@ -113,9 +112,7 @@ set(INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Zip/include/Poco"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/poco/Zip/include/Poco/Zip"
 
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2/Sources"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/freeimage"
 )
 
 set(SOURCES
