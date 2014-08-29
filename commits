@@ -3,7 +3,9 @@
 OF_BRANCH=b21cad7
 GLFW_BRANCH=0a6cb34
 POCO_BRANCH=814baaf
+FREEIMAGE_BRANCH=f9293e6
 
 OF_REPO=https://github.com/openframeworks/openFrameworks/archive/$OF_BRANCH.zip
 GLFW_REPO=https://github.com/arturoc/glfw/archive/$GLFW_BRANCH.zip
 POCO_REPO=https://github.com/pocoproject/poco/archive/$POCO_BRANCH.zip
+FREEIMAGE_REPO=https://github.com/procedural/freeimage/archive/$FREEIMAGE_BRANCH.zip

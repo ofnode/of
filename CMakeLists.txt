@@ -7,6 +7,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(UNIX AND NOT APPLE)
+
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
         "${PROJECT_SOURCE_DIR}/Compiled/linux-64"
     )
@@ -26,6 +27,9 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if(WIN32)
+
+    set(MXE /opt/mxe/usr/x86_64-w64-mingw32.static)
+
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
         "${PROJECT_SOURCE_DIR}/Compiled/mingw-64"
     )
@@ -35,11 +39,17 @@ if(WIN32)
     )
     
     set(INCLUDE_DIRS
-        "/opt/mxe/usr/x86_64-w64-mingw32.static/include"
-        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/GL"
-        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/cairo"
-        "/opt/mxe/usr/x86_64-w64-mingw32.static/include/freetype2"
+        "${MXE}/include"
+        "${MXE}/include/GL"
+        "${MXE}/include/cairo"
+        "${MXE}/include/freetype2"
     )
+
+    set(INCLUDE_DIRS
+      ${INCLUDE_DIRS}
+        "${PROJECT_SOURCE_DIR}/Dependencies/Libs/freeimage"
+    )
+
 endif()
 
 set(DEFINITIONS

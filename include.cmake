@@ -222,6 +222,11 @@ if(WIN32)
         "${MXE}/include/freetype2"
     )
 
+    set(CROSSOF_INCLUDE_DIRS
+      ${CROSSOF_INCLUDE_DIRS}
+        "${PROJECT_SOURCE_DIR}/Dependencies/Libs/freeimage"
+    )
+
 endif()
 
 set(CROSSOF_INCLUDE_DIRS

@@ -5,7 +5,8 @@ cd `dirname $(readlink -f $0)`
 tar -zcvf CrossOF_Sources.tar.gz    \
     *.zip                           \
     Dependencies/Archive/glfw/*.zip \
-    Dependencies/Archive/poco/*.zip
+    Dependencies/Archive/poco/*.zip \
+    Dependencies/Archive/freeimage/*.zip
 
 tar -zcvf CrossOF_Binaries.tar.gz      \
     Compiled/linux-64/*.a              \

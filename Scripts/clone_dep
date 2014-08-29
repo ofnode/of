@@ -12,14 +12,6 @@ cd ..
 
 
 
-cd     $DEPS/Libs
-git    clone https://github.com/procedural/FreeImage.git freeimage
-cd     freeimage
-git    submodule init
-git    submodule update
-
-
-
 cd     $DEPS/Archive/glfw
 
 echo   ""
@@ -63,6 +55,24 @@ patch  -p1 < $DEPS/poco.patch
 echo   ""
 echo   ${CYAN}poco_cmake.patch${NORMAL}
 patch  -p1 < $DEPS/poco_cmake.patch
+
+
+
+cd     $DEPS/Archive/freeimage
+
+echo   ""
+if [ ! -f $FREEIMAGE_BRANCH.zip ]
+then
+       echo "${RED}Downloading $FREEIMAGE_BRANCH.zip archive for FreeImage.${NORMAL}"
+       wget --progress=bar:force $FREEIMAGE_REPO 2>&1 | download_progress
+else
+       echo "${GREEN}Using existing $FREEIMAGE_BRANCH.zip archive for FreeImage.${NORMAL}"
+fi
+
+unzip -q $FREEIMAGE_BRANCH.zip
+
+mv     freeimage-* $DEPS/Libs/freeimage
+rm -rf freeimage-*
 
 
 

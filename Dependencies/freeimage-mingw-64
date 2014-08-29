@@ -14,10 +14,10 @@ cmake -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/
       ../..
 ninja
 
-cp    lib/libfreeimage.a $DEPS/Compiled/mingw-64
-cp    lib/libopenjpeg.a  $DEPS/Compiled/mingw-64
-cp    lib/libopenexr.a   $DEPS/Compiled/mingw-64
-cp    lib/librawlite.a   $DEPS/Compiled/mingw-64
-cp    lib/libtiff.a      $DEPS/Compiled/mingw-64
-cp    lib/libjpeg.a      $DEPS/Compiled/mingw-64
-cp    lib/libpng.a       $DEPS/Compiled/mingw-64
+cp                lib/libfreeimage.a  $DEPS/Compiled/mingw-64
+cp        LibJPEG/lib/libjpeg.a       $DEPS/Compiled/mingw-64
+cp    LibOpenJPEG/lib/libopenjpeg.a   $DEPS/Compiled/mingw-64
+cp         LibPNG/lib/libpng.a        $DEPS/Compiled/mingw-64
+cp     LibRawLite/lib/librawlite.a    $DEPS/Compiled/mingw-64
+cp       LibTIFF4/lib/libtiff.a       $DEPS/Compiled/mingw-64
+cp        OpenEXR/lib/libopenexr.a    $DEPS/Compiled/mingw-64
