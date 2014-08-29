@@ -228,11 +228,6 @@ if(WIN32)
         "${MXE}/include/freetype2"
     )
 
-    set(CROSSOF_INCLUDE_DIRS
-      ${CROSSOF_INCLUDE_DIRS}
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/freeimage"
-    )
-
 endif()
 
 set(CROSSOF_INCLUDE_DIRS
