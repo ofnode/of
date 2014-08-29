@@ -45,11 +45,6 @@ if(WIN32)
         "${MXE}/include/freetype2"
     )
 
-    set(INCLUDE_DIRS
-      ${INCLUDE_DIRS}
-        "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/freeimage"
-    )
-
 endif()
 
 set(DEFINITIONS
@@ -59,6 +54,11 @@ set(DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
     -DPOCO_NO_AUTOMATIC_LIB_INIT
+)
+
+set(INCLUDE_DIRS
+  ${INCLUDE_DIRS}
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/freeimage"
 )
 
 set(INCLUDE_DIRS
