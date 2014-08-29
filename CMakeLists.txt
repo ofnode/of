@@ -9,7 +9,7 @@ endif()
 if(UNIX AND NOT APPLE)
 
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-        "${PROJECT_SOURCE_DIR}/Compiled/linux-64"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Compiled/linux-64"
     )
 
     set(DEFINITIONS
@@ -31,7 +31,7 @@ if(WIN32)
     set(MXE /opt/mxe/usr/x86_64-w64-mingw32.static)
 
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-        "${PROJECT_SOURCE_DIR}/Compiled/mingw-64"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Compiled/mingw-64"
     )
 
     set(DEFINITIONS
@@ -47,7 +47,7 @@ if(WIN32)
 
     set(INCLUDE_DIRS
       ${INCLUDE_DIRS}
-        "${PROJECT_SOURCE_DIR}/Dependencies/Libs/freeimage"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/freeimage"
     )
 
 endif()

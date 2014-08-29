@@ -1,3 +1,5 @@
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
+
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
@@ -80,9 +82,11 @@ if(UNIX AND NOT APPLE)
     find_package(OpenGL REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(Threads REQUIRED)
+    find_package(Fontconfig REQUIRED)
 
     set(CROSSOF_DEFINITIONS
         ${GTK2_DEFINITIONS}
+        ${FONTCONFIG_DEFINITIONS}
     )
 
     set(CROSSOF_INCLUDE_DIRS
@@ -92,6 +96,7 @@ if(UNIX AND NOT APPLE)
         ${GLEW_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
+        ${FONTCONFIG_INCLUDE_DIR}
     )
 
     set(CROSSOF_LIBRARIES
@@ -106,6 +111,7 @@ if(UNIX AND NOT APPLE)
         ${GLEW_LIBRARIES}
         ${OPENGL_LIBRARIES}
         ${OPENSSL_LIBRARIES}
+        ${FONTCONFIG_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
@@ -224,7 +230,7 @@ if(WIN32)
 
     set(CROSSOF_INCLUDE_DIRS
       ${CROSSOF_INCLUDE_DIRS}
-        "${PROJECT_SOURCE_DIR}/Dependencies/Libs/freeimage"
+        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/freeimage"
     )
 
 endif()
