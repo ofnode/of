@@ -11,13 +11,13 @@ TESS=`pwd`
 mkdir -p compiled/linux-64
 cd       compiled/linux-64
 
-clang  -I$TESS/include -c $TESS/Sources/bucketalloc.c
-clang  -I$TESS/include -c $TESS/Sources/dict.c
-clang  -I$TESS/include -c $TESS/Sources/geom.c
-clang  -I$TESS/include -c $TESS/Sources/mesh.c
-clang  -I$TESS/include -c $TESS/Sources/priorityq.c
-clang  -I$TESS/include -c $TESS/Sources/sweep.c
-clang  -I$TESS/include -c $TESS/Sources/tess.c
+clang  -fPIC -I$TESS/include -c $TESS/Sources/bucketalloc.c
+clang  -fPIC -I$TESS/include -c $TESS/Sources/dict.c
+clang  -fPIC -I$TESS/include -c $TESS/Sources/geom.c
+clang  -fPIC -I$TESS/include -c $TESS/Sources/mesh.c
+clang  -fPIC -I$TESS/include -c $TESS/Sources/priorityq.c
+clang  -fPIC -I$TESS/include -c $TESS/Sources/sweep.c
+clang  -fPIC -I$TESS/include -c $TESS/Sources/tess.c
 ar cr  libtess2.a bucketalloc.o dict.o geom.o mesh.o priorityq.o sweep.o tess.o
 
 cp     libtess2.a $DEPS/Compiled/linux-64

@@ -11,8 +11,9 @@ cd       compiled/linux-64
 
 cmake  -DCMAKE_C_COMPILER=clang     \
        -DCMAKE_CXX_COMPILER=clang++ \
+       -DCMAKE_C_FLAGS="-O3 -fPIC"  \
+       -DCMAKE_CXX_FLAGS="-O3 -fPIC -std=c++11 -DPOCO_ENABLE_CPP11 -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
        -DCMAKE_BUILD_TYPE=None      \
-       -DCMAKE_CXX_FLAGS="-O3 -std=c++11 -DPOCO_ENABLE_CPP11 -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
        -DPOCO_STATIC=ON             \
        -G Ninja                     \
        ../..

@@ -15,9 +15,10 @@ cd       compiled/mingw-64
 export OPENSSL_ROOT_DIR=/opt/mxe/usr
 
 cmake  -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
-       -DPOCO_STATIC=ON        \
-       -DCMAKE_BUILD_TYPE=None \
+       -DCMAKE_C_FLAGS="-O3"   \
        -DCMAKE_CXX_FLAGS="-O3 -std=c++11 -fpermissive -DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
+       -DCMAKE_BUILD_TYPE=None \
+       -DPOCO_STATIC=ON        \
        -G Ninja                \
        ../..
 ninja

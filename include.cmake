@@ -301,18 +301,16 @@ add_definitions(${CROSSOF_DEFINITIONS})
 
 set(DEBUG_FLAGS "
     -g
+    -fPIC
     -Wall
     -Wextra
     -fsanitize=address
     -fcolor-diagnostics
     -Wno-unused-parameter
-    -fno-omit-frame-pointer
 ")
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
 
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}")
-set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS}"  )
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS} ${DEBUG_FLAGS}")
-set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS}   ${DEBUG_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG "${DEBUG_FLAGS}")
+set(CMAKE_C_FLAGS_DEBUG   "${DEBUG_FLAGS}")
 

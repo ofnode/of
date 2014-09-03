@@ -10,6 +10,7 @@ mkdir -p compiled/linux-64
 cd       compiled/linux-64
 
 cmake -DCMAKE_C_COMPILER=clang  \
+      -DCMAKE_C_FLAGS="-fPIC"   \
       -DGLFW_BUILD_TESTS=OFF    \
       -DGLFW_BUILD_EXAMPLES=OFF \
       -G Ninja                  \
