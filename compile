@@ -2,8 +2,6 @@
 
 cd `dirname $(readlink -f $0)`
 
-Install/ubuntu_dependencies
-
 cd Scripts
 
 ./clean_dep

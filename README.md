@@ -16,30 +16,29 @@ Features
 
  - Latest openFrameworks versions with precompiled libraries and sources.
 
-Limitations
------------
+Difference
+----------
 
-<b>Arch Linux, Fedora and Ubuntu for now</b>. Install scripts for external dependencies are available only for these systems, but it's possible to add one for your Linux distro.
+- OF_KEY_CTRL, OF_KEY_ALT and OF_KEY_SHIFT are not working because currently OF have to callback keyPressed() two times to check both LEFT and RIGHT modifiers. Use LEFT or RIGHT keys in code directly (e.g. OF_KEY_LEFT_SHIFT).
 
-<b>No sound and video features</b>. openFrameworks uses closed-source FMOD and QuickTime libraries which are not acceptable for this project.
+- Sound and video features are disabled due to use of closed-source FMOD and QuickTime libraries in openFrameworks which are not acceptable for this project.
 
-<b>Can't compile to OSX</b>. I have no Mac yet.
+For other differences between openFrameworks and CrossOF see `Patches` folder.
 
-Installing:
+Installing
 ----------
 
  1. Install `wget` and `patch` packages for your distro.
  2. Run `./setup` to download precompiled openFrameworks libraries.
- 3. Install system dependencies with `Install/archlinux_dependencies`,
-    `Install/fedora_dependencies` or `Install/ubuntu_dependencies`
+ 3. Run a script from `Install` folder that matches your Linux distribution.
 
-Compiling:
+
+Compiling
 ---------
-Run `./compile_on_archlinux`, `./compile_on_fedora` or `./compile_on_ubuntu`
+1. Run a script from `Install` folder that matches your Linux distribution.
+2. Run `./compile` script and wait it to finish.
 
-And wait it to finish.
-
-Examples:
+Examples
 --------
 See `Template` folder.
 
@@ -60,3 +59,4 @@ To debug application, run `analyze.sh` and `sanitize.sh` scripts.
 
   [1]: https://github.com/openframeworks/openFrameworks
   [2]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
+
