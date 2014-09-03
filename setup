@@ -60,5 +60,6 @@ fi
 
 Scripts/clone_dep
 Scripts/clone_of
+Scripts/patch_of
 
 
