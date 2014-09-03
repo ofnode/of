@@ -10,6 +10,7 @@ cd Scripts
 ./clean_of
 ./clone_dep
 ./clone_of
+./patch_of
 ./compile_dep
 ./compile_of_release
 ./compile_of_debug

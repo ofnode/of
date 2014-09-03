@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd `dirname $(readlink -f $0)`
+cd ..
+
+OF=`pwd`
+
+cd Diff
+
+ORIGINS=$(find $OF/openFrameworks -type f -name *.origin)
+
+for i in $ORIGINS; do
+    diff -Naur $i `dirname $i`/`basename ${i%.*}` > $OF/Diff/`basename ${i%%.*}`.patch
+done
