@@ -22,4 +22,4 @@ For Linux:
 9) Rename generated "ofIcon.c" to "ofIcon.h"
 10) Open "ofIcon.h" and rename "gimp_image" struct to "ofIcon"
 11) Replace "crossof/openFrameworks/app/ofIcon.h" with resulted "ofIcon.h" file
-12) Recompile the openFrameworks library with "Scripts/compile_of" script
+12) Recompile the openFrameworks library with "Scripts/compile_of_release" and "Scripts/compile_of_debug" scripts

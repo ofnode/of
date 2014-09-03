@@ -11,4 +11,5 @@ cd Scripts
 ./clone_dep
 ./clone_of
 ./compile_dep
-./compile_of
+./compile_of_release
+./compile_of_debug

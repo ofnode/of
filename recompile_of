@@ -6,4 +6,5 @@ cd Scripts
 
 ./clean_of
 ./clone_of
-./compile_of
+./compile_of_release
+./compile_of_debug
