@@ -12,7 +12,7 @@ chmod +x compile_on_ubuntu
 chmod +x recompile_dep
 chmod +x recompile_of
 
-chmod +x Diff/generate
+chmod +x Difference/generate
 
 chmod +x Scripts/clean_dep
 chmod +x Scripts/clean_of
