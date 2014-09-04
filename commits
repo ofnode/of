@@ -1,6 +1,8 @@
 #!/bin/bash
 
-OF_BRANCH=b21cad7
+# Commits and repository urls used by CrossOF
+
+OF_BRANCH=badd16c
 GLFW_BRANCH=0a6cb34
 POCO_BRANCH=814baaf
 FREEIMAGE_BRANCH=9e6ecb3

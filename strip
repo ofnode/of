@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Removes unused files from OF .zip commit archive
+
+cd `dirname $(readlink -f $0)`
+
+source commits
+
+zip --delete $OF_BRANCH \
+openFrameworks-*/addons/\* \
+openFrameworks-*/apps/\* \
+openFrameworks-*/examples/\* \
+openFrameworks-*/export/\* \
+openFrameworks-*/other/\* \
+openFrameworks-*/scripts/\* \
+openFrameworks-*/libs/cairo/\* \
+openFrameworks-*/libs/fmodex/\* \
+openFrameworks-*/libs/FreeImage/\* \
+openFrameworks-*/libs/freetype/\* \
+openFrameworks-*/libs/glew/\* \
+openFrameworks-*/libs/glfw/\* \
+openFrameworks-*/libs/glu/\* \
+openFrameworks-*/libs/glut/\* \
+openFrameworks-*/libs/openFrameworksCompiled/\* \
+openFrameworks-*/libs/openssl/\* \
+openFrameworks-*/libs/poco/\* \
+openFrameworks-*/libs/quicktime/\* \
+openFrameworks-*/libs/rtAudio/\* \
+openFrameworks-*/libs/videoInput/\* \
+openFrameworks-*/libs/.project
