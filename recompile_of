@@ -7,5 +7,6 @@ cd Scripts
 ./clean_of
 ./clone_of
 ./patch_of
-./compile_of_release
-./compile_of_debug
+./compile_of_linux-64_release
+./compile_of_mingw-64_release
+./compile_of_linux-64_debug

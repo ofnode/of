@@ -6,4 +6,5 @@ cd Scripts
 
 ./clean_dep
 ./clone_dep
-./compile_dep
+./compile_dep_linux-64
+./compile_dep_mingw-64

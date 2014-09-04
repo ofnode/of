@@ -1,0 +1,19 @@
+#!/bin/bash
+
+cd `dirname $(readlink -f $0)`
+cd ..
+
+source pretty
+
+OF=`pwd`
+
+
+echo  ""
+echo  "${GREEN}Compiling Release version of openFrameworks for Linux.${NORMAL}"
+
+mkdir -p $OF/Compiled/linux-64/Release_Build
+cd       $OF/Compiled/linux-64/Release_Build
+
+cmake $OF -G Ninja -DCMAKE_CXX_COMPILER=clang++
+ninja
+

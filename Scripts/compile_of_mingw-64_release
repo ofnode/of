@@ -9,16 +9,6 @@ OF=`pwd`
 
 
 echo  ""
-echo  "${GREEN}Compiling Release version of openFrameworks for Linux.${NORMAL}"
-
-mkdir -p $OF/Compiled/linux-64/Release_Build
-cd       $OF/Compiled/linux-64/Release_Build
-
-cmake $OF -G Ninja -DCMAKE_CXX_COMPILER=clang++
-ninja
-
-
-echo  ""
 echo  "${GREEN}Compiling Release version of openFrameworks for Windows.${NORMAL}"
 
 mkdir -p $OF/Compiled/mingw-64/Release_Build
@@ -26,5 +16,4 @@ cd       $OF/Compiled/mingw-64/Release_Build
 
 cmake $OF -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake
 ninja
-
 

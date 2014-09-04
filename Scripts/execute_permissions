@@ -6,9 +6,7 @@ cd ..
 chmod +x pack
 chmod +x setup
 chmod +x commits
-chmod +x compile_on_archlinux
-chmod +x compile_on_fedora
-chmod +x compile_on_ubuntu
+chmod +x compile
 chmod +x recompile_dep
 chmod +x recompile_of
 
@@ -19,8 +17,11 @@ chmod +x Scripts/clean_of
 chmod +x Scripts/clone_dep
 chmod +x Scripts/clone_of
 chmod +x Scripts/patch_of
-chmod +x Scripts/compile_dep
-chmod +x Scripts/compile_of
+chmod +x Scripts/compile_dep_linux-64
+chmod +x Scripts/compile_dep_mingw-64
+chmod +x Scripts/compile_of_linux-64_release
+chmod +x Scripts/compile_of_mingw-64_release
+chmod +x Scripts/compile_of_linux-64_debug
 
 chmod +x Dependencies/kiss-linux-64
 chmod +x Dependencies/kiss-mingw-64
