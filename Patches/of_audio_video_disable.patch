@@ -1,6 +1,6 @@
 --- a/openFrameworks/ofMain.h
 +++ b/openFrameworks/ofMain.h
-@@ -77,8 +77,10 @@
+@@ -78,8 +78,10 @@
  
  //--------------------------
  // video
