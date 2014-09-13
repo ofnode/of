@@ -2,7 +2,7 @@
 
 # Commits and repository urls used by CrossOF
 
-OF_BRANCH=badd16c
+OF_BRANCH=19b4dda
 GLFW_BRANCH=0a6cb34
 POCO_BRANCH=814baaf
 FREEIMAGE_BRANCH=9e6ecb3

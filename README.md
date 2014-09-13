@@ -19,11 +19,11 @@ Features
 Difference
 ----------
 
-- Sound and video features are disabled due to use of closed-source FMOD and QuickTime libraries in openFrameworks which are not acceptable for this project.
+ - Sound and video features are disabled due to use of closed-source FMOD and QuickTime libraries in openFrameworks which are not acceptable for this project.
 
-- OF_KEY_CTRL, OF_KEY_ALT and OF_KEY_SHIFT are not working because currently OF have to callback keyPressed() two times to check both for left and right modifiers. Use left or right keys in code directly (e.g. OF_KEY_LEFT_SHIFT).
+ - OF_KEY_CTRL/ALT/SHIFT are not working because currently openFrameworks have to callback keyPressed() two times to check both left and right modifiers. Use left or right keys in code directly (e.g. OF_KEY_LEFT_SHIFT).
 
-For other differences between openFrameworks and CrossOF see `Patches` folder.
+For other non-breaking changes of openFrameworks see `Patches` folder.
 
 Installing
 ----------
@@ -35,8 +35,8 @@ Installing
 
 Compiling
 ---------
-1. Run a script from `Install` folder that matches your Linux distribution.
-2. Run `./compile` script and wait it to finish.
+ 1. Run a script from `Install` folder that matches your Linux distribution.
+ 2. Run `./compile` script and wait it to finish.
 
 Examples
 --------

@@ -1,0 +1,61 @@
+--- a/openFrameworks/app/ofAppGLFWWindow.cpp
++++ b/openFrameworks/app/ofAppGLFWWindow.cpp
+@@ -307,6 +307,7 @@
+ 
+ 	ofNotifySetup();
+ 	while(!glfwWindowShouldClose(windowP)){
++		glfwPollEvents();
+ 		ofNotifyUpdate();
+ 		display();
+ 	}
+@@ -382,7 +383,6 @@
+ 	}
+ 
+ 	nFramesSinceWindowResized++;
+-	glfwPollEvents();
+ 
+ }
+ 
+--- a/openFrameworks/events/ofEvents.cpp
++++ b/openFrameworks/events/ofEvents.cpp
+@@ -117,6 +117,19 @@
+ 
+ //------------------------------------------
+ void ofNotifyUpdate(){
++	// update renderer, application and notify update event
++	ofGetCurrentRenderer()->update();
++
++	ofNotifyEvent( ofEvents().update, voidEventArgs );
++}
++
++//------------------------------------------
++void ofNotifyDraw(){
++	if(ofGetCurrentRenderer()){
++		ofNotifyEvent( ofEvents().draw, voidEventArgs );
++	}
++
++	nFrameCount++;
+ 	// calculate sleep time to adjust to target fps
+ 	unsigned long long timeNow = ofGetElapsedTimeMicros();
+ #ifndef TARGET_EMSCRIPTEN
+@@ -163,20 +176,6 @@
+ 		lastFrameTime 	= timeNow-timeThen;
+ 		timeThen    	= timeNow;
+ 	}
+-
+-	// update renderer, application and notify update event
+-	ofGetCurrentRenderer()->update();
+-
+-	ofNotifyEvent( ofEvents().update, voidEventArgs );
+-}
+-
+-//------------------------------------------
+-void ofNotifyDraw(){
+-	if(ofGetCurrentRenderer()){
+-		ofNotifyEvent( ofEvents().draw, voidEventArgs );
+-	}
+-
+-	nFrameCount++;
+ }
+ 
+ //------------------------------------------

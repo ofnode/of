@@ -187,10 +187,7 @@ add_definitions(${DEFINITIONS})
 set(DEBUG_FLAGS "
     -g
     -fPIC
-    -Wall
-    -Wextra
     -fcolor-diagnostics
-    -Wno-unused-parameter
 ")
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
