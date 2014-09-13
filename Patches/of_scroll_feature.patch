@@ -1,6 +1,6 @@
 --- a/openFrameworks/app/ofAppGLFWWindow.cpp
 +++ b/openFrameworks/app/ofAppGLFWWindow.cpp
-@@ -923,7 +923,17 @@
+@@ -924,7 +924,17 @@
  
  //------------------------------------------------------------
  void ofAppGLFWWindow::scroll_cb(GLFWwindow* windowP_, double x, double y) {

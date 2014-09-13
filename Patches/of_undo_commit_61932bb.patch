@@ -1,6 +1,6 @@
 --- a/openFrameworks/events/ofEvents.cpp
 +++ b/openFrameworks/events/ofEvents.cpp
-@@ -181,27 +181,18 @@
+@@ -183,27 +183,18 @@
  //------------------------------------------
  void ofNotifyKeyPressed(int key, int keycode, int scancode, int codepoint){
  	static ofKeyEventArgs keyEventArgs;
@@ -29,7 +29,7 @@
      }
              
  	pressedKeys.insert(key);
-@@ -224,27 +216,17 @@
+@@ -226,27 +217,17 @@
  void ofNotifyKeyReleased(int key, int keycode, int scancode, int codepoint){
  	static ofKeyEventArgs keyEventArgs;
  
