@@ -31,7 +31,6 @@ cmake                 \
 ninja-build           \
 openssl-devel         \
 cairo-devel           \
-glew-devel            \
 freeglut-devel        \
 freetype-devel        \
 fontconfig-devel
@@ -60,7 +59,6 @@ mingw-w64   \
 winpthreads \
 openssl     \
 cairo       \
-glew        \
 freeglut    \
 freetype
 

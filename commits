@@ -1,13 +1,15 @@
 #!/bin/bash
 
-# Commits and repository urls used by CrossOF
+# Commits and repositories used by CrossOF
 
 OF_BRANCH=ff9fa9d
+GLEW_BRANCH=d80b4f1
 GLFW_BRANCH=0a6cb34
 POCO_BRANCH=814baaf
 FREEIMAGE_BRANCH=b421cfb
 
 OF_REPO=https://github.com/openframeworks/openFrameworks/archive/$OF_BRANCH.zip
+GLEW_REPO=https://github.com/omniavinco/glew-cmake/archive/$GLEW_BRANCH.zip
 GLFW_REPO=https://github.com/arturoc/glfw/archive/$GLFW_BRANCH.zip
 POCO_REPO=https://github.com/pocoproject/poco/archive/$POCO_BRANCH.zip
 FREEIMAGE_REPO=https://github.com/procedural/freeimage/archive/$FREEIMAGE_BRANCH.zip

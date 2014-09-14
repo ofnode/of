@@ -21,7 +21,6 @@ cmake                   \
 ninja-build             \
 libssl-dev              \
 libcairo2-dev           \
-libglew-dev             \
 freeglut3-dev           \
 libfreetype6-dev        \
 libfontconfig-dev
@@ -49,7 +48,6 @@ mingw-w64   \
 winpthreads \
 openssl     \
 cairo       \
-glew        \
 freeglut    \
 freetype
 

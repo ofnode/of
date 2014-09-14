@@ -6,9 +6,9 @@ cd ..
 source pretty
 
 function apply() {
-    echo   ""
-    echo   ${CYAN}$1${NORMAL}
-    patch  -p1 < Patches/$1
+    echo  ""
+    echo  ${CYAN}$1${NORMAL}
+    patch -p1 < Patches/$1
 }
 
 apply of_audio_video_disable.patch

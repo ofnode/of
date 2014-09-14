@@ -23,7 +23,6 @@ cmake                          \
 ninja                          \
 openssl                        \
 cairo                          \
-glew                           \
 freeglut                       \
 freetype2                      \
 fontconfig
@@ -50,7 +49,6 @@ mingw-w64   \
 winpthreads \
 openssl     \
 cairo       \
-glew        \
 freeglut    \
 freetype
 

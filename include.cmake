@@ -35,10 +35,11 @@ if(UNIX AND NOT APPLE)
         -Wl,-Bdynamic
     )
 
-    # Static GLFW
+    # Static GLEW and GLFW
     set(CROSSOF_LIBRARIES
       ${CROSSOF_LIBRARIES}
         -Wl,-Bstatic
+        glew
         glfw3
         -Wl,-Bdynamic
     )
@@ -78,7 +79,6 @@ if(UNIX AND NOT APPLE)
     find_package(X11 REQUIRED)
     find_package(ZLIB REQUIRED)
     find_package(GTK2 REQUIRED)
-    find_package(GLEW REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(Threads REQUIRED)
@@ -93,7 +93,6 @@ if(UNIX AND NOT APPLE)
         ${X11_INCLUDE_DIR}
         ${ZLIB_INCLUDE_DIRS}
         ${GTK2_INCLUDE_DIRS}
-        ${GLEW_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${FONTCONFIG_INCLUDE_DIR}
@@ -108,7 +107,6 @@ if(UNIX AND NOT APPLE)
         ${X11_Xxf86vm_LIB}
         ${ZLIB_LIBRARIES}
         ${GTK2_LIBRARIES}
-        ${GLEW_LIBRARIES}
         ${OPENGL_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
@@ -152,10 +150,11 @@ if(WIN32)
         -Wl,-Bdynamic
     )
 
-    # Static GLFW
+    # Static GLEW and GLFW
     set(CROSSOF_LIBRARIES
       ${CROSSOF_LIBRARIES}
         -Wl,-Bstatic
+        glew
         glfw3
         -Wl,-Bdynamic
     )
@@ -204,7 +203,6 @@ if(WIN32)
         iphlpapi
         opengl32
         wsock32
-        glew32s
         ws2_32
         crypto
         glu32
@@ -250,6 +248,9 @@ set(CROSSOF_INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2/include"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/tess2/Sources"
+
+    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glew"
+    "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glew/include"
 
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw"
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/glfw/include"

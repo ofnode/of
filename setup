@@ -6,10 +6,8 @@ cd `dirname $(readlink -f $0)`
 
 source pretty
 
-
 Scripts/clean_dep
 Scripts/clean_of
-
 
 if [ ! -f CrossOF_Binaries.tar.gz ]
 then
@@ -59,9 +57,7 @@ then
     sudo tar -zxvf CrossOF_MXE.tar.gz -C /opt
 fi
 
-
 Scripts/clone_dep
 Scripts/clone_of
 Scripts/patch_of
-
 

@@ -3,10 +3,12 @@
 cd `dirname $(readlink -f $0)`
 cd ..
 
+rm -rf Dependencies/Archive/glew/glew-*
 rm -rf Dependencies/Archive/glfw/glfw-*
 rm -rf Dependencies/Archive/poco/poco-*
 rm -rf Dependencies/Archive/freeimage/freeimage-*
 
+rm -rf Dependencies/Libs/glew
 rm -rf Dependencies/Libs/glfw
 rm -rf Dependencies/Libs/poco
 rm -rf Dependencies/Libs/freeimage

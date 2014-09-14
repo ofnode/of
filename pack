@@ -4,14 +4,16 @@
 
 cd `dirname $(readlink -f $0)`
 
-tar -zcvf CrossOF_Sources.tar.gz    \
-    *.zip                           \
-    Dependencies/Archive/glfw/*.zip \
-    Dependencies/Archive/poco/*.zip \
-    Dependencies/Archive/freeimage/*.zip
+source commits
 
-tar -zcvf CrossOF_Binaries.tar.gz      \
+tar -zcf CrossOF_Sources.tar.gz $OF_BRANCH.zip \
+    Dependencies/Archive/glew/$GLEW_BRANCH.zip \
+    Dependencies/Archive/glfw/$GLFW_BRANCH.zip \
+    Dependencies/Archive/poco/$POCO_BRANCH.zip \
+    Dependencies/Archive/freeimage/$FREEIMAGE_BRANCH.zip
+
+tar -zcf CrossOF_Binaries.tar.gz       \
+    Dependencies/Compiled/linux-64/*.a \
+    Dependencies/Compiled/mingw-64/*.a \
     Compiled/linux-64/*.a              \
     Compiled/mingw-64/*.a              \
-    Dependencies/Compiled/linux-64/*.a \
-    Dependencies/Compiled/mingw-64/*.a

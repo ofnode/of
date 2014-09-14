@@ -21,6 +21,12 @@ echo "${GREEN}Compiling TESS for Linux.${NORMAL}"
 
 
 echo ""
+echo "${GREEN}Compiling GLEW for Linux.${NORMAL}"
+
+./glew-linux-64
+
+
+echo ""
 echo "${GREEN}Compiling GLFW for Linux.${NORMAL}"
 
 ./glfw-linux-64

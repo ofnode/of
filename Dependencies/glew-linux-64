@@ -1,0 +1,19 @@
+#!/bin/bash
+
+cd `dirname $(readlink -f $0)`
+
+DEPS=`pwd`
+
+cd    Libs/glew
+
+mkdir -p compiled/linux-64
+cd       compiled/linux-64
+
+cmake -DCMAKE_C_COMPILER=clang \
+      -DCMAKE_C_FLAGS="-fPIC"  \
+      -G Ninja                 \
+      ../..
+ninja
+
+cp    lib/libglew.a $DEPS/Compiled/linux-64
+

@@ -77,6 +77,9 @@ set(INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/tess2/Sources"
 
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glew"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glew/include"
+
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Libs/glfw/include/GLFW"
@@ -179,8 +182,6 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/utils/ofXml.cpp"
 )
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
-
 include_directories(${INCLUDE_DIRS})
 add_definitions(${DEFINITIONS})
 
@@ -191,6 +192,8 @@ set(DEBUG_FLAGS "
 ")
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
+
+set(CMAKE_CXX_FLAGS "-std=c++11")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${DEBUG_FLAGS}")
 set(CMAKE_C_FLAGS_DEBUG   "${DEBUG_FLAGS}")

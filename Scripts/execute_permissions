@@ -11,8 +11,6 @@ chmod +x compile
 chmod +x recompile_dep
 chmod +x recompile_of
 
-chmod +x Difference/generate
-
 chmod +x Scripts/clean_dep
 chmod +x Scripts/clean_of
 chmod +x Scripts/clone_dep
@@ -28,6 +26,8 @@ chmod +x Dependencies/kiss-linux-64
 chmod +x Dependencies/kiss-mingw-64
 chmod +x Dependencies/tess2-linux-64
 chmod +x Dependencies/tess2-mingw-64
+chmod +x Dependencies/glew-linux-64
+chmod +x Dependencies/glew-mingw-64
 chmod +x Dependencies/glfw-linux-64
 chmod +x Dependencies/glfw-mingw-64
 chmod +x Dependencies/poco-linux-64
@@ -39,7 +39,9 @@ chmod +x Install/archlinux_dependencies
 chmod +x Install/fedora_dependencies
 chmod +x Install/ubuntu_dependencies
 
-chmod +x Template/analyze.sh
-chmod +x Template/sanitize.sh
 chmod +x Template/Icon/icon.sh
+chmod +x Template/sanitize.sh
+chmod +x Template/analyze.sh
+
+chmod +x Difference/generate
 

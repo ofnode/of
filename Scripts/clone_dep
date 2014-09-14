@@ -11,9 +11,21 @@ DEPS=`pwd`
 cd ..
 
 
+cd     $DEPS/Archive/glew
+echo   ""
+if [ ! -f $GLEW_BRANCH.zip ]
+then
+       echo "${RED}Downloading $GLEW_BRANCH.zip archive for GLEW.${NORMAL}"
+       wget --progress=bar:force $GLEW_REPO 2>&1 | download_progress
+else
+       echo "${GREEN}Using existing $GLEW_BRANCH.zip archive for GLEW.${NORMAL}"
+fi
+unzip -q $GLEW_BRANCH.zip
+mv     glew-* $DEPS/Libs/glew
+rm -rf glew-*
+
 
 cd     $DEPS/Archive/glfw
-
 echo   ""
 if [ ! -f $GLFW_BRANCH.zip ]
 then
@@ -22,16 +34,12 @@ then
 else
        echo "${GREEN}Using existing $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
 fi
-
 unzip -q $GLFW_BRANCH.zip
-
 mv     glfw-* $DEPS/Libs/glfw
 rm -rf glfw-*
 
 
-
 cd     $DEPS/Archive/poco
-
 echo   ""
 if [ ! -f $POCO_BRANCH.zip ]
 then
@@ -40,26 +48,19 @@ then
 else
        echo "${GREEN}Using existing $POCO_BRANCH.zip archive for POCO.${NORMAL}"
 fi
-
 unzip  -q $POCO_BRANCH.zip
-
 mv     poco-* $DEPS/Libs/poco
 rm -rf poco-*
-
 cd     $DEPS/Libs/poco
-
 echo   ""
 echo   ${CYAN}poco.patch${NORMAL}
 patch  -p1 < $DEPS/poco.patch
-
 echo   ""
 echo   ${CYAN}poco_cmake.patch${NORMAL}
 patch  -p1 < $DEPS/poco_cmake.patch
 
 
-
 cd     $DEPS/Archive/freeimage
-
 echo   ""
 if [ ! -f $FREEIMAGE_BRANCH.zip ]
 then
@@ -68,11 +69,7 @@ then
 else
        echo "${GREEN}Using existing $FREEIMAGE_BRANCH.zip archive for FreeImage.${NORMAL}"
 fi
-
 unzip -q $FREEIMAGE_BRANCH.zip
-
 mv     freeimage-* $DEPS/Libs/freeimage
 rm -rf freeimage-*
-
-
 
