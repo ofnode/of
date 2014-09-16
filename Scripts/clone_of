@@ -18,28 +18,18 @@ then
 else
        echo "${GREEN}Using existing $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
 fi
-
 unzip  -q $OF/Archive/$OF_BRANCH.zip
-
 mv     openFrameworks-*/libs/openFrameworks .
 
-rm -rf openFrameworks/.settings
-rm     openFrameworks/.cproject
-rm     openFrameworks/.project
+rm -rf Dependencies/Libs/tess2
+mkdir  Dependencies/Libs/tess2
+mv     openFrameworks-*/libs/tess2/include Dependencies/Libs/tess2
+mv     openFrameworks-*/libs/tess2/Sources Dependencies/Libs/tess2
 
-
-TESS=Dependencies/Libs/tess2
-KISS=Dependencies/Libs/kiss
-
-rm -rf $TESS
-mkdir  $TESS
-mv     openFrameworks-*/libs/tess2/include $TESS
-mv     openFrameworks-*/libs/tess2/Sources $TESS
-
-rm -rf $KISS
-mkdir  $KISS
-mv     openFrameworks-*/libs/kiss/include  $KISS
-mv     openFrameworks-*/libs/kiss/src      $KISS
+rm -rf Dependencies/Libs/kiss
+mkdir  Dependencies/Libs/kiss
+mv     openFrameworks-*/libs/kiss/include  Dependencies/Libs/kiss
+mv     openFrameworks-*/libs/kiss/src      Dependencies/Libs/kiss
 
 rm -rf openFrameworks-*
 

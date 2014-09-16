@@ -3,12 +3,12 @@
 cd `dirname $(readlink -f $0)`
 cd ..
 
-rm -rf Dependencies/Archive/glew/glew-*
-rm -rf Dependencies/Archive/glfw/glfw-*
-rm -rf Dependencies/Archive/poco/poco-*
-rm -rf Dependencies/Archive/freeimage/freeimage-*
+function clean() {
+    rm -rf Dependencies/Archive/$1/$1-*
+    rm -rf Dependencies/Libs/$1
+}
 
-rm -rf Dependencies/Libs/glew
-rm -rf Dependencies/Libs/glfw
-rm -rf Dependencies/Libs/poco
-rm -rf Dependencies/Libs/freeimage
+clean glew
+clean glfw
+clean poco
+clean freeimage

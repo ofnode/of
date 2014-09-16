@@ -17,6 +17,8 @@ sudo dnf -y update
 sudo dnf -y install   \
 git                   \
 make                  \
+wget                  \
+patch                 \
 pkgconfig             \
 libstdc++-static      \
 xorg-x11-server-devel \

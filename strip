@@ -26,5 +26,5 @@ openFrameworks-*/libs/openssl/\* \
 openFrameworks-*/libs/poco/\* \
 openFrameworks-*/libs/quicktime/\* \
 openFrameworks-*/libs/rtAudio/\* \
-openFrameworks-*/libs/videoInput/\* \
-openFrameworks-*/libs/.project
+openFrameworks-*/libs/videoInput/\*
+

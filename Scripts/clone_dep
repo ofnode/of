@@ -10,54 +10,29 @@ cd Dependencies
 DEPS=`pwd`
 cd ..
 
-# Clone GLEW
-cd     $DEPS/Archive/glew
+function clone() {
+    cd     $DEPS/Archive/$2
+    echo   ""
+    if [ ! -f $3.zip ]
+    then
+           echo "${RED}Downloading $3.zip archive for $1.${NORMAL}"
+           wget --progress=bar:force $4 2>&1 | download_progress
+    else
+           echo "${GREEN}Using existing $3.zip archive for $1.${NORMAL}"
+    fi
+    unzip -q $3.zip
+    mv     $2-* $DEPS/Libs/$2
+    rm -rf $2-*
+}
+
+clone GLEW glew $GLEW_BRANCH $GLEW_REPO
+clone GLFW glfw $GLFW_BRANCH $GLFW_REPO
+clone POCO poco $POCO_BRANCH $POCO_REPO
+clone FreeImage freeimage $FREEIMAGE_BRANCH $FREEIMAGE_REPO
+
+# POCO patch
 echo   ""
-if [ ! -f $GLEW_BRANCH.zip ]
-then
-       echo "${RED}Downloading $GLEW_BRANCH.zip archive for GLEW.${NORMAL}"
-       wget --progress=bar:force $GLEW_REPO 2>&1 | download_progress
-else
-       echo "${GREEN}Using existing $GLEW_BRANCH.zip archive for GLEW.${NORMAL}"
-fi
-unzip -q $GLEW_BRANCH.zip
-mv     glew-* $DEPS/Libs/glew
-rm -rf glew-*
-
-
-# Clone GLFW
-cd     $DEPS/Archive/glfw
-echo   ""
-if [ ! -f $GLFW_BRANCH.zip ]
-then
-       echo "${RED}Downloading $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
-       wget --progress=bar:force $GLFW_REPO 2>&1 | download_progress
-else
-       echo "${GREEN}Using existing $GLFW_BRANCH.zip archive for GLFW.${NORMAL}"
-fi
-unzip -q $GLFW_BRANCH.zip
-mv     glfw-* $DEPS/Libs/glfw
-rm -rf glfw-*
-
-
-# Clone POCO
-cd     $DEPS/Archive/poco
-echo   ""
-if [ ! -f $POCO_BRANCH.zip ]
-then
-       echo "${RED}Downloading $POCO_BRANCH.zip archive for POCO.${NORMAL}"
-       wget --progress=bar:force $POCO_REPO 2>&1 | download_progress
-else
-       echo "${GREEN}Using existing $POCO_BRANCH.zip archive for POCO.${NORMAL}"
-fi
-unzip  -q $POCO_BRANCH.zip
-mv     poco-* $DEPS/Libs/poco
-rm -rf poco-*
-
-
-# Patch POCO
-echo   ""
-echo   ${CYAN}Copying pocomsg.h${NORMAL}
+echo   "${CYAN}Copying pocomsg.h for POCO${NORMAL}"
 cp     $DEPS/pocomsg.h $DEPS/Libs/poco/Foundation/src/pocomsg.h
 cp     $DEPS/pocomsg.h $DEPS/Libs/poco/Foundation/include/Poco/pocomsg.h
 cd     $DEPS/Libs/poco
@@ -67,19 +42,4 @@ patch  -p1 < $DEPS/poco.patch
 echo   ""
 echo   ${CYAN}poco_cmake.patch${NORMAL}
 patch  -p1 < $DEPS/poco_cmake.patch
-
-
-# Clone FreeImage
-cd     $DEPS/Archive/freeimage
-echo   ""
-if [ ! -f $FREEIMAGE_BRANCH.zip ]
-then
-       echo "${RED}Downloading $FREEIMAGE_BRANCH.zip archive for FreeImage.${NORMAL}"
-       wget --progress=bar:force $FREEIMAGE_REPO 2>&1 | download_progress
-else
-       echo "${GREEN}Using existing $FREEIMAGE_BRANCH.zip archive for FreeImage.${NORMAL}"
-fi
-unzip -q $FREEIMAGE_BRANCH.zip
-mv     freeimage-* $DEPS/Libs/freeimage
-rm -rf freeimage-*
 
