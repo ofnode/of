@@ -4,32 +4,15 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-cp     pocomsg.h Libs/poco/Foundation/src/pocomsg.h
-cp     pocomsg.h Libs/poco/Foundation/include/Poco/pocomsg.h
-
-cd     Libs/poco
-
-mkdir -p compiled/mingw-64
-cd       compiled/mingw-64
+mkdir -p Compiled/mingw-64/poco
+cd       Compiled/mingw-64/poco
 
 export OPENSSL_ROOT_DIR=/opt/mxe/usr
 
-cmake  -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
-       -DCMAKE_C_FLAGS="-O3"   \
-       -DCMAKE_CXX_FLAGS="-O3 -std=c++11 -fpermissive -DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
-       -DCMAKE_BUILD_TYPE=None \
-       -DPOCO_STATIC=ON        \
-       -G Ninja                \
-       ../..
+cmake -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
+      -DPOCO_STATIC=ON        \
+      -DCMAKE_BUILD_TYPE=None \
+      -DCMAKE_C_FLAGS="-O3"   \
+      -DCMAKE_CXX_FLAGS="-O3 -std=c++11 -fpermissive -DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
+      -G Ninja $DEPS/Libs/poco
 ninja
-
-cd     lib
-
-cp     libPocoFoundation.a $DEPS/Compiled/mingw-64
-cp     libPocoXML.a        $DEPS/Compiled/mingw-64
-cp     libPocoUtil.a       $DEPS/Compiled/mingw-64
-cp     libPocoNet.a        $DEPS/Compiled/mingw-64
-cp     libPocoCrypto.a     $DEPS/Compiled/mingw-64
-cp     libPocoNetSSL.a     $DEPS/Compiled/mingw-64
-cp     libPocoZip.a        $DEPS/Compiled/mingw-64
-

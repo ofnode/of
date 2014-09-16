@@ -3,8 +3,6 @@
 cd `dirname $(readlink -f $0)`
 cd ..
 
-rm -rf Compiled/*
-
 rm -rf openFrameworks
 rm -rf openFrameworks-*
 

@@ -4,15 +4,11 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-cd    Libs/glew
-
-mkdir -p compiled/mingw-64
-cd       compiled/mingw-64
+mkdir -p Compiled/mingw-64/glew
+cd       Compiled/mingw-64/glew
 
 cmake -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
-      -G Ninja \
-      ../..
+      -Dglew-cmake_BUILD_SHARED=OFF \
+      -DONLY_LIBS=ON                \
+      -G Ninja $DEPS/Libs/glew
 ninja
-
-cp    lib/libglew.a $DEPS/Compiled/mingw-64
-

@@ -4,18 +4,12 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-cd    Libs/glfw
+mkdir -p Compiled/linux-64/glfw
+cd       Compiled/linux-64/glfw
 
-mkdir -p compiled/linux-64
-cd       compiled/linux-64
-
-cmake -DCMAKE_C_COMPILER=clang  \
-      -DCMAKE_C_FLAGS="-fPIC"   \
+cmake -DCMAKE_C_FLAGS="-fPIC"   \
       -DGLFW_BUILD_TESTS=OFF    \
       -DGLFW_BUILD_EXAMPLES=OFF \
-      -G Ninja                  \
-      ../..
+      -DCMAKE_C_COMPILER=clang  \
+      -G Ninja $DEPS/Libs/glfw
 ninja
-
-cp    src/libglfw3.a $DEPS/Compiled/linux-64
-

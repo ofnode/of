@@ -3,20 +3,23 @@
 cd `dirname $(readlink -f $0)`
 cd ..
 
+OF=`pwd`
+
 source commits
 source pretty
 
-
 echo   ""
-if [ ! -f $OF_BRANCH.zip ]
+if [ ! -f $OF/Archive/$OF_BRANCH.zip ]
 then
        echo "${RED}Downloading $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
+       cd $OF/Archive
        wget --progress=bar:force $OF_REPO 2>&1 | download_progress
+       cd ..
 else
        echo "${GREEN}Using existing $OF_BRANCH.zip archive for openFrameworks.${NORMAL}"
 fi
 
-unzip  -q $OF_BRANCH.zip
+unzip  -q $OF/Archive/$OF_BRANCH.zip
 
 mv     openFrameworks-*/libs/openFrameworks .
 

@@ -8,10 +8,6 @@ endif()
 
 if(UNIX AND NOT APPLE)
 
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-        "${CMAKE_CURRENT_SOURCE_DIR}/Compiled/linux-64"
-    )
-
     set(DEFINITIONS
         -DOF_USING_GTK
     )
@@ -30,10 +26,6 @@ if(WIN32)
 
     set(MXE /opt/mxe/usr/x86_64-w64-mingw32.static)
 
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-        "${CMAKE_CURRENT_SOURCE_DIR}/Compiled/mingw-64"
-    )
-
     set(DEFINITIONS
         -D__MINGW32_VERSION
     )
@@ -46,15 +38,6 @@ if(WIN32)
     )
 
 endif()
-
-set(DEFINITIONS
-  ${DEFINITIONS}
-    -DTARGET_NO_SOUND
-    -DTARGET_NO_VIDEO
-    -DFREEIMAGE_LIB
-    -DPOCO_STATIC
-    -DPOCO_NO_AUTOMATIC_LIB_INIT
-)
 
 set(INCLUDE_DIRS
   ${INCLUDE_DIRS}
@@ -182,6 +165,15 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks/utils/ofXml.cpp"
 )
 
+set(DEFINITIONS
+  ${DEFINITIONS}
+    -DTARGET_NO_SOUND
+    -DTARGET_NO_VIDEO
+    -DFREEIMAGE_LIB
+    -DPOCO_STATIC
+    -DPOCO_NO_AUTOMATIC_LIB_INIT
+)
+
 include_directories(${INCLUDE_DIRS})
 add_definitions(${DEFINITIONS})
 
@@ -198,7 +190,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${DEBUG_FLAGS}")
 set(CMAKE_C_FLAGS_DEBUG   "${DEBUG_FLAGS}")
 
-set(BIN openFrameworks_${CMAKE_BUILD_TYPE})
+set(BIN openFrameworks)
 
 add_library(${BIN} STATIC ${SOURCES})
 

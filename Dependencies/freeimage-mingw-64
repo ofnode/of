@@ -4,20 +4,9 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-cd    Libs/freeimage
-
-mkdir -p compiled/mingw-64
-cd       compiled/mingw-64
+mkdir -p Compiled/mingw-64/freeimage
+cd       Compiled/mingw-64/freeimage
 
 cmake -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
-      -G Ninja \
-      ../..
+      -G Ninja $DEPS/Libs/freeimage
 ninja
-
-cp                lib/libfreeimage.a  $DEPS/Compiled/mingw-64
-cp        LibJPEG/lib/libjpeg.a       $DEPS/Compiled/mingw-64
-cp    LibOpenJPEG/lib/libopenjpeg.a   $DEPS/Compiled/mingw-64
-cp         LibPNG/lib/libpng.a        $DEPS/Compiled/mingw-64
-cp     LibRawLite/lib/librawlite.a    $DEPS/Compiled/mingw-64
-cp       LibTIFF4/lib/libtiff.a       $DEPS/Compiled/mingw-64
-cp        OpenEXR/lib/libopenexr.a    $DEPS/Compiled/mingw-64

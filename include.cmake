@@ -18,59 +18,23 @@ if(UNIX AND NOT APPLE)
         -static-libstdc++
     )
 
-    # Link directories
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
-        -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/linux-64"
-        -L"${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64"
-    )
-
     # Static OF
     set(CROSSOF_LIBRARIES
       ${CROSSOF_LIBRARIES}
-        -Wl,-Bstatic
-        openFrameworks_${CMAKE_BUILD_TYPE}
-        kiss
-        tess2
-        -Wl,-Bdynamic
+        -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/linux-64/${CMAKE_BUILD_TYPE}"
+        openFrameworks
     )
 
-    # Static GLEW and GLFW
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
-        -Wl,-Bstatic
-        glew
-        glfw3
-        -Wl,-Bdynamic
+    # Static dependencies
+    file(GLOB_RECURSE STATIC_LIBRARIES
+         ${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/*.a
     )
 
-    # Static POCO
     set(CROSSOF_LIBRARIES
       ${CROSSOF_LIBRARIES}
         -Wl,-Bstatic
         -Wl,--start-group
-        PocoNet
-        PocoXML
-        PocoUtil
-        PocoFoundation
-        PocoNetSSL
-        PocoCrypto
-        -Wl,--end-group
-        -Wl,-Bdynamic
-    )
-
-    # Static FreeImage
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
-        -Wl,-Bstatic
-        -Wl,--start-group
-        freeimage
-        openjpeg
-        openexr
-        rawlite
-        tiff
-        jpeg
-        png
+        ${STATIC_LIBRARIES}
         -Wl,--end-group
         -Wl,-Bdynamic
     )
@@ -132,67 +96,32 @@ if(WIN32)
         -static-libstdc++
     )
 
-    # Link directories
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
-        -L"${MXE}/lib"
-        -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/mingw-64"
-        -L"${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64"
-    )
-
     # Static OF
     set(CROSSOF_LIBRARIES
       ${CROSSOF_LIBRARIES}
-        -Wl,-Bstatic
-        openFrameworks_${CMAKE_BUILD_TYPE}
-        kiss
-        tess2
-        -Wl,-Bdynamic
-    )
-
-    # Static GLEW and GLFW
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
-        -Wl,-Bstatic
-        glew
-        glfw3
-        -Wl,-Bdynamic
-    )
-
-    # Static POCO
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
-        -Wl,-Bstatic
-        -Wl,--start-group
-        PocoNet
-        PocoXML
-        PocoUtil
-        PocoFoundation
-        PocoNetSSL
-        PocoCrypto
-        -Wl,--end-group
-        -Wl,-Bdynamic
-    )
-
-    # Static FreeImage
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
-        -Wl,-Bstatic
-        -Wl,--start-group
-        freeimage
-        openjpeg
-        openexr
-        rawlite
-        tiff
-        jpeg
-        png
-        -Wl,--end-group
-        -Wl,-Bdynamic
+        -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/mingw-64/${CMAKE_BUILD_TYPE}"
+        openFrameworks
     )
 
     # Static dependencies
+    file(GLOB_RECURSE STATIC_LIBRARIES
+         ${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/*.a
+    )
+
+    list(REMOVE_ITEM STATIC_LIBRARIES *.dll.a)
+
     set(CROSSOF_LIBRARIES
       ${CROSSOF_LIBRARIES}
+        -Wl,-Bstatic
+        -Wl,--start-group
+        ${STATIC_LIBRARIES}
+        -Wl,--end-group
+        -Wl,-Bdynamic
+    )
+
+    set(CROSSOF_LIBRARIES
+      ${CROSSOF_LIBRARIES}
+        -L"${MXE}/lib"
         -Wl,-Bstatic
         -Wl,--start-group
         fontconfig
@@ -303,11 +232,7 @@ add_definitions(${CROSSOF_DEFINITIONS})
 set(DEBUG_FLAGS "
     -g
     -fPIC
-    -Wall
-    -Wextra
     -fsanitize=address
-    -fcolor-diagnostics
-    -Wno-unused-parameter
 ")
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})

@@ -10,7 +10,7 @@ cd Dependencies
 DEPS=`pwd`
 cd ..
 
-
+# Clone GLEW
 cd     $DEPS/Archive/glew
 echo   ""
 if [ ! -f $GLEW_BRANCH.zip ]
@@ -25,6 +25,7 @@ mv     glew-* $DEPS/Libs/glew
 rm -rf glew-*
 
 
+# Clone GLFW
 cd     $DEPS/Archive/glfw
 echo   ""
 if [ ! -f $GLFW_BRANCH.zip ]
@@ -39,6 +40,7 @@ mv     glfw-* $DEPS/Libs/glfw
 rm -rf glfw-*
 
 
+# Clone POCO
 cd     $DEPS/Archive/poco
 echo   ""
 if [ ! -f $POCO_BRANCH.zip ]
@@ -51,6 +53,13 @@ fi
 unzip  -q $POCO_BRANCH.zip
 mv     poco-* $DEPS/Libs/poco
 rm -rf poco-*
+
+
+# Patch POCO
+echo   ""
+echo   ${CYAN}Copying pocomsg.h${NORMAL}
+cp     $DEPS/pocomsg.h $DEPS/Libs/poco/Foundation/src/pocomsg.h
+cp     $DEPS/pocomsg.h $DEPS/Libs/poco/Foundation/include/Poco/pocomsg.h
 cd     $DEPS/Libs/poco
 echo   ""
 echo   ${CYAN}poco.patch${NORMAL}
@@ -60,6 +69,7 @@ echo   ${CYAN}poco_cmake.patch${NORMAL}
 patch  -p1 < $DEPS/poco_cmake.patch
 
 
+# Clone FreeImage
 cd     $DEPS/Archive/freeimage
 echo   ""
 if [ ! -f $FREEIMAGE_BRANCH.zip ]

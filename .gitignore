@@ -6,7 +6,5 @@
 .ninja_log
 .ninja_deps
 
-Compiled/*
-
 openFrameworks
 openFrameworks-*

@@ -6,7 +6,7 @@ cd `dirname $(readlink -f $0)`
 
 source commits
 
-zip --delete $OF_BRANCH \
+zip --delete Archive/$OF_BRANCH \
 openFrameworks-*/addons/\* \
 openFrameworks-*/apps/\* \
 openFrameworks-*/examples/\* \

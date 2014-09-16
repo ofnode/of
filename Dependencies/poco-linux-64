@@ -4,28 +4,14 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-cd     Libs/poco
+mkdir -p Compiled/linux-64/poco
+cd       Compiled/linux-64/poco
 
-mkdir -p compiled/linux-64
-cd       compiled/linux-64
-
-cmake  -DCMAKE_C_COMPILER=clang     \
-       -DCMAKE_CXX_COMPILER=clang++ \
-       -DCMAKE_C_FLAGS="-O3 -fPIC"  \
-       -DCMAKE_CXX_FLAGS="-O3 -fPIC -std=c++11 -DPOCO_ENABLE_CPP11 -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
-       -DCMAKE_BUILD_TYPE=None      \
-       -DPOCO_STATIC=ON             \
-       -G Ninja                     \
-       ../..
+cmake -DPOCO_STATIC=ON             \
+      -DCMAKE_BUILD_TYPE=None      \
+      -DCMAKE_C_COMPILER=clang     \
+      -DCMAKE_CXX_COMPILER=clang++ \
+      -DCMAKE_C_FLAGS="-O3 -fPIC"  \
+      -DCMAKE_CXX_FLAGS="-O3 -fPIC -std=c++11 -DPOCO_ENABLE_CPP11 -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
+      -G Ninja $DEPS/Libs/poco
 ninja
-
-cd     lib
-
-cp     libPocoFoundation.a $DEPS/Compiled/linux-64
-cp     libPocoXML.a        $DEPS/Compiled/linux-64
-cp     libPocoUtil.a       $DEPS/Compiled/linux-64
-cp     libPocoNet.a        $DEPS/Compiled/linux-64
-cp     libPocoCrypto.a     $DEPS/Compiled/linux-64
-cp     libPocoNetSSL.a     $DEPS/Compiled/linux-64
-cp     libPocoZip.a        $DEPS/Compiled/linux-64
-

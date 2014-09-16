@@ -7,12 +7,11 @@ source pretty
 
 OF=`pwd`
 
-
 echo  ""
 echo  "${GREEN}Compiling Release version of openFrameworks for Linux.${NORMAL}"
 
-mkdir -p $OF/Compiled/linux-64/Release_Build
-cd       $OF/Compiled/linux-64/Release_Build
+mkdir -p $OF/Compiled/linux-64/Release
+cd       $OF/Compiled/linux-64/Release
 
 cmake $OF -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
