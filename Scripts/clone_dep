@@ -10,9 +10,10 @@ cd Dependencies
 DEPS=`pwd`
 cd ..
 
+echo ""
+
 function clone() {
     cd     $DEPS/Archive/$2
-    echo   ""
     if [ ! -f $3.zip ]
     then
            echo "${RED}Downloading $3.zip archive for $1.${NORMAL}"

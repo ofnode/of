@@ -17,7 +17,6 @@ else
     echo "${GREEN}Using existing CrossOF_Binaries.tar.gz archive.${NORMAL}"
 fi
 
-
 if [ ! -f CrossOF_Sources.tar.gz ]
 then
     echo "${RED}Downloading CrossOF_Sources.tar.gz archive.${NORMAL}"
@@ -25,7 +24,6 @@ then
 else
     echo "${GREEN}Using existing CrossOF_Sources.tar.gz archive.${NORMAL}"
 fi
-
 
 if [ ! -f CrossOF_MXE.tar.gz ]
 then
@@ -40,21 +38,18 @@ else
     echo "${GREEN}Using existing CrossOF_MXE.tar.gz archive.${NORMAL}"
 fi
 
-
 echo ""
+
 echo "${GREEN}Extracting CrossOF_Binaries.tar.gz archive.${NORMAL}"
-tar -zxvf CrossOF_Binaries.tar.gz
+tar -zxf CrossOF_Binaries.tar.gz
 
-echo ""
 echo "${GREEN}Extracting CrossOF_Sources.tar.gz archive.${NORMAL}"
-tar -zxvf CrossOF_Sources.tar.gz
+tar -zxf CrossOF_Sources.tar.gz
 
-
-echo ""
 if [ ! -d /opt/mxe ]
 then
     echo "${GREEN}Extracting CrossOF_MXE.tar.gz archive to /opt folder.${NORMAL}"
-    sudo tar -zxvf CrossOF_MXE.tar.gz -C /opt
+    sudo tar -zxf CrossOF_MXE.tar.gz -C /opt
 fi
 
 Scripts/clone_dep
