@@ -5,29 +5,14 @@ cd ..
 
 source pretty
 
-cd Dependencies
+function clu() {
+    # $1 Name
+    # $2 Folder
+    # $3 Branch hash
+    # $4 Repository url
+    echo ""
+    echo "${GREEN}Compiling $1 for Windows.${NORMAL}"
+    Dependencies/$2-mingw-64
+}
 
-echo ""
-echo "${GREEN}Compiling KISS for Windows.${NORMAL}"
-./kiss-mingw-64
-
-echo ""
-echo "${GREEN}Compiling TESS for Windows.${NORMAL}"
-./tess2-mingw-64
-
-echo ""
-echo "${GREEN}Compiling GLEW for Windows.${NORMAL}"
-./glew-mingw-64
-
-echo ""
-echo "${GREEN}Compiling GLFW for Windows.${NORMAL}"
-./glfw-mingw-64
-
-echo ""
-echo "${GREEN}Compiling POCO for Windows.${NORMAL}"
-./poco-mingw-64
-
-echo ""
-echo "${GREEN}Compiling FreeImage for Windows.${NORMAL}"
-./freeimage-mingw-64
-
+source clu

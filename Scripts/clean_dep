@@ -3,12 +3,13 @@
 cd `dirname $(readlink -f $0)`
 cd ..
 
-function clean() {
-    rm -rf Dependencies/Archive/$1/$1-*
-    rm -rf Dependencies/Libs/$1
+function clu() {
+    # $1 Name
+    # $2 Folder
+    # $3 Branch hash
+    # $4 Repository url
+    rm -rf Dependencies/Archive/$2/$2-*
+    rm -rf Dependencies/Libs/$2
 }
 
-clean glew
-clean glfw
-clean poco
-clean freeimage
+source clu

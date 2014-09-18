@@ -12,7 +12,11 @@ cd ..
 
 echo ""
 
-function clone() {
+function clu() {
+    # $1 Name
+    # $2 Folder
+    # $3 Branch hash
+    # $4 Repository url
     cd     $DEPS/Archive/$2
     if [ ! -f $3.zip ]
     then
@@ -26,10 +30,7 @@ function clone() {
     rm -rf $2-*
 }
 
-clone GLEW glew $GLEW_BRANCH $GLEW_REPO
-clone GLFW glfw $GLFW_BRANCH $GLFW_REPO
-clone POCO poco $POCO_BRANCH $POCO_REPO
-clone FreeImage freeimage $FREEIMAGE_BRANCH $FREEIMAGE_REPO
+source clu
 
 # POCO patch
 echo   ""

@@ -5,29 +5,14 @@ cd ..
 
 source pretty
 
-cd Dependencies
+function clu() {
+    # $1 Name
+    # $2 Folder
+    # $3 Branch hash
+    # $4 Repository url
+    echo ""
+    echo "${GREEN}Compiling $1 for Linux.${NORMAL}"
+    Dependencies/$2-linux-64
+}
 
-echo ""
-echo "${GREEN}Compiling KISS for Linux.${NORMAL}"
-./kiss-linux-64
-
-echo ""
-echo "${GREEN}Compiling TESS for Linux.${NORMAL}"
-./tess2-linux-64
-
-echo ""
-echo "${GREEN}Compiling GLEW for Linux.${NORMAL}"
-./glew-linux-64
-
-echo ""
-echo "${GREEN}Compiling GLFW for Linux.${NORMAL}"
-./glfw-linux-64
-
-echo ""
-echo "${GREEN}Compiling POCO for Linux.${NORMAL}"
-./poco-linux-64
-
-echo ""
-echo "${GREEN}Compiling FreeImage for Linux.${NORMAL}"
-./freeimage-linux-64
-
+source clu
