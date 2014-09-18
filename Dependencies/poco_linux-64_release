@@ -1,0 +1,17 @@
+#!/bin/bash
+
+cd `dirname $(readlink -f $0)`
+
+DEPS=`pwd`
+
+mkdir -p Compiled/linux-64/Release/poco
+cd       Compiled/linux-64/Release/poco
+
+cmake -DPOCO_STATIC=ON             \
+      -DCMAKE_BUILD_TYPE=None      \
+      -DCMAKE_C_COMPILER=clang     \
+      -DCMAKE_CXX_COMPILER=clang++ \
+      -DCMAKE_C_FLAGS="-w -O3"     \
+      -DCMAKE_CXX_FLAGS="-w -O3 -std=c++11 -DPOCO_ENABLE_CPP11 -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION" \
+      -G Ninja $DEPS/Libs/poco
+ninja

@@ -4,9 +4,10 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-mkdir -p Compiled/mingw-64/fontconfig
-cd       Compiled/mingw-64/fontconfig
+mkdir -p Compiled/mingw-64/Release/fontconfig
+cd       Compiled/mingw-64/Release/fontconfig
 
 cmake -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
+      -DCMAKE_C_FLAGS="-w -O3" \
       -G Ninja $DEPS/Libs/fontconfig
 ninja

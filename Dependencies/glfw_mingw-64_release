@@ -4,10 +4,11 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-mkdir -p Compiled/mingw-64/glfw
-cd       Compiled/mingw-64/glfw
+mkdir -p Compiled/mingw-64/Release/glfw
+cd       Compiled/mingw-64/Release/glfw
 
 cmake -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
+      -DCMAKE_C_FLAGS="-w -O3"  \
       -DGLFW_BUILD_TESTS=OFF    \
       -DGLFW_BUILD_EXAMPLES=OFF \
       -G Ninja $DEPS/Libs/glfw

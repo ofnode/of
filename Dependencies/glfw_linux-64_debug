@@ -4,10 +4,10 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-mkdir -p Compiled/linux-64/glfw
-cd       Compiled/linux-64/glfw
+mkdir -p Compiled/linux-64/Debug/glfw
+cd       Compiled/linux-64/Debug/glfw
 
-cmake -DCMAKE_C_FLAGS="-fPIC"   \
+cmake -DCMAKE_C_FLAGS="-g -fPIC -fcolor-diagnostics"   \
       -DGLFW_BUILD_TESTS=OFF    \
       -DGLFW_BUILD_EXAMPLES=OFF \
       -DCMAKE_C_COMPILER=clang  \

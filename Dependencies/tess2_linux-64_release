@@ -1,0 +1,17 @@
+#!/bin/bash
+
+cd `dirname $(readlink -f $0)`
+
+DEPS=`pwd`
+
+mkdir -p Compiled/linux-64/Release/tess2
+cd       Compiled/linux-64/Release/tess2
+
+clang -I$DEPS/Libs/tess2/include -c $DEPS/Libs/tess2/Sources/bucketalloc.c
+clang -I$DEPS/Libs/tess2/include -c $DEPS/Libs/tess2/Sources/dict.c
+clang -I$DEPS/Libs/tess2/include -c $DEPS/Libs/tess2/Sources/geom.c
+clang -I$DEPS/Libs/tess2/include -c $DEPS/Libs/tess2/Sources/mesh.c
+clang -I$DEPS/Libs/tess2/include -c $DEPS/Libs/tess2/Sources/priorityq.c
+clang -I$DEPS/Libs/tess2/include -c $DEPS/Libs/tess2/Sources/sweep.c
+clang -I$DEPS/Libs/tess2/include -c $DEPS/Libs/tess2/Sources/tess.c
+ar cr libtess2.a bucketalloc.o dict.o geom.o mesh.o priorityq.o sweep.o tess.o

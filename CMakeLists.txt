@@ -177,15 +177,24 @@ set(DEFINITIONS
 include_directories(${INCLUDE_DIRS})
 add_definitions(${DEFINITIONS})
 
+set(RELEASE_FLAGS "
+    -w
+    -O3
+")
+
 set(DEBUG_FLAGS "
     -g
     -fPIC
     -fcolor-diagnostics
 ")
 
-string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
+string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
+string(REPLACE "\n" " " DEBUG_FLAGS   ${DEBUG_FLAGS})
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
+
+set(CMAKE_CXX_FLAGS_RELEASE "${RELEASE_FLAGS}")
+set(CMAKE_C_FLAGS_RELEASE   "${RELEASE_FLAGS}")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${DEBUG_FLAGS}")
 set(CMAKE_C_FLAGS_DEBUG   "${DEBUG_FLAGS}")

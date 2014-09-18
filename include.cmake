@@ -27,7 +27,7 @@ if(UNIX AND NOT APPLE)
 
     # Static dependencies
     file(GLOB_RECURSE STATIC_LIBRARIES
-         ${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/*.a
+         ${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/${CMAKE_BUILD_TYPE}/*.a
     )
 
     set(CROSSOF_LIBRARIES
@@ -95,7 +95,7 @@ if(WIN32)
 
     # Static dependencies
     file(GLOB_RECURSE STATIC_LIBRARIES
-         ${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/*.a
+         ${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/${CMAKE_BUILD_TYPE}/*.a
     )
 
     set(CROSSOF_LIBRARIES
@@ -210,6 +210,7 @@ set(DEBUG_FLAGS "
     -g
     -fPIC
     -fsanitize=address
+    -fcolor-diagnostics
 ")
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})

@@ -4,8 +4,8 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-mkdir -p Compiled/mingw-64/tess2
-cd       Compiled/mingw-64/tess2
+mkdir -p Compiled/mingw-64/Release/tess2
+cd       Compiled/mingw-64/Release/tess2
 
 /opt/mxe/usr/bin/x86_64-w64-mingw32.static-gcc -I$DEPS/Libs/tess2/include -c $DEPS/Libs/tess2/Sources/bucketalloc.c
 /opt/mxe/usr/bin/x86_64-w64-mingw32.static-gcc -I$DEPS/Libs/tess2/include -c $DEPS/Libs/tess2/Sources/dict.c

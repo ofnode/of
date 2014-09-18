@@ -11,8 +11,11 @@ function ccd() {
     # $3 Branch hash
     # $4 Repository url
     echo ""
-    echo "${GREEN}Compiling $1 for Windows.${NORMAL}"
-    Dependencies/$2-mingw-64
+    echo "${GREEN}Compiling Release version of $1 for Windows.${NORMAL}"
+    Dependencies/$2_mingw-64_release
 }
+
+ccd Kiss kiss
+ccd Tess2 tess2
 
 source ccd

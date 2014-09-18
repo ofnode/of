@@ -4,9 +4,11 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-mkdir -p Compiled/mingw-64/openssl
-cd       Compiled/mingw-64/openssl
+mkdir -p Compiled/mingw-64/Release/openssl
+cd       Compiled/mingw-64/Release/openssl
 
 cmake -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
+      -DCMAKE_C_FLAGS="-w -O3"   \
+      -DCMAKE_CXX_FLAGS="-w -O3" \
       -G Ninja $DEPS/Libs/openssl
 ninja

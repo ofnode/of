@@ -4,11 +4,11 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-mkdir -p Compiled/linux-64/openssl
-cd       Compiled/linux-64/openssl
+mkdir -p Compiled/linux-64/Release/openssl
+cd       Compiled/linux-64/Release/openssl
 
-cmake -DCMAKE_C_FLAGS="-fPIC"      \
-      -DCMAKE_CXX_FLAGS="-fPIC"    \
+cmake -DCMAKE_C_FLAGS="-w -O3"     \
+      -DCMAKE_CXX_FLAGS="-w -O3"   \
       -DCMAKE_C_COMPILER=clang     \
       -DCMAKE_CXX_COMPILER=clang++ \
       -G Ninja $DEPS/Libs/openssl

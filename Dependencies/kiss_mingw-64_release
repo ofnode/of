@@ -4,8 +4,8 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-mkdir -p Compiled/mingw-64/kiss
-cd       Compiled/mingw-64/kiss
+mkdir -p Compiled/mingw-64/Release/kiss
+cd       Compiled/mingw-64/Release/kiss
 
 /opt/mxe/usr/bin/x86_64-w64-mingw32.static-gcc -I$DEPS/Libs/kiss/include -c $DEPS/Libs/kiss/src/kiss_fft.c
 /opt/mxe/usr/bin/x86_64-w64-mingw32.static-gcc -I$DEPS/Libs/kiss/include -c $DEPS/Libs/kiss/src/kiss_fftr.c

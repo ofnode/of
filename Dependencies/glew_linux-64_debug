@@ -4,12 +4,12 @@ cd `dirname $(readlink -f $0)`
 
 DEPS=`pwd`
 
-mkdir -p Compiled/linux-64/glew
-cd       Compiled/linux-64/glew
+mkdir -p Compiled/linux-64/Debug/glew
+cd       Compiled/linux-64/Debug/glew
 
-cmake -Dglew-cmake_BUILD_SHARED=OFF \
+cmake -DCMAKE_C_FLAGS="-g -fPIC -fcolor-diagnostics" \
+      -Dglew-cmake_BUILD_SHARED=OFF \
       -DONLY_LIBS=ON                \
-      -DCMAKE_C_FLAGS="-fPIC"       \
       -DCMAKE_C_COMPILER=clang      \
       -G Ninja $DEPS/Libs/glew
 ninja
