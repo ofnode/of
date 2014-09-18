@@ -5,6 +5,7 @@
 cd `dirname $(readlink -f $0)`
 
 source pretty
+source commits
 
 Scripts/clean_dep
 Scripts/clean_of
@@ -12,7 +13,7 @@ Scripts/clean_of
 if [ ! -f CrossOF_Binaries.tar.gz ]
 then
     echo "${RED}Downloading CrossOF_Binaries.tar.gz archive.${NORMAL}"
-    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/master/CrossOF_Binaries.tar.gz 2>&1 | download_progress
+    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$CROSSOF_BINARIES/CrossOF_Binaries.tar.gz 2>&1 | download_progress
 else
     echo "${GREEN}Using existing CrossOF_Binaries.tar.gz archive.${NORMAL}"
 fi
@@ -20,7 +21,7 @@ fi
 if [ ! -f CrossOF_Sources.tar.gz ]
 then
     echo "${RED}Downloading CrossOF_Sources.tar.gz archive.${NORMAL}"
-    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/master/CrossOF_Sources.tar.gz 2>&1 | download_progress
+    wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$CROSSOF_BINARIES/CrossOF_Sources.tar.gz 2>&1 | download_progress
 else
     echo "${GREEN}Using existing CrossOF_Sources.tar.gz archive.${NORMAL}"
 fi
@@ -30,7 +31,7 @@ then
     if [ ! -d /opt/mxe ]
     then
         echo "${RED}Downloading CrossOF_MXE.tar.gz archive.${NORMAL}"
-        wget --progress=bar:force https://github.com/procedural/crossof/releases/download/master/CrossOF_MXE.tar.gz 2>&1 | download_progress
+        wget --progress=bar:force https://github.com/procedural/crossof/releases/download/$CROSSOF_BINARIES/CrossOF_MXE.tar.gz 2>&1 | download_progress
     else
         echo "${GREEN}Using existing /opt/mxe folder.${NORMAL}"
     fi

@@ -2,6 +2,8 @@
 
 # Commits and repositories used by CrossOF
 
+CROSSOF_BINARIES=7423efc
+
 OF_BRANCH=ff9fa9d
 ZLIB_BRANCH=66a7530
 GLEW_BRANCH=d80b4f1
