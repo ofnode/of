@@ -3,7 +3,7 @@
 cd `dirname $(readlink -f $0)`
 cd ..
 
-chmod +x clu
+chmod +x ccd
 chmod +x pack
 chmod +x strip
 chmod +x setup

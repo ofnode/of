@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Control Center for Dependencies
+# Not intended to be run manually
+
+# $1 Name
+# $2 Folder
+# $3 Branch hash
+# $4 Repository url
+
+ccd GLEW glew $GLEW_BRANCH $GLEW_REPO
+ccd GLFW glfw $GLFW_BRANCH $GLFW_REPO
+ccd POCO poco $POCO_BRANCH $POCO_REPO
+ccd FreeImage freeimage $FREEIMAGE_BRANCH $FREEIMAGE_REPO

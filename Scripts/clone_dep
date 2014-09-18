@@ -12,25 +12,25 @@ cd ..
 
 echo ""
 
-function clu() {
+function ccd() {
     # $1 Name
     # $2 Folder
     # $3 Branch hash
     # $4 Repository url
-    cd     $DEPS/Archive/$2
+    cd $DEPS/Archive/$2
     if [ ! -f $3.zip ]
     then
-           echo "${RED}Downloading $3.zip archive for $1.${NORMAL}"
-           wget --progress=bar:force $4 2>&1 | download_progress
+       echo "${RED}Downloading $3.zip archive for $1.${NORMAL}"
+       wget --progress=bar:force $4 2>&1 | download_progress
     else
-           echo "${GREEN}Using existing $3.zip archive for $1.${NORMAL}"
+       echo "${GREEN}Using existing $3.zip archive for $1.${NORMAL}"
     fi
     unzip -q $3.zip
     mv     $2-* $DEPS/Libs/$2
     rm -rf $2-*
 }
 
-source clu
+source ccd
 
 # POCO patch
 echo   ""

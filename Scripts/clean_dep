@@ -3,7 +3,7 @@
 cd `dirname $(readlink -f $0)`
 cd ..
 
-function clu() {
+function ccd() {
     # $1 Name
     # $2 Folder
     # $3 Branch hash
@@ -12,4 +12,4 @@ function clu() {
     rm -rf Dependencies/Libs/$2
 }
 
-source clu
+source ccd
