@@ -41,25 +41,18 @@ if(UNIX AND NOT APPLE)
 
     # Dynamic dependencies
     find_package(X11 REQUIRED)
-    find_package(ZLIB REQUIRED)
     find_package(GTK2 REQUIRED)
     find_package(OpenGL REQUIRED)
-    find_package(OpenSSL REQUIRED)
     find_package(Threads REQUIRED)
-    find_package(Fontconfig REQUIRED)
 
     set(CROSSOF_DEFINITIONS
         ${GTK2_DEFINITIONS}
-        ${FONTCONFIG_DEFINITIONS}
     )
 
     set(CROSSOF_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
-        ${ZLIB_INCLUDE_DIRS}
         ${GTK2_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
-        ${OPENSSL_INCLUDE_DIR}
-        ${FONTCONFIG_INCLUDE_DIR}
     )
 
     set(CROSSOF_LIBRARIES
@@ -69,11 +62,8 @@ if(UNIX AND NOT APPLE)
         ${X11_Xrandr_LIB}
         ${X11_Xcursor_LIB}
         ${X11_Xxf86vm_LIB}
-        ${ZLIB_LIBRARIES}
         ${GTK2_LIBRARIES}
         ${OPENGL_LIBRARIES}
-        ${OPENSSL_LIBRARIES}
-        ${FONTCONFIG_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
@@ -108,23 +98,12 @@ if(WIN32)
          ${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/*.a
     )
 
-    list(REMOVE_ITEM STATIC_LIBRARIES *.dll.a)
-
     set(CROSSOF_LIBRARIES
       ${CROSSOF_LIBRARIES}
         -Wl,-Bstatic
         -Wl,--start-group
         ${STATIC_LIBRARIES}
-        -Wl,--end-group
-        -Wl,-Bdynamic
-    )
-
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
         -L"${MXE}/lib"
-        -Wl,-Bstatic
-        -Wl,--start-group
-        fontconfig
         glib-2.0
         harfbuzz
         freetype
@@ -132,8 +111,8 @@ if(WIN32)
         iphlpapi
         opengl32
         wsock32
+        crypt32
         ws2_32
-        crypto
         glu32
         cairo
         iconv
@@ -141,9 +120,7 @@ if(WIN32)
         winmm
         intl
         bz2
-        ssl
         m
-        z
         -Wl,--end-group
         -Wl,-Bdynamic
     )

@@ -3,6 +3,10 @@
 cd `dirname $(readlink -f $0)`
 cd ..
 
+source pretty
+
+echo   "${CYAN}Cleaning dependencies${NORMAL}"
+
 function ccd() {
     # $1 Name
     # $2 Folder

@@ -17,6 +17,7 @@ function ccd() {
     # $2 Folder
     # $3 Branch hash
     # $4 Repository url
+    mkdir -p $DEPS/Archive/$2
     cd $DEPS/Archive/$2
     if [ ! -f $3.zip ]
     then

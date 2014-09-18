@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cd `dirname $(readlink -f $0)`
+
+DEPS=`pwd`
+
+mkdir -p Compiled/linux-64/fontconfig
+cd       Compiled/linux-64/fontconfig
+
+cmake -DCMAKE_C_FLAGS="-fPIC"  \
+      -DCMAKE_C_COMPILER=clang \
+      -G Ninja $DEPS/Libs/fontconfig
+ninja

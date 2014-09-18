@@ -27,14 +27,20 @@ chmod +x Dependencies/kiss-linux-64
 chmod +x Dependencies/kiss-mingw-64
 chmod +x Dependencies/tess2-linux-64
 chmod +x Dependencies/tess2-mingw-64
+chmod +x Dependencies/zlib-linux-64
+chmod +x Dependencies/zlib-mingw-64
 chmod +x Dependencies/glew-linux-64
 chmod +x Dependencies/glew-mingw-64
 chmod +x Dependencies/glfw-linux-64
 chmod +x Dependencies/glfw-mingw-64
 chmod +x Dependencies/poco-linux-64
 chmod +x Dependencies/poco-mingw-64
+chmod +x Dependencies/openssl-linux-64
+chmod +x Dependencies/openssl-mingw-64
 chmod +x Dependencies/freeimage-linux-64
 chmod +x Dependencies/freeimage-mingw-64
+chmod +x Dependencies/fontconfig-linux-64
+chmod +x Dependencies/fontconfig-mingw-64
 
 chmod +x Install/archlinux_dependencies
 chmod +x Install/fedora_dependencies

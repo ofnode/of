@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd `dirname $(readlink -f $0)`
+
+DEPS=`pwd`
+
+mkdir -p Compiled/mingw-64/fontconfig
+cd       Compiled/mingw-64/fontconfig
+
+cmake -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake \
+      -G Ninja $DEPS/Libs/fontconfig
+ninja

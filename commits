@@ -3,13 +3,19 @@
 # Commits and repositories used by CrossOF
 
 OF_BRANCH=ff9fa9d
+ZLIB_BRANCH=66a7530
 GLEW_BRANCH=d80b4f1
 GLFW_BRANCH=0a6cb34
 POCO_BRANCH=814baaf
+OPENSSL_BRANCH=8e801ee
 FREEIMAGE_BRANCH=b421cfb
+FONTCONFIG_BRANCH=0daf2df
 
 OF_REPO=https://github.com/openframeworks/openFrameworks/archive/$OF_BRANCH.zip
+ZLIB_REPO=https://github.com/commontk/zlib/archive/$ZLIB_BRANCH.zip
 GLEW_REPO=https://github.com/omniavinco/glew-cmake/archive/$GLEW_BRANCH.zip
 GLFW_REPO=https://github.com/arturoc/glfw/archive/$GLFW_BRANCH.zip
 POCO_REPO=https://github.com/pocoproject/poco/archive/$POCO_BRANCH.zip
+OPENSSL_REPO=https://github.com/procedural/openssl/archive/$OPENSSL_BRANCH.zip
 FREEIMAGE_REPO=https://github.com/procedural/freeimage/archive/$FREEIMAGE_BRANCH.zip
+FONTCONFIG_REPO=https://github.com/procedural/fontconfig/archive/$FONTCONFIG_BRANCH.zip
