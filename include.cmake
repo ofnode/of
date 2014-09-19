@@ -4,6 +4,13 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
+set(DEBUG_FLAGS "
+    -g
+    -fPIC
+    -fsanitize=address
+    -fcolor-diagnostics
+")
+
 if(UNIX AND NOT APPLE)
 
     # Search path for .so
@@ -205,13 +212,6 @@ set(CROSSOF_DEFINITIONS
 
 include_directories(${CROSSOF_INCLUDE_DIRS})
 add_definitions(${CROSSOF_DEFINITIONS})
-
-set(DEBUG_FLAGS "
-    -g
-    -fPIC
-    -fsanitize=address
-    -fcolor-diagnostics
-")
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
 
