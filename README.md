@@ -54,7 +54,7 @@ cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/mingw.cmake
 ninja
 ```
 
-To debug application, run `analyze.sh` and `sanitize.sh` scripts.
+To debug application, run `analyze.sh` and pass resulted binary to `sanitize.sh` script (e.g. `sanitize.sh Debug/testApp`).
 
 
   [1]: https://github.com/openframeworks/openFrameworks
