@@ -11,19 +11,15 @@ sudo apt-get update
 sudo apt-get -y upgrade
 
 sudo apt-get -y install \
-git                     \
-build-essential         \
 xorg-dev                \
 libgtk2.0-dev           \
 libudev-dev             \
 clang                   \
 cmake                   \
 ninja-build             \
-libssl-dev              \
 libcairo2-dev           \
 freeglut3-dev           \
-libfreetype6-dev        \
-libfontconfig-dev
+libfreetype6-dev
 
 sudo apt-get -y install \
     autoconf automake bash bison bzip2 cmake flex gettext \
@@ -46,7 +42,6 @@ cd /opt/mxe
 sudo make MXE_TARGETS=x86_64-w64-mingw32.static \
 mingw-w64   \
 winpthreads \
-openssl     \
 cairo       \
 freeglut    \
 freetype

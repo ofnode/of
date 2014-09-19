@@ -15,11 +15,6 @@ echo 'metadata_timer_sync=0' | sudo tee -a /etc/dnf/dnf.conf
 sudo dnf -y update
 
 sudo dnf -y install   \
-git                   \
-make                  \
-wget                  \
-patch                 \
-pkgconfig             \
 libstdc++-static      \
 xorg-x11-server-devel \
 libXcursor-devel      \
@@ -29,13 +24,10 @@ gtk2-devel            \
 libudev-devel         \
 clang                 \
 clang-analyzer        \
-cmake                 \
 ninja-build           \
-openssl-devel         \
 cairo-devel           \
 freeglut-devel        \
-freetype-devel        \
-fontconfig-devel
+freetype-devel
 
 sudo ln -s /usr/bin/ninja-build /usr/bin/ninja
 
@@ -59,7 +51,6 @@ cd /opt/mxe
 sudo make MXE_TARGETS=x86_64-w64-mingw32.static \
 mingw-w64   \
 winpthreads \
-openssl     \
 cairo       \
 freeglut    \
 freetype

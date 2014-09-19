@@ -10,22 +10,17 @@ echo "${GREEN}Installing Arch Linux dependencies.${NORMAL}"
 yes | sudo pacman -Syu
 
 yes | sudo pacman -Sy --needed \
-git                            \
-make                           \
-pkg-config                     \
 xorg-server-devel              \
 libxcursor                     \
 libxrandr                      \
 libxi                          \
+gtk2                           \
 clang                          \
 clang-analyzer                 \
-cmake                          \
 ninja                          \
-openssl                        \
 cairo                          \
 freeglut                       \
-freetype2                      \
-fontconfig
+freetype2
 
 yes | sudo pacman -Sy --needed \
     autoconf automake bash bison bzip2 cmake flex gettext \
@@ -47,7 +42,6 @@ cd /opt/mxe
 sudo make MXE_TARGETS=x86_64-w64-mingw32.static \
 mingw-w64   \
 winpthreads \
-openssl     \
 cairo       \
 freeglut    \
 freetype
