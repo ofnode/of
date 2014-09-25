@@ -13,7 +13,7 @@ function apply() {
 
 apply of_audio_video_disable.patch
 apply of_glfw_missing_include.patch
-apply of_mingw_fix.patch
+apply of_mingw_fixes.patch
 apply of_remove_deprecated_registers.patch
 apply of_scroll_feature.patch
 apply of_undo_commit_61932bb.patch

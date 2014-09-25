@@ -6,9 +6,8 @@ cd ..
 source commits
 source pretty
 
-cd Dependencies
-DEPS=`pwd`
-cd ..
+OF=`pwd`
+DEPS=$OF/Dependencies
 
 echo ""
 
@@ -33,16 +32,13 @@ function ccd() {
 
 source ccd
 
-# POCO patch
+# POCO patches
 echo   ""
-echo   "${CYAN}Copying pocomsg.h for POCO${NORMAL}"
-cp     $DEPS/pocomsg.h $DEPS/Libs/poco/Foundation/src/pocomsg.h
-cp     $DEPS/pocomsg.h $DEPS/Libs/poco/Foundation/include/Poco/pocomsg.h
 cd     $DEPS/Libs/poco
 echo   ""
-echo   ${CYAN}poco.patch${NORMAL}
-patch  -p1 < $DEPS/poco.patch
+echo   ${CYAN}poco_mingw_fixes.patch${NORMAL}
+patch  -p1 < $OF/Patches/poco_mingw_fixes.patch
 echo   ""
-echo   ${CYAN}poco_cmake.patch${NORMAL}
-patch  -p1 < $DEPS/poco_cmake.patch
+echo   ${CYAN}poco_cmake_changes.patch${NORMAL}
+patch  -p1 < $OF/Patches/poco_cmake_changes.patch
 

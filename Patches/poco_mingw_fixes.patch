@@ -99,3 +99,13 @@
  		pPrecision,
  		pScale,
  		pNullable);
+--- a/Foundation/src/EventLogChannel.cpp
++++ b/Foundation/src/EventLogChannel.cpp
+@@ -17,7 +17,6 @@
+ #include "Poco/EventLogChannel.h"
+ #include "Poco/Message.h"
+ #include "Poco/String.h"
+-#include "pocomsg.h"
+ #if defined(POCO_WIN32_UTF8)
+ #include "Poco/UnicodeConverter.h"
+ #endif
