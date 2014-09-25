@@ -8,10 +8,8 @@
 # $3 Branch hash
 # $4 Repository url
 
-ccd Zlib zlib $ZLIB_BRANCH $ZLIB_REPO
 ccd GLEW glew $GLEW_BRANCH $GLEW_REPO
 ccd GLFW glfw $GLFW_BRANCH $GLFW_REPO
 ccd POCO poco $POCO_BRANCH $POCO_REPO
-ccd OpenSSL openssl $OPENSSL_BRANCH $OPENSSL_REPO
 ccd FreeImage freeimage $FREEIMAGE_BRANCH $FREEIMAGE_REPO
 ccd Fontconfig fontconfig $FONTCONFIG_BRANCH $FONTCONFIG_REPO

@@ -19,6 +19,7 @@ clang                          \
 clang-analyzer                 \
 ninja                          \
 cairo                          \
+openssl                        \
 freeglut                       \
 freetype2
 
@@ -43,6 +44,7 @@ sudo make MXE_TARGETS=x86_64-w64-mingw32.static \
 mingw-w64   \
 winpthreads \
 cairo       \
+openssl     \
 freeglut    \
 freetype
 

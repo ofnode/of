@@ -32,8 +32,7 @@ function ccd() {
 
 source ccd
 
-# POCO patches
-echo   ""
+# POCO patch
 cd     $DEPS/Libs/poco
 echo   ""
 echo   ${CYAN}poco_mingw_fixes.patch${NORMAL}

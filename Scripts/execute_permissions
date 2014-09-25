@@ -29,9 +29,6 @@ chmod +x Dependencies/kiss_mingw-64_release
 chmod +x Dependencies/tess2_linux-64_release
 chmod +x Dependencies/tess2_linux-64_debug
 chmod +x Dependencies/tess2_mingw-64_release
-chmod +x Dependencies/zlib_linux-64_release
-chmod +x Dependencies/zlib_linux-64_debug
-chmod +x Dependencies/zlib_mingw-64_release
 chmod +x Dependencies/glew_linux-64_release
 chmod +x Dependencies/glew_linux-64_debug
 chmod +x Dependencies/glew_mingw-64_release
@@ -41,9 +38,6 @@ chmod +x Dependencies/glfw_mingw-64_release
 chmod +x Dependencies/poco_linux-64_release
 chmod +x Dependencies/poco_linux-64_debug
 chmod +x Dependencies/poco_mingw-64_release
-chmod +x Dependencies/openssl_linux-64_release
-chmod +x Dependencies/openssl_linux-64_debug
-chmod +x Dependencies/openssl_mingw-64_release
 chmod +x Dependencies/freeimage_linux-64_release
 chmod +x Dependencies/freeimage_linux-64_debug
 chmod +x Dependencies/freeimage_mingw-64_release

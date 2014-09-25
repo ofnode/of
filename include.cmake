@@ -46,8 +46,10 @@ if(UNIX AND NOT APPLE)
 
     # Dynamic dependencies
     find_package(X11 REQUIRED)
+    find_package(ZLIB REQUIRED)
     find_package(GTK2 REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(OpenSSL REQUIRED)
     find_package(Threads REQUIRED)
 
     set(CROSSOF_DEFINITIONS
@@ -56,8 +58,10 @@ if(UNIX AND NOT APPLE)
 
     set(CROSSOF_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
+        ${ZLIB_INCLUDE_DIRS}
         ${GTK2_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
+        ${OPENSSL_INCLUDE_DIR}
     )
 
     set(CROSSOF_LIBRARIES
@@ -67,8 +71,10 @@ if(UNIX AND NOT APPLE)
         ${X11_Xrandr_LIB}
         ${X11_Xcursor_LIB}
         ${X11_Xxf86vm_LIB}
+        ${ZLIB_LIBRARIES}
         ${GTK2_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        ${OPENSSL_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
@@ -118,6 +124,7 @@ if(WIN32)
         wsock32
         crypt32
         ws2_32
+        crypto
         glu32
         cairo
         iconv
@@ -125,7 +132,9 @@ if(WIN32)
         winmm
         intl
         bz2
+        ssl
         m
+        z
         -Wl,--end-group
         -Wl,-Bdynamic
     )

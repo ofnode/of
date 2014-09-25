@@ -9,8 +9,8 @@ echo "${GREEN}Installing Fedora dependencies.${NORMAL}"
 
 sudo yum -y install dnf
 
-grep -q -F 'metadata_timer_sync=0' /etc/dnf/dnf.conf || \
-echo 'metadata_timer_sync=0' | sudo tee -a /etc/dnf/dnf.conf
+SYNC="metadata_timer_sync=0"
+grep -q -F $SYNC /etc/dnf/dnf.conf || echo $SYNC | sudo tee -a /etc/dnf/dnf.conf
 
 sudo dnf -y update
 
@@ -26,6 +26,7 @@ clang                 \
 clang-analyzer        \
 ninja-build           \
 cairo-devel           \
+openssl-devel         \
 freeglut-devel        \
 freetype-devel
 
@@ -52,6 +53,7 @@ sudo make MXE_TARGETS=x86_64-w64-mingw32.static \
 mingw-w64   \
 winpthreads \
 cairo       \
+openssl     \
 freeglut    \
 freetype
 

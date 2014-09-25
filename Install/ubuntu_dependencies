@@ -18,6 +18,7 @@ clang                   \
 cmake                   \
 ninja-build             \
 libcairo2-dev           \
+libssl-dev              \
 freeglut3-dev           \
 libfreetype6-dev
 
@@ -43,6 +44,7 @@ sudo make MXE_TARGETS=x86_64-w64-mingw32.static \
 mingw-w64   \
 winpthreads \
 cairo       \
+openssl     \
 freeglut    \
 freetype
 
