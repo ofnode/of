@@ -2,7 +2,7 @@
 
 # Commits and repositories used by CrossOF
 
-CROSSOF_BINARIES=7423efc
+CROSSOF_BINARIES=master
 
 OF_BRANCH=94f50e0 # Master branch
 GLEW_BRANCH=442545b # GLEW 1.11.0

@@ -8,11 +8,9 @@ source commits
 
 tar -zcvf CrossOF_Sources.tar.gz                         \
     Archive/$OF_BRANCH.zip                               \
-    Dependencies/Archive/zlib/$ZLIB_BRANCH.zip           \
     Dependencies/Archive/glew/$GLEW_BRANCH.zip           \
     Dependencies/Archive/glfw/$GLFW_BRANCH.zip           \
     Dependencies/Archive/poco/$POCO_BRANCH.zip           \
-    Dependencies/Archive/openssl/$OPENSSL_BRANCH.zip     \
     Dependencies/Archive/freeimage/$FREEIMAGE_BRANCH.zip \
     Dependencies/Archive/fontconfig/$FONTCONFIG_BRANCH.zip
 
