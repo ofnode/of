@@ -29,7 +29,7 @@
      }
              
  	pressedKeys.insert(key);
-@@ -226,27 +217,17 @@
+@@ -227,27 +218,17 @@
  void ofNotifyKeyReleased(int key, int keycode, int scancode, int codepoint){
  	static ofKeyEventArgs keyEventArgs;
  

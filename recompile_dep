@@ -6,6 +6,8 @@ cd `dirname $(readlink -f $0)`
 
 cd Scripts
 
+echo ""
+
 ./clean_dep
 ./clone_dep
 ./compile_dep_linux-64
