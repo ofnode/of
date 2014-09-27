@@ -12,34 +12,34 @@ set(DEBUG_FLAGS "
 if(UNIX AND NOT APPLE)
 
     # Search path for .so
-    set(CROSSOF_LIBRARIES
+    set(OPENFRAMEWORKS_LIBRARIES
         -Wl,-rpath,'$$ORIGIN'
     )
 
     # Static C and C++
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
+    set(OPENFRAMEWORKS_LIBRARIES
+      ${OPENFRAMEWORKS_LIBRARIES}
         -static-libgcc
         -static-libstdc++
     )
 
     # Static OF
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
+    set(OPENFRAMEWORKS_LIBRARIES
+      ${OPENFRAMEWORKS_LIBRARIES}
         -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/linux-64/${CMAKE_BUILD_TYPE}"
         openFrameworks
     )
 
     # Static dependencies
-    file(GLOB_RECURSE STATIC_LIBRARIES
+    file(GLOB_RECURSE OPENFRAMEWORKS_LOCAL_DEPENDENCIES
          ${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/linux-64/${CMAKE_BUILD_TYPE}/*.a
     )
 
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
+    set(OPENFRAMEWORKS_LIBRARIES
+      ${OPENFRAMEWORKS_LIBRARIES}
         -Wl,-Bstatic
         -Wl,--start-group
-        ${STATIC_LIBRARIES}
+        ${OPENFRAMEWORKS_LOCAL_DEPENDENCIES}
         -Wl,--end-group
         -Wl,-Bdynamic
     )
@@ -52,11 +52,11 @@ if(UNIX AND NOT APPLE)
     find_package(OpenSSL REQUIRED)
     find_package(Threads REQUIRED)
 
-    set(CROSSOF_DEFINITIONS
+    set(OPENFRAMEWORKS_DEFINITIONS
         ${GTK2_DEFINITIONS}
     )
 
-    set(CROSSOF_INCLUDE_DIRS
+    set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
         ${ZLIB_INCLUDE_DIRS}
         ${GTK2_INCLUDE_DIRS}
@@ -64,8 +64,8 @@ if(UNIX AND NOT APPLE)
         ${OPENSSL_INCLUDE_DIR}
     )
 
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
+    set(OPENFRAMEWORKS_LIBRARIES
+      ${OPENFRAMEWORKS_LIBRARIES}
         ${X11_LIBRARIES}
         ${X11_Xi_LIB}
         ${X11_Xrandr_LIB}
@@ -86,34 +86,34 @@ if(WIN32)
     set(MXE /opt/mxe/usr/x86_64-w64-mingw32.static)
 
     # Hide console window
-    set(CROSSOF_LIBRARIES
+    set(OPENFRAMEWORKS_LIBRARIES
         -mwindows
     )
 
     # Static C and C++
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
+    set(OPENFRAMEWORKS_LIBRARIES
+      ${OPENFRAMEWORKS_LIBRARIES}
         -static-libgcc
         -static-libstdc++
     )
 
     # Static OF
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
+    set(OPENFRAMEWORKS_LIBRARIES
+      ${OPENFRAMEWORKS_LIBRARIES}
         -L"${CMAKE_CURRENT_LIST_DIR}/Compiled/mingw-64/${CMAKE_BUILD_TYPE}"
         openFrameworks
     )
 
     # Static dependencies
-    file(GLOB_RECURSE STATIC_LIBRARIES
+    file(GLOB_RECURSE OPENFRAMEWORKS_LOCAL_DEPENDENCIES
          ${CMAKE_CURRENT_LIST_DIR}/Dependencies/Compiled/mingw-64/${CMAKE_BUILD_TYPE}/*.a
     )
 
-    set(CROSSOF_LIBRARIES
-      ${CROSSOF_LIBRARIES}
+    set(OPENFRAMEWORKS_LIBRARIES
+      ${OPENFRAMEWORKS_LIBRARIES}
         -Wl,-Bstatic
         -Wl,--start-group
-        ${STATIC_LIBRARIES}
+        ${OPENFRAMEWORKS_LOCAL_DEPENDENCIES}
         -L"${MXE}/lib"
         glib-2.0
         harfbuzz
@@ -139,7 +139,7 @@ if(WIN32)
         -Wl,-Bdynamic
     )
 
-    set(CROSSOF_INCLUDE_DIRS
+    set(OPENFRAMEWORKS_INCLUDE_DIRS
         "${MXE}/include"
         "${MXE}/include/GL"
         "${MXE}/include/cairo"
@@ -148,8 +148,8 @@ if(WIN32)
 
 endif()
 
-set(CROSSOF_INCLUDE_DIRS
-  ${CROSSOF_INCLUDE_DIRS}
+set(OPENFRAMEWORKS_INCLUDE_DIRS
+  ${OPENFRAMEWORKS_INCLUDE_DIRS}
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks"
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks/3d"
     "${CMAKE_CURRENT_LIST_DIR}/openFrameworks/app"
@@ -210,17 +210,18 @@ set(CROSSOF_INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/Dependencies/Libs/freeimage"
 )
 
-set(CROSSOF_DEFINITIONS
-  ${CROSSOF_DEFINITIONS}
+set(OPENFRAMEWORKS_DEFINITIONS
+  ${OPENFRAMEWORKS_DEFINITIONS}
     -DTARGET_NO_SOUND
     -DTARGET_NO_VIDEO
     -DPOCO_STATIC
 )
 
-include_directories(${CROSSOF_INCLUDE_DIRS})
-add_definitions(${CROSSOF_DEFINITIONS})
+add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
+include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
 
 set(CMAKE_CXX_FLAGS_DEBUG "${DEBUG_FLAGS}")
 set(CMAKE_C_FLAGS_DEBUG   "${DEBUG_FLAGS}")
+

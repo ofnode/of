@@ -19,5 +19,5 @@ add_executable(
 
 target_link_libraries(
     ${APP}
-    ${CROSSOF_LIBRARIES}
+    ${OPENFRAMEWORKS_LIBRARIES}
 )
