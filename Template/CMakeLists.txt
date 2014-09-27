@@ -3,9 +3,10 @@ cmake_minimum_required(VERSION 2.8)
 project(ofApp)
 set(APP ofApp)
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
-
-include(../include.cmake)
+list(APPEND CMAKE_MODULE_PATH
+  "${CMAKE_CURRENT_SOURCE_DIR}/.."
+)
+include(openFrameworks)
 
 set(SOURCES
     main.cpp
