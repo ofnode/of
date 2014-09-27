@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(testApp)
-set(APP testApp)
+project(ofApp)
+set(APP ofApp)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
@@ -9,7 +9,7 @@ include(../include.cmake)
 
 set(SOURCES
     main.cpp
-    testApp.cpp
+    ofApp.cpp
 )
 
 add_executable(
