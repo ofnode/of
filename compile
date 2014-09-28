@@ -6,8 +6,6 @@ cd `dirname $(readlink -f $0)`
 
 cd Scripts
 
-echo ""
-
 ./clean_dep
 ./clean_of
 ./clone_dep

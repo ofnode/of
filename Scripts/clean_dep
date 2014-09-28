@@ -5,7 +5,8 @@ cd ..
 
 source pretty
 
-echo   "${CYAN}Cleaning dependencies${NORMAL}"
+echo ""
+echo "${CYAN}Cleaning dependencies${NORMAL}"
 
 function ccd() {
     # $1 Name

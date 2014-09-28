@@ -7,8 +7,6 @@ cd `dirname $(readlink -f $0)`
 source pretty
 source commits
 
-echo ""
-
 Scripts/clean_dep
 Scripts/clean_of
 

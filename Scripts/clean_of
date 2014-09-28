@@ -5,7 +5,8 @@ cd ..
 
 source pretty
 
-echo   "${CYAN}Cleaning openFrameworks${NORMAL}"
+echo ""
+echo "${CYAN}Cleaning openFrameworks${NORMAL}"
 
 rm -rf openFrameworks
 rm -rf openFrameworks-*
