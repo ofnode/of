@@ -6,11 +6,6 @@ cd `dirname $(readlink -f $0)`
 
 cd Scripts
 
-./clean_dep
-./clean_of
-./clone_dep
-./clone_of
-./patch_of
 ./compile_dep_linux-64
 ./compile_dep_mingw-64
 ./compile_of_linux-64_release

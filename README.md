@@ -36,7 +36,7 @@ Installing
 Compiling
 ---------
  1. Run a script from `Install` folder that matches your Linux distribution.
- 2. Run `./compile` script and wait it to finish.
+ 2. Run `./prepare` then `./compile` script and wait it to finish.
 
 Examples
 --------

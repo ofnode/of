@@ -8,6 +8,7 @@ chmod +x pack
 chmod +x strip
 chmod +x setup
 chmod +x commits
+chmod +x prepare
 chmod +x compile
 chmod +x recompile_dep
 chmod +x recompile_of
