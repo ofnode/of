@@ -1,7 +1,7 @@
 Cross-compiled [openFrameworks][1]
 ==================================
 
-Alternative openFrameworks distribution for Arch Linux, Fedora and Ubuntu.
+CMake-based cross-compilable graphical subset of openFrameworks for Linux.
 
 Features
 --------
