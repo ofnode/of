@@ -21,6 +21,8 @@ Difference
 
  - Sound and video features are disabled due to use of closed-source FMOD and QuickTime libraries in openFrameworks which are not acceptable for this project.
 
+ - EXR, RAW, WEBP and JXR image formats are not available.
+
  - OF_KEY_CTRL/ALT/SHIFT are not working because currently openFrameworks have to callback keyPressed() two times to check both left and right modifiers. Use left or right keys in code directly (e.g. OF_KEY_LEFT_SHIFT).
 
 For other non-breaking changes of openFrameworks see `Patches` folder.
