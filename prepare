@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Compiles OF and its dependencies cleanly
+# Clones openFrameworks and its dependencies cleanly
 
 cd `dirname $(readlink -f $0)`
 

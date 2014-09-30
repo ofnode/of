@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Compiles OF and its dependencies cleanly
+# Compiles OF and its dependencies
 
 cd `dirname $(readlink -f $0)`
 
