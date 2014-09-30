@@ -15,6 +15,7 @@ libxcursor                     \
 libxrandr                      \
 libxi                          \
 gtk2                           \
+llvm                           \
 clang                          \
 clang-analyzer                 \
 ninja                          \
