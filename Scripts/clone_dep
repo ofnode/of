@@ -40,4 +40,7 @@ patch  -p1 < $OF/Patches/poco_mingw_fixes.patch
 echo   ""
 echo   ${CYAN}poco_cmake_changes.patch${NORMAL}
 patch  -p1 < $OF/Patches/poco_cmake_changes.patch
+echo   ""
+echo   ${CYAN}poco_warning_fixes.patch${NORMAL}
+patch  -p1 < $OF/Patches/poco_warning_fixes.patch
 
