@@ -34,12 +34,25 @@ Precompiled libraries are available from [releases][4] page.
 
 Compiling
 ---------
+For Linux builds:
+
 Install external dependencies with one of the scripts from `dev/install/linux` folder.
 
 ```bash
 mkdir build
 cd build
 cmake .. -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+ninja
+```
+
+For Windows builds:
+
+Install MXE with one of the scripts from `dev/install/mxe` folder.
+
+```bash
+mkdir build
+cd build
+cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/mingw.cmake
 ninja
 ```
 
