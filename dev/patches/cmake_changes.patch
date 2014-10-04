@@ -1,0 +1,233 @@
+--- a/fontconfig/CMakeLists.txt
++++ b/fontconfig/CMakeLists.txt
+@@ -10,6 +10,18 @@
+ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+ INCLUDE(dist.cmake)
+ 
++if(NOT CMAKE_BUILD_TYPE)
++   set(CMAKE_BUILD_TYPE "Release")
++endif()
++
++if(UNIX AND NOT APPLE)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/linux)
++elseif(WIN32)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/windows)
++endif()
++
+ # Macros
+ MACRO(ADD_PREFIX prefix rootlist)
+   SET(outlist )
+--- a/poco/Foundation/CMakeLists.txt
++++ b/poco/Foundation/CMakeLists.txt
+@@ -15,13 +15,6 @@
+       set(kit_bindir "${kit_dir}/bin/x86")
+     endif (X64)
+   endif ()
+-  find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" "${kit_bindir}"
+-    DOC "path to message compiler")
+-  if (NOT CMAKE_MC_COMPILER)
+-    message(FATAL_ERROR "message compiler not found: required to build")
+-  endif (NOT CMAKE_MC_COMPILER)
+-  message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
+-  mark_as_advanced(CMAKE_MC_COMPILER)
+ endif(WIN32)
+   
+ set( BASE_SRCS 
+@@ -209,19 +202,17 @@
+ )
+ 
+ if (WIN32)
+-  set(RES_SRCS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.h)
+-  set_source_files_properties(${RES_SRCS} PROPERTIES GENERATED true)
+-  add_custom_command(
+-    OUTPUT ${RES_SRCS}
+-    DEPENDS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
+-    COMMAND ${CMAKE_MC_COMPILER}
+-    ARGS 
+-         -h ${CMAKE_SOURCE_DIR}/Foundation/src
+-         -r ${CMAKE_SOURCE_DIR}/Foundation/src
+-         ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
+-    VERBATIM # recommended: p260
++  add_definitions(
++    -DPOCO_CTG_FATAL=0x00000001L
++    -DPOCO_CTG_CRITICAL=0x00000002L
++    -DPOCO_CTG_ERROR=0x00000003L
++    -DPOCO_CTG_WARNING=0x00000004L
++    -DPOCO_CTG_NOTICE=0x00000005L
++    -DPOCO_CTG_INFORMATION=0x00000006L
++    -DPOCO_CTG_DEBUG=0x00000007L
++    -DPOCO_CTG_TRACE=0x00000008L
++    -DPOCO_MSG_LOG=0x00001000L
+   )
+-  list(APPEND WIN_SRCS ${RES_SRCS})
+ endif (WIN32)
+ 
+ set(LIN_SRCS
+--- a/freeimage/CMakeLists.txt
++++ b/freeimage/CMakeLists.txt
+@@ -4,9 +4,20 @@
+ 
+ find_package(ZLIB REQUIRED)
+ 
++if(NOT CMAKE_BUILD_TYPE)
++   set(CMAKE_BUILD_TYPE "Release")
++endif()
++
++if(UNIX AND NOT APPLE)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/linux)
++elseif(WIN32)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/windows)
++endif()
++
+ # Set the output paths
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
+-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "lib/")
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "bin/")
+ 
+ # Process subdirectories
+--- a/glew/CMakeLists.txt
++++ b/glew/CMakeLists.txt
+@@ -5,11 +5,22 @@
+ SET( INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include )
+ SET( RC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build )
+ 
+-SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
++if(NOT CMAKE_BUILD_TYPE)
++   set(CMAKE_BUILD_TYPE "Release")
++endif()
++
++if(UNIX AND NOT APPLE)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/linux)
++elseif(WIN32)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/windows)
++endif()
++
+ SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
+ SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+ 
+-OPTION( glew-cmake_BUILD_SHARED "Build the shared glew library" ON)
++OPTION( glew-cmake_BUILD_SHARED "Build the shared glew library" OFF)
+ OPTION( glew-cmake_BUILD_STATIC "Build the static glew library" ON)
+ 
+ INCLUDE_DIRECTORIES( ${INCLUDE_DIR} )
+@@ -65,7 +76,7 @@
+ FILE( GLOB PUBLIC_HEADERS "include/GL/*.h" )
+ INSTALL( FILES ${PUBLIC_HEADERS} DESTINATION include/GL/ )
+ 
+-IF( ${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR} AND NOT ONLY_LIBS )
++IF( FALSE )
+ 	SET( GLEWINFO_SRCS ${SRC_DIR}/glewinfo.c )
+ 	SET( VISUALINFO_SRCS ${SRC_DIR}/visualinfo.c )
+ 	IF( MSVS )
+--- a/glfw/CMakeLists.txt
++++ b/glfw/CMakeLists.txt
+@@ -11,12 +11,24 @@
+ set(LIB_SUFFIX "" CACHE STRING "Takes an empty string or 64. Directory where lib will be installed: lib or lib64")
+ 
+ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+-option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" ON)
+-option(GLFW_BUILD_TESTS "Build the GLFW test programs" ON)
+-option(GLFW_BUILD_DOCS "Build the GLFW documentation" ON)
+-option(GLFW_INSTALL "Generate installation target" ON)
++option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
++option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
++option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
++option(GLFW_INSTALL "Generate installation target" OFF)
+ option(GLFW_DOCUMENT_INTERNALS "Include internals in documentation" OFF)
+ 
++if(NOT CMAKE_BUILD_TYPE)
++   set(CMAKE_BUILD_TYPE "Release")
++endif()
++
++if(UNIX AND NOT APPLE)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/linux)
++elseif(WIN32)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/windows)
++endif()
++
+ if (WIN32)
+     option(GLFW_USE_DWM_SWAP_INTERVAL "Set swap interval even when DWM compositing is enabled" OFF)
+     option(GLFW_USE_OPTIMUS_HPG "Force use of high-performance GPU on Optimus systems" OFF)
+--- a/poco/CMakeLists.txt
++++ b/poco/CMakeLists.txt
+@@ -16,12 +16,23 @@
+ SET(RELEASE_NAME "Unstable-trunk")
+ SET(PROJECT_VERSION ${COMPLETE_VERSION})
+ 
++if(NOT CMAKE_BUILD_TYPE)
++   set(CMAKE_BUILD_TYPE "Release")
++endif()
++
++if(UNIX AND NOT APPLE)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/linux)
++elseif(WIN32)
++   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
++     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/windows)
++endif()
++
+ # Put the libaries and binaries that get built into directories at the
+ # top of the build tree rather than in hard-to-find leaf
+ # directories. This simplifies manual testing and the use of the build
+ # tree rather than installed Boost libraries.
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+ 
+ # Append our module directory to CMake
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+@@ -59,7 +70,7 @@
+   "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
+ 
+ option(POCO_STATIC
+-  "Set to OFF|ON (default is OFF) to control build of POCO as STATIC library" OFF)
++  "Set to OFF|ON (default is ON) to control build of POCO as STATIC library" ON)
+ 
+ option(POCO_UNBUNDLED
+   "Set to OFF|ON (default is OFF) to control linking dependencies as external" OFF)
+@@ -129,10 +140,7 @@
+ endif(CMAKE_SYSTEM MATCHES "SunOS")
+ 
+ if (CMAKE_COMPILER_IS_MINGW)
+-    add_definitions(-DWC_NO_BEST_FIT_CHARS=0x400  -DPOCO_WIN32_UTF8)
+-    add_definitions(-mno-cygwin -D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+-  link_directories(/usr/local/lib /usr/lib)
+-  include_directories(/usr/local/include /usr/include)
++  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+ endif (CMAKE_COMPILER_IS_MINGW)
+ 
+ if (CMAKE_COMPILER_IS_CYGWIN)
+@@ -158,11 +167,14 @@
+    add_subdirectory(CppUnit)
+ ENDIF ()
+ 
++add_definitions(-DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION)
++set(CMAKE_CXX_FLAGS "-fpermissive ${CMAKE_CXX_FLAGS}")
++
+ add_subdirectory(Foundation)
+ add_subdirectory(XML)
+-add_subdirectory(JSON)
+-add_subdirectory(MongoDB)
+-add_subdirectory(PDF)
++#add_subdirectory(JSON)
++#add_subdirectory(MongoDB)
++#add_subdirectory(PDF)
+ add_subdirectory(Util)
+ add_subdirectory(Net)
+ #add_subdirectory(Web)
+@@ -174,7 +184,7 @@
+     add_subdirectory(Crypto)
+ endif(OPENSSL_FOUND)
+ 
+-add_subdirectory(Data)
++#add_subdirectory(Data)
+ #add_subdirectory(WebWidgets)
+ add_subdirectory(Zip)
+ 
