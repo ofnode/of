@@ -3,15 +3,14 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(RELEASE_FLAGS "
-    -w
-    -O3
+  ${RELEASE_FLAGS}
 ")
 
 set(DEBUG_FLAGS "
+  ${DEBUG_FLAGS}
     -g
     -fPIC
     -fsanitize=address
-    -fcolor-diagnostics
 ")
 
 if(UNIX AND NOT APPLE)
@@ -213,7 +212,16 @@ include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
 string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
 string(REPLACE "\n" " " DEBUG_FLAGS   ${DEBUG_FLAGS})
 
-set(CMAKE_CXX_FLAGS_RELEASE "-std=gnu++11 ${RELEASE_FLAGS}")
-set(CMAKE_CXX_FLAGS_DEBUG   "-std=gnu++11 ${DEBUG_FLAGS}")
-set(CMAKE_C_FLAGS_DEBUG     "${DEBUG_FLAGS}")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(COLORIZATION "-fcolor-diagnostics")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "4.9.0")
+    set(COLORIZATION "-fdiagnostics-color")
+    endif()
+endif()
+
+set(CMAKE_C_FLAGS_RELEASE   "${COLORIZATION}")
+set(CMAKE_C_FLAGS_DEBUG     "${COLORIZATION} ${DEBUG_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${COLORIZATION} -std=gnu++11 ${RELEASE_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG   "${COLORIZATION} -std=gnu++11 ${DEBUG_FLAGS}")
 
