@@ -34,6 +34,7 @@ Precompiled libraries are available from [releases][4] page.
 
 Compiling
 ---------
+
 For Linux build:
 
 Install external dependencies with one of the scripts from `dev/install/linux` folder.
@@ -59,7 +60,8 @@ ninja
 
 Examples
 --------
-## [ofApp][5]
+
+### [ofApp][5]
 
 
   [1]: https://github.com/openframeworks/openFrameworks
