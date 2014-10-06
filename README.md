@@ -34,7 +34,7 @@ Precompiled libraries are available from [releases][4] page.
 
 Compiling
 ---------
-For Linux builds:
+For Linux build:
 
 Install external dependencies with one of the scripts from `dev/install/linux` folder.
 
@@ -45,7 +45,7 @@ cmake .. -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
-For Windows builds:
+For Windows build:
 
 Install MXE with one of the scripts from `dev/install/mxe` folder.
 
@@ -57,8 +57,14 @@ ninja
 ```
 
 
+Examples
+--------
+[ofApp][5]
+
+
   [1]: https://github.com/openframeworks/openFrameworks
   [2]: http://mxe.cc
   [3]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
   [4]: https://github.com/procedural/of/releases
+  [5]: https://github.com/procedural/ofApp
 
