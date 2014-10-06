@@ -3,6 +3,8 @@ Cross-compiled [openFrameworks][1]
 
 CMake-based cross-compilable subset of openFrameworks for Linux.
 
+![OF logo courtesy to: http://julioterra.com](http://i.imgur.com/wKDVkN6.png)
+
 
 Features
 --------
