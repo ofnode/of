@@ -1,20 +1,17 @@
 cmake_minimum_required(VERSION 2.8)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 project(openFrameworks)
+
+set(DEBUG_FLAGS "
+    -g
+    -fPIC
+")
 
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
 endif()
-
-set(RELEASE_FLAGS "
-  ${RELEASE_FLAGS}
-")
-
-set(DEBUG_FLAGS "
-  ${DEBUG_FLAGS}
-    -g
-    -fPIC
-")
 
 if(UNIX AND NOT APPLE)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
@@ -41,14 +38,18 @@ if(WIN32)
         -D__MINGW32_VERSION
     )
     
+    find_package(Cairo REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(Freetype REQUIRED)
 
+    list(APPEND OPENGL_INCLUDE_DIR
+        "${CMAKE_FIND_ROOT_PATH}/include/GL"
+    )
+
     set(INCLUDE_DIRS
+        ${CAIRO_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
-        "${CMAKE_FIND_ROOT_PATH}/include/GL"
-        "${CMAKE_FIND_ROOT_PATH}/include/cairo"
     )
 endif(WIN32)
 
@@ -190,8 +191,7 @@ set(DEFINITIONS
 add_definitions(${DEFINITIONS})
 include_directories(${INCLUDE_DIRS})
 
-string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
-string(REPLACE "\n" " " DEBUG_FLAGS   ${DEBUG_FLAGS})
+string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(COLORIZATION "-fcolor-diagnostics")
@@ -201,10 +201,10 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     endif()
 endif()
 
-set(CMAKE_C_FLAGS_RELEASE   "${COLORIZATION}")
-set(CMAKE_C_FLAGS_DEBUG     "${COLORIZATION} ${DEBUG_FLAGS}")
-set(CMAKE_CXX_FLAGS_RELEASE "${COLORIZATION} -std=gnu++11 ${RELEASE_FLAGS}")
-set(CMAKE_CXX_FLAGS_DEBUG   "${COLORIZATION} -std=gnu++11 ${DEBUG_FLAGS}")
+set(CMAKE_C_FLAGS_RELEASE   "${COLORIZATION} ${CMAKE_C_FLAGS_RELEASE}")
+set(CMAKE_C_FLAGS_DEBUG     "${COLORIZATION} ${CMAKE_C_FLAGS_DEBUG} ${DEBUG_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE}")
+set(CMAKE_CXX_FLAGS_DEBUG   "${COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG} ${DEBUG_FLAGS}")
 
 add_subdirectory(src/poco)
 add_subdirectory(src/glfw)

@@ -1,17 +1,14 @@
-if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE "Release")
-endif()
-
-set(RELEASE_FLAGS "
-  ${RELEASE_FLAGS}
-")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 set(DEBUG_FLAGS "
-  ${DEBUG_FLAGS}
     -g
     -fPIC
     -fsanitize=address
 ")
+
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Release")
+endif()
 
 if(UNIX AND NOT APPLE)
     # Search path for .so
@@ -88,50 +85,71 @@ if(WIN32)
         -static-libstdc++
     )
 
+    # MinGW libraries
+    set(WIN_LIBRARIES
+        winmm
+        gdi32
+        ws2_32
+        crypt32
+        wsock32
+        iphlpapi
+    )
+
     # Local dependencies
     file(GLOB_RECURSE OPENFRAMEWORKS_LOCAL_DEPENDENCIES
          "${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows/*.a"
     )
 
     # External dependencies
+    find_package(Glib REQUIRED)
     find_package(ZLIB REQUIRED)
+    find_package(BZip2 REQUIRED)
+    find_package(Iconv REQUIRED)
+    find_package(Cairo REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(Pixman REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(Threads REQUIRED)
+    find_package(Libintl REQUIRED)
+    find_package(HarfBuzz REQUIRED)
     find_package(Freetype REQUIRED)
 
-    set(OPENFRAMEWORKS_INCLUDE_DIRS
-        ${ZLIB_INCLUDE_DIRS}
-        ${OPENGL_INCLUDE_DIR}
-        ${OPENSSL_INCLUDE_DIR}
-        ${FREETYPE_INCLUDE_DIRS}
+    list(APPEND OPENGL_INCLUDE_DIR
         "${CMAKE_FIND_ROOT_PATH}/include/GL"
-        "${CMAKE_FIND_ROOT_PATH}/include/cairo"
+    )
+
+    set(OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GLIB_INCLUDE_DIRS}
+        ${ZLIB_INCLUDE_DIRS}
+        ${BZIP2_INCLUDE_DIR}
+        ${ICONV_INCLUDE_DIR}
+        ${CAIRO_INCLUDE_DIR}
+        ${OPENGL_INCLUDE_DIR}
+        ${PIXMAN_INCLUDE_DIRS}
+        ${OPENSSL_INCLUDE_DIR}
+        ${LIBINTL_INCLUDE_DIR}
+        ${HARFBUZZ_INCLUDE_DIRS}
+        ${FREETYPE_INCLUDE_DIRS}
     )
 
     set(OPENFRAMEWORKS_LIBRARIES
       ${OPENFRAMEWORKS_LIBRARIES}
         -Wl,-Bstatic
         -Wl,--start-group
+        ${WIN_LIBRARIES}
+        ${GLIB_LIBRARIES}
         ${ZLIB_LIBRARIES}
+        ${BZIP2_LIBRARIES}
+        ${ICONV_LIBRARIES}
+        ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        ${PIXMAN_LIBRARIES}
         ${OPENSSL_LIBRARIES}
+        ${LIBINTL_LIBRARIES}
+        ${HARFBUZZ_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
         ${OPENFRAMEWORKS_LOCAL_DEPENDENCIES}
-        glib-2.0
-        harfbuzz
-        pixman-1
-        iphlpapi
-        wsock32
-        crypt32
-        ws2_32
-        cairo
-        iconv
-        gdi32
-        winmm
-        intl
-        bz2
         -Wl,--end-group
         -Wl,-Bdynamic
     )
@@ -209,8 +227,7 @@ set(OPENFRAMEWORKS_DEFINITIONS
 add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
 include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
 
-string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
-string(REPLACE "\n" " " DEBUG_FLAGS   ${DEBUG_FLAGS})
+string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(COLORIZATION "-fcolor-diagnostics")
@@ -220,8 +237,8 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     endif()
 endif()
 
-set(CMAKE_C_FLAGS_RELEASE   "${COLORIZATION}")
-set(CMAKE_C_FLAGS_DEBUG     "${COLORIZATION} ${DEBUG_FLAGS}")
-set(CMAKE_CXX_FLAGS_RELEASE "${COLORIZATION} -std=gnu++11 ${RELEASE_FLAGS}")
-set(CMAKE_CXX_FLAGS_DEBUG   "${COLORIZATION} -std=gnu++11 ${DEBUG_FLAGS}")
+set(CMAKE_C_FLAGS_RELEASE   "${COLORIZATION} ${CMAKE_C_FLAGS_RELEASE}")
+set(CMAKE_C_FLAGS_DEBUG     "${COLORIZATION} ${CMAKE_C_FLAGS_DEBUG} ${DEBUG_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE}")
+set(CMAKE_CXX_FLAGS_DEBUG   "${COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG} ${DEBUG_FLAGS}")
 

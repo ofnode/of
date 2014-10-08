@@ -109,3 +109,32 @@
  #if defined(POCO_WIN32_UTF8)
  #include "Poco/UnicodeConverter.h"
  #endif
+--- a/poco/Foundation/src/NumberFormatter.cpp
++++ b/poco/Foundation/src/NumberFormatter.cpp
+@@ -367,12 +367,12 @@
+ 	char buffer[24];
+ #if defined(POCO_PTR_IS_64_BIT)
+ 	#if defined(POCO_LONG_IS_64_BIT)
+-		std::sprintf(buffer, "%016lX", (UIntPtr) ptr);
++		std::sprintf(buffer, "%016lX", (intptr_t) ptr);
+ 	#else
+-		std::sprintf(buffer, "%016" I64_FMT "X", (UIntPtr) ptr);
++		std::sprintf(buffer, "%016" I64_FMT "X", (intptr_t) ptr);
+ 	#endif
+ #else
+-	std::sprintf(buffer, "%08lX", (UIntPtr) ptr);
++	std::sprintf(buffer, "%08lX", (intptr_t) ptr);
+ #endif
+ 	str.append(buffer);
+ }
+--- a/poco/Util/src/ServerApplication.cpp
++++ b/poco/Util/src/ServerApplication.cpp
+@@ -341,7 +341,7 @@
+ 	return StartServiceCtrlDispatcherW(svcDispatchTable) != 0; 
+ #else
+ 	SERVICE_TABLE_ENTRY svcDispatchTable[2];
+-	svcDispatchTable[0].lpServiceName = "";
++	svcDispatchTable[0].lpServiceName = const_cast<char*>("");
+ 	svcDispatchTable[0].lpServiceProc = ServiceMain;
+ 	svcDispatchTable[1].lpServiceName = NULL;
+ 	svcDispatchTable[1].lpServiceProc = NULL; 

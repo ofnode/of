@@ -341,7 +341,7 @@ bool ServerApplication::isService()
 	return StartServiceCtrlDispatcherW(svcDispatchTable) != 0; 
 #else
 	SERVICE_TABLE_ENTRY svcDispatchTable[2];
-	svcDispatchTable[0].lpServiceName = "";
+	svcDispatchTable[0].lpServiceName = const_cast<char*>("");
 	svcDispatchTable[0].lpServiceProc = ServiceMain;
 	svcDispatchTable[1].lpServiceName = NULL;
 	svcDispatchTable[1].lpServiceProc = NULL; 

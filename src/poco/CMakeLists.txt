@@ -167,7 +167,9 @@ IF (ENABLE_TESTS)
 ENDIF ()
 
 add_definitions(-DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION)
-set(CMAKE_CXX_FLAGS "-fpermissive ${CMAKE_CXX_FLAGS}")
+if(WIN32)
+   add_definitions(-DPOCO_PTR_IS_64_BIT)
+endif(WIN32)
 
 add_subdirectory(Foundation)
 add_subdirectory(XML)

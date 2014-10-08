@@ -10,6 +10,7 @@ function apply() {
   patch -p1 < $OF/dev/patches/$1
 }
 
+apply of_remove_glut.patch
 apply of_mingw_fixes.patch
 apply of_scroll_feature.patch
 apply of_undo_commit_61932bb.patch
