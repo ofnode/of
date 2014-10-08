@@ -21,7 +21,7 @@ Difference
 
  - Sound and video features are disabled because of use of closed-source FMOD and QuickTime.
 
- - OF_KEY_CTRL/ALT/SHIFT won't work, use left or right keys directly (e.g. OF_KEY_LEFT_SHIFT).
+ - OF_KEY_CTRL/ALT/SHIFT won't work, use left/right keys directly (e.g. OF_KEY_LEFT_SHIFT).
 
  - EXR, RAW and JXR image formats are not supported.
 
