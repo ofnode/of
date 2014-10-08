@@ -271,7 +271,7 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 			s_plugins->AddNode(InitPFM);
 			s_plugins->AddNode(InitPICT);
 			//s_plugins->AddNode(InitRAW);
-			//s_plugins->AddNode(InitWEBP);
+			s_plugins->AddNode(InitWEBP);
 #if !(defined(_MSC_VER) && (_MSC_VER <= 1310))
 			//s_plugins->AddNode(InitJXR);
 #endif // unsupported by MS Visual Studio 2003 !!!

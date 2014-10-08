@@ -25,6 +25,7 @@ add_subdirectory(LibJPEG)
 add_subdirectory(LibOpenJPEG)
 add_subdirectory(LibPNG)
 add_subdirectory(LibTIFF4)
+add_subdirectory(LibWebP)
 add_subdirectory(OpenEXR/Half)
 
 # List the header files
@@ -96,6 +97,7 @@ set(SRCS FreeImage/BitmapAccess.cpp
          FreeImage/PluginTARGA.cpp
          FreeImage/PluginTIFF.cpp
          FreeImage/PluginWBMP.cpp
+         FreeImage/PluginWebP.cpp
          FreeImage/PluginXBM.cpp
          FreeImage/PluginXPM.cpp
          FreeImage/TIFFLogLuv.cpp
@@ -138,7 +140,7 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 add_library(freeimage STATIC ${HEADERS} ${SRCS})
 
 set_target_properties(freeimage PROPERTIES COMPILE_DEFINITIONS "OPJ_STATIC;FREEIMAGE_LIB") 
-set_target_properties(freeimage PROPERTIES COMPILE_FLAGS "-w -fPIC -fpermissive")
+set_target_properties(freeimage PROPERTIES COMPILE_FLAGS "-w -fPIC")
 
 target_link_libraries(freeimage jpeg mng openjpeg png tiff ${ZLIB_LIBRARIES})
 add_dependencies(freeimage jpeg mng openjpeg png tiff ${ZLIB_LIBRARIES})

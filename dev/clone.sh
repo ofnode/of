@@ -24,7 +24,7 @@ setup glfw 0a6cb3 https://github.com/arturoc/glfw
 setup glew 442545 https://github.com/omniavinco/glew-cmake
 
 # v 3.16.0
-setup freeimage c87c8c https://github.com/procedural/freeimage
+setup freeimage e550ad https://github.com/procedural/freeimage
 
 # v 2.11.1
 setup fontconfig 9da280 https://github.com/procedural/fontconfig
