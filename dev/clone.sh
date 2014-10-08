@@ -27,7 +27,7 @@ setup glew 442545 https://github.com/omniavinco/glew-cmake
 setup freeimage c87c8c https://github.com/procedural/freeimage
 
 # v 2.11.1
-setup fontconfig 520270 https://github.com/procedural/fontconfig
+setup fontconfig 9da280 https://github.com/procedural/fontconfig
 
 # v 0.8.4
 setup openFrameworks 94f50e https://github.com/openframeworks/openFrameworks

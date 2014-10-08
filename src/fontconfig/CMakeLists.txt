@@ -44,7 +44,7 @@ MESSAGE("Configure: Fontconfig - generating config.h:")
     # TODO: taken from Ubuntu generated config.h
     SET(CONFDIR /usr/local/fonts)
     SET(FC_ADD_FONTS "yes")
-    SET(FC_DEFAULT_FONTS '/usr/share/fonts')
+    SET(FC_DEFAULT_FONTS "\"/usr/share/fonts\"")
     
     # TODO
     #ENABLE_LIBXML2 # we'll us Expat
