@@ -1,5 +1,6 @@
 *~
 *.a
 *.zip
+*.tar*
 *.txt.user
 build

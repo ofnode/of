@@ -25,6 +25,8 @@ Difference
 
  - EXR, RAW, WEBP and JXR image formats are not supported.
 
+ - GLUT is deprecated.
+
 For other non-breaking changes see `dev/patches` folder.
 
 
