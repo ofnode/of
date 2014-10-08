@@ -3,4 +3,6 @@
 *.zip
 *.tar*
 *.txt.user
+
 build
+lib
