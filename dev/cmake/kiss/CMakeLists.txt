@@ -18,7 +18,6 @@ endif()
 set(DEBUG_FLAGS "
     -g
     -fPIC
-    -fcolor-diagnostics
 ")
 
 string(REPLACE "\n" " " DEBUG_FLAGS ${DEBUG_FLAGS})
