@@ -15,5 +15,8 @@ libssl-dev              \
 freeglut3-dev           \
 libfreetype6-dev
 
+sudo rm /usr/bin/ld
+sudo ln -s `which gold` /usr/bin/ld
+
 sudo ln -s /usr/bin/llvm-symbolizer* /usr/bin/llvm-symbolizer 2> /dev/null
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 project(openFrameworks)
 
@@ -15,7 +15,7 @@ endif()
 
 if(UNIX AND NOT APPLE)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-      ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
+     "${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
       
     set(DEFINITIONS
         -DOF_USING_GTK
@@ -32,7 +32,7 @@ endif(UNIX AND NOT APPLE)
 
 if(WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-      ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
+     "${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
     
     set(DEFINITIONS
         -D__MINGW32_VERSION
