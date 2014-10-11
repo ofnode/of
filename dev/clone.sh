@@ -30,7 +30,7 @@ setup freeimage e550ad https://github.com/procedural/freeimage
 setup fontconfig 9da280 https://github.com/procedural/fontconfig
 
 # v 0.8.4
-setup openFrameworks 94f50e https://github.com/openframeworks/openFrameworks
+setup openFrameworks 4daba8 https://github.com/openframeworks/openFrameworks
 
 
 rm -rf openframeworks
