@@ -224,6 +224,7 @@ set(OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC
 )
 
+include(cotire)
 add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
 include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
 
