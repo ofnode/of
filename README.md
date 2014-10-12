@@ -62,10 +62,16 @@ ninja
 ```
 
 
-Examples
+Template
 --------
 
 ### [ofApp][5]
+
+
+Addons
+------
+
+### [ofxFirstPersonCamera][6]
 
 
   [1]: https://github.com/openframeworks/openFrameworks
@@ -73,4 +79,5 @@ Examples
   [3]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
   [4]: https://github.com/procedural/of/releases
   [5]: https://github.com/procedural/ofApp
+  [6]: https://github.com/procedural/ofxFirstPersonCamera
 

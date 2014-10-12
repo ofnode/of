@@ -3,12 +3,12 @@ cd `dirname $(readlink -f $0)`
 cd ..
 OF=`pwd`
 
-cd src
-
 function apply() {
   echo  "$1"
   patch -p1 < $OF/dev/patches/$1
 }
+
+cd $OF/src
 
 apply of_remove_glut.patch
 apply of_mingw_fixes.patch
