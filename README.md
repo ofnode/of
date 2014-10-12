@@ -62,12 +62,6 @@ ninja
 ```
 
 
-Licenses
---------
-
-See `licenses` folder. OF **can** be used for commercial applications without disclosing their source code. OF uses static linking for all the libraries which allow that for commercial applications. OF **does not** use GPL libraries. FreeImage and FreeType are dual licensed, and thus OF uses their FIPL and FTL licenses which allow commercial use. Cairo and GTK use LGPL which allow dynamic linking to commercial applications, and OF dynamically links to them.
-
-
 Template
 --------
 
@@ -78,6 +72,12 @@ Addons
 ------
 
 ### [ofxFirstPersonCamera][6]
+
+
+Licenses
+--------
+
+See `licenses` folder. OF **can** be used for commercial applications without disclosing their source code. OF uses static linking for all the libraries which allow that for commercial applications. OF **does not** use GPL libraries. FreeImage and FreeType are dual licensed, and thus OF uses their FIPL and FTL licenses which allow commercial use. Cairo and GTK use LGPL which allow dynamic linking to commercial applications, and OF dynamically links to them.
 
 
   [1]: https://github.com/openframeworks/openFrameworks
