@@ -1,9 +1,7 @@
 #!/bin/bash
-cd `dirname $(readlink -f $0)`
+cd "`dirname "$(readlink -f $0)"`"
 cd ..
-OF=`pwd`
-
-cd src
+OF="`pwd`"
 
 function setup() {
   rm -rf $1
@@ -13,6 +11,8 @@ function setup() {
   unzip -q $2.zip
   mv  $1-* $1
 }
+
+cd src
 
 # v 1.5.3
 setup poco cecf7cd https://github.com/pocoproject/poco
@@ -30,7 +30,7 @@ setup freeimage e550ad https://github.com/procedural/freeimage
 setup fontconfig 9da280 https://github.com/procedural/fontconfig
 
 # v 0.8.4
-setup openFrameworks 4daba8 https://github.com/openframeworks/openFrameworks
+setup openFrameworks 5c19e6 https://github.com/openframeworks/openFrameworks
 
 
 rm -rf openframeworks
