@@ -52,6 +52,15 @@ cmake .. -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
+For Debug build:
+
+```bash
+mkdir build
+cd build
+cmake .. -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug
+ninja
+```
+
 For Windows build:
 
 Install MXE with one of the scripts from `dev/install/mxe` folder.
