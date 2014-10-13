@@ -15,7 +15,7 @@ Features
 
  - Generate project file for your favorite editor with [CMake Generators][3].
  
- - Easy addon system: just use `ofxaddon` command in `CMakeLists.txt` project file.
+ - Easy addon system: just use `ofxaddon` command in CMakeLists.txt file.
 
 
 Difference
