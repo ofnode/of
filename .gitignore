@@ -5,4 +5,7 @@
 *.txt.user
 
 build
+debug
+
+bin
 lib
