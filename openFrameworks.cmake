@@ -226,9 +226,9 @@ set(OPENFRAMEWORKS_DEFINITIONS
 
 function(ofxaddon OFXADDON)
     include_directories(${OFXADDON}/src)
-    file(GLOB OFXADDON_SOURCES "${OFXADDON}/src/*.c" "${OFXADDON}/src/*.cpp")
-    file(GLOB OFXADDON_HEADERS "${OFXADDON}/src/*.h" "${OFXADDON}/src/*.hpp")
-    set(OFXADDONS ${OFXADDONS} ${OFXADDON_SOURCES} ${OFXADDON_HEADERS} PARENT_SCOPE)
+    file(GLOB XSOURCES "${OFXADDON}/src/*.c" "${OFXADDON}/src/*.cpp")
+    add_library(${OFXADDON} STATIC ${XSOURCES})
+    set(OFXADDONS_LIBRARIES ${OFXADDONS_LIBRARIES} ${OFXADDON} PARENT_SCOPE)
 endfunction(ofxaddon)
 
 include(cotire)
