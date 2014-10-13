@@ -224,13 +224,6 @@ set(OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC
 )
 
-function(ofxaddon OFXADDON)
-    include_directories(${OFXADDON}/src)
-    file(GLOB XSOURCES "${OFXADDON}/src/*.c" "${OFXADDON}/src/*.cpp")
-    add_library(${OFXADDON} STATIC ${XSOURCES})
-    set(OFXADDONS_LIBRARIES ${OFXADDONS_LIBRARIES} ${OFXADDON} PARENT_SCOPE)
-endfunction(ofxaddon)
-
 include(cotire)
 add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
 include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
@@ -249,4 +242,13 @@ set(CMAKE_C_FLAGS_RELEASE   "${COLORIZATION} ${CMAKE_C_FLAGS_RELEASE}")
 set(CMAKE_C_FLAGS_DEBUG     "${COLORIZATION} ${CMAKE_C_FLAGS_DEBUG} ${DEBUG_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE}")
 set(CMAKE_CXX_FLAGS_DEBUG   "${COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG} ${DEBUG_FLAGS}")
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/bin/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+function(ofxaddon OFXADDON)
+    include_directories(${OFXADDON}/src)
+    file(GLOB XSOURCES "${OFXADDON}/src/*.c" "${OFXADDON}/src/*.cpp")
+    add_library(${OFXADDON} STATIC ${XSOURCES})
+    set(OFXADDONS_LIBRARIES ${OFXADDONS_LIBRARIES} ${OFXADDON} PARENT_SCOPE)
+endfunction(ofxaddon)
 
