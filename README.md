@@ -14,6 +14,8 @@ Features
  - Get fully static 64-bit Windows applications from Linux with [MXE][2].
 
  - Generate project file for your favorite editor with [CMake Generators][3].
+ 
+ - Easy addon system: just use `ofxaddon` command in `CMakeLists.txt` project file.
 
 
 Difference
@@ -62,16 +64,11 @@ ninja
 ```
 
 
-Template
---------
+Templates
+---------
 
 ### [ofApp][5]
-
-
-Addons
-------
-
-### [ofxFirstPersonCamera][6]
+### [ofxAddon][6]
 
 
 Licenses
@@ -85,5 +82,5 @@ See `licenses` folder. OF **can** be used for commercial applications without di
   [3]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
   [4]: https://github.com/procedural/of/releases
   [5]: https://github.com/procedural/ofApp
-  [6]: https://github.com/procedural/ofxFirstPersonCamera
+  [6]: https://github.com/procedural/ofxAddon
 
