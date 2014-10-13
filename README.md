@@ -15,7 +15,7 @@ Features
 
  - Generate project file for your favorite editor with [CMake Generators][3].
  
- - Easily add openFrameworks addons with single `ofxaddon` command.
+ - Easily add [openFrameworks addons][4] with single `ofxaddon` command.
 
 
 Difference
@@ -35,7 +35,7 @@ For other non-breaking changes see `dev/patches` folder.
 Installing
 ----------
 
-Precompiled libraries are available from [releases][4] page.
+Precompiled libraries are available from [releases][5] page.
 
 
 Compiling
@@ -76,8 +76,8 @@ ninja
 Templates
 ---------
 
-### [ofApp][5]
-### [ofxAddon][6]
+### [ofApp][6]
+### [ofxAddon][7]
 
 
 Licenses
@@ -89,7 +89,8 @@ See `licenses` folder. OF **can** be used for commercial applications without di
   [1]: https://github.com/openframeworks/openFrameworks
   [2]: http://mxe.cc
   [3]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
-  [4]: https://github.com/procedural/of/releases
-  [5]: https://github.com/procedural/ofApp
-  [6]: https://github.com/procedural/ofxAddon
+  [4]: http://ofxaddons.com
+  [5]: https://github.com/procedural/of/releases
+  [6]: https://github.com/procedural/ofApp
+  [7]: https://github.com/procedural/ofxAddon
 
