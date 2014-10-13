@@ -83,7 +83,7 @@ Templates
 Licenses
 --------
 
-See `licenses` folder. OF **can** be used for commercial applications without disclosing their source code. OF uses static linking for all the libraries which allow that for commercial applications. OF **does not** use GPL libraries. FreeImage, FreeType and Cairo are dual licensed, and thus OF uses FIPL, FTL and MPL respectively which allows commercial use. GTK uses LGPL that allow dynamic linking to commercial applications, and OF dynamically links to it.
+See `licenses` folder. OF **can** be used for commercial applications without disclosing their source code. OF uses static linking for all the libraries which allow it for commercial applications. OF **does not** use GPL libraries. FreeImage, FreeType and Cairo are dual licensed, and thus OF uses FIPL, FTL and MPL respectively which allows commercial use. GTK uses LGPL that allow dynamic linking to commercial applications, and OF dynamically links to it.
 
 
   [1]: https://github.com/openframeworks/openFrameworks
