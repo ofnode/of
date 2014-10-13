@@ -15,7 +15,7 @@ Features
 
  - Generate project file for your favorite editor with [CMake Generators][3].
  
- - Easy addon system: just use `ofxaddon` command in CMakeLists.txt.
+ - Easily add openFrameworks addons with single `ofxaddon` command.
 
 
 Difference
