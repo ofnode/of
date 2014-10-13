@@ -9,7 +9,7 @@ CMake-based cross-compilable subset of openFrameworks for Linux.
 Features
 --------
 
- - 64-bit, C++11, Clang, CMake, Ninja and Sanitizer ready.
+ - 64-bit, C++11, Clang, CMake, Ninja, Cotire and Sanitize ready.
 
  - Get fully static 64-bit Windows applications from Linux with [MXE][2].
 
