@@ -4,6 +4,7 @@ set(DEBUG_FLAGS "
     -g
     -fPIC
     -fsanitize=address
+    -fsanitize-address-zero-base-shadow
 ")
 
 if(NOT CMAKE_BUILD_TYPE)
