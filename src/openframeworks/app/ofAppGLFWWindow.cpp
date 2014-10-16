@@ -924,8 +924,7 @@ void ofAppGLFWWindow::motion_cb(GLFWwindow* windowP_, double x, double y) {
 
 //------------------------------------------------------------
 void ofAppGLFWWindow::scroll_cb(GLFWwindow* windowP_, double x, double y) {
-	int button = y == 1? OF_MOUSE_BUTTON_4 : OF_MOUSE_BUTTON_5;
-	ofNotifyMousePressed(ofGetMouseX(), ofGetMouseY(), button);
+	//TODO: implement scroll events
 }
 
 //------------------------------------------------------------
