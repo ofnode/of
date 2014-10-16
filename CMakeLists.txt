@@ -22,11 +22,15 @@ if(UNIX AND NOT APPLE)
     )
 
     find_package(GTK2 REQUIRED)
+    find_package(Cairo REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(Freetype REQUIRED)
 
     set(INCLUDE_DIRS
         ${GTK2_INCLUDE_DIRS}
+        ${CAIRO_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
+        ${FREETYPE_INCLUDE_DIRS}
     )
 endif(UNIX AND NOT APPLE)
 
