@@ -4,6 +4,8 @@
 *.tar*
 *.txt.user
 
+openFrameworks
+
 build
 debug
 
