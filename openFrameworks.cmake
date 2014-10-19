@@ -253,11 +253,21 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_
 set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG} ${DEBUG_FLAGS}")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 function(ofxaddon OFXADDON)
     include_directories(${OFXADDON}/src)
     file(GLOB XSOURCES "${OFXADDON}/src/*.c" "${OFXADDON}/src/*.cpp")
-    add_library(${OFXADDON} STATIC ${XSOURCES})
-    set(OFXADDONS_LIBRARIES ${OFXADDONS_LIBRARIES} ${OFXADDON} PARENT_SCOPE)
+    if(XSOURCES)
+        if(ARGV1 STREQUAL SHARED)
+            add_library(${OFXADDON} SHARED ${XSOURCES})
+        else()
+            add_library(${OFXADDON} STATIC ${XSOURCES})
+        endif()
+        set(OFXADDONS_LIBRARIES ${OFXADDONS_LIBRARIES} ${OFXADDON} PARENT_SCOPE)
+    endif()
 endfunction(ofxaddon)
+
+set(OFXADDONS_BEGIN -Wl,--start-group)
+set(OFXADDONS_END -Wl,--end-group)
 
