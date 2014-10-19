@@ -12,10 +12,10 @@ cd src
 
 apply of_remove_glut.patch
 apply of_mingw_fixes.patch
-apply of_undo_commit_61932bb.patch
 apply of_audio_video_disable.patch
 apply of_glfw_missing_include.patch
 apply of_remove_deprecated_registers.patch
+apply of_remove_double_key_callbacks.patch
 
 apply poco_mingw_fixes.patch
 apply poco_warning_fixes.patch

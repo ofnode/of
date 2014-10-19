@@ -137,6 +137,7 @@ set(SOURCES
 
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/events/ofEvents.cpp"
 
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/gl/ofBufferObject.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/gl/ofFbo.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/gl/ofGLProgrammableRenderer.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/gl/ofGLRenderer.cpp"
@@ -174,10 +175,12 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/types/ofRectangle.cpp"
 
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofFileUtils.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofFpsCounter.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofLog.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofMatrixStack.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofSystemUtils.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofThread.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofTimer.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofURLFileLoader.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofUtils.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/openframeworks/utils/ofXml.cpp"

@@ -1,6 +1,6 @@
 --- a/openframeworks/ofMain.h
 +++ b/openframeworks/ofMain.h
-@@ -78,8 +78,10 @@
+@@ -79,8 +79,10 @@
  
  //--------------------------
  // video
@@ -22,7 +22,7 @@
  	#include "ofQtUtils.h"
  #endif
  
-@@ -361,7 +361,7 @@
+@@ -367,7 +367,7 @@
  	#endif
  
  	// try to close quicktime, for non-linux systems:
