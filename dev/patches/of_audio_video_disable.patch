@@ -22,7 +22,7 @@
  	#include "ofQtUtils.h"
  #endif
  
-@@ -367,7 +367,7 @@
+@@ -369,7 +369,7 @@
  	#endif
  
  	// try to close quicktime, for non-linux systems:
