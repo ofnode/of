@@ -1,15 +1,19 @@
 *~
 *.a
+*.so
+*.lib
+*.dll
 *.zip
 *.tar*
 *.txt.user
 
-openFrameworks
+openFrameworks/*
+src/assimp/test
 
-include
+include/*
 
-build
-debug
+build/*
+debug/*
 
-bin
-lib
+bin/*
+lib/*

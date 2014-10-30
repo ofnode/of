@@ -19,7 +19,6 @@ rm -rf src/tess2
 rm -rf src/openframeworks
 
 rm -rf addons
-rm -rf examples
 
 rm -rf lib
 rm     lib.tar.gz 2> /dev/null
