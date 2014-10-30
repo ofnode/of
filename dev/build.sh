@@ -3,8 +3,7 @@ cd "`dirname "$(readlink -f $0)"`"
 cd ..
 OF="`pwd`"
 
-rm   -rf "$OF/lib"
-rm       "$OF/lib.tar.gz"
+#---------------------------------
 
 mkdir -p "$OF/build/Release/linux"
 cd       "$OF/build/Release/linux"

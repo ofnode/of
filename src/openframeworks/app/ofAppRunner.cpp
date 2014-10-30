@@ -20,7 +20,7 @@
 
 
 // adding this for vc2010 compile: error C3861: 'closeQuicktime': identifier not found
-#if !defined(TARGET_NO_VIDEO) && (defined(TARGET_WIN32) || defined(TARGET_OSX))
+#if defined (OF_VIDEO_PLAYER_QUICKTIME) || defined(TARGET_OSX)
 	#include "ofQtUtils.h"
 #endif
 
@@ -195,9 +195,6 @@ static string glslVersionFromGL(int major, int minor){
 void ofSetOpenGLESVersion(int version){
 	glVersionMajor = version;
 	glVersionMinor = 0;
-	if(version>1){
-		ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
-	}
 }
 
 int	ofGetOpenGLESVersion(){
@@ -211,9 +208,6 @@ string ofGetGLSLVersion(){
 void ofSetOpenGLVersion(int major, int minor){
 	glVersionMajor = major;
 	glVersionMinor = minor;
-	if(major>2){
-		ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
-	}
 }
 
 int	ofGetOpenGLVersionMajor(){
@@ -237,11 +231,22 @@ void ofSetupOpenGL(shared_ptr<ofAppBaseGLWindow> windowPtr, int w, int h, ofWind
 #endif
     if(!ofGetCurrentRenderer()) {
 	#ifdef TARGET_PROGRAMMABLE_GL
-	    ofPtr<ofBaseRenderer> renderer(new ofGLProgrammableRenderer(false));
+	    ofSetCurrentRenderer(shared_ptr<ofBaseRenderer>(new ofGLProgrammableRenderer(windowPtr.get()))),false);
 	#else
-	    shared_ptr<ofBaseRenderer> renderer(new ofGLRenderer(false));
+#ifdef TARGET_OPENGLES
+    	if(glVersionMajor>1){
+    	    ofSetCurrentRenderer(shared_ptr<ofBaseRenderer>(new ofGLProgrammableRenderer(windowPtr.get())),false);
+    	}else{
+    		ofSetCurrentRenderer(shared_ptr<ofBaseRenderer>(new ofGLRenderer(windowPtr.get())),false);
+    	}
+#else
+    	if(glVersionMajor>2){
+    	    ofSetCurrentRenderer(shared_ptr<ofBaseRenderer>(new ofGLProgrammableRenderer(windowPtr.get())),false);
+    	}else{
+    		ofSetCurrentRenderer(shared_ptr<ofBaseRenderer>(new ofGLRenderer(windowPtr.get())),false);
+    	}
+#endif
 	#endif
-	    ofSetCurrentRenderer(renderer,false);
     }
 
 	window = windowPtr;
@@ -369,7 +374,7 @@ void ofExitCallback(){
 	#endif
 
 	// try to close quicktime, for non-linux systems:
-	#if !defined(TARGET_NO_VIDEO) && (defined(OF_VIDEO_CAPTURE_QUICKTIME) || defined(OF_VIDEO_PLAYER_QUICKTIME))
+	#if defined(OF_VIDEO_CAPTURE_QUICKTIME) || defined(OF_VIDEO_PLAYER_QUICKTIME)
 	closeQuicktime();
 	#endif
 

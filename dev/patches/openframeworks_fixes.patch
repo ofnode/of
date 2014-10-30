@@ -1,0 +1,62 @@
+--- a/openframeworks/app/ofAppGlutWindow.cpp
++++ b/openframeworks/app/ofAppGlutWindow.cpp
+@@ -169,10 +169,10 @@
+ 	DragAcceptFiles (handle, TRUE);
+ 
+ 	//store the current message event handler for the window
+-	currentWndProc = (WNDPROC)GetWindowLongPtr(handle, GWL_WNDPROC);
++	currentWndProc = (WNDPROC)GetWindowLongPtr(handle, GWLP_WNDPROC);
+ 
+ 	//tell the window to now use our event handler!
+-	SetWindowLongPtr(handle, GWL_WNDPROC, (long)winProc);
++	SetWindowLongPtr(handle, GWLP_WNDPROC, (LONG_PTR)winProc);
+ }
+ 
+ #endif
+--- a/openframeworks/app/ofAppRunner.cpp
++++ b/openframeworks/app/ofAppRunner.cpp
+@@ -20,7 +20,7 @@
+ 
+ 
+ // adding this for vc2010 compile: error C3861: 'closeQuicktime': identifier not found
+-#if defined (TARGET_WIN32) || defined(TARGET_OSX)
++#if defined (OF_VIDEO_PLAYER_QUICKTIME) || defined(TARGET_OSX)
+ 	#include "ofQtUtils.h"
+ #endif
+ 
+--- a/openframeworks/graphics/ofTrueTypeFont.cpp
++++ b/openframeworks/graphics/ofTrueTypeFont.cpp
+@@ -3,18 +3,11 @@
+ 
+ #include "ft2build.h"
+ 
+-#ifdef TARGET_LINUX
+ #include FT_FREETYPE_H
+ #include FT_GLYPH_H
+ #include FT_OUTLINE_H
+ #include FT_TRIGONOMETRY_H
+ #include <fontconfig/fontconfig.h>
+-#else
+-#include "freetype2/freetype/freetype.h"
+-#include "freetype2/freetype/ftglyph.h"
+-#include "freetype2/freetype/ftoutln.h"
+-#include "freetype2/freetype/fttrigon.h"
+-#endif
+ 
+ #include <algorithm>
+ 
+--- a/openframeworks/video/ofDirectShowPlayer.cpp
++++ b/openframeworks/video/ofDirectShowPlayer.cpp
+@@ -20,9 +20,9 @@
+ #define __IDxtAlphaSetter_INTERFACE_DEFINED__
+ #define __IDxtJpeg_INTERFACE_DEFINED__
+ #define __IDxtKey_INTERFACE_DEFINED__
+-#include <uuids.h>
+-#include <Aviriff.h>
+-#include <Windows.h>
++//#include <uuids.h>
++#include <aviriff.h>
++#include <windows.h>
+ 
+ //for threading
+ #include <process.h>

@@ -4,21 +4,8 @@ project(freeimage)
 
 find_package(ZLIB REQUIRED)
 
-if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE "Release")
-endif()
-
-if(UNIX AND NOT APPLE)
-   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/linux)
-elseif(WIN32)
-   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/windows)
-endif()
-
 # Set the output paths
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "bin/")
 
 # Process subdirectories
 add_subdirectory(LibJPEG)

@@ -74,9 +74,7 @@ static void restoreAppWindowFocus(){
 
 #if defined( TARGET_LINUX ) && defined (OF_USING_GTK)
 #include <gtk/gtk.h>
-#ifndef TARGET_NO_VIDEO
 #include "ofGstUtils.h"
-#endif
 #include "Poco/Condition.h"
 
 #if GTK_MAJOR_VERSION>=3
@@ -190,11 +188,6 @@ gboolean text_dialog_gtk(gpointer userdata){
 	return FALSE;
 }
 
-static gboolean closeGTK(GtkWidget *widget){
-	gtk_main_quit();
-	return FALSE;
-}
-
 static void initGTK(){
 	static bool initialized = false;
 	if(!initialized){
@@ -203,55 +196,13 @@ static void initGTK(){
 		#endif
 		int argc=0; char **argv = NULL;
 		gtk_init (&argc, &argv);
-		#ifndef TARGET_NO_VIDEO
 		ofGstUtils::startGstMainLoop();
-		#endif
 		initialized = true;
 	}
 
 }
-static void startGTK(GtkWidget *dialog){
-	gtk_init_add((GSourceFunc)closeGTK, NULL);
-	gtk_quit_add_destroy(1, GTK_OBJECT(dialog));
-	gtk_main();
-}
 
 static string gtkFileDialog(GtkFileChooserAction action,string windowTitle,string defaultName=""){
-	#ifdef TARGET_NO_VIDEO
-	initGTK();
-	string results;
-
-	const gchar* button_name = "";
-	switch(action){
-	case GTK_FILE_CHOOSER_ACTION_OPEN:
-		button_name = GTK_STOCK_OPEN;
-		break;
-	case GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER:
-		button_name = GTK_STOCK_SELECT_ALL;
-		break;
-	case GTK_FILE_CHOOSER_ACTION_SAVE:
-		button_name = GTK_STOCK_SAVE;
-		break;
-	default:
-		return "";
-		break;
-	}
-
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(windowTitle.c_str(),
-						  NULL,
-						  action,
-						  button_name, GTK_RESPONSE_ACCEPT,
-						  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						  NULL);
-
-	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog), defaultName.c_str());
-
-	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-		results = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-	}
-	startGTK(dialog);
-	return results;
-	#else
 	initGTK();
 	FileDialogData dialogData;
 	dialogData.action = action;
@@ -265,7 +216,6 @@ static string gtkFileDialog(GtkFileChooserAction action,string windowTitle,strin
 		dialogData.condition.wait(dialogData.mutex);
 	}
 	return dialogData.results;
-	#endif
 }
 
 #endif
@@ -323,12 +273,6 @@ void ofSystemAlertDialog(string errorMessage){
 	#endif
 
 	#if defined( TARGET_LINUX ) && defined (OF_USING_GTK)
-		#ifdef TARGET_NO_VIDEO
-		initGTK();
-		GtkWidget* dialog = gtk_message_dialog_new(NULL, (GtkDialogFlags)0, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", errorMessage.c_str());
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		startGTK(dialog);
-		#else
 		initGTK();
 		TextDialogData dialogData;
 		dialogData.text = errorMessage;
@@ -338,7 +282,6 @@ void ofSystemAlertDialog(string errorMessage){
 			dialogData.mutex.lock();
 			dialogData.condition.wait(dialogData.mutex);
 		}
-		#endif
 	#endif
 
 	#ifdef TARGET_ANDROID
@@ -644,19 +587,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 string ofSystemTextBoxDialog(string question, string text){
 #if defined( TARGET_LINUX ) && defined (OF_USING_GTK)
-	#ifdef TARGET_NO_VIDEO
-	initGTK();
-	GtkWidget* dialog = gtk_message_dialog_new(NULL, (GtkDialogFlags)0, GTK_MESSAGE_QUESTION, (GtkButtonsType)GTK_BUTTONS_OK_CANCEL, "%s", question.c_str());
-	GtkWidget* content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-	GtkWidget* textbox = gtk_entry_new();
-	gtk_entry_set_text(GTK_ENTRY(textbox), text.c_str());
-	gtk_container_add(GTK_CONTAINER(content_area), textbox);
-	gtk_widget_show_all(dialog);
-	if(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-		text = gtk_entry_get_text(GTK_ENTRY(textbox));
-	}
-	startGTK(dialog);
-	#else
 	initGTK();
 	TextDialogData dialogData;
 	dialogData.text = text;
@@ -668,7 +598,6 @@ string ofSystemTextBoxDialog(string question, string text){
 		dialogData.condition.wait(dialogData.mutex);
 	}
 	text = dialogData.text;
-	#endif
 #endif
 
 #ifdef TARGET_OSX

@@ -10,18 +10,6 @@ PROJECT(fontconfig C)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 INCLUDE(dist.cmake)
 
-if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE "Release")
-endif()
-
-if(UNIX AND NOT APPLE)
-   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/linux)
-elseif(WIN32)
-   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${CMAKE_BUILD_TYPE}/windows)
-endif()
-
 # Macros
 MACRO(ADD_PREFIX prefix rootlist)
   SET(outlist )

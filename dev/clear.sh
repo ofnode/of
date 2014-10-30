@@ -3,13 +3,23 @@ cd "`dirname "$(readlink -f $0)"`"
 cd ..
 OF="`pwd`"
 
-cd src
+#---------------------------------
 
-rm -rf fontconfig
-rm -rf freeimage
-rm -rf glew
-rm -rf glfw
-rm -rf kiss
-rm -rf openframeworks
-rm -rf poco
-rm -rf tess2
+rm -rf src/assimp
+rm -rf src/fontconfig
+rm -rf src/freeglut
+rm -rf src/freeimage
+rm -rf src/glew
+rm -rf src/glfw
+rm -rf src/kiss
+rm -rf src/libusb
+rm -rf src/poco
+rm -rf src/rtaudio
+rm -rf src/tess2
+rm -rf src/openframeworks
+
+rm -rf addons
+rm -rf examples
+
+rm -rf lib
+rm     lib.tar.gz 2> /dev/null
