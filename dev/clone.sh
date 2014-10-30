@@ -69,5 +69,7 @@ cp     "$OF/dev/add/tess2/CMakeLists.txt" tess2
 rm -rf "$OF/addons"
 mv     openFrameworks/addons "$OF"
 
+mv     openFrameworks/examples/* "$OF/examples"
+
 rm -rf openFrameworks
 

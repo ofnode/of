@@ -7,6 +7,9 @@
 *.tar*
 *.txt.user
 
+examples/*
+examples/!CMakeLists.txt
+
 openFrameworks/*
 src/assimp/test
 
