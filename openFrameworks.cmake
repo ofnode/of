@@ -73,7 +73,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 if(UNIX AND NOT APPLE)
 
-    set(LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
+    set(OF_LIBS_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_GTK
@@ -96,8 +96,8 @@ if(UNIX AND NOT APPLE)
     )
 
     # Local dependencies
-    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${LIB_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_DEP   "${LIB_DIR}/*.a")
+    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIBS_DIR}")
+    file(GLOB_RECURSE OPENFRAMEWORKS_DEP   "${OF_LIBS_DIR}/*.a")
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
         -Wl,-Bstatic
@@ -170,7 +170,7 @@ if(UNIX AND NOT APPLE)
 
 elseif(WIN32)
 
-    set(LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
+    set(OF_LIBS_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -D__MINGW32_VERSION
@@ -190,13 +190,13 @@ elseif(WIN32)
 
     # Dynamic libraries
     set(OPENFRAMEWORKS_DLL
+        "${OF_LIBS_DIR}/libusb.dll"
         "${WIN_DLL_DIR}/libogg-0.dll"
         "${WIN_DLL_DIR}/OpenAL32.dll"
         "${WIN_DLL_DIR}/libFLAC-8.dll"
         "${WIN_DLL_DIR}/libvorbis-0.dll"
         "${WIN_DLL_DIR}/libsndfile-1.dll"
         "${WIN_DLL_DIR}/libvorbisenc-2.dll"
-        "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows/libusb.dll"
     )
 
     # MinGW libraries
@@ -229,8 +229,8 @@ elseif(WIN32)
     endif()
 
     # Local dependencies
-    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${LIB_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_DEP   "${LIB_DIR}/*.a")
+    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIBS_DIR}")
+    file(GLOB_RECURSE OPENFRAMEWORKS_DEP   "${OF_LIBS_DIR}/*.a")
 
     # External dependencies
     find_package(Glib REQUIRED)
