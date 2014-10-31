@@ -44,8 +44,6 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     ")
 endif()
 
-#------------------------------------------
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     set(RELEASE_CXX_FLAGS_CLANG "
         -Wno-deprecated-register
@@ -57,6 +55,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     ")
 endif()
 
+#------------------------------------------
+
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
 endif()
@@ -66,6 +66,10 @@ find_package(PkgConfig REQUIRED)
 
 # Constant root directory path for addons
 set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+
+# Output paths for libraries and executable
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 if(UNIX AND NOT APPLE)
 
@@ -166,13 +170,27 @@ if(UNIX AND NOT APPLE)
 
 elseif(WIN32)
 
-    set(LIB_DIR "${OF_ROOT_DIR}/lib/Release/windows")
+    set(LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
 
-    set(WIN_DLL_DIR "/opt/mxe/usr/x86_64-w64-mingw32.shared/bin")
+    set(OPENFRAMEWORKS_DEFINITIONS
+        -D__MINGW32_VERSION
+        -DOF_SOUNDSTREAM_RTAUDIO
+        -DOF_SOUND_PLAYER_OPENAL
+        -DOF_VIDEO_CAPTURE_DIRECTSHOW
+        -DOF_VIDEO_PLAYER_DIRECTSHOW
+    )
+
+    set(WIN_DLL_DIR /opt/mxe/usr/x86_64-w64-mingw32.shared/bin CACHE PATH
+       "Path to folder with needed dynamic libraries for Windows builds.")
+
+    if(NOT DLL_MANUAL_COPY)
+       set(DLL_MANUAL_COPY OFF CACHE BOOL
+          "Enable if you want to copy DLLs manually.")
+    endif()
 
     # Dynamic libraries
     set(OPENFRAMEWORKS_DLL
-        "${OF_ROOT_DIR}/lib/Release/windows/libusb.dll"
+        "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows/libusb.dll"
         "${WIN_DLL_DIR}/libvorbisenc-2.dll"
         "${WIN_DLL_DIR}/libsndfile-1.dll"
         "${WIN_DLL_DIR}/libvorbis-0.dll"
@@ -193,25 +211,19 @@ elseif(WIN32)
         setupapi
     )
 
-    if(NOT DLL_MANUAL_COPY)
-        file(COPY ${OPENFRAMEWORKS_DLL} DESTINATION
-                  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-    endif()
-
-    set(OPENFRAMEWORKS_DEFINITIONS
-        -D__MINGW32_VERSION
-        -DOF_SOUNDSTREAM_RTAUDIO
-        -DOF_SOUND_PLAYER_OPENAL
-        -DOF_VIDEO_CAPTURE_DIRECTSHOW
-        -DOF_VIDEO_PLAYER_DIRECTSHOW
-    )
-
     # Static C and C++
     set(OPENFRAMEWORKS_LIBRARIES
         -static-libgcc
         -static-libstdc++
     )
 
+    # Copy DLL dependencies
+    if(NOT DLL_MANUAL_COPY)
+        file(COPY ${OPENFRAMEWORKS_DLL} DESTINATION
+                  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    endif()
+
+    # Hide console window
     if(NOT SHOW_CONSOLE)
         list(APPEND OPENFRAMEWORKS_LIBRARIES -mwindows)
     endif()
@@ -414,10 +426,6 @@ if(UNIX AND NOT APPLE)
 include_directories("${OF_ROOT_DIR}/include")
 endif()
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
-
 function(ofxaddon OFXADDON)
 
     set(OFXADDON_DIR ${OFXADDON})
@@ -532,13 +540,14 @@ function(ofxaddon OFXADDON)
         if (CMAKE_BUILD_TYPE STREQUAL Release)
             # Static OpenCV for release only, on Ubuntu 14.04 OpenCV build without -fPIC
             list(APPEND OFXADDONS_LIBRARIES -Wl,-Bstatic ${OPENCV_LDFLAGS} -Wl,-Bdynamic)
+            # OpenCV depends on TBB
             if (UNIX AND NOT APPLE)
                 pkg_check_modules(TBB REQUIRED tbb)
                 include_directories(${TBB_INCLUDE_DIRS})
                 list(APPEND OFXADDONS_LIBRARIES ${TBB_LIBRARIES})
             endif()
         else()
-            # Dynamic OpenCV for debugging with Clang's ASAN
+            # Dynamic OpenCV for debugging with ASAN
             list(APPEND OFXADDONS_LIBRARIES ${OPENCV_LDFLAGS})
         endif()
 

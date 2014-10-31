@@ -192,7 +192,7 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/src/libusb"
     "${CMAKE_CURRENT_LIST_DIR}/src/libusb/libusb"
 )
-endif(WIN32)
+endif()
 
 set(SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/3d/of3dPrimitives.cpp"
@@ -356,7 +356,7 @@ add_subdirectory(src/rtaudio)
 add_subdirectory(src/tess2)
 if(WIN32)
 add_subdirectory(src/libusb)
-endif(WIN32)
+endif()
 add_subdirectory(src/assimp)
 
 add_library(openFrameworks STATIC ${SOURCES})
