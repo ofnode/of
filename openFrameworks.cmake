@@ -190,13 +190,13 @@ elseif(WIN32)
 
     # Dynamic libraries
     set(OPENFRAMEWORKS_DLL
-        "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows/libusb.dll"
-        "${WIN_DLL_DIR}/libvorbisenc-2.dll"
-        "${WIN_DLL_DIR}/libsndfile-1.dll"
-        "${WIN_DLL_DIR}/libvorbis-0.dll"
-        "${WIN_DLL_DIR}/libFLAC-8.dll"
-        "${WIN_DLL_DIR}/OpenAL32.dll"
         "${WIN_DLL_DIR}/libogg-0.dll"
+        "${WIN_DLL_DIR}/OpenAL32.dll"
+        "${WIN_DLL_DIR}/libFLAC-8.dll"
+        "${WIN_DLL_DIR}/libvorbis-0.dll"
+        "${WIN_DLL_DIR}/libsndfile-1.dll"
+        "${WIN_DLL_DIR}/libvorbisenc-2.dll"
+        "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows/libusb.dll"
     )
 
     # MinGW libraries
