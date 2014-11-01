@@ -1,86 +1,73 @@
 cmake_minimum_required(VERSION 2.8)
 
+SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+
 project(RtAudio)
 
-SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
-find_package(Jack)
+if(WIN32)
 
-IF (WIN32)
+    add_definitions(-D__WINDOWS_DS__)
 
-    ADD_DEFINITIONS(-D__WINDOWS_ASIO__)
+    include_directories(include)
 
-    INCLUDE_DIRECTORIES(include)
-
-    SET(RTAudioLib_SRCS
+    set(SRCS
         RtAudio.cpp
-        include/iasiothiscallresolver.cpp
-        include/asiolist.cpp
-        include/asiodrivers.cpp
-        include/asio.cpp
     )
 
-    SET(RTAudioLib_HEADERS
+    set(HEADERS
         include/soundcard.h
         RtError.h
         RtAudio.h
-        include/iasiothiscallresolver.h
-        include/iasiodrv.h
         include/ginclude.h
         include/dsound.h
-        include/asiosys.h
-        include/asiolist.h
-        include/asiodrvr.h
-        include/asiodrivers.h
-        include/asio.h
     )
     
-    add_library(rtaudio STATIC ${RTAudioLib_SRCS} ${RTAudioLib_HEADERS})
-ENDIF(WIN32)
+    add_library(rtaudio STATIC ${SRCS} ${HEADERS})
 
-IF (UNIX)
+elseif(UNIX)
 
-    INCLUDE_DIRECTORIES(include)
+    find_package(Jack)
 
-    SET(RTAudioLib_SRCS
+    include_directories(include)
+
+    SET(SRCS
         RtAudio.cpp
     )
     
-    SET(RTAudioLib_HEADERS
+    SET(HEADERS
         include/soundcard.h
         RtError.h
         RtAudio.h
         include/ginclude.h
     )
     
-    IF (APPLE)
+    if(APPLE)
 
-        ADD_DEFINITIONS(-D__MACOSX_CORE__ -DMAC)
-        add_library(rtaudio SHARED ${RTAudioLib_SRCS} ${RTAudioLib_HEADERS} )
+        add_definitions(-D__MACOSX_CORE__ -DMAC)
+        add_library(rtaudio SHARED ${SRCS} ${HEADERS} )
         target_link_libraries(rtaudio)
         set_target_properties(rtaudio PROPERTIES LINK_FLAGS "-framework CoreFoundation -framework CoreAudio -framework AudioUnit -framework AudioToolbox") 
     
-    ELSE(APPLE)
+    else()
     
-        IF (JACK_FOUND)
-            ADD_DEFINITIONS(-D__UNIX_JACK__)
-            INCLUDE_DIRECTORIES(${JACK_INCLUDE_DIR})
-        ENDIF(JACK_FOUND)
+        if(JACK_FOUND)
+            add_definitions(-D__UNIX_JACK__)
+            include_directories(${JACK_INCLUDE_DIR})
+        endif()
     
         #find_package(ALSA REQUIRED)
-        ADD_DEFINITIONS(-D__LINUX_ALSA__)
-        SET(ALSA_LIBRARY "-lasound -lpthread")
+        add_definitions(-D__LINUX_ALSA__)
+        set(ALSA_LIBRARY "-lasound -lpthread")
         INCLUDE_DIRECTORIES(${ALSA_INCLUDE_DIR})
-        add_library(rtaudio STATIC ${RTAudioLib_SRCS} ${RTAudioLib_HEADERS})
+        add_library(rtaudio STATIC ${SRCS} ${HEADERS})
         set_target_properties(rtaudio PROPERTIES COMPILE_FLAGS -fPIC)
         
-        IF (JACK_FOUND)
+        if(JACK_FOUND)
             target_link_libraries(rtaudio ${ALSA_LIBRARY} ${JACK_LIBRARIES})
-        ELSE(JACK_FOUND)
+        else()
             target_link_libraries(rtaudio ${ALSA_LIBRARY})
-        ENDIF(JACK_FOUND)
+        endif()
         
-        MESSAGE("ALSA lib : ${ALSA_LIBRARY}")
-
-    ENDIF(APPLE)
+    endif()
     
-ENDIF(UNIX)
+endif()

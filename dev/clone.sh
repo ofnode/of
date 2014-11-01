@@ -41,7 +41,7 @@ setup libusb f44e97 https://github.com/procedural/libusb
 setup poco cecf7cd https://github.com/pocoproject/poco
 
 # v 4.0.12 master
-setup rtaudio 522713 https://github.com/procedural/rtaudio
+setup rtaudio 02c152 https://github.com/procedural/rtaudio
 
 # v 0.8.4 master
 setup openFrameworks edf53f https://github.com/openframeworks/openFrameworks
