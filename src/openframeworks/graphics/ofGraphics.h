@@ -12,12 +12,14 @@
 
 
 void ofSetCurrentRenderer(shared_ptr<ofBaseRenderer> renderer,bool setDefaults=false);
-void ofSetCurrentRenderer(const string & rendererType,bool setDefaults=false);
+OF_DEPRECATED(void ofSetCurrentRenderer(const string & rendererType,bool setDefaults=false));
 shared_ptr<ofBaseRenderer> & ofGetCurrentRenderer();
 
 //for pdf screenshot
 void ofBeginSaveScreenAsPDF(string filename, bool bMultipage = false, bool b3D = false, ofRectangle viewport = ofRectangle(0,0,0,0));
 void ofEndSaveScreenAsPDF();
+void ofBeginSaveScreenAsSVG(string filename, bool bMultipage = false, bool b3D = false, ofRectangle viewport = ofRectangle(0,0,0,0));
+void ofEndSaveScreenAsSVG();
 
 
 // transformations

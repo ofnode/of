@@ -20,8 +20,16 @@ mingw-w64   \
 winpthreads \
 cairo       \
 openssl     \
-freeglut    \
-freetype
+freetype    \
+assimp      \
+opencv      \
+mpg123      \
+openal      \
+libsndfile
+
+sudo make MXE_TARGETS=x86_64-w64-mingw32.shared \
+openal      \
+libsndfile
 
 sudo ln -s /opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake /opt/mxe/mingw.cmake 2> /dev/null
 

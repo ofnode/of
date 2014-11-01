@@ -1,13 +1,22 @@
 *~
 *.a
+*.so
+*.lib
+*.dll
 *.zip
 *.tar*
 *.txt.user
 
-openFrameworks
+examples/*
+examples/!CMakeLists.txt
 
-build
-debug
+openFrameworks/*
+src/assimp/test
 
-bin
-lib
+include/*
+
+build/*
+debug/*
+
+bin/*
+lib/*

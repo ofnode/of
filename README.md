@@ -1,7 +1,6 @@
-Cross-compiled [openFrameworks][1]
-==================================
+CMake-based [openFrameworks][1]
+===============================
 
-CMake-based cross-compilable subset of openFrameworks for Linux.
 
 ![OF logo courtesy to: http://julioterra.com](http://i.imgur.com/wKDVkN6.png)
 
@@ -11,7 +10,7 @@ Features
 
  - 64-bit, C++11, CMake, Ninja, Cotire, Clang and Sanitize ready.
 
- - Get fully static 64-bit Windows applications from Linux with [MXE][2].
+ - Get mostly static 64-bit Windows applications from Linux with [MXE][2].
 
  - Generate project file for your favorite editor with [CMake Generators][3].
  
@@ -21,15 +20,7 @@ Features
 Difference
 ----------
 
- - Sound and video features are disabled because of use of closed-source FMOD and QuickTime.
-
- - OF_KEY_CTRL/ALT/SHIFT won't work, use position keys directly, e.g. OF_KEY_LEFT_SHIFT.
-
- - EXR, RAW and JXR image formats are not supported.
-
- - GLUT is deprecated.
-
-For other non-breaking changes see `dev/patches` folder.
+The only difference is that this project targets CMake build system and stores source code of libraries on which openFrameworks depends locally, applying patches if needed (see `dev/patches` folder).
 
 
 Installing
@@ -48,7 +39,7 @@ Install external dependencies with one of the scripts from `dev/install/linux` f
 ```bash
 mkdir build
 cd build
-cmake .. -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
@@ -57,7 +48,7 @@ For Debug build:
 ```bash
 mkdir build
 cd build
-cmake .. -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug
+cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug
 ninja
 ```
 
@@ -83,7 +74,7 @@ Templates
 Licenses
 --------
 
-See `licenses` folder. OF **can** be used for commercial applications without disclosing their source code. OF statically links to all the libraries which allow that for commercial applications. OF **does not** use GPL libraries. FreeImage, FreeType and Cairo are dual licensed, and thus OF uses FIPL, FTL and MPL respectively which allows commercial use. GTK uses LGPL that allow dynamic linking to commercial applications, and OF dynamically links to it.
+See `licenses` folder. OF **can** be used for commercial applications without disclosing their source code. OF statically links to all libraries which allow that for commercial use. OF **does not** use GPL libraries. FreeImage, FreeType and Cairo are dual licensed, and thus OF uses FIPL, FTL and MPL respectively. OpenAL Soft, libsndfile and libusb are licensed under LGPL which allow dynamic linking to closed source applications, and OF dynamically links to them.
 
 
   [1]: https://github.com/openframeworks/openFrameworks

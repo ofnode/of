@@ -12,26 +12,41 @@ function setup() {
   mv  $1-* $1
 }
 
+#---------------------------------
+
 cd src
 
-# v 1.5.3
-setup poco cecf7cd https://github.com/pocoproject/poco
+# v 2.0 release
+setup assimp 5b71b7 https://github.com/procedural/assimp
 
-# v 3.1.0
-setup glfw 0a6cb3 https://github.com/arturoc/glfw
-
-# v 1.11.0
-setup glew 442545 https://github.com/omniavinco/glew-cmake
-
-# v 3.16.0
-setup freeimage e550ad https://github.com/procedural/freeimage
-
-# v 2.11.1
+# v 2.11.1 release
 setup fontconfig 9da280 https://github.com/procedural/fontconfig
 
-# v 0.8.4
-setup openFrameworks d4389d https://github.com/openframeworks/openFrameworks
+# v 2.8.1 release
+setup freeglut 0fd376 https://github.com/procedural/freeglut
 
+# v 3.16.0 release
+setup freeimage e550ad https://github.com/procedural/freeimage
+
+# v 1.11.0 release
+setup glew 442545 https://github.com/omniavinco/glew-cmake
+
+# v 3.1.0 master
+setup glfw 0a6cb3 https://github.com/arturoc/glfw
+
+# v 1.0.19 release
+setup libusb f44e97 https://github.com/procedural/libusb
+
+# v 1.5.3 release
+setup poco cecf7cd https://github.com/pocoproject/poco
+
+# v 4.0.12 master
+setup rtaudio 02c152 https://github.com/procedural/rtaudio
+
+# v 0.8.4 master
+setup openFrameworks 7bc279 https://github.com/openframeworks/openFrameworks
+
+#---------------------------------
 
 rm -rf openframeworks
 mv     openFrameworks/libs/openFrameworks openframeworks
@@ -47,6 +62,14 @@ mkdir  kiss
 
 mv     openFrameworks/libs/kiss/include kiss/include
 mv     openFrameworks/libs/kiss/src     kiss/src
+
+cp      "$OF/dev/add/kiss/CMakeLists.txt" kiss
+cp     "$OF/dev/add/tess2/CMakeLists.txt" tess2
+
+rm -rf "$OF/addons"
+mv     openFrameworks/addons "$OF"
+
+mv     openFrameworks/examples/* "$OF/examples"
 
 rm -rf openFrameworks
 

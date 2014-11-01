@@ -1,0 +1,38 @@
+--- videoInput.h
++++ videoInput.h
+@@ -321,12 +321,12 @@
+ 
+ 		//Manual control over settings thanks.....
+ 		//These are experimental for now.
+-		bool setVideoSettingFilter(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
+-		bool setVideoSettingFilterPct(int deviceID, long Property, float pctValue, long Flags = NULL);
++		bool setVideoSettingFilter(int deviceID, long Property, long lValue, long Flags = 0, bool useDefaultValue = false);
++		bool setVideoSettingFilterPct(int deviceID, long Property, float pctValue, long Flags = 0);
+ 		bool getVideoSettingFilter(int deviceID, long Property, long &min, long &max, long &SteppingDelta, long &currentValue, long &flags, long &defaultValue);
+ 
+-		bool setVideoSettingCamera(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
+-		bool setVideoSettingCameraPct(int deviceID, long Property, float pctValue, long Flags = NULL);
++		bool setVideoSettingCamera(int deviceID, long Property, long lValue, long Flags = 0, bool useDefaultValue = false);
++		bool setVideoSettingCameraPct(int deviceID, long Property, float pctValue, long Flags = 0);
+ 		bool getVideoSettingCamera(int deviceID, long Property, long &min, long &max, long &SteppingDelta, long &currentValue, long &flags, long &defaultValue);
+ 
+ 		//bool setVideoSettingCam(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
+--- videoInput.cpp
++++ videoInput.cpp
+@@ -19,12 +19,14 @@
+ #define __IDxtJpeg_INTERFACE_DEFINED__
+ #define __IDxtKey_INTERFACE_DEFINED__
+ #include <uuids.h>
+-#include <Aviriff.h>
+-#include <Windows.h>
++#include <aviriff.h>
++#include <windows.h>
+ 
+ //for threading
+ #include <process.h>
+ 
++#define HEADER(pVideoInfo) (&(((VIDEOINFOHEADER *) (pVideoInfo))->bmiHeader))
++
+ // Due to a missing qedit.h in recent Platform SDKs, we've replicated the relevant contents here
+ // #include <qedit.h>
+ MIDL_INTERFACE("0579154A-2B53-4994-B0D0-E773148EFF85")
