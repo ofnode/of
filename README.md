@@ -20,7 +20,7 @@ Features
 Difference
 ----------
 
-The only difference is that this project targets CMake build system and stores source code of libraries on which openFrameworks depends locally, applying patches if needed. See `dev/patches` folder for details.
+The only difference is that this project targets CMake build system and stores source code of libraries on which openFrameworks depends locally, applying patches if needed (see `dev/patches` folder).
 
 
 Installing
