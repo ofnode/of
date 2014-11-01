@@ -57,12 +57,11 @@ endif()
 
 #------------------------------------------
 
+find_package(PkgConfig REQUIRED)
+
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
 endif()
-
-# PkgConfig required for addons
-find_package(PkgConfig REQUIRED)
 
 # Constant root directory path for addons
 set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
@@ -107,12 +106,14 @@ if(UNIX AND NOT APPLE)
         -Wl,-Bdynamic
     )
 
+    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+
     # External dependencies
     find_package(X11 REQUIRED)
+    find_package(Glib REQUIRED)
     find_package(ZLIB REQUIRED)
     find_package(UDev REQUIRED)
     find_package(ALSA REQUIRED)
-    find_package(GTK2 REQUIRED)
     find_package(Cairo REQUIRED)
     find_package(LibUSB REQUIRED)
     find_package(MPG123 REQUIRED)
@@ -124,16 +125,13 @@ if(UNIX AND NOT APPLE)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
 
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        ${GTK2_DEFINITIONS}
-    )
-
     set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
+        ${GTK3_INCLUDE_DIRS}
+        ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
         ${UDEV_INCLUDE_DIR}
         ${ALSA_INCLUDE_DIRS}
-        ${GTK2_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
         ${LIBUSB_1_INCLUDE_DIRS}
         ${MPG123_INCLUDE_DIRS}
@@ -141,6 +139,7 @@ if(UNIX AND NOT APPLE)
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
+        ${FREETYPE_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
     )
 
@@ -150,10 +149,11 @@ if(UNIX AND NOT APPLE)
         ${X11_Xrandr_LIB}
         ${X11_Xcursor_LIB}
         ${X11_Xxf86vm_LIB}
+        ${GTK3_LIBRARIES}
+        ${GLIB_LIBRARIES}
         ${ZLIB_LIBRARIES}
         ${UDEV_LIBRARIES}
         ${ALSA_LIBRARIES}
-        ${GTK2_LIBRARIES}
         ${CAIRO_LIBRARIES}
         ${LIBUSB_1_LIBRARIES}
         ${MPG123_LIBRARIES}
@@ -161,6 +161,7 @@ if(UNIX AND NOT APPLE)
         ${OPENGL_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${SNDFILE_LIBRARIES}
+        ${FREETYPE_LIBRARIES}
         ${GSTREAMER_LIBRARIES}
         ${GSTREAMER_BASE_LIBRARIES}
         ${GSTREAMER_APP_LIBRARIES}
@@ -181,11 +182,16 @@ elseif(WIN32)
     )
 
     set(WIN_DLL_DIR /opt/mxe/usr/x86_64-w64-mingw32.shared/bin CACHE PATH
-       "Path to folder with needed dynamic libraries for Windows builds.")
+       "Path to folder with needed dynamic libraries for Windows builds")
 
     if(NOT DLL_MANUAL_COPY)
        set(DLL_MANUAL_COPY OFF CACHE BOOL
-          "Enable if you want to copy DLLs manually.")
+          "Enable if you want to copy DLLs manually")
+    endif()
+
+    if(NOT SHOW_CONSOLE)
+       set(SHOW_CONSOLE OFF CACHE BOOL
+          "Open console window on application start on Windows")
     endif()
 
     # Dynamic libraries
@@ -367,7 +373,7 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/libusb"
     "${OF_ROOT_DIR}/src/libusb/libusb"
 )
-endif(WIN32)
+endif()
 
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC

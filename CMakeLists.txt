@@ -58,6 +58,8 @@ endif()
 
 #------------------------------------------
 
+find_package(PkgConfig REQUIRED)
+
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
 endif()
@@ -73,16 +75,19 @@ if(UNIX AND NOT APPLE)
         -DOF_VIDEO_PLAYER_GSTREAMER
     )
 
+    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+
+    find_package(Glib REQUIRED)
     find_package(ALSA REQUIRED)
-    find_package(GTK2 REQUIRED)
     find_package(Cairo REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
 
     set(INCLUDE_DIRS
+        ${GTK3_INCLUDE_DIRS}
+        ${GLIB_INCLUDE_DIRS}
         ${ALSA_INCLUDE_DIRS}
-        ${GTK2_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}

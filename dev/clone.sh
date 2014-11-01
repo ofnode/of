@@ -17,7 +17,7 @@ function setup() {
 cd src
 
 # v 2.0 release
-setup assimp 687e84 https://github.com/procedural/assimp
+setup assimp 5b71b7 https://github.com/procedural/assimp
 
 # v 2.11.1 release
 setup fontconfig 9da280 https://github.com/procedural/fontconfig
