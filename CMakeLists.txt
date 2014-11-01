@@ -80,6 +80,8 @@ if(UNIX AND NOT APPLE)
     find_package(Glib REQUIRED)
     find_package(ALSA REQUIRED)
     find_package(Cairo REQUIRED)
+    find_package(MPG123 REQUIRED)
+    find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
@@ -89,6 +91,8 @@ if(UNIX AND NOT APPLE)
         ${GLIB_INCLUDE_DIRS}
         ${ALSA_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
+        ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
@@ -98,6 +102,7 @@ elseif(WIN32)
 
     set(DEFINITIONS
         -D__MINGW32_VERSION
+        -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_VIDEO_CAPTURE_DIRECTSHOW
@@ -105,6 +110,8 @@ elseif(WIN32)
     )
     
     find_package(Cairo REQUIRED)
+    find_package(MPG123 REQUIRED)
+    find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(Freetype REQUIRED)
 
@@ -112,6 +119,8 @@ elseif(WIN32)
 
     set(INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
+        ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
     )

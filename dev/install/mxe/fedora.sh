@@ -21,6 +21,7 @@ openssl     \
 freetype    \
 assimp      \
 opencv      \
+mpg123      \
 openal      \
 libsndfile
 

@@ -175,6 +175,7 @@ elseif(WIN32)
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -D__MINGW32_VERSION
+        -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_VIDEO_CAPTURE_DIRECTSHOW
@@ -209,6 +210,7 @@ elseif(WIN32)
     set(WIN_LIBRARIES
         winmm
         gdi32
+        dsound
         ws2_32
         crypt32
         wsock32
@@ -239,11 +241,11 @@ elseif(WIN32)
     file(GLOB_RECURSE OPENFRAMEWORKS_DEP   "${OF_LIBS_DIR}/*.a")
 
     # External dependencies
-    find_package(Glib REQUIRED)
     find_package(ZLIB REQUIRED)
     find_package(BZip2 REQUIRED)
     find_package(Iconv REQUIRED)
     find_package(Cairo REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(Pixman REQUIRED)
@@ -257,11 +259,11 @@ elseif(WIN32)
     list(APPEND OPENGL_INCLUDE_DIR "${CMAKE_FIND_ROOT_PATH}/include/GL")
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
-        ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
         ${BZIP2_INCLUDE_DIR}
         ${ICONV_INCLUDE_DIR}
         ${CAIRO_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${PIXMAN_INCLUDE_DIRS}
@@ -280,6 +282,7 @@ elseif(WIN32)
         ${BZIP2_LIBRARIES}
         ${ICONV_LIBRARIES}
         ${CAIRO_LIBRARIES}
+        ${MPG123_LIBRARIES}
         ${OPENGL_LIBRARIES}
         ${PIXMAN_LIBRARIES}
         ${OPENSSL_LIBRARIES}
