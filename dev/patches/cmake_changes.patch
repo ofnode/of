@@ -89,7 +89,7 @@
  
  # Append our module directory to CMake
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-@@ -51,13 +70,13 @@
+@@ -53,13 +70,13 @@
  #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL) 
  
  # For Debug build types, append a "d" to the library names.

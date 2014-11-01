@@ -44,7 +44,7 @@ setup poco cecf7cd https://github.com/pocoproject/poco
 setup rtaudio 02c152 https://github.com/procedural/rtaudio
 
 # v 0.8.4 master
-setup openFrameworks edf53f https://github.com/openframeworks/openFrameworks
+setup openFrameworks 7bc279 https://github.com/openframeworks/openFrameworks
 
 #---------------------------------
 
