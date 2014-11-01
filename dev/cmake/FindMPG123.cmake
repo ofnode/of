@@ -1,4 +1,3 @@
-find_package(PkgConfig)
 pkg_check_modules(PC_MPG123 QUIET libmpg123)
 
 find_path(MPG123_INCLUDE_DIR mpg123.h
