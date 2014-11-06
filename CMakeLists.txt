@@ -135,6 +135,12 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/src/freeglut/include"
 
     "${CMAKE_CURRENT_LIST_DIR}/src/freeimage"
+    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR"
+    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/Half"
+    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/Iex"
+    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/IlmImf"
+    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/IlmThread"
+    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/Imath"
 
     "${CMAKE_CURRENT_LIST_DIR}/src/glew"
     "${CMAKE_CURRENT_LIST_DIR}/src/glew/include"

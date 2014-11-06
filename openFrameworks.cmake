@@ -318,6 +318,12 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/freeglut/include"
 
     "${OF_ROOT_DIR}/src/freeimage"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Iex"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmImf"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmThread"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Imath"
 
     "${OF_ROOT_DIR}/src/glew"
     "${OF_ROOT_DIR}/src/glew/include"
