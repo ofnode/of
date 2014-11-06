@@ -265,7 +265,7 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 	        s_plugins->AddNode(InitHDR);
 			s_plugins->AddNode(InitG3);
 			s_plugins->AddNode(InitSGI);
-			//s_plugins->AddNode(InitEXR);
+			s_plugins->AddNode(InitEXR);
 			s_plugins->AddNode(InitJ2K);
 			s_plugins->AddNode(InitJP2);
 			s_plugins->AddNode(InitPFM);

@@ -26,7 +26,7 @@ setup fontconfig 9da280 https://github.com/procedural/fontconfig
 setup freeglut 0fd376 https://github.com/procedural/freeglut
 
 # v 3.16.0 release
-setup freeimage e550ad https://github.com/procedural/freeimage
+setup freeimage 62b55b https://github.com/procedural/freeimage
 
 # v 1.11.0 release
 setup glew 442545 https://github.com/omniavinco/glew-cmake

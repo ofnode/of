@@ -4,9 +4,6 @@ project(freeimage)
 
 find_package(ZLIB REQUIRED)
 
-# Set the output paths
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
-
 # Process subdirectories
 add_subdirectory(LibJPEG)
 add_subdirectory(LibOpenJPEG)
@@ -14,6 +11,10 @@ add_subdirectory(LibPNG)
 add_subdirectory(LibTIFF4)
 add_subdirectory(LibWebP)
 add_subdirectory(OpenEXR/Half)
+add_subdirectory(OpenEXR/Iex)
+add_subdirectory(OpenEXR/IlmImf)
+add_subdirectory(OpenEXR/IlmThread)
+add_subdirectory(OpenEXR/Imath)
 
 # List the header files
 set(HEADERS CacheFile.h
@@ -61,6 +62,7 @@ set(SRCS FreeImage/BitmapAccess.cpp
          FreeImage/PluginBMP.cpp
          FreeImage/PluginCUT.cpp
          FreeImage/PluginDDS.cpp
+         FreeImage/PluginEXR.cpp
          FreeImage/PluginG3.cpp
          FreeImage/PluginGIF.cpp
          FreeImage/PluginHDR.cpp
@@ -119,6 +121,11 @@ set(SRCS FreeImage/BitmapAccess.cpp
 # List the include paths
 include_directories(${CMAKE_SOURCE_DIR}
                     ${CMAKE_SOURCE_DIR}/DeprecationManager
+                    ${CMAKE_SOURCE_DIR}/OpenEXR/Half
+                    ${CMAKE_SOURCE_DIR}/OpenEXR/Iex
+                    ${CMAKE_SOURCE_DIR}/OpenEXR/IlmImf
+                    ${CMAKE_SOURCE_DIR}/OpenEXR/IlmThread
+                    ${CMAKE_SOURCE_DIR}/OpenEXR/Imath
 )
 
 include_directories(${ZLIB_INCLUDE_DIRS})
@@ -126,9 +133,15 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 # Declaration of the library
 add_library(freeimage STATIC ${HEADERS} ${SRCS})
 
-set_target_properties(freeimage PROPERTIES COMPILE_DEFINITIONS "OPJ_STATIC;FREEIMAGE_LIB") 
-set_target_properties(freeimage PROPERTIES COMPILE_FLAGS "-w -fPIC")
+add_definitions(-DOPJ_STATIC -DFREEIMAGE_LIB -DNO_LCMS -DDISABLE_PERF_MEASUREMENT)
 
-target_link_libraries(freeimage jpeg mng openjpeg png tiff ${ZLIB_LIBRARIES})
-add_dependencies(freeimage jpeg mng openjpeg png tiff ${ZLIB_LIBRARIES})
+if(UNIX AND NOT APPLE)
+add_definitions(-D__ANSI__)
+elseif(WIN32)
+add_definitions(-DWINVER=0x0500)
+endif()
+
+target_link_libraries(freeimage)
+
+set_target_properties(freeimage PROPERTIES COMPILE_FLAGS "-w -fPIC")
 

@@ -1,43 +1,43 @@
 # List the header files
 set(HEADERS src/dec/alphai.h
-         	src/dec/decode_vp8.h
-         	src/dec/vp8i.h
-         	src/dec/vp8li.h
-         	src/dec/webpi.h
-         	src/dsp/dsp.h
-         	src/dsp/lossless.h
-         	src/dsp/yuv.h
-         	src/enc/backward_references.h
-         	src/enc/cost.h
-         	src/enc/histogram.h
-         	src/enc/vp8enci.h
-         	src/enc/vp8li.h
-         	src/mux/muxi.h
-         	src/utils/alpha_processing.h
-         	src/utils/bit_reader.h
-         	src/utils/bit_writer.h
-         	src/utils/color_cache.h
-         	src/utils/filters.h
-         	src/utils/huffman.h
-         	src/utils/huffman_encode.h
-         	src/utils/quant_levels.h
-         	src/utils/quant_levels_dec.h
-         	src/utils/random.h
-         	src/utils/rescaler.h
-         	src/utils/thread.h
-         	src/utils/utils.h
-         	src/webp/decode.h
-         	src/webp/demux.h
-         	src/webp/encode.h
-         	src/webp/format_constants.h
-         	src/webp/mux.h
-         	src/webp/mux_types.h
-         	src/webp/types.h
+            src/dec/decode_vp8.h
+            src/dec/vp8i.h
+            src/dec/vp8li.h
+            src/dec/webpi.h
+            src/dsp/dsp.h
+            src/dsp/lossless.h
+            src/dsp/yuv.h
+            src/enc/backward_references.h
+            src/enc/cost.h
+            src/enc/histogram.h
+            src/enc/vp8enci.h
+            src/enc/vp8li.h
+            src/mux/muxi.h
+            src/utils/alpha_processing.h
+            src/utils/bit_reader.h
+            src/utils/bit_writer.h
+            src/utils/color_cache.h
+            src/utils/filters.h
+            src/utils/huffman.h
+            src/utils/huffman_encode.h
+            src/utils/quant_levels.h
+            src/utils/quant_levels_dec.h
+            src/utils/random.h
+            src/utils/rescaler.h
+            src/utils/thread.h
+            src/utils/utils.h
+            src/webp/decode.h
+            src/webp/demux.h
+            src/webp/encode.h
+            src/webp/format_constants.h
+            src/webp/mux.h
+            src/webp/mux_types.h
+            src/webp/types.h
 )
 
 # List the source files
 set(SRCS src/dec/dec_alpha.c
-	  	 src/dec/dec_buffer.c
+         src/dec/dec_buffer.c
          src/dec/dec_frame.c
          src/dec/dec_idec.c
          src/dec/dec_io.c

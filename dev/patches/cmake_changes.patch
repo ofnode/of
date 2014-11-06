@@ -14,17 +14,6 @@
 -		MESSAGE( WARNING "The Assimp test suite is currently Windows-only." )
 -	ENDIF ( WIN32 )
 -ENDIF ( BUILD_TESTS )
---- a/freeimage/CMakeLists.txt
-+++ b/freeimage/CMakeLists.txt
-@@ -6,8 +6,6 @@
- 
- # Set the output paths
- set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
--set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "lib/")
--set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "bin/")
- 
- # Process subdirectories
- add_subdirectory(LibJPEG)
 --- a/glew/CMakeLists.txt
 +++ b/glew/CMakeLists.txt
 @@ -5,11 +5,9 @@
