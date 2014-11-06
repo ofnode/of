@@ -66,13 +66,13 @@ endif()
 # Constant root directory path for addons
 set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-# Output paths for libraries and executable
+# Output shared libraries and executables to project local bin folder
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 if(UNIX AND NOT APPLE)
 
-    set(OF_LIBS_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
+    set(OF_LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_GTK
@@ -89,26 +89,29 @@ if(UNIX AND NOT APPLE)
         -static-libstdc++
     )
 
-    # Search path for .so
+    # The folder with executable will be
+    # a search path for shared libraries
     list(APPEND OPENFRAMEWORKS_LIBRARIES
         -Wl,-rpath,'$$ORIGIN'
     )
 
-    # Local dependencies
-    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIBS_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_DEP   "${OF_LIBS_DIR}/*.a")
+    #// Local dependencies /////////////////////////////////////////////////////
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
+    file(GLOB_RECURSE OPENFRAMEWORKS_LIB   "${OF_LIB_DIR}/*.a")
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
         -Wl,-Bstatic
         -Wl,--start-group
-        ${OPENFRAMEWORKS_DEP}
+        ${OPENFRAMEWORKS_LIB}
         -Wl,--end-group
         -Wl,-Bdynamic
     )
 
+    #// Global dependencies ////////////////////////////////////////////////////
+
     pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
-    # External dependencies
     find_package(X11 REQUIRED)
     find_package(Glib REQUIRED)
     find_package(ZLIB REQUIRED)
@@ -169,9 +172,28 @@ if(UNIX AND NOT APPLE)
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
+    #///////////////////////////////////////////////////////////////////////////
+
 elseif(WIN32)
 
-    set(OF_LIBS_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
+    #// Options ////////////////////////////////////////////////////////////////
+
+    set(OF_WIN_DLL_DIR /opt/mxe/usr/x86_64-w64-mingw32.shared/bin CACHE PATH
+       "Path to a folder with needed dll libraries for Windows applications")
+
+    if(NOT OF_ENABLE_MANUAL_DLL_COPY)
+       set(OF_ENABLE_MANUAL_DLL_COPY OFF CACHE BOOL
+          "Disables dll autocopy to bin folder")
+    endif()
+
+    if(NOT OF_ENABLE_CONSOLE)
+       set(OF_ENABLE_CONSOLE OFF CACHE BOOL
+          "Enable console window opening on Windows")
+    endif()
+
+    #///////////////////////////////////////////////////////////////////////////
+
+    set(OF_LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -D__MINGW32_VERSION
@@ -182,28 +204,10 @@ elseif(WIN32)
         -DOF_VIDEO_PLAYER_DIRECTSHOW
     )
 
-    set(WIN_DLL_DIR /opt/mxe/usr/x86_64-w64-mingw32.shared/bin CACHE PATH
-       "Path to folder with needed dynamic libraries for Windows builds")
-
-    if(NOT DLL_MANUAL_COPY)
-       set(DLL_MANUAL_COPY OFF CACHE BOOL
-          "Enable if you want to copy DLLs manually")
-    endif()
-
-    if(NOT SHOW_CONSOLE)
-       set(SHOW_CONSOLE OFF CACHE BOOL
-          "Open console window on application start on Windows")
-    endif()
-
-    # Dynamic libraries
-    set(OPENFRAMEWORKS_DLL
-        "${OF_LIBS_DIR}/libusb.dll"
-        "${WIN_DLL_DIR}/libogg-0.dll"
-        "${WIN_DLL_DIR}/OpenAL32.dll"
-        "${WIN_DLL_DIR}/libFLAC-8.dll"
-        "${WIN_DLL_DIR}/libvorbis-0.dll"
-        "${WIN_DLL_DIR}/libsndfile-1.dll"
-        "${WIN_DLL_DIR}/libvorbisenc-2.dll"
+    # Static C and C++
+    set(OPENFRAMEWORKS_LIBRARIES
+        -static-libgcc
+        -static-libstdc++
     )
 
     # MinGW libraries
@@ -219,28 +223,36 @@ elseif(WIN32)
         setupapi
     )
 
-    # Static C and C++
-    set(OPENFRAMEWORKS_LIBRARIES
-        -static-libgcc
-        -static-libstdc++
+    # Dynamic dependencies
+    set(OPENFRAMEWORKS_DLL
+        "${OF_LIB_DIR}/libusb.dll"
+        "${OF_WIN_DLL_DIR}/OpenAL32.dll"
+        "${OF_WIN_DLL_DIR}/libogg-0.dll"
+        "${OF_WIN_DLL_DIR}/libFLAC-8.dll"
+        "${OF_WIN_DLL_DIR}/libmpg123-0.dll"
+        "${OF_WIN_DLL_DIR}/libvorbis-0.dll"
+        "${OF_WIN_DLL_DIR}/libsndfile-1.dll"
+        "${OF_WIN_DLL_DIR}/libvorbisenc-2.dll"
     )
 
-    # Copy DLL dependencies
-    if(NOT DLL_MANUAL_COPY)
+    # Hide console on app run
+    if(NOT OF_ENABLE_CONSOLE)
+        list(APPEND OPENFRAMEWORKS_LIBRARIES -mwindows)
+    endif()
+
+    # Copy dll dependencies to folder
+    if(NOT OF_ENABLE_MANUAL_DLL_COPY)
         file(COPY ${OPENFRAMEWORKS_DLL} DESTINATION
                   ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
     endif()
 
-    # Hide console window
-    if(NOT SHOW_CONSOLE)
-        list(APPEND OPENFRAMEWORKS_LIBRARIES -mwindows)
-    endif()
+    #// Local dependencies /////////////////////////////////////////////////////
 
-    # Local dependencies
-    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIBS_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_DEP   "${OF_LIBS_DIR}/*.a")
+    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
+    file(GLOB_RECURSE OPENFRAMEWORKS_LIB   "${OF_LIB_DIR}/*.a")
 
-    # External dependencies
+    #// Global dependencies ////////////////////////////////////////////////////
+
     find_package(ZLIB REQUIRED)
     find_package(BZip2 REQUIRED)
     find_package(Iconv REQUIRED)
@@ -255,7 +267,7 @@ elseif(WIN32)
     find_package(Threads REQUIRED)
     find_package(Freetype REQUIRED)
 
-    # There was a case when GL folder didn't get added to include path
+    # Forcing GL include path (MXE)
     list(APPEND OPENGL_INCLUDE_DIR "${CMAKE_FIND_ROOT_PATH}/include/GL")
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
@@ -282,18 +294,19 @@ elseif(WIN32)
         ${BZIP2_LIBRARIES}
         ${ICONV_LIBRARIES}
         ${CAIRO_LIBRARIES}
-        ${MPG123_LIBRARIES}
         ${OPENGL_LIBRARIES}
         ${PIXMAN_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${LIBINTL_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
-        ${OPENFRAMEWORKS_DEP}
+        ${OPENFRAMEWORKS_LIB}
         -Wl,--end-group
         -Wl,-Bdynamic
         ${OPENFRAMEWORKS_DLL}
     )
+
+    #///////////////////////////////////////////////////////////////////////////
 
 endif()
 
@@ -429,17 +442,12 @@ set(CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBU
 set(CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_GCC} ${RELEASE_CXX_FLAGS_CLANG}")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_GCC}   ${DEBUG_CXX_FLAGS_CLANG}")
 
-if(UNIX AND NOT APPLE)
-# Optional path for headers which need to be
-# included first before system path scanning
-include_directories("${OF_ROOT_DIR}/include")
-endif()
 
 function(ofxaddon OFXADDON)
 
     set(OFXADDON_DIR ${OFXADDON})
 
-    #-- Standard addons ---------------------------------------------
+    #// Standard addons ////////////////////////////////////////////////////////
 
     if(OFXADDON STREQUAL ofx3DModelLoader)
         set(OFXADDON_DIR "${OF_ROOT_DIR}/addons/ofx3DModelLoader")
@@ -547,7 +555,7 @@ function(ofxaddon OFXADDON)
         pkg_check_modules(OPENCV REQUIRED opencv)
         include_directories(${OPENCV_INCLUDE_DIRS})
         if (CMAKE_BUILD_TYPE STREQUAL Release)
-            # Static OpenCV for release only, on Ubuntu 14.04 OpenCV build without -fPIC
+            # Static OpenCV for releases only, OpenCV build have no PIC on Ubuntu Trusty
             list(APPEND OFXADDONS_LIBRARIES -Wl,-Bstatic ${OPENCV_LDFLAGS} -Wl,-Bdynamic)
             # OpenCV depends on TBB
             if (UNIX AND NOT APPLE)
@@ -646,7 +654,7 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs")
 
-    #-- Custom addons -----------------------------------------------
+    #// Custom addons //////////////////////////////////////////////////////////
 
     else()
 
@@ -664,6 +672,8 @@ function(ofxaddon OFXADDON)
         endforeach()
 
     endif()
+
+    #///////////////////////////////////////////////////////////////////////////
 
     if(OFXSOURCES)
         if(ARGV1 STREQUAL SHARED)

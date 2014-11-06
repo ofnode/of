@@ -4,7 +4,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 project(ofExamples)
 
-set(DLL_MANUAL_COPY ON)
+set(OF_ENABLE_MANUAL_DLL_COPY ON)
+
 include(openFrameworks)
 
 ofxaddon(ofx3DModelLoader)
