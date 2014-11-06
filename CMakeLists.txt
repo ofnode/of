@@ -4,7 +4,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
 project(openFrameworks)
 
-#-- Compiler-neutral flags ----------------
+#// Compiler-neutral flags /////////////////////////////////////////////////////
 
 set(RELEASE_FLAGS "
 ")
@@ -14,7 +14,7 @@ set(DEBUG_FLAGS "
     -fPIC
 ")
 
-#-- GCC specific flags --------------------
+#// GCC specific flags /////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL GNU)
     set(RELEASE_C_FLAGS_GCC "
@@ -34,7 +34,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     ")
 endif()
 
-#-- Clang specific flags ------------------
+#// Clang specific flags ///////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(RELEASE_C_FLAGS_CLANG "
@@ -56,7 +56,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     ")
 endif()
 
-#------------------------------------------
+#///////////////////////////////////////////////////////////////////////////////
 
 find_package(PkgConfig REQUIRED)
 
