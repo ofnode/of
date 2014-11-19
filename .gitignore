@@ -10,8 +10,7 @@
 examples/*
 examples/!CMakeLists.txt
 
-openFrameworks/*
-src/assimp/test
+src/assimp/test/*
 
 include/*
 
