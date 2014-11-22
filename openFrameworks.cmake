@@ -150,6 +150,7 @@ if(UNIX AND NOT APPLE)
         ${GSTREAMER_APP_LIBRARIES}
         ${GSTREAMER_VIDEO_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
+        dl
     )
 
     #///////////////////////////////////////////////////////////////////////////

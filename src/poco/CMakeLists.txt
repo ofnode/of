@@ -64,13 +64,17 @@ option(POCO_UNBUNDLED
 
 # Uncomment from next two lines to force statitc or dynamic library, default is autodetection
 if(POCO_STATIC)
-    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)    
+    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS -DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION )    
     set( LIB_MODE STATIC )
     message(STATUS "Building static libraries")
 else(POCO_STATIC)
     set( LIB_MODE SHARED )
     message(STATUS "Building dynamic libraries")
 endif(POCO_STATIC)
+
+if(POCO_STATIC AND CMAKE_SYSTEM MATCHES "Linux")
+    add_definitions( -fPIC )
+endif()
 
 IF (ENABLE_TESTS)
   include(CTest)
@@ -127,7 +131,7 @@ if (CMAKE_SYSTEM MATCHES "SunOS")
 endif(CMAKE_SYSTEM MATCHES "SunOS")
 
 if (CMAKE_COMPILER_IS_MINGW)
-  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED -DPOCO_PTR_IS_64_BIT )
 endif (CMAKE_COMPILER_IS_MINGW)
 
 if (CMAKE_COMPILER_IS_CYGWIN)
@@ -152,11 +156,6 @@ endif()
 IF (ENABLE_TESTS)
    add_subdirectory(CppUnit)
 ENDIF ()
-
-add_definitions(-DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION)
-if(WIN32)
-   add_definitions(-DPOCO_PTR_IS_64_BIT)
-endif(WIN32)
 
 add_subdirectory(Foundation)
 add_subdirectory(XML)

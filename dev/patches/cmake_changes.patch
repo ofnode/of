@@ -78,7 +78,7 @@
  
  # Append our module directory to CMake
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-@@ -53,13 +70,13 @@
+@@ -53,20 +51,20 @@
  #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL) 
  
  # For Debug build types, append a "d" to the library names.
@@ -94,7 +94,26 @@
  
  option(POCO_UNBUNDLED
    "Set to OFF|ON (default is OFF) to control linking dependencies as external" OFF)
-@@ -129,10 +140,7 @@
+ 
+ # Uncomment from next two lines to force statitc or dynamic library, default is autodetection
+ if(POCO_STATIC)
+-    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)    
++    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS -DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION )    
+     set( LIB_MODE STATIC )
+     message(STATUS "Building static libraries")
+ else(POCO_STATIC)
+@@ -74,6 +72,10 @@
+     message(STATUS "Building dynamic libraries")
+ endif(POCO_STATIC)
+ 
++if(POCO_STATIC AND CMAKE_SYSTEM MATCHES "Linux")
++    add_definitions( -fPIC )
++endif()
++
+ IF (ENABLE_TESTS)
+   include(CTest)
+   ENABLE_TESTING()
+@@ -129,10 +131,7 @@
  endif(CMAKE_SYSTEM MATCHES "SunOS")
  
  if (CMAKE_COMPILER_IS_MINGW)
@@ -102,19 +121,12 @@
 -    add_definitions(-mno-cygwin -D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
 -  link_directories(/usr/local/lib /usr/lib)
 -  include_directories(/usr/local/include /usr/include)
-+  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
++  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED -DPOCO_PTR_IS_64_BIT )
  endif (CMAKE_COMPILER_IS_MINGW)
  
  if (CMAKE_COMPILER_IS_CYGWIN)
-@@ -158,11 +167,16 @@
-    add_subdirectory(CppUnit)
- ENDIF ()
+@@ -160,9 +159,9 @@
  
-+add_definitions(-DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION)
-+if(WIN32)
-+   add_definitions(-DPOCO_PTR_IS_64_BIT)
-+endif(WIN32)
-+
  add_subdirectory(Foundation)
  add_subdirectory(XML)
 -add_subdirectory(JSON)
@@ -126,7 +138,7 @@
  add_subdirectory(Util)
  add_subdirectory(Net)
  #add_subdirectory(Web)
-@@ -174,7 +183,7 @@
+@@ -174,7 +173,7 @@
      add_subdirectory(Crypto)
  endif(OPENSSL_FOUND)
  
