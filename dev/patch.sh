@@ -10,7 +10,11 @@ function apply() {
 
 #---------------------------------
 
-cd src
+cd "$OF/addons"
+
+apply addons_fixes.patch
+
+cd "$OF/src"
 
 apply cmake_changes.patch
 apply poco_mingw_fixes.patch
