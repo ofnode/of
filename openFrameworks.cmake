@@ -50,7 +50,7 @@ set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
-if(UNIX AND NOT APPLE)
+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
     set(OF_LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
 
@@ -155,7 +155,7 @@ if(UNIX AND NOT APPLE)
 
     #///////////////////////////////////////////////////////////////////////////
 
-elseif(WIN32)
+elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
 
     #// Options ////////////////////////////////////////////////////////////////
 
@@ -368,13 +368,13 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/openframeworks/video"
 )
 
-if(WIN32)
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/videoinput"
 
     "${OF_ROOT_DIR}/src/libusb"
     "${OF_ROOT_DIR}/src/libusb/libusb"
-)
+    )
 endif()
 
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
@@ -385,6 +385,7 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
 add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
 include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
 
+#///////////////////////////////////////////////////////////////////////////////
 
 string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
 string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
@@ -420,6 +421,7 @@ set(CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBU
 set(CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}")
 
+#///////////////////////////////////////////////////////////////////////////////
 
 function(ofxaddon OFXADDON)
 
@@ -536,7 +538,7 @@ function(ofxaddon OFXADDON)
             # Static OpenCV for releases only, OpenCV build have no PIC on Ubuntu Trusty
             list(APPEND OFXADDONS_LIBRARIES -Wl,-Bstatic ${OPENCV_LDFLAGS} -Wl,-Bdynamic)
             # OpenCV depends on TBB
-            if (UNIX AND NOT APPLE)
+            if (CMAKE_SYSTEM_NAME STREQUAL Linux)
                 pkg_check_modules(TBB REQUIRED tbb)
                 include_directories(${TBB_INCLUDE_DIRS})
                 list(APPEND OFXADDONS_LIBRARIES ${TBB_LIBRARIES})
@@ -561,16 +563,16 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/src/ofxOscReceiver.cpp"
             "${OFXADDON_DIR}/src/ofxOscSender.cpp"
         )
-        if(UNIX AND NOT APPLE)
-        list(APPEND OFXSOURCES
+        if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+            list(APPEND OFXSOURCES
             "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/NetworkingUtils.cpp"
             "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/UdpSocket.cpp"
-        )
-        elseif(WIN32)
-        list(APPEND OFXSOURCES
+            )
+        elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
+            list(APPEND OFXSOURCES
             "${OFXADDON_DIR}/libs/oscpack/src/ip/win32/NetworkingUtils.cpp"
             "${OFXADDON_DIR}/libs/oscpack/src/ip/win32/UdpSocket.cpp"
-        )
+            )
         endif()
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs/oscpack/src")

@@ -44,7 +44,7 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if(UNIX AND NOT APPLE)
+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
     set(DEFINITIONS
         -DOF_USING_GTK
@@ -78,7 +78,7 @@ if(UNIX AND NOT APPLE)
         ${GSTREAMER_INCLUDE_DIRS}
     )
 
-elseif(WIN32)
+elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
 
     set(DEFINITIONS
         -DOF_USING_MPG123
@@ -184,13 +184,13 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video"
 )
 
-if(WIN32)
-list(APPEND INCLUDE_DIRS
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/src/videoinput"
 
     "${CMAKE_CURRENT_LIST_DIR}/src/libusb"
     "${CMAKE_CURRENT_LIST_DIR}/src/libusb/libusb"
-)
+    )
 endif()
 
 set(SOURCES
@@ -268,18 +268,18 @@ set(SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
 )
 
-if(UNIX AND NOT APPLE)
-list(APPEND SOURCES
+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+    list(APPEND SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
-)
-elseif(WIN32)
-list(APPEND SOURCES
+    )
+elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    list(APPEND SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/src/videoinput/videoInput.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
-)
+    )
 endif()
 
 list(APPEND DEFINITIONS
@@ -291,6 +291,7 @@ list(APPEND DEFINITIONS
 add_definitions(${DEFINITIONS})
 include_directories(${INCLUDE_DIRS})
 
+#///////////////////////////////////////////////////////////////////////////////
 
 string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
 string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
@@ -326,15 +327,17 @@ set(CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBU
 set(CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}")
 
-if(UNIX AND NOT APPLE)
+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
    set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
-elseif(WIN32)
+elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
    set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
 endif()
+
+#///////////////////////////////////////////////////////////////////////////////
 
 add_subdirectory(src/fontconfig)
 add_subdirectory(src/freeglut)
