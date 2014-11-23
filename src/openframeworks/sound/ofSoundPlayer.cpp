@@ -37,8 +37,6 @@ void ofSoundUpdate(){
 void ofSoundShutdown(){
 	#ifdef OF_SOUND_PLAYER_FMOD
 		ofFmodSoundPlayer::closeFmod();
-	#else
-		ofLogWarning("ofSoundPlayer") << "ofSoundShutdown() not implemented on this platform";
 	#endif
 }
 #endif
