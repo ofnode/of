@@ -1,5 +1,5 @@
 #!/bin/bash
-# Tested on Ubuntu 14.04
+# Tested on Ubuntu 12.04 and 14.04
 
 sudo apt-get update
 sudo apt-get -y upgrade
@@ -37,8 +37,9 @@ gstreamer1.0-plugins-ugly \
 libgstreamer1.0-dev       \
 libgstreamer-plugins-base1.0-dev
 
+sudo apt-get install --reinstall libgl1-mesa-glx
+
 sudo rm /usr/bin/ld
 sudo ln -s `which gold` /usr/bin/ld
 
 sudo ln -s /usr/bin/llvm-symbolizer* /usr/bin/llvm-symbolizer 2> /dev/null
-
