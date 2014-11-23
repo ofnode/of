@@ -19,6 +19,15 @@
  		//bool setVideoSettingCam(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
 --- videoInput.cpp
 +++ videoInput.cpp
+@@ -11,7 +11,7 @@
+ #include <tchar.h>
+ 
+ //Include Directshow stuff here so we don't worry about needing all the h files.
+-#include <DShow.h>
++#include <dshow.h>
+ //#include "streams.h"
+ #pragma include_alias( "dxtrans.h", "qedit.h" )
+ #define __IDxtCompositor_INTERFACE_DEFINED__
 @@ -19,12 +19,14 @@
  #define __IDxtJpeg_INTERFACE_DEFINED__
  #define __IDxtKey_INTERFACE_DEFINED__
