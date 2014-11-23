@@ -34,7 +34,7 @@ function(example APP DIR)
     target_link_libraries(${APP} ${OFXADDONS_BEGIN} ${OFXADDONS_LIBRARIES} ${OFXADDONS_END} ${OPENFRAMEWORKS_LIBRARIES})
     set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
 
-    if(WIN32)
+    if(CMAKE_SYSTEM_NAME STREQUAL Windows)
         file(COPY ${OPENFRAMEWORKS_DLL} DESTINATION "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
     endif()
 
@@ -173,7 +173,7 @@ example( windowExample                        utils/windowExample )
 example( xmlExample                           utils/xmlExample )
 
 example( asciiVideo                           video/asciiVideo )
-if(APPLE)
+if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
 example( osxHighPerformanceVideoPlayerExample video/osxHighPerformanceVideoPlayerExample )
 example( osxVideoRecorderExample              video/osxVideoRecorderExample )
 endif()
