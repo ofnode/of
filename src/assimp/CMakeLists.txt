@@ -27,7 +27,7 @@ INSTALL( FILES "${CMAKE_BINARY_DIR}/assimp.pc" DESTINATION ${LIB_INSTALL_DIR}/pk
 
 # Globally enbale Boost resp. the Boost workaround – it is also needed by the
 # tools which include the Assimp headers.
-SET ( ENABLE_BOOST_WORKAROUND OFF CACHE BOOL
+SET ( ENABLE_BOOST_WORKAROUND ON CACHE BOOL
 	"If a simple implementation of the used Boost functions is used. Slightly reduces functionality, but enables builds without Boost available."
 )
 IF ( ENABLE_BOOST_WORKAROUND )
@@ -62,4 +62,3 @@ IF ( BUILD_ASSIMP_TOOLS )
 	ENDIF ( WIN32 )
 	ADD_SUBDIRECTORY( tools/assimp_cmd/ )
 ENDIF ( BUILD_ASSIMP_TOOLS )
-
