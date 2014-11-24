@@ -151,6 +151,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
         ${GSTREAMER_VIDEO_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
         dl
+        rt
     )
 
     #///////////////////////////////////////////////////////////////////////////
@@ -672,4 +673,3 @@ set_directory_properties(PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
 
 set(OFXADDONS_BEGIN -Wl,--start-group)
 set(OFXADDONS_END -Wl,--end-group)
-
