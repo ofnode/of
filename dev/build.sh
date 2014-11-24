@@ -15,9 +15,13 @@ cd       "$OF/build/Debug/linux"
 cmake    "$OF" -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug
 ninja
 
+if [ -d /opt/mxe ]; then
+
 mkdir -p "$OF/build/Release/windows"
 cd       "$OF/build/Release/windows"
 cmake    "$OF" -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/mingw.cmake
 ninja
+
+fi
 
 tar -czvf "$OF/lib.tar.gz" "$OF/lib"
