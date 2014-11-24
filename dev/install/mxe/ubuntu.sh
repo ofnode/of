@@ -21,7 +21,6 @@ winpthreads \
 cairo       \
 openssl     \
 freetype    \
-assimp      \
 opencv      \
 openal      \
 mpg123      \
@@ -33,4 +32,3 @@ mpg123      \
 libsndfile
 
 sudo ln -s /opt/mxe/usr/x86_64-w64-mingw32.static/share/cmake/mxe-conf.cmake /opt/mxe/mingw.cmake 2> /dev/null
-
