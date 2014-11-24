@@ -37,7 +37,7 @@ gstreamer1.0-plugins-ugly \
 libgstreamer1.0-dev       \
 libgstreamer-plugins-base1.0-dev
 
-sudo apt-get install --reinstall libgl1-mesa-glx
+sudo apt-get install --reinstall libgl1-mesa-glx libgl1-mesa-dev
 
 sudo rm /usr/bin/ld
 sudo ln -s `which gold` /usr/bin/ld
