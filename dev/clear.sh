@@ -18,6 +18,7 @@ rm -rf src/poco
 rm -rf src/rtaudio
 rm -rf src/tess2
 rm -rf src/openframeworks
+rm -rf src/videoinput
 
 rm -rf addons
 rm -rf examples/!(CMakeLists.txt)

@@ -52,8 +52,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
-    set(OF_LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
-
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_GTK
         -DOF_USING_MPG123
@@ -77,13 +75,15 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
     #// Local dependencies /////////////////////////////////////////////////////
 
+    set(OF_LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
+
     list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_LIB   "${OF_LIB_DIR}/*.a")
+    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
         -Wl,-Bstatic
         -Wl,--start-group
-        ${OPENFRAMEWORKS_LIB}
+        ${OPENFRAMEWORKS_LIBS}
         -Wl,--end-group
         -Wl,-Bdynamic
     )
@@ -92,34 +92,34 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
     pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
+    find_library(RT_LIB rt)
+    find_library(DL_LIB dl)
     find_package(X11 REQUIRED)
+    find_package(UDev REQUIRED)
     find_package(Glib REQUIRED)
     find_package(ZLIB REQUIRED)
-    find_package(UDev REQUIRED)
     find_package(ALSA REQUIRED)
     find_package(Cairo REQUIRED)
-    find_package(LibUSB REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(OpenSSL REQUIRED)
-    find_package(Threads REQUIRED)
     find_package(Sndfile REQUIRED)
+    find_package(Threads REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
+        ${UDEV_INCLUDE_DIR}
         ${GTK3_INCLUDE_DIRS}
         ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
-        ${UDEV_INCLUDE_DIR}
         ${ALSA_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
-        ${LIBUSB_1_INCLUDE_DIRS}
-        ${MPG123_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
@@ -127,31 +127,30 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
-        ${X11_LIBRARIES}
+        ${RT_LIB}
+        ${DL_LIB}
         ${X11_Xi_LIB}
+        ${X11_LIBRARIES}
         ${X11_Xrandr_LIB}
         ${X11_Xcursor_LIB}
         ${X11_Xxf86vm_LIB}
+        ${UDEV_LIBRARIES}
         ${GTK3_LIBRARIES}
         ${GLIB_LIBRARIES}
         ${ZLIB_LIBRARIES}
-        ${UDEV_LIBRARIES}
         ${ALSA_LIBRARIES}
-        ${CAIRO_LIBRARIES}
-        ${LIBUSB_1_LIBRARIES}
-        ${MPG123_LIBRARIES}
         ${OPENAL_LIBRARY}
+        ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        ${MPG123_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${GSTREAMER_LIBRARIES}
-        ${GSTREAMER_BASE_LIBRARIES}
-        ${GSTREAMER_APP_LIBRARIES}
-        ${GSTREAMER_VIDEO_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
-        dl
-        rt
+        ${GSTREAMER_APP_LIBRARIES}
+        ${GSTREAMER_BASE_LIBRARIES}
+        ${GSTREAMER_VIDEO_LIBRARIES}
     )
 
     #///////////////////////////////////////////////////////////////////////////
@@ -160,22 +159,12 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
 
     #// Options ////////////////////////////////////////////////////////////////
 
-    set(OF_WIN_DLL_DIR /opt/mxe/usr/x86_64-w64-mingw32.shared/bin CACHE PATH
-       "Path to a folder with needed dll libraries for Windows applications")
-
-    if(NOT OF_ENABLE_MANUAL_DLL_COPY)
-       set(OF_ENABLE_MANUAL_DLL_COPY OFF CACHE BOOL
-          "Disables dll autocopy to bin folder")
-    endif()
-
     if(NOT OF_ENABLE_CONSOLE)
        set(OF_ENABLE_CONSOLE OFF CACHE BOOL
-          "Enable console window opening on Windows")
+          "Enable console window on Windows")
     endif()
 
     #///////////////////////////////////////////////////////////////////////////
-
-    set(OF_LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_MPG123
@@ -191,46 +180,25 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
         -static-libstdc++
     )
 
-    # MinGW libraries
-    set(WIN_LIBRARIES
-        winmm
-        gdi32
-        dsound
-        ws2_32
-        crypt32
-        wsock32
-        iphlpapi
-        strmiids
-        setupapi
-    )
-
-    # Dynamic dependencies
-    set(OPENFRAMEWORKS_DLL
-        "${OF_LIB_DIR}/libusb.dll"
-        "${OF_WIN_DLL_DIR}/OpenAL32.dll"
-        "${OF_WIN_DLL_DIR}/libogg-0.dll"
-        "${OF_WIN_DLL_DIR}/libFLAC-8.dll"
-        "${OF_WIN_DLL_DIR}/libmpg123-0.dll"
-        "${OF_WIN_DLL_DIR}/libvorbis-0.dll"
-        "${OF_WIN_DLL_DIR}/libsndfile-1.dll"
-        "${OF_WIN_DLL_DIR}/libvorbisenc-2.dll"
-    )
-
     # Hide console on app run
     if(NOT OF_ENABLE_CONSOLE)
         list(APPEND OPENFRAMEWORKS_LIBRARIES -mwindows)
     endif()
 
-    # Copy dll dependencies to folder
-    if(NOT OF_ENABLE_MANUAL_DLL_COPY)
-        file(COPY ${OPENFRAMEWORKS_DLL} DESTINATION
-                  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-    endif()
-
     #// Local dependencies /////////////////////////////////////////////////////
 
+    set(OF_LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
+
     list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_LIB   "${OF_LIB_DIR}/*.a")
+    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -Wl,-Bstatic
+        -Wl,--start-group
+        ${OPENFRAMEWORKS_LIBS}
+        -Wl,--end-group
+        -Wl,-Bdynamic
+    )
 
     #// Global dependencies ////////////////////////////////////////////////////
 
@@ -244,9 +212,19 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
     find_package(Pixman REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(Sndfile REQUIRED)
-    find_package(LibIntl REQUIRED)
     find_package(Threads REQUIRED)
+    find_package(LibIntl REQUIRED)
     find_package(Freetype REQUIRED)
+
+    find_library(WINMM_LIB winmm)
+    find_library(GDI32_LIB gdi32)
+    find_library(DSOUND_LIB dsound)
+    find_library(WS2_32_LIB ws2_32)
+    find_library(CRYPT32_LIB crypt32)
+    find_library(WSOCK32_LIB wsock32)
+    find_library(IPHLPAPI_LIB iphlpapi)
+    find_library(STRMIIDS_LIB strmiids)
+    find_library(SETUPAPI_LIB setupapi)
 
     # Forcing GL include path (MXE)
     list(APPEND OPENGL_INCLUDE_DIR "${CMAKE_FIND_ROOT_PATH}/include/GL")
@@ -256,9 +234,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
         ${BZIP2_INCLUDE_DIR}
         ${ICONV_INCLUDE_DIR}
         ${CAIRO_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${PIXMAN_INCLUDE_DIRS}
         ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
@@ -267,24 +245,31 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
-        -Wl,-Bstatic
-        -Wl,--start-group
-        ${WIN_LIBRARIES}
-        ${GLIB_LIBRARIES}
+        ${OPENAL_LIBRARY}
         ${ZLIB_LIBRARIES}
         ${BZIP2_LIBRARIES}
         ${ICONV_LIBRARIES}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        ${MPG123_LIBRARIES}
         ${PIXMAN_LIBRARIES}
         ${OPENSSL_LIBRARIES}
+        ${SNDFILE_LIBRARIES}
         ${LIBINTL_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
-        ${OPENFRAMEWORKS_LIB}
-        -Wl,--end-group
-        -Wl,-Bdynamic
-        ${OPENFRAMEWORKS_DLL}
+    )
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${WINMM_LIB}
+        ${GDI32_LIB}
+        ${DSOUND_LIB}
+        ${WS2_32_LIB}
+        ${CRYPT32_LIB}
+        ${WSOCK32_LIB}
+        ${IPHLPAPI_LIB}
+        ${STRMIIDS_LIB}
+        ${SETUPAPI_LIB}
     )
 
     #///////////////////////////////////////////////////////////////////////////
@@ -372,13 +357,11 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
 if(CMAKE_SYSTEM_NAME STREQUAL Windows)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/videoinput"
-
-    "${OF_ROOT_DIR}/src/libusb"
-    "${OF_ROOT_DIR}/src/libusb/libusb"
     )
 endif()
 
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
+    -DFREEIMAGE_LIB
     -DPOCO_STATIC
     -DPOCO_NO_AUTOMATIC_LIB_INIT
 )
@@ -427,8 +410,6 @@ set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_
 function(ofxaddon OFXADDON)
 
     set(OFXADDON_DIR ${OFXADDON})
-
-    #// Standard addons ////////////////////////////////////////////////////////
 
     if(OFXADDON STREQUAL ofx3DModelLoader)
         set(OFXADDON_DIR "${OF_ROOT_DIR}/addons/ofx3DModelLoader")
@@ -504,6 +485,17 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src/extra")
         include_directories("${OFXADDON_DIR}/libs/libfreenect/src")
         include_directories("${OFXADDON_DIR}/libs/libfreenect/include")
+        if (CMAKE_SYSTEM_NAME STREQUAL Linux)
+            find_package(LibUSB REQUIRED)
+            include_directories(${LIBUSB_1_INCLUDE_DIRS})
+            list(APPEND OFXADDONS_LIBRARIES ${LIBUSB_1_LIBRARIES})
+        elseif (CMAKE_SYSTEM_NAME STREQUAL Windows)
+            include_directories(
+                "${OF_ROOT_DIR}/src/libusb"
+                "${OF_ROOT_DIR}/src/libusb/libusb"
+            )
+            list(APPEND OFXADDONS_LIBRARIES -lusb)
+        endif()
 
 
     elseif(OFXADDON STREQUAL ofxMultiTouch)
@@ -635,8 +627,6 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs")
 
-    #// Custom addons //////////////////////////////////////////////////////////
-
     else()
 
         file(GLOB_RECURSE OFXHEADERS "${OFXADDON_DIR}/src/*.h"
@@ -654,8 +644,6 @@ function(ofxaddon OFXADDON)
 
     endif()
 
-    #///////////////////////////////////////////////////////////////////////////
-
     if(OFXSOURCES)
         if(ARGV1 STREQUAL SHARED)
             add_library(${OFXADDON} SHARED ${OFXSOURCES})
@@ -667,9 +655,12 @@ function(ofxaddon OFXADDON)
 
 endfunction(ofxaddon)
 
+#///////////////////////////////////////////////////////////////////////////////
+
 include(cotire)
 set(COTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES 1)
 set_directory_properties(PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
 
 set(OFXADDONS_BEGIN -Wl,--start-group)
 set(OFXADDONS_END -Wl,--end-group)
+

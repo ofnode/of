@@ -4,8 +4,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 project(ofExamples)
 
-set(OF_ENABLE_MANUAL_DLL_COPY ON)
-
 include(openFrameworks)
 
 ofxaddon(ofx3DModelLoader)
@@ -33,10 +31,6 @@ function(example APP DIR)
     add_executable(${APP} ${SRC})
     target_link_libraries(${APP} ${OFXADDONS_BEGIN} ${OFXADDONS_LIBRARIES} ${OFXADDONS_END} ${OPENFRAMEWORKS_LIBRARIES})
     set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
-
-    if(CMAKE_SYSTEM_NAME STREQUAL Windows)
-        file(COPY ${OPENFRAMEWORKS_DLL} DESTINATION "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
-    endif()
 
 endfunction(example)
 

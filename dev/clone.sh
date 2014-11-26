@@ -17,13 +17,13 @@ function setup() {
 cd src
 
 # v 2.0 release
-setup assimp 69b951 https://github.com/procedural/assimp
+setup assimp 7e2ead https://github.com/procedural/assimp
 
 # v 2.11.1 release
 setup fontconfig 9da280 https://github.com/procedural/fontconfig
 
 # v 2.8.1 release
-setup freeglut 0fd376 https://github.com/procedural/freeglut
+setup freeglut b3d5bc https://github.com/procedural/freeglut
 
 # v 3.16.0 release
 setup freeimage 62b55b https://github.com/procedural/freeimage
@@ -45,6 +45,11 @@ setup rtaudio 02c152 https://github.com/procedural/rtaudio
 
 # v 0.8.4 master
 setup openFrameworks 2706e5 https://github.com/openframeworks/openFrameworks
+
+rm -rf videoinput
+mkdir  videoinput
+wget -q https://raw.githubusercontent.com/ofTheo/videoInput/221b16/videoInputSrcAndDemos/libs/videoInput/videoInput.cpp -O videoinput/videoInput.cpp
+wget -q https://raw.githubusercontent.com/ofTheo/videoInput/221b16/videoInputSrcAndDemos/libs/videoInput/videoInput.h   -O videoinput/videoInput.h
 
 #---------------------------------
 

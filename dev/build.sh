@@ -19,7 +19,7 @@ if [ -d /opt/mxe ]; then
 
 mkdir -p "$OF/build/Release/windows"
 cd       "$OF/build/Release/windows"
-cmake    "$OF" -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/mingw.cmake
+cmake    "$OF" -G Ninja -DCMAKE_TOOLCHAIN_FILE=`find /opt/mxe -name mxe-conf.cmake`
 ninja
 
 fi

@@ -59,7 +59,7 @@ Install MXE with one of the scripts from `dev/install/mxe` folder.
 ```bash
 mkdir build
 cd build
-cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=/opt/mxe/mingw.cmake
+cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=`find /opt/mxe -name mxe-conf.cmake`
 ninja
 ```
 

@@ -76,7 +76,7 @@ include_directories ( "include" "src" )
 
 file ( GLOB SRC_FREEGLUTLIB "src/*.c" )
 
-add_library ( freeglut ${SRC_FREEGLUTLIB} )
+add_library ( freeglut STATIC ${SRC_FREEGLUTLIB} )
 
 if ( CYGWIN OR MSYS OR MINGW )
     add_definitions ( -DWIN32 -DFREEGLUT_EXPORTS )

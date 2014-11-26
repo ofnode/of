@@ -60,9 +60,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     find_package(Glib REQUIRED)
     find_package(ALSA REQUIRED)
     find_package(Cairo REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
 
@@ -71,9 +71,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
         ${GLIB_INCLUDE_DIRS}
         ${ALSA_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
     )
@@ -89,18 +89,18 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
     )
     
     find_package(Cairo REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
 
     list(APPEND OPENGL_INCLUDE_DIR "${CMAKE_FIND_ROOT_PATH}/include/GL")
 
     set(INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
     )
 
@@ -187,9 +187,6 @@ list(APPEND INCLUDE_DIRS
 if(CMAKE_SYSTEM_NAME STREQUAL Windows)
     list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/src/videoinput"
-
-    "${CMAKE_CURRENT_LIST_DIR}/src/libusb"
-    "${CMAKE_CURRENT_LIST_DIR}/src/libusb/libusb"
     )
 endif()
 
@@ -328,13 +325,13 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_
 set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}")
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
-   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
-   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
-   set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
+    set(LIBRARY_OUTPUT_PATH            ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
 elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
-   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
-   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
-   set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
+    set(LIBRARY_OUTPUT_PATH            ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
 endif()
 
 #///////////////////////////////////////////////////////////////////////////////

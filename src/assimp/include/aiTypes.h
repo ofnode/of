@@ -45,6 +45,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef AI_TYPES_H_INC
 #define AI_TYPES_H_INC
 
+#include <cstring>
+
 // Some runtime headers
 #include <sys/types.h>
 #include <memory.h>

@@ -1,7 +1,0 @@
-videoInput.
-
-A video capture library for windows.
-
-https://github.com/ofTheo/videoInput
-
-Used commit hash: 221b16

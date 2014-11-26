@@ -1,5 +1,5 @@
---- videoInput.h
-+++ videoInput.h
+--- a/videoinput/videoInput.h
++++ b/videoinput/videoInput.h
 @@ -321,12 +321,12 @@
  
  		//Manual control over settings thanks.....
@@ -17,8 +17,8 @@
  		bool getVideoSettingCamera(int deviceID, long Property, long &min, long &max, long &SteppingDelta, long &currentValue, long &flags, long &defaultValue);
  
  		//bool setVideoSettingCam(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
---- videoInput.cpp
-+++ videoInput.cpp
+--- a/videoinput/videoInput.cpp
++++ b/videoinput/videoInput.cpp
 @@ -11,7 +11,7 @@
  #include <tchar.h>
  
