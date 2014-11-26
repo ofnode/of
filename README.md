@@ -26,15 +26,18 @@ The only difference is that this project targets CMake build system and stores s
 Installing
 ----------
 
-Precompiled libraries are available from [releases][5] page.
+1. Clone the repository with `git clone https://github.com/procedural/of`.
+2. Install developer files for your Linux distro with a script from `dev/install/linux` folder.
+3. Optionally: install developer files for MXE with a script from `dev/install/mxe` folder.
+4. Download precompiled libraries from [releases][5] page and extract `libs` folder to `of`.
 
 
 Compiling
 ---------
 
-For Linux build:
+Run `build.sh` script from `dev` folder. You can compile it manually with these steps:
 
-Install external dependencies with one of the scripts from `dev/install/linux` folder.
+For Linux build:
 
 ```bash
 mkdir build
@@ -53,8 +56,6 @@ ninja
 ```
 
 For Windows build:
-
-Install MXE with one of the scripts from `dev/install/mxe` folder.
 
 ```bash
 mkdir build
