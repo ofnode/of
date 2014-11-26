@@ -485,17 +485,9 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src/extra")
         include_directories("${OFXADDON_DIR}/libs/libfreenect/src")
         include_directories("${OFXADDON_DIR}/libs/libfreenect/include")
-        if (CMAKE_SYSTEM_NAME STREQUAL Linux)
-            find_package(LibUSB REQUIRED)
-            include_directories(${LIBUSB_1_INCLUDE_DIRS})
-            list(APPEND OFXADDONS_LIBRARIES ${LIBUSB_1_LIBRARIES})
-        elseif (CMAKE_SYSTEM_NAME STREQUAL Windows)
-            include_directories(
-                "${OF_ROOT_DIR}/src/libusb"
-                "${OF_ROOT_DIR}/src/libusb/libusb"
-            )
-            list(APPEND OFXADDONS_LIBRARIES -lusb)
-        endif()
+        find_package(LibUSB REQUIRED)
+        include_directories(${LIBUSB_1_INCLUDE_DIRS})
+        list(APPEND OFXADDONS_LIBRARIES ${LIBUSB_1_LIBRARIES})
 
 
     elseif(OFXADDON STREQUAL ofxMultiTouch)

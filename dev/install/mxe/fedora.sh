@@ -22,4 +22,5 @@ freetype    \
 opencv      \
 openal      \
 mpg123      \
+libusb1     \
 libsndfile
