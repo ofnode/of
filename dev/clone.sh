@@ -34,9 +34,6 @@ setup glew 442545 https://github.com/omniavinco/glew-cmake
 # v 3.1.0 master
 setup glfw 0a6cb3 https://github.com/arturoc/glfw
 
-# v 1.0.19 release
-setup libusb f44e97 https://github.com/procedural/libusb
-
 # v 1.5.3 release
 setup poco cecf7cd https://github.com/pocoproject/poco
 
