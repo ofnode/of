@@ -12,10 +12,7 @@ examples/!CMakeLists.txt
 
 src/assimp/test/*
 
-include/*
+build*/*
+debug*/*
 
-build/*
-debug/*
-
-bin/*
 lib/*
