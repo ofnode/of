@@ -37,6 +37,11 @@ endif()
 
 #///////////////////////////////////////////////////////////////////////////////
 
+# CMake output colors
+string(ASCII 27 COLOR_ESC)
+set(COLOR_RESET "${COLOR_ESC}[m")
+set(COLOR_ERROR "${COLOR_ESC}[41m")
+
 find_package(PkgConfig REQUIRED)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -423,11 +428,11 @@ function(ofxaddon OFXADDON)
 
 
     elseif(OFXADDON STREQUAL ofxAccelerometer)
-        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
+        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
 
 
     elseif(OFXADDON STREQUAL ofxAndroid)
-        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
+        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
 
 
     elseif(OFXADDON STREQUAL ofxAssimpModelLoader)
@@ -444,7 +449,7 @@ function(ofxaddon OFXADDON)
 
 
     elseif(OFXADDON STREQUAL ofxEmscripten)
-        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
+        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
 
 
     elseif(OFXADDON STREQUAL ofxGui)
@@ -463,7 +468,7 @@ function(ofxaddon OFXADDON)
 
 
     elseif(OFXADDON STREQUAL ofxiOS)
-        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
+        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
 
 
     elseif(OFXADDON STREQUAL ofxKinect)
@@ -491,7 +496,7 @@ function(ofxaddon OFXADDON)
 
 
     elseif(OFXADDON STREQUAL ofxMultiTouch)
-        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
+        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
 
 
     elseif(OFXADDON STREQUAL ofxNetwork)
@@ -620,6 +625,10 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/libs")
 
     else()
+
+        if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/")
+            message(FATAL_ERROR "${COLOR_ERROR}ofxaddon(${OFXADDON_DIR}): the folder doesn't exist.${COLOR_RESET}")
+        endif()
 
         file(GLOB_RECURSE OFXHEADERS "${OFXADDON_DIR}/src/*.h"
                                      "${OFXADDON_DIR}/src/*.hpp"
