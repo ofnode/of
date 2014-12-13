@@ -2,6 +2,7 @@
 
 sudo apt-get update
 sudo apt-get -y upgrade
+
 sudo apt-get -y install \
     autoconf automake bash bison bzip2 cmake flex gettext \
     git g++ gperf intltool libffi-dev libtool libltdl-dev \

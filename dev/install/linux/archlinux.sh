@@ -4,6 +4,7 @@
 yes | sudo pacman -Syu
 
 yes | sudo pacman -Sy --needed \
+git               \
 make              \
 pkg-config        \
 xorg-server-devel \

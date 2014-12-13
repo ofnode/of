@@ -1,11 +1,12 @@
 #!/bin/bash
 
 yes | sudo pacman -Syu
+
 yes | sudo pacman -Sy --needed \
     autoconf automake bash bison bzip2 cmake flex gettext \
-    git gcc gperf intltool libffi libtool openssl wget xz \
+    git sed gperf intltool libffi libtool openssl wget xz \
     coreutils patch pkg-config perl perl-xml-parser scons \
-    sed make unzip gettext ruby
+    make unzip gettext ruby
 
 if [ ! -d /opt/mxe ]; then
     sudo git clone https://github.com/mxe/mxe.git /opt/mxe

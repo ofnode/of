@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sudo yum -y update
+
 sudo yum -y install \
     autoconf automake bash bison bzip2 cmake flex \
     gcc-c++ gettext git intltool make sed wget xz \

@@ -8,6 +8,7 @@ http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E
 sudo yum -y update
 
 sudo yum -y install     \
+git                     \
 pkgconfig               \
 libstdc++-static        \
 xorg-x11-server-devel   \
