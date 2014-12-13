@@ -42,7 +42,10 @@ libmpg123-devel         \
 libraw1394-devel        \
 gstreamer1-devel        \
 gstreamer1-libav        \
+gstreamer1-plugins-base \
+gstreamer1-plugins-good \
 gstreamer1-plugins-ugly \
+gstreamer1-plugins-bad-free \
 gstreamer1-plugins-base-devel
 
 sudo ln -s /usr/bin/ninja-build /usr/bin/ninja 2> /dev/null
