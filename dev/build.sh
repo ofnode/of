@@ -3,7 +3,7 @@ cd "`dirname "$(readlink -f $0)"`"
 cd ..
 OF="`pwd`"
 
-#---------------------------------
+#-------------------------------------------------------------------------------
 
 mkdir -p "$OF/build/Release/linux"
 cd       "$OF/build/Release/linux"
@@ -24,4 +24,6 @@ ninja
 
 fi
 
-tar -czvf "$OF/lib.tar.gz" "$OF/lib"
+cd  "$OF"
+tar -czvf lib.tar.gz lib
+

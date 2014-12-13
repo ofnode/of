@@ -45,17 +45,6 @@
  
  #include <algorithm>
  
---- a/openframeworks/sound/ofSoundPlayer.cpp
-+++ b/openframeworks/sound/ofSoundPlayer.cpp
-@@ -37,8 +37,6 @@
- void ofSoundShutdown(){
- 	#ifdef OF_SOUND_PLAYER_FMOD
- 		ofFmodSoundPlayer::closeFmod();
--	#else
--		ofLogWarning("ofSoundPlayer") << "ofSoundShutdown() not implemented on this platform";
- 	#endif
- }
- #endif
 --- a/openframeworks/utils/ofSystemUtils.cpp
 +++ b/openframeworks/utils/ofSystemUtils.cpp
 @@ -372,7 +372,7 @@

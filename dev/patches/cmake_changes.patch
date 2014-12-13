@@ -29,6 +29,14 @@
  OPTION( glew-cmake_BUILD_STATIC "Build the static glew library" ON)
  
  INCLUDE_DIRECTORIES( ${INCLUDE_DIR} )
+@@ -41,7 +41,6 @@
+ 	ADD_LIBRARY( libglew_static STATIC ${LIBGLEW_SRCS} )
+ 
+ 	SET_PROPERTY( TARGET libglew_static PROPERTY ARCHIVE_OUTPUT_NAME "glew" )
+-	SET_PROPERTY( TARGET libglew_static PROPERTY DEBUG_POSTFIX d )
+ 	INSTALL( TARGETS libglew_static DESTINATION lib )
+ 	TARGET_LINK_LIBRARIES( libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES} )
+ ENDIF (  )
 @@ -65,7 +76,7 @@
  FILE( GLOB PUBLIC_HEADERS "include/GL/*.h" )
  INSTALL( FILES ${PUBLIC_HEADERS} DESTINATION include/GL/ )
@@ -67,17 +75,6 @@
  set_target_properties(glfw PROPERTIES OUTPUT_NAME "${GLFW_LIB_NAME}")
  
  if (BUILD_SHARED_LIBS)
---- a/libusb/libusb/CMakeLists.txt
-+++ b/libusb/libusb/CMakeLists.txt
-@@ -48,7 +48,7 @@
- 	list(APPEND LIBUSB_LIBTARGETS usb)
- endif()
- 
--if (WITH_STATIC)
-+if (FALSE)
- 	add_library(usb
- 		STATIC
- 		${LIBUSB_COMMON}
 --- a/poco/CMakeLists.txt
 +++ b/poco/CMakeLists.txt
 @@ -20,8 +20,6 @@
@@ -89,12 +86,11 @@
  
  # Append our module directory to CMake
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-@@ -53,20 +51,20 @@
+@@ -53,20 +51,19 @@
  #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL) 
  
  # For Debug build types, append a "d" to the library names.
 -set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Set debug library postfix" FORCE)
-+#set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Set debug library postfix" FORCE)
  
  option(ENABLE_TESTS
    "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
@@ -136,25 +132,21 @@
  endif (CMAKE_COMPILER_IS_MINGW)
  
  if (CMAKE_COMPILER_IS_CYGWIN)
-@@ -160,9 +159,9 @@
+@@ -160,9 +159,6 @@
  
  add_subdirectory(Foundation)
  add_subdirectory(XML)
 -add_subdirectory(JSON)
 -add_subdirectory(MongoDB)
 -add_subdirectory(PDF)
-+#add_subdirectory(JSON)
-+#add_subdirectory(MongoDB)
-+#add_subdirectory(PDF)
  add_subdirectory(Util)
  add_subdirectory(Net)
  #add_subdirectory(Web)
-@@ -174,7 +173,7 @@
+@@ -174,7 +173,6 @@
      add_subdirectory(Crypto)
  endif(OPENSSL_FOUND)
  
 -add_subdirectory(Data)
-+#add_subdirectory(Data)
  #add_subdirectory(WebWidgets)
  add_subdirectory(Zip)
  

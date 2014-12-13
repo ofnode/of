@@ -51,7 +51,6 @@ endif ()
 #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL) 
 
 # For Debug build types, append a "d" to the library names.
-#set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Set debug library postfix" FORCE)
 
 option(ENABLE_TESTS
   "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
@@ -159,9 +158,6 @@ ENDIF ()
 
 add_subdirectory(Foundation)
 add_subdirectory(XML)
-#add_subdirectory(JSON)
-#add_subdirectory(MongoDB)
-#add_subdirectory(PDF)
 add_subdirectory(Util)
 add_subdirectory(Net)
 #add_subdirectory(Web)
@@ -173,7 +169,6 @@ if(OPENSSL_FOUND)
     add_subdirectory(Crypto)
 endif(OPENSSL_FOUND)
 
-#add_subdirectory(Data)
 #add_subdirectory(WebWidgets)
 add_subdirectory(Zip)
 

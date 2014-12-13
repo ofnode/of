@@ -12,7 +12,7 @@ function setup() {
   mv  $1-* $1
 }
 
-#---------------------------------
+#-------------------------------------------------------------------------------
 
 cd src
 
@@ -37,15 +37,15 @@ setup poco cecf7cd https://github.com/pocoproject/poco
 # v 4.0.12 master
 setup rtaudio 02c152 https://github.com/procedural/rtaudio
 
-# v 0.8.4 master
-setup openFrameworks 2706e5 https://github.com/openframeworks/openFrameworks
+# v 0.9.0 master
+setup openFrameworks 08ee18 https://github.com/openframeworks/openFrameworks
 
 rm -rf videoinput
 mkdir  videoinput
 wget -q https://raw.githubusercontent.com/ofTheo/videoInput/221b16/videoInputSrcAndDemos/libs/videoInput/videoInput.cpp -O videoinput/videoInput.cpp
 wget -q https://raw.githubusercontent.com/ofTheo/videoInput/221b16/videoInputSrcAndDemos/libs/videoInput/videoInput.h   -O videoinput/videoInput.h
 
-#---------------------------------
+#-------------------------------------------------------------------------------
 
 rm -rf openframeworks
 mv     openFrameworks/libs/openFrameworks openframeworks
