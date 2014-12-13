@@ -22,6 +22,7 @@ winpthreads \
 cairo       \
 openssl     \
 freetype    \
+fontconfig  \
 opencv      \
 openal      \
 mpg123      \
