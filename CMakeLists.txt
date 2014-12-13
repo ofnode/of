@@ -65,6 +65,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
+    find_package(Fontconfig REQUIRED)
+
+    list(APPEND DEFINITIONS
+        ${FONTCONFIG_DEFINITIONS}
+    )
 
     set(INCLUDE_DIRS
         ${GTK3_INCLUDE_DIRS}
@@ -76,6 +81,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
         ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
+        ${FONTCONFIG_INCLUDE_DIR}
     )
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
@@ -93,8 +99,15 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
     find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
+    find_package(Fontconfig REQUIRED)
 
-    list(APPEND OPENGL_INCLUDE_DIR "${CMAKE_FIND_ROOT_PATH}/include/GL")
+    list(APPEND OPENGL_INCLUDE_DIR
+        "${CMAKE_FIND_ROOT_PATH}/include/GL"
+    )
+
+    list(APPEND DEFINITIONS
+        ${FONTCONFIG_DEFINITIONS}
+    )
 
     set(INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
@@ -102,14 +115,12 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
         ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
+        ${FONTCONFIG_INCLUDE_DIR}
     )
 
 endif()
 
 list(APPEND INCLUDE_DIRS
-    "${CMAKE_CURRENT_LIST_DIR}/src/fontconfig"
-    "${CMAKE_CURRENT_LIST_DIR}/src/fontconfig/src"
-
     "${CMAKE_CURRENT_LIST_DIR}/src/freeglut"
     "${CMAKE_CURRENT_LIST_DIR}/src/freeglut/include"
 
@@ -332,7 +343,6 @@ endif()
 
 #///////////////////////////////////////////////////////////////////////////////
 
-add_subdirectory(src/fontconfig)
 add_subdirectory(src/freeglut)
 add_subdirectory(src/freeimage)
 add_subdirectory(src/glew)

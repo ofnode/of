@@ -113,6 +113,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     find_package(Threads REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
+    find_package(Fontconfig REQUIRED)
+
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        ${FONTCONFIG_DEFINITIONS}
+    )
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
@@ -129,6 +134,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
         ${SNDFILE_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
+        ${FONTCONFIG_INCLUDE_DIR}
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -152,6 +158,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
         ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${GSTREAMER_LIBRARIES}
+        ${FONTCONFIG_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
         ${GSTREAMER_APP_LIBRARIES}
         ${GSTREAMER_BASE_LIBRARIES}
@@ -220,6 +227,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
     find_package(Threads REQUIRED)
     find_package(LibIntl REQUIRED)
     find_package(Freetype REQUIRED)
+    find_package(Fontconfig REQUIRED)
 
     find_library(WINMM_LIB winmm)
     find_library(GDI32_LIB gdi32)
@@ -231,8 +239,13 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
     find_library(STRMIIDS_LIB strmiids)
     find_library(SETUPAPI_LIB setupapi)
 
-    # Forcing GL include path (MXE)
-    list(APPEND OPENGL_INCLUDE_DIR "${CMAKE_FIND_ROOT_PATH}/include/GL")
+    list(APPEND OPENGL_INCLUDE_DIR
+        "${CMAKE_FIND_ROOT_PATH}/include/GL"
+    )
+
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        ${FONTCONFIG_DEFINITIONS}
+    )
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${ZLIB_INCLUDE_DIRS}
@@ -247,6 +260,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
         ${SNDFILE_INCLUDE_DIR}
         ${LIBINTL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
+        ${FONTCONFIG_INCLUDE_DIR}
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -262,6 +276,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
         ${SNDFILE_LIBRARIES}
         ${LIBINTL_LIBRARIES}
         ${FREETYPE_LIBRARIES}
+        ${FONTCONFIG_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
@@ -282,9 +297,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
 endif()
 
 list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/fontconfig"
-    "${OF_ROOT_DIR}/src/fontconfig/src"
-
     "${OF_ROOT_DIR}/src/freeglut"
     "${OF_ROOT_DIR}/src/freeglut/include"
 
@@ -491,6 +503,7 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/libs/libfreenect/src")
         include_directories("${OFXADDON_DIR}/libs/libfreenect/include")
         find_package(LibUSB REQUIRED)
+        add_definitions(${LIBUSB_1_DEFINITIONS})
         include_directories(${LIBUSB_1_INCLUDE_DIRS})
         list(APPEND OFXADDONS_LIBRARIES ${LIBUSB_1_LIBRARIES})
 

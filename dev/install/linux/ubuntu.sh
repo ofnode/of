@@ -7,7 +7,6 @@ sudo apt-get -y upgrade
 sudo apt-get -y install   \
 pkg-config                \
 xorg-dev                  \
-libgtk2.0-dev             \
 libgtk-3-dev              \
 libudev-dev               \
 llvm                      \
@@ -18,13 +17,13 @@ libcairo2-dev             \
 libusb-1.0-0-dev          \
 libssl-dev                \
 libfreetype6-dev          \
+libfontconfig1-dev        \
 libglu1-mesa-dev          \
-libasound2-dev            \
-libassimp-dev             \
 libopenal-dev             \
 libopencv-dev             \
 libtbb-dev                \
 libmpg123-dev             \
+libasound2-dev            \
 libsndfile1-dev           \
 gstreamer1.0-x            \
 gstreamer1.0-alsa         \

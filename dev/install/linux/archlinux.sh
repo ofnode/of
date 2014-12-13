@@ -9,7 +9,6 @@ xorg-server-devel \
 libxcursor        \
 libxrandr         \
 libxi             \
-gtk2              \
 gtk3              \
 llvm              \
 clang             \
@@ -20,8 +19,8 @@ cairo             \
 libusb            \
 openssl           \
 freetype2         \
+fontconfig        \
 glu               \
-assimp            \
 openal            \
 opencv            \
 intel-tbb         \

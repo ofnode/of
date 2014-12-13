@@ -19,9 +19,6 @@ cd src
 # v 2.0 release
 setup assimp 7e2ead https://github.com/procedural/assimp
 
-# v 2.11.1 release
-setup fontconfig 9da280 https://github.com/procedural/fontconfig
-
 # v 2.8.1 release
 setup freeglut b3d5bc https://github.com/procedural/freeglut
 
@@ -69,8 +66,7 @@ cp      "$OF/dev/add/kiss/CMakeLists.txt" kiss
 cp     "$OF/dev/add/tess2/CMakeLists.txt" tess2
 
 rm -rf "$OF/addons"
-mv     openFrameworks/addons "$OF"
-
+mv     openFrameworks/addons     "$OF"
 mv     openFrameworks/examples/* "$OF/examples"
 
 rm -rf openFrameworks
