@@ -1,8 +1,8 @@
 #!/bin/bash
+# Tested on Manjaro 0.8.11
 
 yes | sudo pacman -Syu
 yes | sudo pacman -Sy --needed \
-gcc               \
 make              \
 pkg-config        \
 xorg-server-devel \
