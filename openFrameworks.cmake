@@ -20,7 +20,6 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
     set(DEBUG_C_FLAGS_CLANG "
         -Wno-deprecated-register
-        -fsanitize-address-zero-base-shadow
     ")
 endif()
 
