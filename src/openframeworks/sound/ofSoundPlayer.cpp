@@ -38,6 +38,8 @@ void ofSoundShutdown(){
 	#ifdef OF_SOUND_PLAYER_FMOD
 		ofFmodSoundPlayer::closeFmod();
 	#endif
+	// ofSoundShutdown doesn't log an "unimplemented" message like the related functions
+	// above, because it's called by the openFrameworks shutdown routine regardless
 }
 #endif
 
