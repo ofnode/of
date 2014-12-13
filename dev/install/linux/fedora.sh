@@ -1,11 +1,12 @@
 #!/bin/bash
-# Tested on Fedora 20
+# Tested on Fedora 20 and 21
 
 sudo yum -y localinstall --nogpgcheck \
 http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
 http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 sudo yum -y update
+
 sudo yum -y install     \
 pkgconfig               \
 libstdc++-static        \
