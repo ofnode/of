@@ -1,8 +1,8 @@
+project(openFrameworks)
+
 cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
-
-project(openFrameworks)
 
 #// Compiler-neutral flags /////////////////////////////////////////////////////
 
@@ -44,7 +44,7 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+if(CMAKE_SYSTEM MATCHES Linux)
 
     set(DEFINITIONS
         -DOF_USING_GTK
@@ -84,7 +84,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
         ${FONTCONFIG_INCLUDE_DIR}
     )
 
-elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
+elseif(CMAKE_SYSTEM MATCHES Windows)
 
     set(DEFINITIONS
         -DOF_USING_MPG123
@@ -195,7 +195,7 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video"
 )
 
-if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+if(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_LIST_DIR}/src/videoinput"
     )
@@ -276,13 +276,13 @@ set(SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
 )
 
-if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+if(CMAKE_SYSTEM MATCHES Linux)
     list(APPEND SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
     )
-elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
+elseif(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/src/videoinput/videoInput.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
@@ -293,7 +293,6 @@ endif()
 list(APPEND DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
-    -DPOCO_NO_AUTOMATIC_LIB_INIT
 )
 
 add_definitions(${DEFINITIONS})
@@ -335,9 +334,9 @@ set(CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBU
 set(CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}")
 
-if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+if(CMAKE_SYSTEM MATCHES Linux)
     set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
-elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
+elseif(CMAKE_SYSTEM MATCHES Windows)
     set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
 endif()
 

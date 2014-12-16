@@ -1,16 +1,34 @@
 --- a/poco/Foundation/include/Poco/Any.h
 +++ b/poco/Foundation/include/Poco/Any.h
-@@ -17,6 +17,10 @@
- #ifndef Foundation_Any_INCLUDED
- #define Foundation_Any_INCLUDED
+@@ -46,6 +46,8 @@
+ 	#error "Any SOO can only be enabled with C++11 support"
+ #endif
  
-+#if !defined(POCO_SMALL_OBJECT_SIZE) && !defined(POCO_NO_SOO)
-+	#define POCO_SMALL_OBJECT_SIZE 32
-+#endif
++#define POCO_SMALL_OBJECT_SIZE 32
 +
+ template <typename PlaceholderT, unsigned int SizeV = POCO_SMALL_OBJECT_SIZE>
+ union Placeholder
+ 	/// ValueHolder union (used by Poco::Any and Poco::Dynamic::Var for small
+--- a/poco/NetSSL_Win/src/Context.cpp
++++ b/poco/NetSSL_Win/src/Context.cpp
+@@ -218,7 +218,7 @@
+ 	blob.cbData = static_cast<DWORD>(size);
+ 	blob.pbData = reinterpret_cast<BYTE*>(const_cast<char*>(pBuffer));
  
- #include "Poco/Exception.h"
- #include "Poco/MetaProgramming.h"
+-	HCERTSTORE hTempStore =  PFXImportCertStore(&blob, wpassword.data(), PKCS12_ALLOW_OVERWRITE_KEY | PKCS12_INCLUDE_EXTENDED_PROPERTIES);
++	HCERTSTORE hTempStore =  PFXImportCertStore(&blob, wpassword.data(), 0x00004000/*PKCS12_ALLOW_OVERWRITE_KEY*/ | 0x0010/*PKCS12_INCLUDE_EXTENDED_PROPERTIES*/);
+ 	
+ 	// clear UTF-16 password
+ 	std::fill(const_cast<wchar_t*>(wpassword.data()), const_cast<wchar_t*>(wpassword.data() + password.size()), L'X');
+@@ -272,7 +272,7 @@
+ 	if (_pCert)
+ 	{
+ 		schannelCred.cCreds = 1; // how many cred are stored in &pCertContext
+-		schannelCred.paCred = &const_cast<PCCERT_CONTEXT>(_pCert);
++		schannelCred.paCred = const_cast<PCCERT_CONTEXT*>(&_pCert);
+ 	}
+ 
+ 	schannelCred.grbitEnabledProtocols = proto();
 --- a/poco/Foundation/src/Environment_WIN32.cpp
 +++ b/poco/Foundation/src/Environment_WIN32.cpp
 @@ -19,6 +19,8 @@
@@ -22,83 +40,17 @@
  #include <iphlpapi.h>
  
  
---- a/poco/Foundation/src/NumericString.cpp
-+++ b/poco/Foundation/src/NumericString.cpp
-@@ -31,7 +31,7 @@
- // --- double conversion ---
+--- a/poco/Foundation/src/Environment_WIN32U.cpp
++++ b/poco/Foundation/src/Environment_WIN32U.cpp
+@@ -21,6 +21,8 @@
+ #include <sstream>
+ #include <cstring>
+ #include "Poco/UnWindows.h"
++#include <ws2tcpip.h>
++#include <wincrypt.h>
+ #include <iphlpapi.h>
  
- #include "Poco/NumericString.h"
--poco_static_assert(POCO_MAX_FLT_STRING_LEN == double_conversion::kMaxSignificantDecimalDigits);
-+//poco_static_assert(POCO_MAX_FLT_STRING_LEN == double_conversion::kMaxSignificantDecimalDigits);
- #include "Poco/String.h"
- #include <memory>
- #include <cctype>
-@@ -46,8 +46,8 @@ void pad(std::string& str, int precision, int width, char prefix = ' ', char dec
- 	/// Used only internally.
- {
- 	// these cases should never happen, if they do, it's a library bug
--	poco_assert_dbg (precision > 0);
--	poco_assert_dbg (str.length());
-+	//poco_assert_dbg (precision > 0);
-+	//poco_assert_dbg (str.length());
  
- 	std::string::size_type decSepPos = str.find(decSep);
- 	if (decSepPos == std::string::npos)
-@@ -85,7 +85,7 @@ void insertThousandSep(std::string& str, char thSep, char decSep = '.')
- 	/// Inserts thousand separators.
- 	/// Used only internally.
- {
--	poco_assert (decSep != thSep);
-+	//poco_assert (decSep != thSep);
- 
- 	std::string::size_type exPos = str.find('e');
- 	std::string::size_type decPos = str.find(decSep);
---- a/poco/Net/src/NetworkInterface.cpp
-+++ b/poco/Net/src/NetworkInterface.cpp
-@@ -28,8 +28,9 @@
- #if defined(POCO_OS_FAMILY_WINDOWS)
- 	#if defined(POCO_WIN32_UTF8)
- 		#include "Poco/UnicodeConverter.h"
--		#include "Poco/Error.h"
- 	#endif
-+	#include "Poco/Error.h"
-+	#include <wincrypt.h>
- 	#include <iphlpapi.h>
- 	#include <ipifcons.h>
- #endif
-@@ -1105,10 +1105,10 @@ NetworkInterface::Map NetworkInterface::map(bool ipOnly, bool upOnly)
- 		Poco::UnicodeConverter::toUTF8(pAddress->Description, displayName);
- #else
- 		char nameBuffer[1024];
--		rc = WideCharToMultiByte(CP_ACP, 0, pAddress->FriendlyName, -1, nameBuffer, sizeof(nameBuffer), NULL, NULL);
-+		int rc = WideCharToMultiByte(CP_ACP, 0, pAddress->FriendlyName, -1, nameBuffer, sizeof(nameBuffer), NULL, NULL);
- 		if (rc) name = nameBuffer;
- 		char displayNameBuffer[1024];
--		int rc = WideCharToMultiByte(CP_ACP, 0, pAddress->Description, -1, displayNameBuffer, sizeof(displayNameBuffer), NULL, NULL);
-+		rc = WideCharToMultiByte(CP_ACP, 0, pAddress->Description, -1, displayNameBuffer, sizeof(displayNameBuffer), NULL, NULL);
- 		if (rc) displayName = displayNameBuffer;
- #endif
- 
---- a/poco/Data/ODBC/include/Poco/Data/ODBC/Unicode.h
-+++ b/poco/Data/ODBC/include/Poco/Data/ODBC/Unicode.h
-@@ -438,7 +438,7 @@
- 		cbColNameMax,
- 		pcbColName,
- 		pfSqlType,
--		pcbColDef,
-+		(SQLUINTEGER*)pcbColDef,
- 		pibScale,
- 		pfNullable);
- }
-@@ -538,7 +538,7 @@
- 		pcbName,
- 		pfType,
- 		pfSubType,
--		pLength,
-+		(SQLINTEGER*)pLength,
- 		pPrecision,
- 		pScale,
- 		pNullable);
 --- a/poco/Foundation/src/EventLogChannel.cpp
 +++ b/poco/Foundation/src/EventLogChannel.cpp
 @@ -17,7 +17,6 @@
@@ -109,32 +61,13 @@
  #if defined(POCO_WIN32_UTF8)
  #include "Poco/UnicodeConverter.h"
  #endif
---- a/poco/Foundation/src/NumberFormatter.cpp
-+++ b/poco/Foundation/src/NumberFormatter.cpp
-@@ -367,12 +367,12 @@
- 	char buffer[24];
- #if defined(POCO_PTR_IS_64_BIT)
- 	#if defined(POCO_LONG_IS_64_BIT)
--		std::sprintf(buffer, "%016lX", (UIntPtr) ptr);
-+		std::sprintf(buffer, "%016lX", (intptr_t) ptr);
- 	#else
--		std::sprintf(buffer, "%016" I64_FMT "X", (UIntPtr) ptr);
-+		std::sprintf(buffer, "%016" I64_FMT "X", (intptr_t) ptr);
+--- a/poco/Net/src/NetworkInterface.cpp
++++ b/poco/Net/src/NetworkInterface.cpp
+@@ -30,6 +30,7 @@
+ 		#include "Poco/UnicodeConverter.h"
  	#endif
- #else
--	std::sprintf(buffer, "%08lX", (UIntPtr) ptr);
-+	std::sprintf(buffer, "%08lX", (intptr_t) ptr);
+ 	#include "Poco/Error.h"
++	#include <wincrypt.h>
+ 	#include <iphlpapi.h>
+ 	#include <ipifcons.h>
  #endif
- 	str.append(buffer);
- }
---- a/poco/Util/src/ServerApplication.cpp
-+++ b/poco/Util/src/ServerApplication.cpp
-@@ -341,7 +341,7 @@
- 	return StartServiceCtrlDispatcherW(svcDispatchTable) != 0; 
- #else
- 	SERVICE_TABLE_ENTRY svcDispatchTable[2];
--	svcDispatchTable[0].lpServiceName = "";
-+	svcDispatchTable[0].lpServiceName = const_cast<char*>("");
- 	svcDispatchTable[0].lpServiceProc = ServiceMain;
- 	svcDispatchTable[1].lpServiceName = NULL;
- 	svcDispatchTable[1].lpServiceProc = NULL; 

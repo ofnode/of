@@ -75,22 +75,154 @@
  set_target_properties(glfw PROPERTIES OUTPUT_NAME "${GLFW_LIB_NAME}")
  
  if (BUILD_SHARED_LIBS)
+--- a/poco/cmake/PocoMacros.cmake
++++ b/poco/cmake/PocoMacros.cmake
+@@ -24,13 +24,6 @@
+       set(kit_bindir "${kit_dir}/bin/x86")
+     endif (X64)
+   endif ()
+-  find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" "${kit_bindir}"
+-    DOC "path to message compiler")
+-  if (NOT CMAKE_MC_COMPILER)
+-    message(FATAL_ERROR "message compiler not found: required to build")
+-  endif (NOT CMAKE_MC_COMPILER)
+-  message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
+-  mark_as_advanced(CMAKE_MC_COMPILER)
+ endif(WIN32)
+ 
+ #===============================================================================
+@@ -197,36 +190,4 @@
+ #           sources:        a list of files to add to ${out}
+ #    Example: POCO_SOURCES_PLAT( SRCS Foundation ON src/Foundation.cpp )
+ macro(POCO_GENERATE_PACKAGE target_name export_name package_destination)
+-include(CMakePackageConfigHelpers)
+-write_basic_package_version_file(
+-  "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}ConfigVersion.cmake"
+-  VERSION ${PROJECT_VERSION}
+-  COMPATIBILITY AnyNewerVersion
+-)
+-export(EXPORT "${export_name}"
+-  FILE "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}Targets.cmake"
+-  NAMESPACE "Poco::"
+-)
+-configure_file(cmake/Poco${target_name}Config.cmake
+-  "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}Config.cmake"
+-  @ONLY
+-)
+-
+-set(ConfigPackageLocation "${package_destination}")
+-
+-install(
+-    EXPORT "${export_name}"
+-    FILE "Poco${target_name}Targets.cmake"
+-    NAMESPACE "Poco::"
+-    DESTINATION ${package_destination}
+-    )
+-
+-install(
+-    FILES
+-        "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}Config.cmake"
+-        "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}ConfigVersion.cmake"
+-    DESTINATION ${package_destination}
+-    COMPONENT Devel
+-    )
+-
+ endmacro()
+--- a/poco/Foundation/CMakeLists.txt
++++ b/poco/Foundation/CMakeLists.txt
+@@ -34,9 +34,6 @@
+     include/Poco/EventLogChannel.h
+     )
+ 
+-# Messages
+-POCO_MESSAGES( SRCS Logging src/pocomsg.mc)
+-
+ # If POCO_UNBUNDLED is enabled we try to find the required packages
+ # The configuration will fail if the packages are not found
+ if (POCO_UNBUNDLED)
+@@ -101,6 +98,17 @@
+ 
+ if(WIN32)
+     set(SYSLIBS ${SYSLIBS} iphlpapi)
++    add_definitions(
++      -DPOCO_CTG_FATAL=0x00000001L
++      -DPOCO_CTG_CRITICAL=0x00000002L
++      -DPOCO_CTG_ERROR=0x00000003L
++      -DPOCO_CTG_WARNING=0x00000004L
++      -DPOCO_CTG_NOTICE=0x00000005L
++      -DPOCO_CTG_INFORMATION=0x00000006L
++      -DPOCO_CTG_DEBUG=0x00000007L
++      -DPOCO_CTG_TRACE=0x00000008L
++      -DPOCO_MSG_LOG=0x00001000L
++    )
+ endif(WIN32)
+ if (${CMAKE_CXX_COMPILER_ID} MATCHES "SunPro")
+     set_target_properties( "${LIBNAME}" PROPERTIES LINK_FLAGS "-library=stlport4")
 --- a/poco/CMakeLists.txt
 +++ b/poco/CMakeLists.txt
-@@ -20,8 +20,6 @@
- # top of the build tree rather than in hard-to-find leaf
- # directories. This simplifies manual testing and the use of the build
- # tree rather than installed Boost libraries.
+@@ -8,12 +8,12 @@
+ 
+ project(Poco)
+ 
+-cmake_minimum_required(VERSION 3.0.0)
++cmake_minimum_required(VERSION 2.8)
+ 
+-file(STRINGS "${CMAKE_SOURCE_DIR}/libversion" SHARED_LIBRARY_VERSION)
++file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/libversion" SHARED_LIBRARY_VERSION)
+ 
+ # Read the version information from the VERSION file
+-file (STRINGS "${CMAKE_SOURCE_DIR}/VERSION" PACKAGE_VERSION )
++file (STRINGS "${CMAKE_CURRENT_LIST_DIR}/VERSION" PACKAGE_VERSION )
+ message(STATUS "Poco package version: ${PACKAGE_VERSION}")
+ string(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION})
+ string(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" CPACK_PACKAGE_VERSION_MINOR ${PACKAGE_VERSION})
+@@ -23,12 +23,6 @@
+ set(RELEASE_NAME "Unstable-trunk")
+ set(PROJECT_VERSION ${COMPLETE_VERSION})
+ 
+-# Put the libaries and binaries that get built into directories at the
+-# top of the build tree rather than in hard-to-find leaf
+-# directories. This simplifies manual testing and the use of the build
+-# tree rather than installed Boost libraries.
 -set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 -set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+ # Windows DLLs are "runtime" for CMake. Output them to "bin" like the Visual Studio projects do.
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
  
- # Append our module directory to CMake
- set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-@@ -53,20 +51,19 @@
- #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL) 
+@@ -61,9 +55,6 @@
+ #    * RelWithDebInfo (CMAKE_C_FLAGS_RELWITHDEBINFO or CMAKE_CXX_FLAGS_RELWITHDEBINFO
+ #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL)
  
- # For Debug build types, append a "d" to the library names.
+-# For Debug build types, append a "d" to the library names.
 -set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Set debug library postfix" FORCE)
+-
+ # Include some common macros to simpilfy the Poco CMake files
+ include(PocoMacros)
+ 
+@@ -71,34 +62,34 @@
+ option(ENABLE_XML "Enable the XML" ON)
+ option(ENABLE_JSON "Enable the JSON" ON)
+ option(ENABLE_MONGODB "Enable MongoDB" ON)
+-option(ENABLE_PDF "Enable PDF" ON)
++option(ENABLE_PDF "Enable PDF" OFF)
+ option(ENABLE_UTIL "Enable Util" ON)
+ option(ENABLE_NET "Enable Net" ON)
+ option(ENABLE_NETSSL "Enable NetSSL" ON)
+-option(ENABLE_NETSSL_WIN "Enable NetSSL Windows" ON)
++option(ENABLE_NETSSL_WIN "Enable NetSSL Windows" OFF)
+ option(ENABLE_CRYPTO "Enable Crypto" ON)
+ option(ENABLE_DATA "Enable Data" ON)
+ option(ENABLE_DATA_SQLITE "Enable Data SQlite" ON)
+-option(ENABLE_DATA_MYSQL "Enable Data MySQL" ON)
+-option(ENABLE_DATA_ODBC "Enable Data ODBC" ON)
++option(ENABLE_DATA_MYSQL "Enable Data MySQL" OFF)
++option(ENABLE_DATA_ODBC "Enable Data ODBC" OFF)
+ option(ENABLE_SEVENZIP "Enable SevenZip" ON)
+ option(ENABLE_ZIP "Enable Zip" ON)
+ option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" ON)
+ 
+-option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
++option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" ON)
  
  option(ENABLE_TESTS
    "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
@@ -104,12 +236,12 @@
  
  # Uncomment from next two lines to force statitc or dynamic library, default is autodetection
  if(POCO_STATIC)
--    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)    
-+    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS -DPOCO_ENABLE_CPP11 -DPCRE_STATIC -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_AUTOMATIC_LIB_INIT -DPOCO_UTIL_NO_JSONCONFIGURATION )    
+-    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
++    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS -DPOCO_ENABLE_CPP11 -DPOCO_NO_FPENVIRONMENT )
      set( LIB_MODE STATIC )
      message(STATUS "Building static libraries")
  else(POCO_STATIC)
-@@ -74,6 +72,10 @@
+@@ -106,6 +97,10 @@
      message(STATUS "Building dynamic libraries")
  endif(POCO_STATIC)
  
@@ -117,82 +249,17 @@
 +    add_definitions( -fPIC )
 +endif()
 +
- IF (ENABLE_TESTS)
+ if (ENABLE_TESTS)
    include(CTest)
-   ENABLE_TESTING()
-@@ -129,10 +131,7 @@
- endif(CMAKE_SYSTEM MATCHES "SunOS")
+   enable_testing()
+@@ -146,9 +141,7 @@
  
  if (CMAKE_COMPILER_IS_MINGW)
--    add_definitions(-DWC_NO_BEST_FIT_CHARS=0x400  -DPOCO_WIN32_UTF8)
--    add_definitions(-mno-cygwin -D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+   add_definitions(-DWC_NO_BEST_FIT_CHARS=0x400  -DPOCO_WIN32_UTF8)
+-  add_definitions(-mno-cygwin -D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
 -  link_directories(/usr/local/lib /usr/lib)
 -  include_directories(/usr/local/include /usr/include)
-+  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED -DPOCO_PTR_IS_64_BIT )
++  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
  endif (CMAKE_COMPILER_IS_MINGW)
  
- if (CMAKE_COMPILER_IS_CYGWIN)
-@@ -160,9 +159,6 @@
- 
- add_subdirectory(Foundation)
- add_subdirectory(XML)
--add_subdirectory(JSON)
--add_subdirectory(MongoDB)
--add_subdirectory(PDF)
- add_subdirectory(Util)
- add_subdirectory(Net)
- #add_subdirectory(Web)
-@@ -174,7 +173,6 @@
-     add_subdirectory(Crypto)
- endif(OPENSSL_FOUND)
- 
--add_subdirectory(Data)
- #add_subdirectory(WebWidgets)
- add_subdirectory(Zip)
- 
---- a/poco/Foundation/CMakeLists.txt
-+++ b/poco/Foundation/CMakeLists.txt
-@@ -15,13 +15,6 @@
-       set(kit_bindir "${kit_dir}/bin/x86")
-     endif (X64)
-   endif ()
--  find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" "${kit_bindir}"
--    DOC "path to message compiler")
--  if (NOT CMAKE_MC_COMPILER)
--    message(FATAL_ERROR "message compiler not found: required to build")
--  endif (NOT CMAKE_MC_COMPILER)
--  message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
--  mark_as_advanced(CMAKE_MC_COMPILER)
- endif(WIN32)
-   
- set( BASE_SRCS 
-@@ -209,19 +202,17 @@
- )
- 
- if (WIN32)
--  set(RES_SRCS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.h)
--  set_source_files_properties(${RES_SRCS} PROPERTIES GENERATED true)
--  add_custom_command(
--    OUTPUT ${RES_SRCS}
--    DEPENDS ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
--    COMMAND ${CMAKE_MC_COMPILER}
--    ARGS 
--         -h ${CMAKE_SOURCE_DIR}/Foundation/src
--         -r ${CMAKE_SOURCE_DIR}/Foundation/src
--         ${CMAKE_SOURCE_DIR}/Foundation/src/pocomsg.mc
--    VERBATIM # recommended: p260
-+  add_definitions(
-+    -DPOCO_CTG_FATAL=0x00000001L
-+    -DPOCO_CTG_CRITICAL=0x00000002L
-+    -DPOCO_CTG_ERROR=0x00000003L
-+    -DPOCO_CTG_WARNING=0x00000004L
-+    -DPOCO_CTG_NOTICE=0x00000005L
-+    -DPOCO_CTG_INFORMATION=0x00000006L
-+    -DPOCO_CTG_DEBUG=0x00000007L
-+    -DPOCO_CTG_TRACE=0x00000008L
-+    -DPOCO_MSG_LOG=0x00001000L
-   )
--  list(APPEND WIN_SRCS ${RES_SRCS})
- endif (WIN32)
- 
- set(LIN_SRCS
+ if (CYGWIN)

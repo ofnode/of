@@ -1,8 +1,8 @@
+project(ofExamples)
+
 cmake_minimum_required(VERSION 2.8)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/..")
-
-project(ofExamples)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/..")
 
 include(openFrameworks)
 
@@ -30,7 +30,7 @@ function(example APP DIR)
 
     add_executable(${APP} ${SRC})
     target_link_libraries(${APP} ${OFXADDONS_BEGIN} ${OFXADDONS_LIBRARIES} ${OFXADDONS_END} ${OPENFRAMEWORKS_LIBRARIES})
-    set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
+    set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY bin)
 
 endfunction(example)
 
@@ -167,7 +167,7 @@ example( windowExample                        utils/windowExample )
 example( xmlExample                           utils/xmlExample )
 
 example( asciiVideo                           video/asciiVideo )
-if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
+if(CMAKE_SYSTEM MATCHES Darwin)
 example( osxHighPerformanceVideoPlayerExample video/osxHighPerformanceVideoPlayerExample )
 example( osxVideoRecorderExample              video/osxVideoRecorderExample )
 endif()

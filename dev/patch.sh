@@ -19,5 +19,4 @@ cd "$OF/src"
 apply cmake_changes.patch
 apply videoinput_fixes.patch
 apply poco_mingw_fixes.patch
-apply poco_warning_fixes.patch
 apply openframeworks_fixes.patch

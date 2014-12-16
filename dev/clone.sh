@@ -31,8 +31,8 @@ setup glew 442545 https://github.com/omniavinco/glew-cmake
 # v 3.1.0 master
 setup glfw 0a6cb3 https://github.com/arturoc/glfw
 
-# v 1.5.3 release
-setup poco cecf7cd https://github.com/pocoproject/poco
+# v 1.6.0 master
+setup poco 676f043 https://github.com/pocoproject/poco
 
 # v 4.0.12 master
 setup rtaudio 02c152 https://github.com/procedural/rtaudio

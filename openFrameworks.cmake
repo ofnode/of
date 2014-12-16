@@ -54,7 +54,7 @@ set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
-if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+if(CMAKE_SYSTEM MATCHES Linux)
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_GTK
@@ -166,7 +166,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
     #///////////////////////////////////////////////////////////////////////////
 
-elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
+elseif(CMAKE_SYSTEM MATCHES Windows)
 
     #// Options ////////////////////////////////////////////////////////////////
 
@@ -370,7 +370,7 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/openframeworks/video"
 )
 
-if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+if(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/videoinput"
     )
@@ -379,7 +379,6 @@ endif()
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
-    -DPOCO_NO_AUTOMATIC_LIB_INIT
 )
 
 add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
@@ -540,7 +539,7 @@ function(ofxaddon OFXADDON)
             # Static OpenCV for releases only, OpenCV build have no PIC on Ubuntu Trusty
             list(APPEND OFXADDONS_LIBRARIES -Wl,-Bstatic ${OPENCV_LDFLAGS} -Wl,-Bdynamic)
             # OpenCV depends on TBB
-            if (CMAKE_SYSTEM_NAME STREQUAL Linux)
+            if (CMAKE_SYSTEM MATCHES Linux)
                 pkg_check_modules(TBB REQUIRED tbb)
                 include_directories(${TBB_INCLUDE_DIRS})
                 list(APPEND OFXADDONS_LIBRARIES ${TBB_LIBRARIES})
@@ -565,12 +564,12 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/src/ofxOscReceiver.cpp"
             "${OFXADDON_DIR}/src/ofxOscSender.cpp"
         )
-        if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+        if(CMAKE_SYSTEM MATCHES Linux)
             list(APPEND OFXSOURCES
             "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/NetworkingUtils.cpp"
             "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/UdpSocket.cpp"
             )
-        elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
+        elseif(CMAKE_SYSTEM MATCHES Windows)
             list(APPEND OFXSOURCES
             "${OFXADDON_DIR}/libs/oscpack/src/ip/win32/NetworkingUtils.cpp"
             "${OFXADDON_DIR}/libs/oscpack/src/ip/win32/UdpSocket.cpp"
