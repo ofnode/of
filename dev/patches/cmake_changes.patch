@@ -29,7 +29,7 @@
  OPTION( glew-cmake_BUILD_STATIC "Build the static glew library" ON)
  
  INCLUDE_DIRECTORIES( ${INCLUDE_DIR} )
-@@ -41,7 +41,6 @@
+@@ -43,7 +43,6 @@
  	ADD_LIBRARY( libglew_static STATIC ${LIBGLEW_SRCS} )
  
  	SET_PROPERTY( TARGET libglew_static PROPERTY ARCHIVE_OUTPUT_NAME "glew" )
