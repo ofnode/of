@@ -10,9 +10,6 @@
 //
 
 
-#if !defined(_WIN32_WCE)
-
-
 #include "WinConfigurationTest.h"
 #include "CppUnit/TestCaller.h"
 #include "CppUnit/TestSuite.h"
@@ -62,7 +59,22 @@ void WinConfigurationTest::testConfiguration()
 	assert (pReg->getUInt64("name2") == std::numeric_limits<UInt64>::max());
 	pReg->setInt64("name2", std::numeric_limits<Int64>::min()); 
 	assert (pReg->getInt64("name2") == std::numeric_limits<Int64>::min());
+
+	/// write real int64 value type
+	regKey.setInt64("name3", std::numeric_limits<Int64>::max());
+	assert (pReg->getInt64("name3") == std::numeric_limits<Int64>::max());
 #endif
+
+	/// create fake binary data
+	const int dataSize = 127;
+	std::vector<char> data(dataSize);
+	for (int i = 0; i < dataSize; ++i)
+		data[i] = rand() % 256;
+
+	regKey.setBinary("name4", data);
+	assert (pReg->getString("name4") == std::string(data.begin(), data.end()));
+
+
 	assert (pReg->hasProperty("name1"));
 	assert (pReg->hasProperty("name2"));
 	
@@ -82,9 +94,11 @@ void WinConfigurationTest::testConfiguration()
 
 	Poco::Util::AbstractConfiguration::Keys keys;
 	pReg->keys(keys);
-	assert (keys.size() == 3);
+	assert (keys.size() == 5);
 	assert (std::find(keys.begin(), keys.end(), "name1") != keys.end());
 	assert (std::find(keys.begin(), keys.end(), "name2") != keys.end());
+	assert (std::find(keys.begin(), keys.end(), "name3") != keys.end());
+	assert (std::find(keys.begin(), keys.end(), "name4") != keys.end());
 	assert (std::find(keys.begin(), keys.end(), "config") != keys.end());
 
 	pReg->keys("config", keys);
@@ -96,6 +110,13 @@ void WinConfigurationTest::testConfiguration()
 	assert (pRootReg->getInt("HKEY_CURRENT_USER.Software.Applied Informatics.Test.name1") == 1);
 
 	pRootReg->keys(keys);
+#if defined(_WIN32_WCE)
+	assert (keys.size() == 4);
+	assert (std::find(keys.begin(), keys.end(), "HKEY_CLASSES_ROOT") != keys.end());
+	assert (std::find(keys.begin(), keys.end(), "HKEY_CURRENT_USER") != keys.end());
+	assert (std::find(keys.begin(), keys.end(), "HKEY_LOCAL_MACHINE") != keys.end());
+	assert (std::find(keys.begin(), keys.end(), "HKEY_USERS") != keys.end());
+#else
 	assert (keys.size() == 6);
 	assert (std::find(keys.begin(), keys.end(), "HKEY_CLASSES_ROOT") != keys.end());
 	assert (std::find(keys.begin(), keys.end(), "HKEY_CURRENT_CONFIG") != keys.end());
@@ -103,11 +124,14 @@ void WinConfigurationTest::testConfiguration()
 	assert (std::find(keys.begin(), keys.end(), "HKEY_LOCAL_MACHINE") != keys.end());
 	assert (std::find(keys.begin(), keys.end(), "HKEY_PERFORMANCE_DATA") != keys.end());
 	assert (std::find(keys.begin(), keys.end(), "HKEY_USERS") != keys.end());
+#endif
 
 	pRootReg->keys("HKEY_CURRENT_USER.Software.Applied Informatics.Test", keys);
-	assert (keys.size() == 3);
+	assert (keys.size() == 5);
 	assert (std::find(keys.begin(), keys.end(), "name1") != keys.end());
 	assert (std::find(keys.begin(), keys.end(), "name2") != keys.end());
+	assert (std::find(keys.begin(), keys.end(), "name3") != keys.end());
+	assert (std::find(keys.begin(), keys.end(), "name4") != keys.end());
 	assert (std::find(keys.begin(), keys.end(), "config") != keys.end());
 }
 
@@ -130,6 +154,3 @@ CppUnit::Test* WinConfigurationTest::suite()
 
 	return pSuite;
 }
-
-
-#endif // _WIN32_WCE

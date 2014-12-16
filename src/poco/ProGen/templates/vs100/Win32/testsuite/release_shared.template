@@ -1,7 +1,7 @@
 <Configuration
 	Name="release_shared|Win32"
 	OutputDirectory="bin\"
-	IntermediateDirectory="obj\$(ConfigurationName)"
+	IntermediateDirectory="obj\${project.name}\$(ConfigurationName)"
 	ConfigurationType="1"
 	UseOfMFC="2"
 	CharacterSet="2"
@@ -23,7 +23,7 @@
 	/>
 	<Tool
 		Name="VCCLCompilerTool"
-		Optimization="4"
+		Optimization="2"
 		InlineFunctionExpansion="1"
 		EnableIntrinsicFunctions="true"
 		FavorSizeOrSpeed="1"

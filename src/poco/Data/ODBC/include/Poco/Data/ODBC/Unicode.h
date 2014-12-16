@@ -438,7 +438,7 @@ inline SQLRETURN SQLDescribeCol(SQLHSTMT hstmt,
 		cbColNameMax,
 		pcbColName,
 		pfSqlType,
-		(SQLUINTEGER*)pcbColDef,
+		pcbColDef,
 		pibScale,
 		pfNullable);
 }
@@ -538,7 +538,7 @@ inline SQLRETURN SQLGetDescRec(SQLHDESC hdesc,
 		pcbName,
 		pfType,
 		pfSubType,
-		(SQLINTEGER*)pLength,
+		pLength,
 		pPrecision,
 		pScale,
 		pNullable);

@@ -367,12 +367,12 @@ void NumberFormatter::append(std::string& str, const void* ptr)
 	char buffer[24];
 #if defined(POCO_PTR_IS_64_BIT)
 	#if defined(POCO_LONG_IS_64_BIT)
-		std::sprintf(buffer, "%016lX", (intptr_t) ptr);
+		std::sprintf(buffer, "%016lX", (UIntPtr) ptr);
 	#else
-		std::sprintf(buffer, "%016" I64_FMT "X", (intptr_t) ptr);
+		std::sprintf(buffer, "%016" I64_FMT "X", (UIntPtr) ptr);
 	#endif
 #else
-	std::sprintf(buffer, "%08lX", (intptr_t) ptr);
+	std::sprintf(buffer, "%08lX", (UIntPtr) ptr);
 #endif
 	str.append(buffer);
 }

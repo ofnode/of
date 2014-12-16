@@ -85,7 +85,7 @@ const Var Var::operator + (const Var& other) const
 {
 	if (isInteger())
 	{
-		if(isSigned())
+		if (isSigned())
 			return add<Poco::Int64>(other);
 		else
 			return add<Poco::UInt64>(other);
@@ -103,7 +103,7 @@ Var& Var::operator += (const Var& other)
 {
 	if (isInteger())
 	{
-		if(isSigned())
+		if (isSigned())
 			return *this = add<Poco::Int64>(other);
 		else
 			return *this = add<Poco::UInt64>(other);
@@ -121,7 +121,7 @@ const Var Var::operator - (const Var& other) const
 {
 	if (isInteger())
 	{
-		if(isSigned())
+		if (isSigned())
 			return subtract<Poco::Int64>(other);
 		else
 			return subtract<Poco::UInt64>(other);
@@ -137,7 +137,7 @@ Var& Var::operator -= (const Var& other)
 {
 	if (isInteger())
 	{
-		if(isSigned())
+		if (isSigned())
 			return *this = subtract<Poco::Int64>(other);
 		else
 			return *this = subtract<Poco::UInt64>(other);
@@ -153,7 +153,7 @@ const Var Var::operator * (const Var& other) const
 {
 	if (isInteger())
 	{
-		if(isSigned())
+		if (isSigned())
 			return multiply<Poco::Int64>(other);
 		else
 			return multiply<Poco::UInt64>(other);
@@ -169,7 +169,7 @@ Var& Var::operator *= (const Var& other)
 {
 	if (isInteger())
 	{
-		if(isSigned())
+		if (isSigned())
 			return *this = multiply<Poco::Int64>(other);
 		else
 			return *this = multiply<Poco::UInt64>(other);
@@ -185,7 +185,7 @@ const Var Var::operator / (const Var& other) const
 {
 	if (isInteger())
 	{
-		if(isSigned())
+		if (isSigned())
 			return divide<Poco::Int64>(other);
 		else
 			return divide<Poco::UInt64>(other);
@@ -201,7 +201,7 @@ Var& Var::operator /= (const Var& other)
 {
 	if (isInteger())
 	{
-		if(isSigned())
+		if (isSigned())
 			return *this = divide<Poco::Int64>(other);
 		else
 			return *this = divide<Poco::UInt64>(other);
@@ -401,6 +401,8 @@ Var Var::parse(const std::string& val, std::string::size_type& pos)
 			return parseObject(val, pos);
 		case '[':
 			return parseArray(val, pos);
+		case '"':
+			return parseJSONString(val, pos);
 		default:
 			return parseString(val, pos);
 		}
@@ -464,41 +466,79 @@ Var Var::parseArray(const std::string& val, std::string::size_type& pos)
 
 std::string Var::parseString(const std::string& val, std::string::size_type& pos)
 {
-	static const std::string STR_STOP("\"");
-	static const std::string OTHER_STOP("\n ,]}");
-
-	bool inString = false;
-	//skip optional ' "
 	if (val[pos] == '"')
 	{
-		inString = true;
-		++pos;
-	}
-	
-	std::string::size_type stop = std::string::npos;
-	if (inString)
-	{
-		stop = val.find_first_of(STR_STOP, pos);
-		if (stop == std::string::npos)
-			throw DataFormatException("Unterminated string");
+		return parseJSONString(val, pos);
 	}
 	else
 	{
-		// we stop at space, ',', ']' or '}' or end of string
-		stop = val.find_first_of(OTHER_STOP, pos);
-		if (stop == std::string::npos)
-			stop = val.size();
-
-		std::string::size_type safeCheck = val.find_first_of(STR_STOP, pos);
-		if (safeCheck != std::string::npos && safeCheck < stop)
-			throw DataFormatException("Misplaced string termination char found");
-
+		std::string result;
+		while (pos < val.size() 
+			&& !Poco::Ascii::isSpace(val[pos]) 
+			&& val[pos] != ','
+			&& val[pos] != ']'
+			&& val[pos] != '}')
+		{
+			result += val[pos++];
+		}
+		return result;
 	}
+}
 
-	// stop now points to the last char to be not included
-	std::string result = val.substr(pos, stop - pos);
-	++stop; // point past '/"
-	pos = stop;
+
+std::string Var::parseJSONString(const std::string& val, std::string::size_type& pos)
+{
+	poco_assert_dbg (val[pos] == '"');
+	++pos;
+	std::string result;
+	bool done = false;
+	while (pos < val.size() && !done)
+	{
+		switch (val[pos])
+		{
+		case '"':
+			done = true;
+			++pos;
+			break;
+		case '\\':
+			if (pos < val.size())
+			{
+				++pos;
+				switch (val[pos])
+				{
+				case 'b':
+					result += '\b';
+					break; 
+				case 'f':
+					result += '\f';
+					break; 
+				case 'n':
+					result += '\n';
+					break; 
+				case 'r':
+					result += '\r';
+					break; 
+				case 't':
+					result += '\t';
+					break; 
+				default:
+					result += val[pos];
+					break;
+				}
+				break;
+			}
+			else
+			{
+				result += val[pos];
+			}
+			++pos;
+			break;
+		default:
+			result += val[pos++];
+			break;
+		}
+	}
+	if (!done) throw Poco::DataFormatException("unterminated JSON string");
 	return result;
 }
 

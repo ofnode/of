@@ -35,6 +35,8 @@ public:
 	void testSwap();
 	void testEncodeDecode();
 	void testOther();
+	void testFromPath();
+	void testQueryParameters();
 
 	void setUp();
 	void tearDown();

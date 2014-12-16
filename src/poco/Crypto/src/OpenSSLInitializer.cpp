@@ -4,7 +4,7 @@
 // $Id: //poco/1.4/Crypto/src/OpenSSLInitializer.cpp#3 $
 //
 // Library: Crypto
-// Package: CryotpCore
+// Package: CryptoCore
 // Module:  OpenSSLInitializer
 //
 // Copyright (c) 2006-2009, Applied Informatics Software Engineering GmbH.
@@ -35,8 +35,7 @@ namespace Crypto {
 
 
 Poco::FastMutex* OpenSSLInitializer::_mutexes(0);
-Poco::FastMutex OpenSSLInitializer::_mutex;
-int OpenSSLInitializer::_rc(0);
+Poco::AtomicCounter OpenSSLInitializer::_rc;
 
 
 OpenSSLInitializer::OpenSSLInitializer()
@@ -47,14 +46,19 @@ OpenSSLInitializer::OpenSSLInitializer()
 
 OpenSSLInitializer::~OpenSSLInitializer()
 {
-	uninitialize();
+	try
+	{
+		uninitialize();
+	}
+	catch (...)
+	{
+		poco_unexpected();
+	}
 }
 
 
 void OpenSSLInitializer::initialize()
 {
-	Poco::FastMutex::ScopedLock lock(_mutex);
-	
 	if (++_rc == 1)
 	{
 #if OPENSSL_VERSION_NUMBER >= 0x0907000L
@@ -91,8 +95,6 @@ void OpenSSLInitializer::initialize()
 
 void OpenSSLInitializer::uninitialize()
 {
-	Poco::FastMutex::ScopedLock lock(_mutex);
-
 	if (--_rc == 0)
 	{
 		EVP_cleanup();
@@ -102,6 +104,8 @@ void OpenSSLInitializer::uninitialize()
 		CRYPTO_set_id_callback(0);
 #endif
 		delete [] _mutexes;
+		
+		CONF_modules_free();
 	}
 }
 

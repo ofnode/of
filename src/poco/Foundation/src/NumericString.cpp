@@ -31,7 +31,7 @@
 // --- double conversion ---
 
 #include "Poco/NumericString.h"
-//poco_static_assert(POCO_MAX_FLT_STRING_LEN == double_conversion::kMaxSignificantDecimalDigits);
+poco_static_assert(POCO_MAX_FLT_STRING_LEN == double_conversion::kMaxSignificantDecimalDigits);
 #include "Poco/String.h"
 #include <memory>
 #include <cctype>
@@ -46,8 +46,8 @@ void pad(std::string& str, int precision, int width, char prefix = ' ', char dec
 	/// Used only internally.
 {
 	// these cases should never happen, if they do, it's a library bug
-	//poco_assert_dbg (precision > 0);
-	//poco_assert_dbg (str.length());
+	poco_assert_dbg (precision > 0);
+	poco_assert_dbg (str.length());
 
 	std::string::size_type decSepPos = str.find(decSep);
 	if (decSepPos == std::string::npos)
@@ -85,38 +85,38 @@ void insertThousandSep(std::string& str, char thSep, char decSep = '.')
 	/// Inserts thousand separators.
 	/// Used only internally.
 {
-	//poco_assert (decSep != thSep);
+	poco_assert (decSep != thSep);
+	if (str.size() == 0) return;
 
 	std::string::size_type exPos = str.find('e');
+	if (exPos == std::string::npos) exPos = str.find('E');
 	std::string::size_type decPos = str.find(decSep);
 	// there's no rinsert, using forward iterator to go backwards
 	std::string::iterator it = str.end();
-	std::string::iterator begin = str.begin();
-	if (exPos != std::string::npos)
-	{
-		while (it != begin)
-		{
-			--it;
-			if ((*it == 'e') || (*it == 'E')) break;
-		}
-	}
+	if (exPos != std::string::npos) it -= str.size() - exPos;
+
 	if (decPos != std::string::npos)
 	{
-		while (it != begin)
+		while (it != str.begin())
 		{
 			--it;
 			if (*it == decSep) break;
 		}
 	}
 	int thCount = 0;
-	for (; it != begin; --it)
+	if (it == str.end()) --it;
+	for (; it != str.begin();)
 	{
-		if (!std::isdigit(*it)) continue;
-		if (++thCount == 3)
-		{
-			it = str.insert(it, thSep);
-			thCount = 0;
-		}
+		std::string::iterator pos = it;
+		std::string::value_type chr = *it;
+		std::string::value_type prevChr = *--it;
+
+		if (!std::isdigit(chr)) continue;
+
+		if (++thCount == 3 && std::isdigit(prevChr))
+			it = str.insert(pos, thSep);
+
+		if (thCount == 3) thCount = 0;
 	}
 }
 

@@ -35,7 +35,14 @@ Timer::Timer(long startInterval, long periodicInterval):
 
 Timer::~Timer()
 {
-	stop();
+	try
+	{
+		stop();
+	}
+	catch (...)
+	{
+		poco_unexpected();
+	}
 }
 
 
@@ -177,7 +184,7 @@ void Timer::run()
 		}
 		while (sleep < 0);
 
-		if (_wakeUp.tryWait(sleep > _periodicInterval ? _periodicInterval : sleep))
+		if (_wakeUp.tryWait(sleep))
 		{
 			Poco::FastMutex::ScopedLock lock(_mutex);
 			_nextInvocation.update();

@@ -71,6 +71,7 @@ class Foundation_API PatternFormatter: public Formatter
 	///   * %F - message date/time fractional seconds/microseconds (000000 - 999999)
 	///   * %z - time zone differential in ISO 8601 format (Z or +NN.NN)
 	///   * %Z - time zone differential in RFC format (GMT or +NNNN)
+	///   * %L - convert time to local time (must be specified before any date/time specifier; does not itself output anything)
 	///   * %E - epoch time (UTC, seconds since midnight, January 1, 1970)
 	///   * %v[width] - the message source (%s) but text length is padded/cropped to 'width'
 	///   * %[name] - the value of the message parameter with the given name
@@ -120,10 +121,11 @@ protected:
 		/// Returns a string for the given priority value.
 	
 private:
-
 	struct PatternAction
 	{
-		PatternAction(): key(0), length(0) {}
+		PatternAction(): key(0), length(0) 
+		{
+		}
 
 		char key;
 		int length;
@@ -131,16 +133,14 @@ private:
 		std::string prepend;
 	};
 
-	std::vector<PatternAction>  _patternActions;
-	bool                        _localTime;
-	Timestamp::TimeDiff         _localTimeOffset;
-	std::string                 _pattern;
-
-
-	void ParsePattern();
+	void parsePattern();
 		/// Will parse the _pattern string into the vector of PatternActions,
 		/// which contains the message key, any text that needs to be written first
 		/// a proprety in case of %[] and required length.
+
+	std::vector<PatternAction> _patternActions;
+	bool _localTime;
+	std::string _pattern;
 };
 
 

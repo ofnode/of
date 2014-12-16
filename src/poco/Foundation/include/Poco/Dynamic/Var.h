@@ -495,6 +495,10 @@ public:
 		/// Returns true if stored value is numeric.
 		/// Returns false for numeric strings (e.g. "123" is string, not number)
 
+	bool isBoolean() const;
+		/// Returns true if stored value is boolean.
+		/// Returns false for boolean strings (e.g. "true" is string, not number)
+
 	bool isString() const;
 		/// Returns true if stored value is std::string.
 
@@ -538,6 +542,7 @@ private:
 	static Var parseObject(const std::string& val, std::string::size_type& pos);
 	static Var parseArray(const std::string& val, std::string::size_type& pos);
 	static std::string parseString(const std::string& val, std::string::size_type& pos);
+	static std::string parseJSONString(const std::string& val, std::string::size_type& pos);
 	static void skipWhiteSpace(const std::string& val, std::string::size_type& pos);
 
 	template <typename T>
@@ -588,7 +593,7 @@ private:
 
 	void destruct()
 	{
-		if(!isEmpty()) delete content();
+		if (!isEmpty()) delete content();
 	}
 
 	VarHolder* _pHolder;
@@ -632,7 +637,7 @@ private:
 
 	void construct(const Var& other)
 	{
-		if(!other.isEmpty())
+		if (!other.isEmpty())
 			other.content()->clone(&_placeholder);
 		else
 			_placeholder.erase();
@@ -640,9 +645,9 @@ private:
 
 	void destruct()
 	{
-		if(!isEmpty())
+		if (!isEmpty())
 		{
-			if(_placeholder.isLocal())
+			if (_placeholder.isLocal())
 				content()->~VarHolder();
 			else
 				delete content();
@@ -822,6 +827,13 @@ inline bool Var::isNumeric() const
 {
 	VarHolder* pHolder = content();
 	return pHolder ? pHolder->isNumeric() : false;
+}
+
+
+inline bool Var::isBoolean() const
+{
+	VarHolder* pHolder = content();
+	return pHolder ? pHolder->isBoolean() : false;
 }
 
 

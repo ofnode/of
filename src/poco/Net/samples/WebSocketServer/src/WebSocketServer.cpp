@@ -163,7 +163,7 @@ public:
 			app.logger().information(it->first + ": " + it->second);
 		}
 		
-		if (request.getURI() == "/ws")
+		if(request.find("Upgrade") != request.end() && Poco::icompare(request["Upgrade"], "websocket") == 0)
 			return new WebSocketRequestHandler;
 		else
 			return new PageRequestHandler;

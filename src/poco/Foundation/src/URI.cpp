@@ -19,13 +19,14 @@
 #include "Poco/Exception.h"
 #include "Poco/String.h"
 #include "Poco/NumberParser.h"
+#include "Poco/Path.h"
 
 
 namespace Poco {
 
 
 const std::string URI::RESERVED_PATH     = "?#";
-const std::string URI::RESERVED_QUERY    = "#";
+const std::string URI::RESERVED_QUERY    = "?#/";
 const std::string URI::RESERVED_FRAGMENT = "";
 const std::string URI::ILLEGAL           = "%<>{}|\\\"^`";
 
@@ -122,6 +123,16 @@ URI::URI(const URI& baseURI, const std::string& relativeURI):
 	_fragment(baseURI._fragment)
 {
 	resolve(relativeURI);
+}
+
+
+URI::URI(const Path& path):
+	_scheme("file"),
+	_port(0)
+{
+	Path absolutePath(path);
+	absolutePath.makeAbsolute();
+	_path = absolutePath.toString(Path::PATH_UNIX);
 }
 
 
@@ -324,9 +335,9 @@ void URI::addQueryParameter(const std::string& param, const std::string& val)
 {
 	std::string reserved(RESERVED_QUERY);
 	reserved += "=&";
-	if (!_query.empty()) _query.append(1, '&');
+	if (!_query.empty()) _query += '&';
 	encode(param, reserved, _query);
-	_query.append(1, '=');
+	_query += '=';
 	encode(val, reserved, _query);
 }
 
@@ -336,6 +347,56 @@ std::string URI::getQuery() const
 	std::string query;
 	decode(_query, query);
 	return query;
+}
+
+
+URI::QueryParameters URI::getQueryParameters() const
+{
+	QueryParameters result;
+	std::string::const_iterator it(_query.begin());
+	std::string::const_iterator end(_query.end());
+	while (it != end)
+	{
+		std::string name;
+		std::string value;
+		while (it != end && *it != '=' && *it != '&')
+		{
+			if (*it == '+') 
+				name += ' ';
+			else
+				name += *it;
+			++it;
+		}
+		if (it != end && *it == '=')
+		{
+			++it;
+			while (it != end && *it != '&')
+			{
+				if (*it == '+') 
+					value += ' ';
+				else
+					value += *it;
+				++it;
+			}
+		}
+		std::string decodedName;
+		std::string decodedValue;
+		URI::decode(name, decodedName);
+		URI::decode(value, decodedValue);
+		result.push_back(std::make_pair(decodedName, decodedValue));
+		if (it != end && *it == '&') ++it;	
+	}
+	return result;
+}
+
+
+void URI::setQueryParameters(const QueryParameters& params)
+{
+	_query.clear();
+	for (QueryParameters::const_iterator it = params.begin(); it != params.end(); ++it)
+	{
+		addQueryParameter(it->first, it->second);
+	}
 }
 
 

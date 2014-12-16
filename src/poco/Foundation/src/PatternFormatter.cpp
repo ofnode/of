@@ -34,18 +34,16 @@ const std::string PatternFormatter::PROP_TIMES   = "times";
 
 
 PatternFormatter::PatternFormatter():
-	_localTime(false),
-	_localTimeOffset(0)
+	_localTime(false)
 {
 }
 
 
 PatternFormatter::PatternFormatter(const std::string& format):
 	_localTime(false),
-	_localTimeOffset(0),
 	_pattern(format)
 {
-	ParsePattern();
+	parsePattern();
 }
 
 
@@ -57,9 +55,11 @@ PatternFormatter::~PatternFormatter()
 void PatternFormatter::format(const Message& msg, std::string& text)
 {
 	Timestamp timestamp = msg.getTime();
-	if (_localTime)
+	bool localTime = _localTime;
+	if (localTime)
 	{
-		timestamp  += _localTimeOffset;
+		timestamp += Timezone::utcOffset()*Timestamp::resolution();
+		timestamp += Timezone::dst()*Timestamp::resolution();
 	}
 	DateTime dateTime = timestamp;
 	for (std::vector<PatternAction>::iterator ip = _patternActions.begin(); ip != _patternActions.end(); ++ip)
@@ -99,8 +99,8 @@ void PatternFormatter::format(const Message& msg, std::string& text)
 		case 'i': NumberFormatter::append0(text, dateTime.millisecond(), 3); break;
 		case 'c': NumberFormatter::append(text, dateTime.millisecond()/100); break;
 		case 'F': NumberFormatter::append0(text, dateTime.millisecond()*1000 + dateTime.microsecond(), 6); break;
-		case 'z': text.append(DateTimeFormatter::tzdISO(_localTime ? Timezone::tzd() : DateTimeFormatter::UTC)); break;
-		case 'Z': text.append(DateTimeFormatter::tzdRFC(_localTime ? Timezone::tzd() : DateTimeFormatter::UTC)); break;
+		case 'z': text.append(DateTimeFormatter::tzdISO(localTime ? Timezone::tzd() : DateTimeFormatter::UTC)); break;
+		case 'Z': text.append(DateTimeFormatter::tzdRFC(localTime ? Timezone::tzd() : DateTimeFormatter::UTC)); break;
 		case 'E': NumberFormatter::append(text, msg.getTime().epochTime()); break;
 		case 'v':
 			if (ip->length > msg.getSource().length())	//append spaces
@@ -119,16 +119,26 @@ void PatternFormatter::format(const Message& msg, std::string& text)
 			{
 			}
 			break;
+		case 'L':
+			if (!localTime)
+			{
+				localTime = true;
+				timestamp += Timezone::utcOffset()*Timestamp::resolution();
+				timestamp += Timezone::dst()*Timestamp::resolution();
+				dateTime = timestamp;
+			}
+			break;
 		}
 	}
 }
 
-void PatternFormatter::ParsePattern()
+
+void PatternFormatter::parsePattern()
 {
 	_patternActions.clear();
 	std::string::const_iterator it  = _pattern.begin();
 	std::string::const_iterator end = _pattern.end();
-	PatternAction end_act;
+	PatternAction endAct;
 	while (it != end)
 	{
 		if (*it == '%')
@@ -136,12 +146,12 @@ void PatternFormatter::ParsePattern()
 			if (++it != end)
 			{
 				PatternAction act;
-				act.prepend = end_act.prepend;
-				end_act.prepend.clear();
+				act.prepend = endAct.prepend;
+				endAct.prepend.clear();
 
-				if(*it == '[')
+				if (*it == '[')
 				{
-					act.key='x';
+					act.key = 'x';
 					++it;
 					std::string prop;
 					while (it != end && *it != ']') prop += *it++;
@@ -150,10 +160,10 @@ void PatternFormatter::ParsePattern()
 				}
 				else
 				{
-					act.key=*it;
-					if ((it+1) != end && *(it+1) == '[')
+					act.key = *it;
+					if ((it + 1) != end && *(it + 1) == '[')
 					{
-						it+=2;
+						it += 2;
 						std::string number;
 						while (it != end && *it != ']') number += *it++;
 						if (it == end) --it;
@@ -161,7 +171,7 @@ void PatternFormatter::ParsePattern()
 						{
 							act.length = NumberParser::parse(number);
 						}
-						catch(...)
+						catch (...)
 						{
 						}
 					}
@@ -172,11 +182,13 @@ void PatternFormatter::ParsePattern()
 		}
 		else
 		{
-			end_act.prepend += *it++;
+			endAct.prepend += *it++;
 		}
 	}
-	if( end_act.prepend.size())
-		_patternActions.push_back(end_act);
+	if (endAct.prepend.size())
+	{
+		_patternActions.push_back(endAct);
+	}
 }
 
 	
@@ -185,15 +197,16 @@ void PatternFormatter::setProperty(const std::string& name, const std::string& v
 	if (name == PROP_PATTERN)
 	{
 		_pattern = value;
-		ParsePattern();
+		parsePattern();
 	}
 	else if (name == PROP_TIMES)
 	{
 		_localTime = (value == "local");
-		_localTimeOffset = Timestamp::resolution()*( Timezone::utcOffset() + Timezone::dst() );
 	}
 	else 
+	{
 		Formatter::setProperty(name, value);
+	}
 }
 
 

@@ -28,6 +28,11 @@
 #include <cstdlib>
 
 
+#ifndef SQLITE_OPEN_URI
+#define SQLITE_OPEN_URI 0
+#endif
+
+
 namespace Poco {
 namespace Data {
 namespace SQLite {
@@ -51,12 +56,20 @@ SessionImpl::SessionImpl(const std::string& fileName, std::size_t loginTimeout):
 	addFeature("autoCommit", 
 		&SessionImpl::autoCommit, 
 		&SessionImpl::isAutoCommit);
+	addProperty("connectionTimeout", &SessionImpl::setConnectionTimeout, &SessionImpl::getConnectionTimeout);
 }
 
 
 SessionImpl::~SessionImpl()
 {
-	close();
+	try
+	{
+		close();
+	}
+	catch (...)
+	{
+		poco_unexpected();
+	}
 }
 
 
@@ -142,7 +155,7 @@ private:
 
 	inline int connectImpl()
 	{
-		return sqlite3_open(_connectString.c_str(), _ppDB);
+		return sqlite3_open_v2(_connectString.c_str(), _ppDB, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_URI, NULL);
 	}
 
 	std::string _connectString;
@@ -176,7 +189,8 @@ void SessionImpl::open(const std::string& connect)
 			close();
 			Utility::throwException(rc);
 		}
-	} catch (SQLiteException& ex)
+	} 
+	catch (SQLiteException& ex)
 	{
 		throw ConnectionFailedException(ex.displayText());
 	}
@@ -209,6 +223,18 @@ void SessionImpl::setConnectionTimeout(std::size_t timeout)
 	int rc = sqlite3_busy_timeout(_pDB, tout);
 	if (rc != 0) Utility::throwException(rc);
 	_timeout = tout;
+}
+
+
+void SessionImpl::setConnectionTimeout(const std::string& prop, const Poco::Any& value)
+{
+	setConnectionTimeout(Poco::RefAnyCast<std::size_t>(value));
+}
+
+
+Poco::Any SessionImpl::getConnectionTimeout(const std::string& prop)
+{
+	return Poco::Any(_timeout/1000);
 }
 
 

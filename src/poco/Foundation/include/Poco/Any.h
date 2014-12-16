@@ -17,10 +17,6 @@
 #ifndef Foundation_Any_INCLUDED
 #define Foundation_Any_INCLUDED
 
-#if !defined(POCO_SMALL_OBJECT_SIZE) && !defined(POCO_NO_SOO)
-	#define POCO_SMALL_OBJECT_SIZE 32
-#endif
-
 
 #include "Poco/Exception.h"
 #include "Poco/MetaProgramming.h"
@@ -50,6 +46,8 @@ template <class> class VarHolderImpl;
 	#error "Any SOO can only be enabled with C++11 support"
 #endif
 
+#define POCO_SMALL_OBJECT_SIZE 32
+
 template <typename PlaceholderT, unsigned int SizeV = POCO_SMALL_OBJECT_SIZE>
 union Placeholder
 	/// ValueHolder union (used by Poco::Any and Poco::Dynamic::Var for small
@@ -62,7 +60,6 @@ union Placeholder
 	/// where the object was allocated (0 => heap, 1 => local).
 {
 public:
-
 	struct Size
 	{
 		static const unsigned int value = SizeV;
@@ -90,7 +87,7 @@ public:
 
 	PlaceholderT* content() const
 	{
-		if(isLocal())
+		if (isLocal())
 			return reinterpret_cast<PlaceholderT*>(holder);
 		else
 			return pHolder;
@@ -196,9 +193,9 @@ public:
 		/// Destructor. If Any is locally held, calls ValueHolder destructor;
 		/// otherwise, deletes the placeholder from the heap.
 	{
-		if(!empty())
+		if (!empty())
 		{
-			if(_valueHolder.isLocal())
+			if (_valueHolder.isLocal())
 				destruct();
 			else
 				delete content();
@@ -345,7 +342,7 @@ private:
 
 	void construct(const Any& other)
 	{
-		if(!other.empty())
+		if (!other.empty())
 			other.content()->clone(&_valueHolder);
 		else
 			_valueHolder.erase();

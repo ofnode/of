@@ -209,6 +209,7 @@ void HTTPRequest::read(std::istream& istr)
 	uri.reserve(64);
 	version.reserve(16);
 	int ch = istr.get();
+	if (istr.bad()) throw NetException("Error reading HTTP request header");
 	if (ch == eof) throw NoMessageException();
 	while (Poco::Ascii::isSpace(ch)) ch = istr.get();
 	if (ch == eof) throw MessageException("No HTTP request header");
@@ -255,7 +256,6 @@ void HTTPRequest::setCredentials(const std::string& header, const std::string& s
 	auth.append(authInfo);
 	set(header, auth);
 }
-
 
 
 } } // namespace Poco::Net

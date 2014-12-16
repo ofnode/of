@@ -49,7 +49,8 @@ public:
 		CM_DEFLATE = 8,
 		CM_ENHANCEDDEFLATE = 9,
 		CM_DATECOMPRIMPLODING = 10,
-		CM_UNUSED = 11
+		CM_UNUSED = 11,
+		CM_AUTO = 255 /// automatically select DM_DEFLATE or CM_STORE based on file type (extension)
 	};
 
 	enum CompressionLevel
@@ -89,7 +90,9 @@ public:
 		FT_ASCII = 1
 	};
 
-	static const std::string ILLEGAL_PATH;
+	static bool isValidPath(const std::string& path);
+		/// Checks whether the given path is valid (does
+		/// not contain ".." path segments).
 };
 
 

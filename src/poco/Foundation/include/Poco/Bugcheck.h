@@ -33,17 +33,17 @@ namespace Poco {
 class Foundation_API Bugcheck
 	/// This class provides some static methods that are
 	/// used by the
-	/// poco_assert_dbg(), poco_assert(), poco_check_ptr() 
-	/// and poco_bugcheck() macros. 
+	/// poco_assert_dbg(), poco_assert(), poco_check_ptr(), 
+	/// poco_bugcheck() and poco_unexpected() macros. 
 	/// You should not invoke these methods
 	/// directly. Use the macros instead, as they
 	/// automatically provide useful context information.
 {
 public:
-	static void assertion(const char* cond, const char* file, int line);
+	static void assertion(const char* cond, const char* file, int line, const char* text = 0);
 		/// An assertion failed. Break into the debugger, if
 		/// possible, then throw an AssertionViolationException.
-		
+
 	static void nullPointer(const char* ptr, const char* file, int line);
 		/// An null pointer was encountered. Break into the debugger, if
 		/// possible, then throw an NullPointerException.
@@ -56,6 +56,12 @@ public:
 		/// An internal error was encountered. Break into the debugger, if
 		/// possible, then throw an BugcheckException.
 
+	static void unexpected(const char* file, int line);
+		/// An exception was caught in a destructor. Break into debugger,
+		/// if possible and report exception. Must only be called from
+		/// within a catch () block as it rethrows the exception to
+		/// determine its class.
+
 	static void debugger(const char* file, int line);
 		/// An internal error was encountered. Break into the debugger, if
 		/// possible.
@@ -65,7 +71,7 @@ public:
 		/// possible.
 
 protected:
-	static std::string what(const char* msg, const char* file, int line);
+	static std::string what(const char* msg, const char* file, int line, const char* text = 0);
 };
 
 
@@ -78,13 +84,21 @@ protected:
 #if defined(_DEBUG)
 	#define poco_assert_dbg(cond) \
 		if (!(cond)) Poco::Bugcheck::assertion(#cond, __FILE__, __LINE__); else (void) 0
+
+	#define poco_assert_msg_dbg(cond, text) \
+		if (!(cond)) Poco::Bugcheck::assertion(#cond, __FILE__, __LINE__, text); else (void) 0
 #else
+	#define poco_assert_msg_dbg(cond, text)
 	#define poco_assert_dbg(cond)
 #endif
 
 
 #define poco_assert(cond) \
 	if (!(cond)) Poco::Bugcheck::assertion(#cond, __FILE__, __LINE__); else (void) 0
+
+
+#define poco_assert_msg(cond, text) \
+	if (!(cond)) Poco::Bugcheck::assertion(#cond, __FILE__, __LINE__, text); else (void) 0
 
 
 #define poco_check_ptr(ptr) \
@@ -97,6 +111,10 @@ protected:
 
 #define poco_bugcheck_msg(msg) \
 	Poco::Bugcheck::bugcheck(msg, __FILE__, __LINE__)
+
+
+#define poco_unexpected() \
+	Poco::Bugcheck::unexpected(__FILE__, __LINE__);
 
 
 #define poco_debugger() \
@@ -125,22 +143,25 @@ protected:
 
 //
 // poco_static_assert
-// 
+//
 // The following was ported from <boost/static_assert.hpp>
 //
+
+
+GCC_DIAG_OFF(unused-local-typedefs) // supress numerous gcc warnings
 
 
 template <bool x>
 struct POCO_STATIC_ASSERTION_FAILURE;
 
 
-template <> 
-struct POCO_STATIC_ASSERTION_FAILURE<true> 
+template <>
+struct POCO_STATIC_ASSERTION_FAILURE<true>
 {
-	enum 
-	{ 
-		value = 1 
-	}; 
+	enum
+	{
+		value = 1
+	};
 };
 
 
