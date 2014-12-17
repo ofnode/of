@@ -30,7 +30,7 @@ function(example APP DIR)
 
     add_executable(${APP} ${SRC})
     target_link_libraries(${APP} ${OFXADDONS_BEGIN} ${OFXADDONS_LIBRARIES} ${OFXADDONS_END} ${OPENFRAMEWORKS_LIBRARIES})
-    set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY bin)
+    set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
 
 endfunction(example)
 
