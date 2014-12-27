@@ -647,7 +647,9 @@ function(ofxaddon OFXADDON)
                                      "${OFXADDON_DIR}/libs/*.hpp")
 
         file(GLOB_RECURSE OFXSOURCES "${OFXADDON_DIR}/src/*.c"
-                                     "${OFXADDON_DIR}/src/*.cpp")
+                                     "${OFXADDON_DIR}/src/*.cpp"
+                                     "${OFXADDON_DIR}/libs/*.c"
+                                     "${OFXADDON_DIR}/libs/*.cpp")
 
         foreach(OFXHEADER_PATH ${OFXHEADERS})
             get_filename_component(OFXHEADER_DIR ${OFXHEADER_PATH} PATH)
