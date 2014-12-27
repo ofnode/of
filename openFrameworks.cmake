@@ -166,6 +166,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     #///////////////////////////////////////////////////////////////////////////
 
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+
+    message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
+
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
     #// Options ////////////////////////////////////////////////////////////////
