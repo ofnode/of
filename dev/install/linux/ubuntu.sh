@@ -37,9 +37,13 @@ gstreamer1.0-plugins-ugly \
 libgstreamer1.0-dev       \
 libgstreamer-plugins-base1.0-dev
 
-sudo apt-get -y install --reinstall libgl1-mesa-glx libgl1-mesa-dev
+# Use gold linker
+sudo rm /usr/bin/ld && sudo ln -s `which gold` /usr/bin/ld
 
-sudo rm /usr/bin/ld
-sudo ln -s `which gold` /usr/bin/ld
+# Use default linker
+#sudo rm /usr/bin/ld && sudo apt-get install --reinstall binutils
+
+# Reinstall Mesa if CMake can't find OpenGL
+#sudo apt-get -y install --reinstall libgl1-mesa-glx libgl1-mesa-dev
 
 sudo ln -s /usr/bin/llvm-symbolizer* /usr/bin/llvm-symbolizer 2> /dev/null

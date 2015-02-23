@@ -17,13 +17,13 @@ function setup() {
 cd src
 
 # v 2.0 release
-setup assimp 7e2ead https://github.com/procedural/assimp
+setup assimp 7e2ead https://github.com/ofnode/assimp
 
 # v 2.8.1 release
-setup freeglut b3d5bc https://github.com/procedural/freeglut
+setup freeglut b3d5bc https://github.com/ofnode/freeglut
 
 # v 3.16.0 release
-setup freeimage 62b55b https://github.com/procedural/freeimage
+setup freeimage 62b55b https://github.com/ofnode/freeimage
 
 # v 1.11.0 release
 setup glew 442545 https://github.com/omniavinco/glew-cmake
@@ -35,7 +35,7 @@ setup glfw 0a6cb3 https://github.com/arturoc/glfw
 setup poco 676f043 https://github.com/pocoproject/poco
 
 # v 4.0.12 master
-setup rtaudio 02c152 https://github.com/procedural/rtaudio
+setup rtaudio 02c152 https://github.com/ofnode/rtaudio
 
 # v 0.9.0 master
 setup openFrameworks 08ee18 https://github.com/openframeworks/openFrameworks
@@ -62,7 +62,7 @@ mkdir  kiss
 mv     openFrameworks/libs/kiss/include kiss/include
 mv     openFrameworks/libs/kiss/src     kiss/src
 
-cp      "$OF/dev/add/kiss/CMakeLists.txt" kiss
+cp     "$OF/dev/add/kiss/CMakeLists.txt"  kiss
 cp     "$OF/dev/add/tess2/CMakeLists.txt" tess2
 
 rm -rf "$OF/addons"

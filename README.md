@@ -26,7 +26,7 @@ The only difference is that this project targets CMake build system and stores s
 Installing
 ----------
 
-1. `git clone https://github.com/procedural/of --depth 1` will clone this repository.
+1. `git clone https://github.com/ofnode/of --depth 1` will clone this repository.
 2. Install developer files for your Linux distro with a script from `dev/install/linux` folder.
 3. Optionally: install developer files for MXE with a script from `dev/install/mxe` folder.
 4. Download precompiled libraries from [releases][5] page and extract `lib` folder to `of`.
@@ -82,7 +82,6 @@ See `licenses` folder. OF **can** be used for commercial applications without di
   [2]: http://mxe.cc
   [3]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
   [4]: http://ofxaddons.com
-  [5]: https://github.com/procedural/of/releases
-  [6]: https://github.com/procedural/ofApp
-  [7]: https://github.com/procedural/ofxAddon
-
+  [5]: https://github.com/ofnode/of/releases
+  [6]: https://github.com/ofnode/ofApp
+  [7]: https://github.com/ofnode/ofxAddon
