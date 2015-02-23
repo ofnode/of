@@ -6,9 +6,10 @@ set(RELEASE_FLAGS "
 ")
 
 set(DEBUG_FLAGS "
-    -g
+    -O0
     -fPIC
     -fsanitize=address
+    -finstrument-functions
 ")
 
 #// Clang specific flags ///////////////////////////////////////////////////////
@@ -30,29 +31,32 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
     set(DEBUG_CXX_FLAGS_CLANG "
         -Wno-deprecated-register
-        -fsanitize-address-zero-base-shadow
     ")
 endif()
 
-#///////////////////////////////////////////////////////////////////////////////
+#// Options ////////////////////////////////////////////////////////////////////
 
-# CMake output colors
-string(ASCII 27 COLOR_ESC)
-set(COLOR_RESET "${COLOR_ESC}[m")
-set(COLOR_ERROR "${COLOR_ESC}[41m")
+set(OF_ENABLE_COTIRE ON CACHE BOOL
+  "Enable Cotire header precompiler")
+
+set(OF_ENABLE_CONSOLE OFF CACHE BOOL
+  "Enable console window on Windows")
+
+#// Setup //////////////////////////////////////////////////////////////////////
+
+set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 find_package(PkgConfig REQUIRED)
 
 if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE "Release")
+   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# Constant root directory path for addons
-set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
-
 # Output shared libraries and executables to project local bin folder
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+
+#///////////////////////////////////////////////////////////////////////////////
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -164,22 +168,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${GSTREAMER_VIDEO_LIBRARIES}
     )
 
-    #///////////////////////////////////////////////////////////////////////////
-
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
-
-    #// Options ////////////////////////////////////////////////////////////////
-
-    if(NOT OF_ENABLE_CONSOLE)
-       set(OF_ENABLE_CONSOLE OFF CACHE BOOL
-          "Enable console window on Windows")
-    endif()
-
-    #///////////////////////////////////////////////////////////////////////////
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_MPG123
@@ -295,8 +288,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${SETUPAPI_LIB}
     )
 
-    #///////////////////////////////////////////////////////////////////////////
-
 endif()
 
 list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
@@ -388,19 +379,7 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
 add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
 include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
 
-#///////////////////////////////////////////////////////////////////////////////
-
-string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
-string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
-
-if(CMAKE_C_COMPILER_ID STREQUAL Clang)
-string(REPLACE "\n" " " RELEASE_C_FLAGS_CLANG ${RELEASE_C_FLAGS_CLANG})
-string(REPLACE "\n" " "   DEBUG_C_FLAGS_CLANG   ${DEBUG_C_FLAGS_CLANG})
-endif()
-if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
-string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
-string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
-endif()
+#// Compiler flags /////////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
@@ -418,13 +397,25 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     endif()
 endif()
 
-set(CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
-set(CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG}")
+string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
+string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
 
-set(CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
-set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}")
+if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+string(REPLACE "\n" " " RELEASE_C_FLAGS_CLANG ${RELEASE_C_FLAGS_CLANG})
+string(REPLACE "\n" " "   DEBUG_C_FLAGS_CLANG   ${DEBUG_C_FLAGS_CLANG})
+endif()
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
+string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
+endif()
 
-#///////////////////////////////////////////////////////////////////////////////
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG}")
+
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}")
+
+#// ofxAddons //////////////////////////////////////////////////////////////////
 
 function(ofxaddon OFXADDON)
 
@@ -442,11 +433,11 @@ function(ofxaddon OFXADDON)
 
 
     elseif(OFXADDON STREQUAL ofxAccelerometer)
-        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
+        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
 
 
     elseif(OFXADDON STREQUAL ofxAndroid)
-        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
+        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
 
 
     elseif(OFXADDON STREQUAL ofxAssimpModelLoader)
@@ -463,7 +454,7 @@ function(ofxaddon OFXADDON)
 
 
     elseif(OFXADDON STREQUAL ofxEmscripten)
-        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
+        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
 
 
     elseif(OFXADDON STREQUAL ofxGui)
@@ -482,7 +473,7 @@ function(ofxaddon OFXADDON)
 
 
     elseif(OFXADDON STREQUAL ofxiOS)
-        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
+        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
 
 
     elseif(OFXADDON STREQUAL ofxKinect)
@@ -511,7 +502,7 @@ function(ofxaddon OFXADDON)
 
 
     elseif(OFXADDON STREQUAL ofxMultiTouch)
-        message(FATAL_ERROR "${COLOR_ERROR}${OFXADDON} is not supported yet.${COLOR_RESET}")
+        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
 
 
     elseif(OFXADDON STREQUAL ofxNetwork)
@@ -642,7 +633,7 @@ function(ofxaddon OFXADDON)
     else()
 
         if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/")
-            message(FATAL_ERROR "${COLOR_ERROR}ofxaddon(${OFXADDON_DIR}): the folder doesn't exist.${COLOR_RESET}")
+            message(FATAL_ERROR "ofxaddon(${OFXADDON_DIR}): the folder doesn't exist.")
         endif()
 
         file(GLOB_RECURSE OFXHEADERS "${OFXADDON_DIR}/src/*.h"
@@ -673,12 +664,36 @@ function(ofxaddon OFXADDON)
 
 endfunction(ofxaddon)
 
-#///////////////////////////////////////////////////////////////////////////////
+#// Misc ///////////////////////////////////////////////////////////////////////
 
-include(cotire)
-set(COTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES 1)
-set_directory_properties(PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
+if(OF_ENABLE_COTIRE)
+    include(cotire)
+    set(COTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES 1)
+    set_directory_properties(PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
+else()
+    function(cotire NO)
+    endfunction(cotire)
+endif()
 
 set(OFXADDONS_BEGIN -Wl,--start-group)
 set(OFXADDONS_END -Wl,--end-group)
 
+#// Messages ///////////////////////////////////////////////////////////////////
+
+message(STATUS "CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
+
+message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
+message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
+
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    message(STATUS "CMAKE_C_FLAGS_DEBUG: "   ${CMAKE_C_FLAGS_DEBUG})
+    message(STATUS "CMAKE_CXX_FLAGS_DEBUG: " ${CMAKE_CXX_FLAGS_DEBUG})
+endif()
+
+if(CMAKE_BUILD_TYPE MATCHES Release)
+    message(STATUS "CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
+    message(STATUS "CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
+endif()
+
+message(STATUS "OF_ENABLE_COTIRE: "  ${OF_ENABLE_COTIRE})
+message(STATUS "OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})

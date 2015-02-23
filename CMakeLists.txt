@@ -10,8 +10,9 @@ set(RELEASE_FLAGS "
 ")
 
 set(DEBUG_FLAGS "
-    -g
+    -O0
     -fPIC
+    -finstrument-functions
 ")
 
 #// Clang specific flags ///////////////////////////////////////////////////////
@@ -36,13 +37,23 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     ")
 endif()
 
-#///////////////////////////////////////////////////////////////////////////////
+#// Setup //////////////////////////////////////////////////////////////////////
+
+set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 find_package(PkgConfig REQUIRED)
 
 if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE "Release")
+   set(CMAKE_BUILD_TYPE Release)
 endif()
+
+if(CMAKE_SYSTEM MATCHES Linux)
+    set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
+elseif(CMAKE_SYSTEM MATCHES Windows)
+    set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
+endif()
+
+#///////////////////////////////////////////////////////////////////////////////
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -125,172 +136,172 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 endif()
 
 list(APPEND INCLUDE_DIRS
-    "${CMAKE_CURRENT_LIST_DIR}/src/freeglut"
-    "${CMAKE_CURRENT_LIST_DIR}/src/freeglut/include"
+    "${OF_ROOT_DIR}/src/freeglut"
+    "${OF_ROOT_DIR}/src/freeglut/include"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage"
-    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR"
-    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/Half"
-    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/Iex"
-    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/IlmImf"
-    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/IlmThread"
-    "${CMAKE_CURRENT_LIST_DIR}/src/freeimage/OpenEXR/Imath"
+    "${OF_ROOT_DIR}/src/freeimage"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Iex"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmImf"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmThread"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Imath"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/glew"
-    "${CMAKE_CURRENT_LIST_DIR}/src/glew/include"
+    "${OF_ROOT_DIR}/src/glew"
+    "${OF_ROOT_DIR}/src/glew/include"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/glfw"
-    "${CMAKE_CURRENT_LIST_DIR}/src/glfw/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/glfw/include/GLFW"
+    "${OF_ROOT_DIR}/src/glfw"
+    "${OF_ROOT_DIR}/src/glfw/include"
+    "${OF_ROOT_DIR}/src/glfw/include/GLFW"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/kiss"
-    "${CMAKE_CURRENT_LIST_DIR}/src/kiss/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/kiss/src"
+    "${OF_ROOT_DIR}/src/kiss"
+    "${OF_ROOT_DIR}/src/kiss/include"
+    "${OF_ROOT_DIR}/src/kiss/src"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Crypto/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Crypto/include/Poco"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Crypto/include/Poco/Crypto"
+    "${OF_ROOT_DIR}/src/poco"
+    "${OF_ROOT_DIR}/src/poco/Crypto/include"
+    "${OF_ROOT_DIR}/src/poco/Crypto/include/Poco"
+    "${OF_ROOT_DIR}/src/poco/Crypto/include/Poco/Crypto"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Foundation/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Foundation/include/Poco"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Foundation/include/Poco/Dynamic"
+    "${OF_ROOT_DIR}/src/poco/Foundation/include"
+    "${OF_ROOT_DIR}/src/poco/Foundation/include/Poco"
+    "${OF_ROOT_DIR}/src/poco/Foundation/include/Poco/Dynamic"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Net/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Net/include/Poco"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Net/include/Poco/Net"
+    "${OF_ROOT_DIR}/src/poco/Net/include"
+    "${OF_ROOT_DIR}/src/poco/Net/include/Poco"
+    "${OF_ROOT_DIR}/src/poco/Net/include/Poco/Net"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/NetSSL_OpenSSL/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/NetSSL_OpenSSL/include/Poco"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/NetSSL_OpenSSL/include/Poco/Net"
+    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
+    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include/Poco"
+    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include/Poco/Net"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Util/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Util/include/Poco"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Util/include/Poco/Util"
+    "${OF_ROOT_DIR}/src/poco/Util/include"
+    "${OF_ROOT_DIR}/src/poco/Util/include/Poco"
+    "${OF_ROOT_DIR}/src/poco/Util/include/Poco/Util"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/XML/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/XML/include/Poco"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/XML/include/Poco/DOM"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/XML/include/Poco/SAX"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/XML/include/Poco/XML"
+    "${OF_ROOT_DIR}/src/poco/XML/include"
+    "${OF_ROOT_DIR}/src/poco/XML/include/Poco"
+    "${OF_ROOT_DIR}/src/poco/XML/include/Poco/DOM"
+    "${OF_ROOT_DIR}/src/poco/XML/include/Poco/SAX"
+    "${OF_ROOT_DIR}/src/poco/XML/include/Poco/XML"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Zip/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Zip/include/Poco"
-    "${CMAKE_CURRENT_LIST_DIR}/src/poco/Zip/include/Poco/Zip"
+    "${OF_ROOT_DIR}/src/poco/Zip/include"
+    "${OF_ROOT_DIR}/src/poco/Zip/include/Poco"
+    "${OF_ROOT_DIR}/src/poco/Zip/include/Poco/Zip"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/rtaudio"
-    "${CMAKE_CURRENT_LIST_DIR}/src/rtaudio/include"
+    "${OF_ROOT_DIR}/src/rtaudio"
+    "${OF_ROOT_DIR}/src/rtaudio/include"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/tess2"
-    "${CMAKE_CURRENT_LIST_DIR}/src/tess2/include"
-    "${CMAKE_CURRENT_LIST_DIR}/src/tess2/Sources"
+    "${OF_ROOT_DIR}/src/tess2"
+    "${OF_ROOT_DIR}/src/tess2/include"
+    "${OF_ROOT_DIR}/src/tess2/Sources"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/3d"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/app"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/communication"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/events"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/math"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/sound"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/types"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video"
+    "${OF_ROOT_DIR}/src/openframeworks"
+    "${OF_ROOT_DIR}/src/openframeworks/3d"
+    "${OF_ROOT_DIR}/src/openframeworks/app"
+    "${OF_ROOT_DIR}/src/openframeworks/communication"
+    "${OF_ROOT_DIR}/src/openframeworks/events"
+    "${OF_ROOT_DIR}/src/openframeworks/gl"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics"
+    "${OF_ROOT_DIR}/src/openframeworks/math"
+    "${OF_ROOT_DIR}/src/openframeworks/sound"
+    "${OF_ROOT_DIR}/src/openframeworks/types"
+    "${OF_ROOT_DIR}/src/openframeworks/utils"
+    "${OF_ROOT_DIR}/src/openframeworks/video"
 )
 
 if(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND INCLUDE_DIRS
-    "${CMAKE_CURRENT_LIST_DIR}/src/videoinput"
+    "${OF_ROOT_DIR}/src/videoinput"
     )
 endif()
 
 set(SOURCES
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/3d/of3dPrimitives.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/3d/of3dUtils.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/3d/ofCamera.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/3d/ofEasyCam.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/3d/ofMesh.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/3d/ofNode.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/3d/of3dPrimitives.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/3d/of3dUtils.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/3d/ofCamera.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/3d/ofEasyCam.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/3d/ofMesh.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/3d/ofNode.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/app/ofAppGLFWWindow.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/app/ofAppGlutWindow.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/app/ofAppNoWindow.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/app/ofAppRunner.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGLFWWindow.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGlutWindow.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppNoWindow.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppRunner.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/communication/ofArduino.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/communication/ofSerial.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/communication/ofArduino.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/communication/ofSerial.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/events/ofEvents.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/events/ofEvents.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofBufferObject.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofFbo.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofGLProgrammableRenderer.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofGLRenderer.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofGLUtils.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofLight.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofMaterial.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofShader.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofTexture.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofVbo.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/gl/ofVboMesh.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofBufferObject.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofFbo.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofGLProgrammableRenderer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofGLRenderer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofGLUtils.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofLight.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofMaterial.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofShader.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofTexture.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofVbo.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/gl/ofVboMesh.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/of3dGraphics.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofBitmapFont.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofCairoRenderer.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofGraphics.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofImage.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofPath.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofPixels.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofPolyline.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofRendererCollection.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofTessellator.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/graphics/ofTrueTypeFont.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/of3dGraphics.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofBitmapFont.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofCairoRenderer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofGraphics.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofImage.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofPath.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofPixels.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofPolyline.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofRendererCollection.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofTessellator.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofTrueTypeFont.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/math/ofMath.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/math/ofMatrix3x3.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/math/ofMatrix4x4.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/math/ofQuaternion.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/math/ofVec2f.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/math/ofVec4f.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/math/ofMath.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/math/ofMatrix3x3.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/math/ofMatrix4x4.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/math/ofQuaternion.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/math/ofVec2f.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/math/ofVec4f.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/sound/ofSoundPlayer.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/sound/ofSoundStream.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundPlayer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundStream.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/types/ofBaseTypes.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/types/ofColor.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/types/ofParameter.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/types/ofParameterGroup.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/types/ofRectangle.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/types/ofBaseTypes.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/types/ofColor.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/types/ofParameter.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/types/ofParameterGroup.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/types/ofRectangle.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofFileUtils.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofFpsCounter.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofLog.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofMatrixStack.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofSystemUtils.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofThread.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofTimer.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofURLFileLoader.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofUtils.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/utils/ofXml.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofFileUtils.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofFpsCounter.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofLog.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofMatrixStack.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofSystemUtils.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofThread.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofTimer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofURLFileLoader.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofUtils.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/utils/ofXml.cpp"
 
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
 )
 
 if(CMAKE_SYSTEM MATCHES Linux)
     list(APPEND SOURCES
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofGstUtils.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
     )
 elseif(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND SOURCES
-    "${CMAKE_CURRENT_LIST_DIR}/src/videoinput/videoInput.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
+    "${OF_ROOT_DIR}/src/videoinput/videoInput.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
     )
 endif()
 
@@ -302,19 +313,7 @@ list(APPEND DEFINITIONS
 add_definitions(${DEFINITIONS})
 include_directories(${INCLUDE_DIRS})
 
-#///////////////////////////////////////////////////////////////////////////////
-
-string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
-string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
-
-if(CMAKE_C_COMPILER_ID STREQUAL Clang)
-string(REPLACE "\n" " " RELEASE_C_FLAGS_CLANG ${RELEASE_C_FLAGS_CLANG})
-string(REPLACE "\n" " "   DEBUG_C_FLAGS_CLANG   ${DEBUG_C_FLAGS_CLANG})
-endif()
-if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
-string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
-string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
-endif()
+#// Compiler flags /////////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
@@ -332,19 +331,42 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     endif()
 endif()
 
-set(CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
-set(CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG}")
+string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
+string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
 
-set(CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
-set(CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}")
-
-if(CMAKE_SYSTEM MATCHES Linux)
-    set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/linux)
-elseif(CMAKE_SYSTEM MATCHES Windows)
-    set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/${CMAKE_BUILD_TYPE}/windows)
+if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+string(REPLACE "\n" " " RELEASE_C_FLAGS_CLANG ${RELEASE_C_FLAGS_CLANG})
+string(REPLACE "\n" " "   DEBUG_C_FLAGS_CLANG   ${DEBUG_C_FLAGS_CLANG})
+endif()
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
+string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
 endif()
 
-#///////////////////////////////////////////////////////////////////////////////
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG}")
+
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}")
+
+#// Messages ///////////////////////////////////////////////////////////////////
+
+message(STATUS "CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
+
+message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
+message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
+
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    message(STATUS "CMAKE_C_FLAGS_DEBUG: "   ${CMAKE_C_FLAGS_DEBUG})
+    message(STATUS "CMAKE_CXX_FLAGS_DEBUG: " ${CMAKE_CXX_FLAGS_DEBUG})
+endif()
+
+if(CMAKE_BUILD_TYPE MATCHES Release)
+    message(STATUS "CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
+    message(STATUS "CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
+endif()
+
+#// Build //////////////////////////////////////////////////////////////////////
 
 add_subdirectory(src/freeglut)
 add_subdirectory(src/freeimage)
@@ -357,4 +379,3 @@ add_subdirectory(src/tess2)
 add_subdirectory(src/assimp)
 
 add_library(openFrameworks STATIC ${SOURCES})
-
