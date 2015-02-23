@@ -530,18 +530,11 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
         pkg_check_modules(OPENCV REQUIRED opencv)
         include_directories(${OPENCV_INCLUDE_DIRS})
-        if (CMAKE_BUILD_TYPE STREQUAL Release)
-            # Static OpenCV for releases only, OpenCV build have no PIC on Ubuntu Trusty
-            list(APPEND OFXADDONS_LIBRARIES -Wl,-Bstatic ${OPENCV_LDFLAGS} -Wl,-Bdynamic)
-            # OpenCV depends on TBB
-            if (CMAKE_SYSTEM MATCHES Linux)
-                pkg_check_modules(TBB REQUIRED tbb)
-                include_directories(${TBB_INCLUDE_DIRS})
-                list(APPEND OFXADDONS_LIBRARIES ${TBB_LIBRARIES})
-            endif()
-        else()
-            # Dynamic OpenCV for debugging with ASAN
-            list(APPEND OFXADDONS_LIBRARIES ${OPENCV_LDFLAGS})
+        list(APPEND OFXADDONS_LIBRARIES ${OPENCV_LDFLAGS})
+        if (CMAKE_SYSTEM MATCHES Linux)
+            find_package(TBB REQUIRED)
+            include_directories(${TBB_INCLUDE_DIRS})
+            list(APPEND OFXADDONS_LIBRARIES ${TBB_LIBRARIES})
         endif()
 
 
