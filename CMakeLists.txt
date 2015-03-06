@@ -10,7 +10,6 @@ set(RELEASE_FLAGS "
 ")
 
 set(DEBUG_FLAGS "
-    -pg
     -O0
     -fPIC
 ")
