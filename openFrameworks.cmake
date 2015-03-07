@@ -6,9 +6,11 @@ set(RELEASE_FLAGS "
 ")
 
 set(DEBUG_FLAGS "
-    -O0
+    -O2
     -fPIC
     -fsanitize=address
+    -fno-omit-frame-pointer
+    -fno-optimize-sibling-calls
 ")
 
 #// Clang specific flags ///////////////////////////////////////////////////////
