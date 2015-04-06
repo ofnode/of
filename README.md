@@ -29,7 +29,7 @@ Installing
 1. `git clone https://github.com/ofnode/of --depth 1` will clone this repository.
 2. Install developer files for your Linux distro with a script from `dev/install/linux` folder.
 3. Optionally: install developer files for MXE with a script from `dev/install/mxe` folder.
-4. Download precompiled libraries from [releases][5] page and extract `lib` folder to `of`.
+4. Download precompiled libraries from [releases][5] page and extract `lib-*` folder to `of`.
 
 
 Compiling
@@ -37,7 +37,7 @@ Compiling
 
 Run `build.sh` script from `dev` folder. Also, you can compile it manually:
 
-For Linux build:
+For Linux Release build:
 
 ```bash
 mkdir build
@@ -46,7 +46,7 @@ cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
-For Debug build:
+For Linux Debug build:
 
 ```bash
 mkdir build
@@ -55,7 +55,7 @@ cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug
 ninja
 ```
 
-For Windows build:
+For Windows Release build:
 
 ```bash
 mkdir build
@@ -64,6 +64,14 @@ cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=`find /opt/mxe -name mxe-conf.cmake`
 ninja
 ```
 
+For Windows Debug build:
+
+```bash
+mkdir build
+cd build
+cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=`find /opt/mxe -name mxe-conf.cmake` -DCMAKE_BUILD_TYPE=Debug
+ninja
+```
 
 Templates
 ---------

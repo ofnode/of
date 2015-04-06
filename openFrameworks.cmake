@@ -6,7 +6,6 @@ set(RELEASE_FLAGS "
 ")
 
 set(DEBUG_FLAGS "
-    -O0
     -Winline
     -Wconversion
     -fno-omit-frame-pointer
@@ -82,7 +81,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     #// Local dependencies /////////////////////////////////////////////////////
 
-    set(OF_LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
+    if(CMAKE_BUILD_TYPE MATCHES Release)
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release")
+    elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/debug")
+    endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
     file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
@@ -194,7 +197,11 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     #// Local dependencies /////////////////////////////////////////////////////
 
-    set(OF_LIB_DIR "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
+    if(CMAKE_BUILD_TYPE MATCHES Release)
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/release")
+    elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug")
+    endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
     file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
@@ -379,6 +386,18 @@ add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
 include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
 
 #// Compiler flags /////////////////////////////////////////////////////////////
+
+if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+    set(O_FLAG -O0)
+elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
+    if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
+    set(O_FLAG -Og)
+    elseif(CMAKE_SYSTEM MATCHES Windows)
+    set(O_FLAG -O2)
+    else()
+    set(O_FLAG -O0)
+    endif()
+endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
@@ -676,20 +695,20 @@ set(OFXADDONS_END -Wl,--end-group)
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
+message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
 
-message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
-message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
+message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
+message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message(STATUS "CMAKE_C_FLAGS_DEBUG: "   ${CMAKE_C_FLAGS_DEBUG})
-    message(STATUS "CMAKE_CXX_FLAGS_DEBUG: " ${CMAKE_CXX_FLAGS_DEBUG})
+    message("++ CMAKE_C_FLAGS_DEBUG: "   ${CMAKE_C_FLAGS_DEBUG})
+    message("++ CMAKE_CXX_FLAGS_DEBUG: " ${CMAKE_CXX_FLAGS_DEBUG})
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES Release)
-    message(STATUS "CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
-    message(STATUS "CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
+    message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
+    message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
 endif()
 
-message(STATUS "OF_ENABLE_COTIRE: "  ${OF_ENABLE_COTIRE})
-message(STATUS "OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})
+message("++ OF_ENABLE_COTIRE: "  ${OF_ENABLE_COTIRE})
+message("++ OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})

@@ -10,9 +10,6 @@ set(RELEASE_FLAGS "
 ")
 
 set(DEBUG_FLAGS "
-    -O0
-    -Winline
-    -Wconversion
     -fno-omit-frame-pointer
     -fno-optimize-sibling-calls
 ")
@@ -47,15 +44,15 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
 
-if(CMAKE_SYSTEM MATCHES Linux)
-    set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/linux")
-elseif(CMAKE_SYSTEM MATCHES Windows)
-    set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib/${CMAKE_BUILD_TYPE}/windows")
-endif()
-
 #///////////////////////////////////////////////////////////////////////////////
 
 if(CMAKE_SYSTEM MATCHES Linux)
+
+    if(CMAKE_BUILD_TYPE MATCHES Release)
+        set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib-linux/release")
+    elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+        set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib-linux/debug")
+    endif()
 
     set(DEFINITIONS
         -DOF_USING_GTK
@@ -100,6 +97,12 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
+
+    if(CMAKE_BUILD_TYPE MATCHES Release)
+        set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib-windows/release")
+    elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+        set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib-windows/debug")
+    endif()
 
     set(DEFINITIONS
         -DOF_USING_MPG123
@@ -315,6 +318,18 @@ include_directories(${INCLUDE_DIRS})
 
 #// Compiler flags /////////////////////////////////////////////////////////////
 
+if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+    set(O_FLAG -O0)
+elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
+    if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
+    set(O_FLAG -Og)
+    elseif(CMAKE_SYSTEM MATCHES Windows)
+    set(O_FLAG -O2)
+    else()
+    set(O_FLAG -O0)
+    endif()
+endif()
+
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
 endif()
@@ -348,26 +363,26 @@ string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
 endif()
 
 string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG} ${O_FLAG}")
 
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_FLAG}")
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
+message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
 
-message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
-message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
+message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
+message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message(STATUS "CMAKE_C_FLAGS_DEBUG: "   ${CMAKE_C_FLAGS_DEBUG})
-    message(STATUS "CMAKE_CXX_FLAGS_DEBUG: " ${CMAKE_CXX_FLAGS_DEBUG})
+    message("++ CMAKE_C_FLAGS_DEBUG: "   ${CMAKE_C_FLAGS_DEBUG})
+    message("++ CMAKE_CXX_FLAGS_DEBUG: " ${CMAKE_CXX_FLAGS_DEBUG})
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES Release)
-    message(STATUS "CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
-    message(STATUS "CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
+    message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
+    message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
 endif()
 
 #// Build //////////////////////////////////////////////////////////////////////
