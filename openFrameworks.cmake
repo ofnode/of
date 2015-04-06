@@ -90,6 +90,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
     list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
     file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
 
+    if(NOT OPENFRAMEWORKS_LIBS)
+        message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+    endif()
+
     list(APPEND OPENFRAMEWORKS_LIBRARIES
         -Wl,-Bstatic
         -Wl,--start-group
@@ -205,6 +209,10 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
     file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
+
+    if(NOT OPENFRAMEWORKS_LIBS)
+        message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+    endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
         -Wl,-Bstatic
