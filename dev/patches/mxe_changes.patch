@@ -1,3 +1,13 @@
+--- a/usr/x86_64-w64-mingw32.shared/share/cmake/mxe-conf.cmake
++++ b/usr/x86_64-w64-mingw32.shared/share/cmake/mxe-conf.cmake
+@@ -2,7 +2,6 @@
+ set(MSYS 1)
+ set(BUILD_SHARED_LIBS ON)
+ set(LIBTYPE SHARED)
+-set(CMAKE_BUILD_TYPE Release)
+ set(CMAKE_FIND_ROOT_PATH /opt/mxe/usr/x86_64-w64-mingw32.shared)
+ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 --- a/src/opencv.mk
 +++ b/src/opencv.mk
 @@ -3,8 +3,8 @@
