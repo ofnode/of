@@ -10,8 +10,9 @@ set(RELEASE_FLAGS "
 ")
 
 set(DEBUG_FLAGS "
-    -O2
-    -fPIC
+    -O0
+    -Winline
+    -Wconversion
     -fno-omit-frame-pointer
     -fno-optimize-sibling-calls
 ")
@@ -24,7 +25,6 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     ")
 
     set(DEBUG_C_FLAGS_CLANG "
-        -Wno-deprecated-register
     ")
 endif()
 
@@ -34,7 +34,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     ")
 
     set(DEBUG_CXX_FLAGS_CLANG "
-        -Wno-deprecated-register
     ")
 endif()
 
@@ -316,6 +315,10 @@ include_directories(${INCLUDE_DIRS})
 
 #// Compiler flags /////////////////////////////////////////////////////////////
 
+if(CMAKE_SYSTEM MATCHES Linux)
+    set(PIC_FLAG -fPIC)
+endif()
+
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
@@ -345,10 +348,10 @@ string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
 endif()
 
 string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG}")
 
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG}")
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
