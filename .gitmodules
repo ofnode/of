@@ -1,0 +1,3 @@
+[submodule "examples/ofExamples"]
+	path = examples/ofExamples
+	url = https://github.com/ofnode/ofExamples

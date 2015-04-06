@@ -10,10 +10,10 @@
 build/*
 debug/*
 
+examples/build/*
+examples/debug/*
+
 lib-linux/*
 lib-windows/*
-
-examples/*
-examples/!CMakeLists.txt
 
 src/assimp/test/*
