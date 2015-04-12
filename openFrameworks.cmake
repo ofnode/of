@@ -249,10 +249,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_library(STRMIIDS_LIB strmiids)
     find_library(SETUPAPI_LIB setupapi)
 
-    list(APPEND OPENGL_INCLUDE_DIR
-        "${CMAKE_FIND_ROOT_PATH}/include/GL"
-    )
-
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
         ${FONTCONFIG_DEFINITIONS}
     )
@@ -329,34 +325,12 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
 
     "${OF_ROOT_DIR}/src/poco"
     "${OF_ROOT_DIR}/src/poco/Crypto/include"
-    "${OF_ROOT_DIR}/src/poco/Crypto/include/Poco"
-    "${OF_ROOT_DIR}/src/poco/Crypto/include/Poco/Crypto"
-
     "${OF_ROOT_DIR}/src/poco/Foundation/include"
-    "${OF_ROOT_DIR}/src/poco/Foundation/include/Poco"
-    "${OF_ROOT_DIR}/src/poco/Foundation/include/Poco/Dynamic"
-
     "${OF_ROOT_DIR}/src/poco/Net/include"
-    "${OF_ROOT_DIR}/src/poco/Net/include/Poco"
-    "${OF_ROOT_DIR}/src/poco/Net/include/Poco/Net"
-
     "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
-    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include/Poco"
-    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include/Poco/Net"
-
     "${OF_ROOT_DIR}/src/poco/Util/include"
-    "${OF_ROOT_DIR}/src/poco/Util/include/Poco"
-    "${OF_ROOT_DIR}/src/poco/Util/include/Poco/Util"
-
     "${OF_ROOT_DIR}/src/poco/XML/include"
-    "${OF_ROOT_DIR}/src/poco/XML/include/Poco"
-    "${OF_ROOT_DIR}/src/poco/XML/include/Poco/DOM"
-    "${OF_ROOT_DIR}/src/poco/XML/include/Poco/SAX"
-    "${OF_ROOT_DIR}/src/poco/XML/include/Poco/XML"
-
     "${OF_ROOT_DIR}/src/poco/Zip/include"
-    "${OF_ROOT_DIR}/src/poco/Zip/include/Poco"
-    "${OF_ROOT_DIR}/src/poco/Zip/include/Poco/Zip"
 
     "${OF_ROOT_DIR}/src/rtaudio"
     "${OF_ROOT_DIR}/src/rtaudio/include"

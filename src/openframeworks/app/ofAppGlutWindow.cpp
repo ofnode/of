@@ -9,7 +9,7 @@
 
 #ifdef TARGET_WIN32
 	#define GLUT_BUILDING_LIB
-	#include "glut.h"
+	#include "GL/glut.h"
 #endif
 #ifdef TARGET_OSX
     #include <OpenGL/OpenGL.h>

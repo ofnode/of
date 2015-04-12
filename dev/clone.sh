@@ -66,6 +66,6 @@ cp     "$OF/dev/add/kiss/CMakeLists.txt"  kiss
 cp     "$OF/dev/add/tess2/CMakeLists.txt" tess2
 
 rm -rf "$OF/addons"
-mv     openFrameworks/addons     "$OF"
+mv     openFrameworks/addons "$OF"
 
 rm -rf openFrameworks

@@ -2,7 +2,7 @@ CMake-based [openFrameworks][1]
 ===============================
 
 
-![OF logo courtesy to: http://julioterra.com](http://i.imgur.com/wKDVkN6.png)
+![](http://i.imgur.com/wKDVkN6.png)
 
 
 Features
@@ -10,11 +10,11 @@ Features
 
  - 64-bit, C++11, CMake, Ninja, Cotire, Clang and Sanitize ready.
 
- - Get mostly static 64-bit Windows applications from Linux with [MXE][2].
+ - Get 64-bit Windows applications from [Linux with MXE][2] or [Windows][3].
 
- - Generate project file for your favorite editor with [CMake Generators][3].
+ - Generate project file for your favorite editor with [CMake Generators][4].
  
- - Easily add [openFrameworks addons][4] with single `ofxaddon` command.
+ - Easily add [openFrameworks addons][5] with single `ofxaddon` command.
 
 
 Difference
@@ -29,55 +29,36 @@ Installing
 1. `git clone --recursive https://github.com/ofnode/of` will clone this repository.
 2. Install developer files for your Linux distro with a script from `dev/install/linux` folder.
 3. Optionally: install developer files for MXE with a script from `dev/install/mxe` folder.
-4. Download precompiled libraries from [releases][5] page and extract `lib-*` folder to `of`.
+4. Download precompiled libraries from [releases][6] page and extract `lib-*` folder to `of`.
 
 
 Compiling
 ---------
 
-Run `build.sh` script from `dev` folder. Also, you can compile it manually:
-
-For Linux Release build:
+Release build:
 
 ```bash
 mkdir build
 cd build
-cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
+cmake .. -G Ninja
 ninja
 ```
 
-For Linux Debug build:
+Debug build:
 
 ```bash
 mkdir build
 cd build
-cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug
+cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Debug
 ninja
 ```
 
-For Windows Release build:
-
-```bash
-mkdir build
-cd build
-cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=`find /opt/mxe -name mxe-conf.cmake`
-ninja
-```
-
-For Windows Debug build:
-
-```bash
-mkdir build
-cd build
-cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=`find /opt/mxe -name mxe-conf.cmake` -DCMAKE_BUILD_TYPE=Debug
-ninja
-```
 
 Templates
 ---------
 
-### [ofApp][6]
-### [ofxAddon][7]
+### [ofApp][7]
+### [ofxAddon][8]
 
 
 Licenses
@@ -88,8 +69,9 @@ See `licenses` folder. OF **can** be used for commercial applications without di
 
   [1]: https://github.com/openframeworks/openFrameworks
   [2]: http://mxe.cc
-  [3]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
-  [4]: http://ofxaddons.com
-  [5]: https://github.com/ofnode/of/releases
-  [6]: https://github.com/ofnode/ofApp
-  [7]: https://github.com/ofnode/ofxAddon
+  [3]: https://github.com/ofnode/of/blob/7a6559a/dev/install/windows/msys2.sh
+  [4]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
+  [5]: http://ofxaddons.com
+  [6]: https://github.com/ofnode/of/releases
+  [7]: https://github.com/ofnode/ofApp
+  [8]: https://github.com/ofnode/ofxAddon

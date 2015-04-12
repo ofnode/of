@@ -94,3 +94,46 @@
  
  //for threading
  #include <process.h>
+--- a/openframeworks/app/ofAppGlutWindow.cpp
++++ b/openframeworks/app/ofAppGlutWindow.cpp
+@@ -9,7 +9,7 @@
+ 
+ #ifdef TARGET_WIN32
+ 	#define GLUT_BUILDING_LIB
+-	#include "glut.h"
++	#include "GL/glut.h"
+ #endif
+ #ifdef TARGET_OSX
+     #include <OpenGL/OpenGL.h>
+--- a/openframeworks/graphics/ofGraphics.cpp
++++ b/openframeworks/graphics/ofGraphics.cpp
+@@ -26,7 +26,7 @@
+ 	#endif
+ 
+ 	#ifdef TARGET_WIN32
+-		#include "glu.h"
++		#include "GL/glu.h"
+ 	#endif
+ #endif
+ 
+@@ -37,7 +37,7 @@
+ 
+ #ifdef TARGET_WIN32
+ 	#define GLUT_BUILDING_LIB
+-	#include "glut.h"
++	#include "GL/glut.h"
+ #endif
+ #ifdef TARGET_OSX
+ 	#include <GLUT/glut.h>
+--- a/openframeworks/utils/ofConstants.h
++++ b/openframeworks/utils/ofConstants.h
+@@ -106,7 +106,7 @@
+ 	#define GLEW_STATIC
+ 	#include "GL/glew.h"
+ 	#include "GL/wglew.h"
+-   	#include "glu.h"
++	#include "GL/glu.h"
+ 	#define __WINDOWS_DS__
+ 	#define __WINDOWS_MM__
+ 	#if (_MSC_VER)       // microsoft visual studio
+

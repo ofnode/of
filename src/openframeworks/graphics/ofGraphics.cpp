@@ -26,7 +26,7 @@
 	#endif
 
 	#ifdef TARGET_WIN32
-		#include "glu.h"
+		#include "GL/glu.h"
 	#endif
 #endif
 
@@ -37,7 +37,7 @@
 
 #ifdef TARGET_WIN32
 	#define GLUT_BUILDING_LIB
-	#include "glut.h"
+	#include "GL/glut.h"
 #endif
 #ifdef TARGET_OSX
 	#include <GLUT/glut.h>
