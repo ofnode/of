@@ -372,3 +372,9 @@ add_subdirectory(src/tess2)
 add_subdirectory(src/assimp)
 
 add_library(openFrameworks STATIC ${SOURCES})
+
+target_link_libraries(
+    openFrameworks
+    -static-libgcc
+    -static-libstdc++
+)
