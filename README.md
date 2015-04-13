@@ -76,7 +76,7 @@ See `licenses` folder. OF **can** be used for commercial applications without di
 
   [1]: https://github.com/openframeworks/openFrameworks
   [2]: http://mxe.cc
-  [3]: https://github.com/ofnode/of/blob/7a6559a/dev/install/windows/msys2.sh
+  [3]: https://github.com/ofnode/of/blob/da05b1d/dev/install/windows/msys2.sh
   [4]: http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators
   [5]: http://ofxaddons.com
   [6]: https://github.com/ofnode/of/releases
