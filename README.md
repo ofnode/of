@@ -54,6 +54,12 @@ ninja
 ```
 
 
+Known issues for Windows
+------------------------
+
+ 1. DirectShow player can't play videos showing nothing on playback.
+ 2. ofxThreadedImageLoader's `.loadFromURL()` method causes crashes.
+
 Templates
 ---------
 
