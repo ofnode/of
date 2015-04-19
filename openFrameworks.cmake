@@ -586,20 +586,6 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/libs/svgTiny/src")
 
 
-    elseif(OFXADDON STREQUAL ofxSynth)
-        set(OFXADDON_DIR "${OF_ROOT_DIR}/addons/ofxSynth")
-        set(OFXSOURCES
-            "${OFXADDON_DIR}/src/ofxSoundEffect.cpp"
-            "${OFXADDON_DIR}/src/ofxSoundUnit.cpp"
-            "${OFXADDON_DIR}/src/ofxSynth.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthDelayLine.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthEnvelope.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthFilter.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthSampler.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthWaveWriter.cpp"
-        )
-
-
     elseif(OFXADDON STREQUAL ofxThreadedImageLoader)
         set(OFXADDON_DIR "${OF_ROOT_DIR}/addons/ofxThreadedImageLoader")
         set(OFXSOURCES "${OFXADDON_DIR}/src/ofxThreadedImageLoader.cpp")
