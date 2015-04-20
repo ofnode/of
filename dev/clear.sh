@@ -19,7 +19,6 @@ rm -rf src/openframeworks
 rm -rf src/videoinput
 
 rm -rf addons
-rm -rf examples/!(CMakeLists.txt)
 
 rm -rf lib
 rm     lib.tar.gz 2> /dev/null
