@@ -48,8 +48,8 @@
  	IF( MSVS )
 --- a/glfw/CMakeLists.txt
 +++ b/glfw/CMakeLists.txt
-@@ -11,11 +11,11 @@
- set(LIB_SUFFIX "" CACHE STRING "Takes an empty string or 64. Directory where lib will be installed: lib or lib64")
+@@ -19,11 +19,11 @@
+ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
  
  option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 -option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" ON)
@@ -66,15 +66,15 @@
      option(GLFW_USE_DWM_SWAP_INTERVAL "Set swap interval even when DWM compositing is enabled" OFF)
 --- a/glfw/src/CMakeLists.txt
 +++ b/glfw/src/CMakeLists.txt
-@@ -56,7 +56,7 @@
+@@ -57,7 +57,7 @@
      set_source_files_properties(${glfw_SOURCES} PROPERTIES LANGUAGE C)
  endif()
  
 -add_library(glfw ${glfw_SOURCES} ${glfw_HEADERS})
 +add_library(glfw STATIC ${glfw_SOURCES} ${glfw_HEADERS})
- set_target_properties(glfw PROPERTIES OUTPUT_NAME "${GLFW_LIB_NAME}")
- 
- if (BUILD_SHARED_LIBS)
+ set_target_properties(glfw PROPERTIES
+                       OUTPUT_NAME "${GLFW_LIB_NAME}"
+                       VERSION ${GLFW_VERSION}
 --- a/poco/cmake/PocoMacros.cmake
 +++ b/poco/cmake/PocoMacros.cmake
 @@ -24,13 +24,6 @@
