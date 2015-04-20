@@ -116,6 +116,12 @@ void ofAppGLFWWindow::setup(const ofGLWindowSettings & settings){
 }
 
 void ofAppGLFWWindow::setup(const ofGLFWWindowSettings & _settings){
+	if(windowP){
+		ofLogError() << "window already setup, probably you are mixing old and new style setup";
+		ofLogError() << "call only ofCreateWindow(settings) or ofSetupOpenGL(...)";
+		ofLogError() << "calling window->setup() after ofCreateWindow() is not necesary and won't do anything";
+		return;
+	}
 	settings = _settings;
 
 	if(!glfwInit( )){
@@ -268,7 +274,9 @@ void ofAppGLFWWindow::setup(const ofGLFWWindowSettings & _settings){
 	glfwSetWindowCloseCallback(windowP, exit_cb);
 	glfwSetScrollCallback(windowP, scroll_cb);
 	glfwSetDropCallback(windowP, drop_cb);
-	setWindowPosition(settings.position.x,settings.position.y);
+	if (settings.isPositionSet()) {
+		setWindowPosition(settings.getPosition().x,settings.getPosition().y);
+	}
 }
 
 #ifdef TARGET_LINUX
@@ -849,9 +857,19 @@ static void rotateMouseXY(ofOrientation orientation, int w, int h, double &x, do
 }
 
 //------------------------------------------------------------
-void ofAppGLFWWindow::mouse_cb(GLFWwindow* windowP_, int button, int state, int mods) {
+ofAppGLFWWindow * ofAppGLFWWindow::setCurrent(GLFWwindow* windowP){
+	ofAppGLFWWindow * instance = static_cast<ofAppGLFWWindow *>(glfwGetWindowUserPointer(windowP));
+	shared_ptr<ofMainLoop> mainLoop = ofGetMainLoop();
+	if(mainLoop){
+		mainLoop->setCurrentWindow(instance);
+	}
+	instance->makeCurrent();
+	return instance;
+}
 
-	ofAppGLFWWindow * instance = static_cast<ofAppGLFWWindow *>(glfwGetWindowUserPointer(windowP_));
+//------------------------------------------------------------
+void ofAppGLFWWindow::mouse_cb(GLFWwindow* windowP_, int button, int state, int mods) {
+	ofAppGLFWWindow * instance = setCurrent(windowP_);
 #ifdef TARGET_OSX
     //we do this as unlike glut, glfw doesn't report right click for ctrl click or middle click for alt click 
     if( instance->events().getKeyPressed(OF_KEY_CONTROL) && button == GLFW_MOUSE_BUTTON_LEFT){
@@ -888,7 +906,7 @@ void ofAppGLFWWindow::mouse_cb(GLFWwindow* windowP_, int button, int state, int 
 
 //------------------------------------------------------------
 void ofAppGLFWWindow::motion_cb(GLFWwindow* windowP_, double x, double y) {
-	ofAppGLFWWindow * instance = static_cast<ofAppGLFWWindow *>(glfwGetWindowUserPointer(windowP_));
+	ofAppGLFWWindow * instance = setCurrent(windowP_);
 	rotateMouseXY(instance->orientation, instance->getWidth(), instance->getHeight(), x, y);
 
 	if(!instance->buttonPressed){
@@ -900,14 +918,14 @@ void ofAppGLFWWindow::motion_cb(GLFWwindow* windowP_, double x, double y) {
 
 //------------------------------------------------------------
 void ofAppGLFWWindow::scroll_cb(GLFWwindow* windowP_, double x, double y) {
-	ofAppGLFWWindow * instance = static_cast<ofAppGLFWWindow *>(glfwGetWindowUserPointer(windowP_));
+	ofAppGLFWWindow * instance = setCurrent(windowP_);
 	rotateMouseXY(instance->orientation, instance->getWidth(), instance->getHeight(), x, y);
 	instance->events().notifyMouseScrolled(x, y);
 }
 
 //------------------------------------------------------------
 void ofAppGLFWWindow::drop_cb(GLFWwindow* windowP_, int numFiles, const char** dropString) {
-	ofAppGLFWWindow * instance = static_cast<ofAppGLFWWindow *>(glfwGetWindowUserPointer(windowP_));
+	ofAppGLFWWindow * instance = setCurrent(windowP_);
 	ofDragInfo drag;
 	drag.position.set(instance->events().getMouseX(), instance->events().getMouseY());
 	drag.files.resize(numFiles);
@@ -1036,7 +1054,7 @@ void ofAppGLFWWindow::keyboard_cb(GLFWwindow* windowP_, int keycode, int scancod
 			break;
 	}
 
-	ofAppGLFWWindow * instance = static_cast<ofAppGLFWWindow *>(glfwGetWindowUserPointer(windowP_));
+	ofAppGLFWWindow * instance = setCurrent(windowP_);
 	if(action == GLFW_PRESS || action == GLFW_REPEAT){
 		instance->events().notifyKeyPressed(key,keycode,scancode,codepoint);
 	}else if (action == GLFW_RELEASE){
@@ -1046,7 +1064,7 @@ void ofAppGLFWWindow::keyboard_cb(GLFWwindow* windowP_, int keycode, int scancod
 
 //------------------------------------------------------------
 void ofAppGLFWWindow::resize_cb(GLFWwindow* windowP_,int w, int h) {
-	ofAppGLFWWindow * instance = static_cast<ofAppGLFWWindow *>(glfwGetWindowUserPointer(windowP_));
+	ofAppGLFWWindow * instance = setCurrent(windowP_);
 	instance->windowW = w;
 	instance->windowH = h;
 	instance->events().notifyWindowResized(w*instance->pixelScreenCoordScale, h*instance->pixelScreenCoordScale);
@@ -1056,7 +1074,7 @@ void ofAppGLFWWindow::resize_cb(GLFWwindow* windowP_,int w, int h) {
 
 //--------------------------------------------
 void ofAppGLFWWindow::exit_cb(GLFWwindow* windowP_){
-	ofAppGLFWWindow * instance = static_cast<ofAppGLFWWindow *>(glfwGetWindowUserPointer(windowP_));
+	ofAppGLFWWindow * instance = setCurrent(windowP_);
 	instance->events().notifyExit();
 }
 
