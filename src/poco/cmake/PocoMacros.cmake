@@ -180,14 +180,35 @@ endmacro()
 #===============================================================================
 # Macros for Package generation
 #
-#TODO: Document this!
 #  POCO_GENERATE_PACKAGE - Generates *Config.cmake
-#    Usage: POCO_SOURCES_PLAT( out name platform sources)
+#    Usage: POCO_GENERATE_PACKAGE(target_name)
 #      INPUT:
-#           out             the variable the sources are added to
-#           name:           the name of the components
-#           platform:       the platform this sources are for (ON = All, OFF = None, WIN32, UNIX ...)
-#           sources:        a list of files to add to ${out}
-#    Example: POCO_SOURCES_PLAT( SRCS Foundation ON src/Foundation.cpp )
-macro(POCO_GENERATE_PACKAGE target_name export_name package_destination)
+#           target_name             the name of the target. e.g. Foundation for PocoFoundation
+#    Example: POCO_GENERATE_PACKAGE(Foundation)
+macro(POCO_GENERATE_PACKAGE target_name)
+endmacro()
+
+#===============================================================================
+# Macros for simplified installation
+#
+#  POCO_INSTALL - Install the given target
+#    Usage: POCO_INSTALL(target_name)
+#      INPUT:
+#           target_name             the name of the target. e.g. Foundation for PocoFoundation
+#    Example: POCO_INSTALL(Foundation)
+macro(POCO_INSTALL target_name)
+install(
+    DIRECTORY include/Poco
+    DESTINATION include
+    COMPONENT Devel
+    PATTERN ".svn" EXCLUDE
+    )
+
+install(
+    TARGETS "${target_name}" EXPORT "${target_name}Targets"
+    LIBRARY DESTINATION lib${LIB_SUFFIX}
+    ARCHIVE DESTINATION lib${LIB_SUFFIX}
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
+    )
 endmacro()

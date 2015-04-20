@@ -221,7 +221,8 @@ void MongoDBTest::testCountCommand()
 	if ( response.documents().size() > 0 )
 	{
 		Poco::MongoDB::Document::Ptr doc = response.documents()[0];
-		double count = doc->get<double>("n");
+		std::cout << doc->toString() << std::endl;
+		int count = doc->get<int>("n");
 		assert(count == 1);
 	}
 	else
@@ -248,7 +249,7 @@ void MongoDBTest::testDBCountCommand()
 	if ( response.documents().size() > 0 )
 	{
 		Poco::MongoDB::Document::Ptr doc = response.documents()[0];
-		double count = doc->get<double>("n");
+		int count = doc->get<int>("n");
 		assert(count == 1);
 	}
 	else
@@ -267,7 +268,7 @@ void MongoDBTest::testDBCount2Command()
 	}
 
 	Poco::MongoDB::Database db("team");
-	double count = db.count(_mongo, "players");
+	int count = db.count(_mongo, "players");
 	assert(count == 1);
 }
 
@@ -305,7 +306,8 @@ void MongoDBTest::testCursorRequest()
 	}
 	_mongo.sendRequest(*insertRequest);
 
-	double count = db.count(_mongo, "numbers");
+	int count = db.count(_mongo, "numbers");
+	std::cout << "count= " << count << std::endl;
 	assert(count == 10000);
 
 	Poco::MongoDB::Cursor cursor("team", "numbers");
@@ -390,7 +392,7 @@ void MongoDBTest::testConnectionPool()
 	if ( response.documents().size() > 0 )
 	{
 		Poco::MongoDB::Document::Ptr doc = response.documents()[0];
-		double count = doc->get<double>("n");
+		int count = doc->get<int>("n");
 		assert(count == 1);
 	}
 	else
@@ -402,21 +404,7 @@ void MongoDBTest::testConnectionPool()
 
 void MongoDBTest::testObjectID()
 {
-	std::string str;
-	str.append(1, (char) 0x53);
-	str.append(1, (char) 0x6A);
-	str.append(1, (char) 0xEE);
-	str.append(1, (char) 0xBB);
-	str.append(1, (char) 0xA0);
-	str.append(1, (char) 0x81);
-	str.append(1, (char) 0xDE);
-	str.append(1, (char) 0x68);
-	str.append(1, (char) 0x15);
-	str.append(1, (char) 0x00);
-	str.append(1, (char) 0x00);
-	str.append(1, (char) 0x02);
-
-	ObjectId oid(str);
+	ObjectId oid("536aeebba081de6815000002");
 	std::string str2 = oid.toString();
 	assert(str2 == "536aeebba081de6815000002");
 }

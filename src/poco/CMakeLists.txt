@@ -10,14 +10,14 @@ project(Poco)
 
 cmake_minimum_required(VERSION 2.8)
 
-file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/libversion" SHARED_LIBRARY_VERSION)
+file(STRINGS "${PROJECT_SOURCE_DIR}/libversion" SHARED_LIBRARY_VERSION)
 
 # Read the version information from the VERSION file
-file (STRINGS "${CMAKE_CURRENT_LIST_DIR}/VERSION" PACKAGE_VERSION )
+file (STRINGS "${PROJECT_SOURCE_DIR}/VERSION" PACKAGE_VERSION )
 message(STATUS "Poco package version: ${PACKAGE_VERSION}")
-string(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION})
-string(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" CPACK_PACKAGE_VERSION_MINOR ${PACKAGE_VERSION})
-string(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" CPACK_PACKAGE_VERSION_PATCH ${PACKAGE_VERSION})
+string(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION})
+string(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+.*" "\\1" CPACK_PACKAGE_VERSION_MINOR ${PACKAGE_VERSION})
+string(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" CPACK_PACKAGE_VERSION_PATCH ${PACKAGE_VERSION})
 
 set(COMPLETE_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
 set(RELEASE_NAME "Unstable-trunk")
@@ -28,6 +28,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Append our module directory to CMake
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+# COMMENT REPLACED BY BIICODE
 
 #################################################################################
 # Setup C/C++ compiler options
@@ -72,9 +74,13 @@ option(ENABLE_DATA "Enable Data" ON)
 option(ENABLE_DATA_SQLITE "Enable Data SQlite" ON)
 option(ENABLE_DATA_MYSQL "Enable Data MySQL" OFF)
 option(ENABLE_DATA_ODBC "Enable Data ODBC" OFF)
-option(ENABLE_SEVENZIP "Enable SevenZip" ON)
+option(ENABLE_SEVENZIP "Enable SevenZip" OFF)
 option(ENABLE_ZIP "Enable Zip" ON)
-option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" ON)
+option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
+option(ENABLE_CPPPARSER "Enable C++ parser" OFF)
+option(ENABLE_POCODOC "Enable Poco Documentation Generator" OFF)
+option(ENABLE_PAGECOMPILER "Enable PageCompiler" OFF)
+option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" OFF)
 
 option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" ON)
 
@@ -128,8 +134,13 @@ endif(WIN32)
 if (UNIX AND NOT ANDROID )
   add_definitions( -DPOCO_OS_FAMILY_UNIX )
   # Standard 'must be' defines
-  add_definitions( -D_XOPEN_SOURCE=500 -D_REENTRANT -D_THREAD_SAFE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64)
-  set(SYSLIBS  pthread dl rt)
+  if (APPLE)
+    add_definitions( -DPOCO_HAVE_IPv6 -DPOCO_NO_STAT64)
+    set(SYSLIBS  dl)
+  else (APPLE)
+    add_definitions( -D_XOPEN_SOURCE=500 -D_REENTRANT -D_THREAD_SAFE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64)
+    set(SYSLIBS  pthread dl rt)
+  endif (APPLE)
 endif(UNIX AND NOT ANDROID )
 
 if (CMAKE_SYSTEM MATCHES "SunOS")
@@ -141,7 +152,7 @@ endif(CMAKE_SYSTEM MATCHES "SunOS")
 
 if (CMAKE_COMPILER_IS_MINGW)
   add_definitions(-DWC_NO_BEST_FIT_CHARS=0x400  -DPOCO_WIN32_UTF8)
-  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED)
 endif (CMAKE_COMPILER_IS_MINGW)
 
 if (CYGWIN)
@@ -241,6 +252,26 @@ if(APRUTIL_FOUND AND APACHE_FOUND)
     list(APPEND Poco_COMPONENTS "ApacheConnector")
     endif()
 endif(APRUTIL_FOUND AND APACHE_FOUND)
+
+if(ENABLE_CPPPARSER)
+add_subdirectory(CppParser)
+list(APPEND Poco_COMPONENTS "CppParser")
+endif()
+
+if(ENABLE_POCODOC)
+add_subdirectory(PocoDoc)
+list(APPEND Poco_COMPONENTS "PocoDoc")
+endif()
+
+if(ENABLE_PAGECOMPILER)
+add_subdirectory(PageCompiler)
+list(APPEND Poco_COMPONENTS "PageCompiler")
+endif()
+
+if(ENABLE_PAGECOMPILER_FILE2PAGE)
+add_subdirectory(PageCompiler/File2Page)
+list(APPEND Poco_COMPONENTS "File2Page")
+endif()
 
 #############################################################
 # Uninstall stuff see: http://www.vtk.org/Wiki/CMake_FAQ

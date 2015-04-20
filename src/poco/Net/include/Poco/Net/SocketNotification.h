@@ -43,10 +43,10 @@ public:
 	virtual ~SocketNotification();
 		/// Destroys the SocketNotification.
 		
-	SocketReactor& source();
+	SocketReactor& source() const;
 		/// Returns the SocketReactor that generated the notification.	
 		
-	Socket& socket();
+	Socket socket() const;
 		/// Returns the socket that caused the notification.
 
 private:
@@ -96,7 +96,7 @@ public:
 
 
 class Net_API TimeoutNotification: public SocketNotification
-	/// This notification is sent if no other event has occured
+	/// This notification is sent if no other event has occurred
 	/// for a specified time.
 {
 public:
@@ -137,13 +137,13 @@ public:
 //
 // inlines
 //
-inline SocketReactor& SocketNotification::source()
+inline SocketReactor& SocketNotification::source() const
 {
 	return *_pReactor;
 }
 
 	
-inline Socket& SocketNotification::socket()
+inline Socket SocketNotification::socket() const
 {
 	return _socket;
 }
