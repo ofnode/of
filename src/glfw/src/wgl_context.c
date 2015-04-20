@@ -57,6 +57,7 @@ static void initWGLExtensions(_GLFWwindow* window)
     window->wgl.ARB_create_context_robustness = GL_FALSE;
     window->wgl.EXT_swap_control = GL_FALSE;
     window->wgl.ARB_pixel_format = GL_FALSE;
+    window->wgl.ARB_context_flush_control = GL_FALSE;
 
     window->wgl.GetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)
         wglGetProcAddress("wglGetExtensionsStringEXT");
@@ -119,6 +120,9 @@ static void initWGLExtensions(_GLFWwindow* window)
         if (window->wgl.GetPixelFormatAttribivARB)
             window->wgl.ARB_pixel_format = GL_TRUE;
     }
+
+    if (_glfwPlatformExtensionSupported("WGL_ARB_context_flush_control"))
+        window->wgl.ARB_context_flush_control = GL_TRUE;
 }
 
 // Returns the specified attribute of the specified pixel format
@@ -181,8 +185,7 @@ static GLboolean choosePixelFormat(_GLFWwindow* window,
         {
             // Get pixel format attributes through WGL_ARB_pixel_format
             if (!getPixelFormatAttrib(window, n, WGL_SUPPORT_OPENGL_ARB) ||
-                !getPixelFormatAttrib(window, n, WGL_DRAW_TO_WINDOW_ARB) ||
-                !getPixelFormatAttrib(window, n, WGL_DOUBLE_BUFFER_ARB))
+                !getPixelFormatAttrib(window, n, WGL_DRAW_TO_WINDOW_ARB))
             {
                 continue;
             }
@@ -213,13 +216,20 @@ static GLboolean choosePixelFormat(_GLFWwindow* window,
             u->accumAlphaBits = getPixelFormatAttrib(window, n, WGL_ACCUM_ALPHA_BITS_ARB);
 
             u->auxBuffers = getPixelFormatAttrib(window, n, WGL_AUX_BUFFERS_ARB);
-            u->stereo = getPixelFormatAttrib(window, n, WGL_STEREO_ARB);
+
+            if (getPixelFormatAttrib(window, n, WGL_STEREO_ARB))
+                u->stereo = GL_TRUE;
+            if (getPixelFormatAttrib(window, n, WGL_DOUBLE_BUFFER_ARB))
+                u->doublebuffer = GL_TRUE;
 
             if (window->wgl.ARB_multisample)
                 u->samples = getPixelFormatAttrib(window, n, WGL_SAMPLES_ARB);
 
             if (window->wgl.ARB_framebuffer_sRGB)
-                u->sRGB = getPixelFormatAttrib(window, n, WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB);
+            {
+                if (getPixelFormatAttrib(window, n, WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB))
+                    u->sRGB = GL_TRUE;
+            }
         }
         else
         {
@@ -236,8 +246,7 @@ static GLboolean choosePixelFormat(_GLFWwindow* window,
             }
 
             if (!(pfd.dwFlags & PFD_DRAW_TO_WINDOW) ||
-                !(pfd.dwFlags & PFD_SUPPORT_OPENGL) ||
-                !(pfd.dwFlags & PFD_DOUBLEBUFFER))
+                !(pfd.dwFlags & PFD_SUPPORT_OPENGL))
             {
                 continue;
             }
@@ -265,7 +274,11 @@ static GLboolean choosePixelFormat(_GLFWwindow* window,
             u->accumAlphaBits = pfd.cAccumAlphaBits;
 
             u->auxBuffers = pfd.cAuxBuffers;
-            u->stereo = (pfd.dwFlags & PFD_STEREO) ? GL_TRUE : GL_FALSE;
+
+            if (pfd.dwFlags & PFD_STEREO)
+                u->stereo = GL_TRUE;
+            if (pfd.dwFlags & PFD_DOUBLEBUFFER)
+                u->doublebuffer = GL_TRUE;
         }
 
         u->wgl = n;
@@ -336,7 +349,7 @@ void _glfwTerminateContextAPI(void)
     assert((size_t) index < sizeof(attribs) / sizeof(attribs[0])); \
 }
 
-// Prepare for creation of the OpenGL context
+// Create the OpenGL or OpenGL ES context
 //
 int _glfwCreateContext(_GLFWwindow* window,
                        const _GLFWctxconfig* ctxconfig,
@@ -412,8 +425,29 @@ int _glfwCreateContext(_GLFWwindow* window,
             }
         }
 
+        if (ctxconfig->release)
+        {
+            if (window->wgl.ARB_context_flush_control)
+            {
+                if (ctxconfig->release == GLFW_RELEASE_BEHAVIOR_NONE)
+                {
+                    setWGLattrib(WGL_CONTEXT_RELEASE_BEHAVIOR_ARB,
+                                 WGL_CONTEXT_RELEASE_BEHAVIOR_NONE_ARB);
+                }
+                else if (ctxconfig->release == GLFW_RELEASE_BEHAVIOR_FLUSH)
+                {
+                    setWGLattrib(WGL_CONTEXT_RELEASE_BEHAVIOR_ARB,
+                                 WGL_CONTEXT_RELEASE_BEHAVIOR_FLUSH_ARB);
+                }
+            }
+        }
+
         if (ctxconfig->major != 1 || ctxconfig->minor != 0)
         {
+            // NOTE: Only request an explicitly versioned context when
+            //       necessary, as explicitly requesting version 1.0 does not
+            //       always return the highest available version
+
             setWGLattrib(WGL_CONTEXT_MAJOR_VERSION_ARB, ctxconfig->major);
             setWGLattrib(WGL_CONTEXT_MINOR_VERSION_ARB, ctxconfig->minor);
         }
@@ -522,6 +556,12 @@ int _glfwAnalyzeContext(const _GLFWwindow* window,
 
             required = GL_TRUE;
         }
+
+        if (ctxconfig->release)
+        {
+            if (window->wgl.ARB_context_flush_control)
+                required = GL_TRUE;
+        }
     }
     else
     {
@@ -556,6 +596,18 @@ int _glfwAnalyzeContext(const _GLFWwindow* window,
         // FSAA is not a hard constraint, so otherwise we just don't care
 
         if (window->wgl.ARB_multisample && window->wgl.ARB_pixel_format)
+        {
+            // We appear to have both the extension and the means to ask for it
+            required = GL_TRUE;
+        }
+    }
+
+    if (fbconfig->sRGB)
+    {
+        // We want sRGB, but can we get it?
+        // sRGB is not a hard constraint, so otherwise we just don't care
+
+        if (window->wgl.ARB_framebuffer_sRGB && window->wgl.ARB_pixel_format)
         {
             // We appear to have both the extension and the means to ask for it
             required = GL_TRUE;

@@ -64,7 +64,7 @@
 //****                KeySym to Unicode mapping table                 ****
 //************************************************************************
 
-static struct codepair {
+static const struct codepair {
   unsigned short keysym;
   unsigned short ucs;
 } keysymtab[] = {
@@ -852,9 +852,9 @@ static struct codepair {
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-// Convert X11 KeySym to Unicode
+// Convert XKB KeySym to Unicode
 //
-long _glfwKeySym2Unicode(KeySym keysym)
+long _glfwKeySym2Unicode(unsigned int keysym)
 {
     int min = 0;
     int max = sizeof(keysymtab) / sizeof(struct codepair) - 1;
@@ -886,3 +886,4 @@ long _glfwKeySym2Unicode(KeySym keysym)
     // No matching Unicode value found
     return -1;
 }
+

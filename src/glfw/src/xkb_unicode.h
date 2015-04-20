@@ -1,8 +1,7 @@
 //========================================================================
-// GLFW 3.1 - www.glfw.org
+// GLFW 3.1 Linux - www.glfw.org
 //------------------------------------------------------------------------
-// Copyright (c) 2002-2006 Marcus Geelnard
-// Copyright (c) 2006-2010 Camilla Berglund <elmindreda@elmindreda.org>
+// Copyright (c) 2014 Jonas Ådahl <jadahl@gmail.com>
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -25,22 +24,10 @@
 //
 //========================================================================
 
-#include "internal.h"
+#ifndef _xkb_unicode_h_
+#define _xkb_unicode_h_
 
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
-//////////////////////////////////////////////////////////////////////////
+long _glfwKeySym2Unicode(unsigned int keysym);
 
-GLFWAPI double glfwGetTime(void)
-{
-    _GLFW_REQUIRE_INIT_OR_RETURN(0.0);
-    return _glfwPlatformGetTime();
-}
-
-GLFWAPI void glfwSetTime(double time)
-{
-    _GLFW_REQUIRE_INIT();
-    _glfwPlatformSetTime(time);
-}
-
+#endif // _xkb_unicode_h_

@@ -45,6 +45,16 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+    {
+        int xpos, ypos;
+        glfwGetWindowPos(window, &xpos, &ypos);
+        glfwSetWindowPos(window, xpos, ypos);
+    }
+}
+
 int main(void)
 {
     int i;
@@ -69,6 +79,8 @@ int main(void)
             exit(EXIT_FAILURE);
         }
 
+        glfwSetKeyCallback(windows[i], key_callback);
+
         glfwMakeContextCurrent(windows[i]);
         glClearColor((GLclampf) (i & 1),
                      (GLclampf) (i >> 1),
@@ -79,8 +91,10 @@ int main(void)
         glfwSetWindowPos(windows[i],
                          100 + (i & 1) * (200 + left + right),
                          100 + (i >> 1) * (200 + top + bottom));
-        glfwShowWindow(windows[i]);
     }
+
+    for (i = 0;  i < 4;  i++)
+        glfwShowWindow(windows[i]);
 
     while (running)
     {

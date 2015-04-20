@@ -35,9 +35,9 @@
 
 // Parses the client API version string and extracts the version number
 //
-static GLboolean parseGLVersion(int* api, int* major, int* minor, int* rev)
+static GLboolean parseVersionString(int* api, int* major, int* minor, int* rev)
 {
-    int i, _api = GLFW_OPENGL_API, _major, _minor = 0, _rev = 0;
+    int i;
     const char* version;
     const char* prefixes[] =
     {
@@ -46,6 +46,8 @@ static GLboolean parseGLVersion(int* api, int* major, int* minor, int* rev)
         "OpenGL ES ",
         NULL
     };
+
+    *api = GLFW_OPENGL_API;
 
     version = (const char*) glGetString(GL_VERSION);
     if (!version)
@@ -62,22 +64,17 @@ static GLboolean parseGLVersion(int* api, int* major, int* minor, int* rev)
         if (strncmp(version, prefixes[i], length) == 0)
         {
             version += length;
-            _api = GLFW_OPENGL_ES_API;
+            *api = GLFW_OPENGL_ES_API;
             break;
         }
     }
 
-    if (!sscanf(version, "%d.%d.%d", &_major, &_minor, &_rev))
+    if (!sscanf(version, "%d.%d.%d", major, minor, rev))
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
                         "No version found in context version string");
         return GL_FALSE;
     }
-
-    *api = _api;
-    *major = _major;
-    *minor = _minor;
-    *rev = _rev;
 
     return GL_TRUE;
 }
@@ -198,6 +195,17 @@ GLboolean _glfwIsValidContextConfig(const _GLFWctxconfig* ctxconfig)
         }
     }
 
+    if (ctxconfig->release)
+    {
+        if (ctxconfig->release != GLFW_RELEASE_BEHAVIOR_NONE &&
+            ctxconfig->release != GLFW_RELEASE_BEHAVIOR_FLUSH)
+        {
+            _glfwInputError(GLFW_INVALID_VALUE,
+                            "Invalid context release behavior requested");
+            return GL_FALSE;
+        }
+    }
+
     return GL_TRUE;
 }
 
@@ -222,6 +230,12 @@ const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
             continue;
         }
 
+        if (desired->doublebuffer != current->doublebuffer)
+        {
+            // Double buffering is a hard constraint
+            continue;
+        }
+
         // Count number of missing buffers
         {
             missing = 0;
@@ -235,8 +249,11 @@ const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
             if (desired->stencilBits > 0 && current->stencilBits == 0)
                 missing++;
 
-            if (desired->auxBuffers > 0 && current->auxBuffers < desired->auxBuffers)
+            if (desired->auxBuffers > 0 &&
+                current->auxBuffers < desired->auxBuffers)
+            {
                 missing += desired->auxBuffers - current->auxBuffers;
+            }
 
             if (desired->samples > 0 && current->samples == 0)
             {
@@ -254,19 +271,19 @@ const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
         {
             colorDiff = 0;
 
-            if (desired->redBits > 0)
+            if (desired->redBits != GLFW_DONT_CARE)
             {
                 colorDiff += (desired->redBits - current->redBits) *
                              (desired->redBits - current->redBits);
             }
 
-            if (desired->greenBits > 0)
+            if (desired->greenBits != GLFW_DONT_CARE)
             {
                 colorDiff += (desired->greenBits - current->greenBits) *
                              (desired->greenBits - current->greenBits);
             }
 
-            if (desired->blueBits > 0)
+            if (desired->blueBits != GLFW_DONT_CARE)
             {
                 colorDiff += (desired->blueBits - current->blueBits) *
                              (desired->blueBits - current->blueBits);
@@ -277,59 +294,56 @@ const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
         {
             extraDiff = 0;
 
-            if (desired->alphaBits > 0)
+            if (desired->alphaBits != GLFW_DONT_CARE)
             {
                 extraDiff += (desired->alphaBits - current->alphaBits) *
                              (desired->alphaBits - current->alphaBits);
             }
 
-            if (desired->depthBits > 0)
+            if (desired->depthBits != GLFW_DONT_CARE)
             {
                 extraDiff += (desired->depthBits - current->depthBits) *
                              (desired->depthBits - current->depthBits);
             }
 
-            if (desired->stencilBits > 0)
+            if (desired->stencilBits != GLFW_DONT_CARE)
             {
                 extraDiff += (desired->stencilBits - current->stencilBits) *
                              (desired->stencilBits - current->stencilBits);
             }
 
-            if (desired->accumRedBits > 0)
+            if (desired->accumRedBits != GLFW_DONT_CARE)
             {
                 extraDiff += (desired->accumRedBits - current->accumRedBits) *
                              (desired->accumRedBits - current->accumRedBits);
             }
 
-            if (desired->accumGreenBits > 0)
+            if (desired->accumGreenBits != GLFW_DONT_CARE)
             {
                 extraDiff += (desired->accumGreenBits - current->accumGreenBits) *
                              (desired->accumGreenBits - current->accumGreenBits);
             }
 
-            if (desired->accumBlueBits > 0)
+            if (desired->accumBlueBits != GLFW_DONT_CARE)
             {
                 extraDiff += (desired->accumBlueBits - current->accumBlueBits) *
                              (desired->accumBlueBits - current->accumBlueBits);
             }
 
-            if (desired->accumAlphaBits > 0)
+            if (desired->accumAlphaBits != GLFW_DONT_CARE)
             {
                 extraDiff += (desired->accumAlphaBits - current->accumAlphaBits) *
                              (desired->accumAlphaBits - current->accumAlphaBits);
             }
 
-            if (desired->samples > 0)
+            if (desired->samples != GLFW_DONT_CARE)
             {
                 extraDiff += (desired->samples - current->samples) *
                              (desired->samples - current->samples);
             }
 
-            if (desired->sRGB)
-            {
-                if (!current->sRGB)
-                    extraDiff++;
-            }
+            if (desired->sRGB && !current->sRGB)
+                extraDiff++;
         }
 
         // Figure out if the current one is better than the best one found so far
@@ -362,10 +376,10 @@ GLboolean _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig)
 {
     _GLFWwindow* window = _glfwPlatformGetCurrentContext();
 
-    if (!parseGLVersion(&window->context.api,
-                        &window->context.major,
-                        &window->context.minor,
-                        &window->context.revision))
+    if (!parseVersionString(&window->context.api,
+                            &window->context.major,
+                            &window->context.minor,
+                            &window->context.revision))
     {
         return GL_FALSE;
     }
@@ -461,6 +475,17 @@ GLboolean _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig)
             else if (strategy == GL_NO_RESET_NOTIFICATION_ARB)
                 window->context.robustness = GLFW_NO_RESET_NOTIFICATION;
         }
+    }
+
+    if (glfwExtensionSupported("GL_KHR_context_flush_control"))
+    {
+        GLint behavior;
+        glGetIntegerv(GL_CONTEXT_RELEASE_BEHAVIOR, &behavior);
+
+        if (behavior == GL_NONE)
+            window->context.release = GLFW_RELEASE_BEHAVIOR_NONE;
+        else if (behavior == GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH)
+            window->context.release = GLFW_RELEASE_BEHAVIOR_FLUSH;
     }
 #endif // _GLFW_USE_OPENGL
 
@@ -563,7 +588,6 @@ GLFWAPI void glfwSwapInterval(int interval)
 
 GLFWAPI int glfwExtensionSupported(const char* extension)
 {
-    const GLubyte* extensions;
     _GLFWwindow* window;
 
     _GLFW_REQUIRE_INIT_OR_RETURN(GL_FALSE);
@@ -575,29 +599,14 @@ GLFWAPI int glfwExtensionSupported(const char* extension)
         return GL_FALSE;
     }
 
-    if (!extension || *extension == '\0')
+    if (*extension == '\0')
     {
         _glfwInputError(GLFW_INVALID_VALUE, NULL);
         return GL_FALSE;
     }
 
-    if (window->context.major < 3)
-    {
-        // Check if extension is in the old style OpenGL extensions string
-
-        extensions = glGetString(GL_EXTENSIONS);
-        if (!extensions)
-        {
-            _glfwInputError(GLFW_PLATFORM_ERROR,
-                            "Failed to retrieve extension string");
-            return GL_FALSE;
-        }
-
-        if (_glfwStringInExtensionString(extension, extensions))
-            return GL_TRUE;
-    }
 #if defined(_GLFW_USE_OPENGL)
-    else
+    if (window->context.major >= 3)
     {
         int i;
         GLint count;
@@ -620,7 +629,22 @@ GLFWAPI int glfwExtensionSupported(const char* extension)
                 return GL_TRUE;
         }
     }
+    else
 #endif // _GLFW_USE_OPENGL
+    {
+        // Check if extension is in the old style OpenGL extensions string
+
+        const GLubyte* extensions = glGetString(GL_EXTENSIONS);
+        if (!extensions)
+        {
+            _glfwInputError(GLFW_PLATFORM_ERROR,
+                            "Failed to retrieve extension string");
+            return GL_FALSE;
+        }
+
+        if (_glfwStringInExtensionString(extension, extensions))
+            return GL_TRUE;
+    }
 
     // Check if extension is in the platform-specific string
     return _glfwPlatformExtensionSupported(extension);
