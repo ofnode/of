@@ -11,6 +11,7 @@ xorg-server        \
 xorg-server-devel  \
 xorg-server-utils  \
 xorg-server-common \
+libxinerama        \
 libxcursor         \
 libxrandr          \
 libxi              \

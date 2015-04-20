@@ -29,7 +29,7 @@ setup freeimage 62b55b2 https://github.com/ofnode/freeimage
 setup glew fef9d94 https://github.com/ofnode/glew
 
 # v 3.1.0 master
-setup glfw f21c4e1 https://github.com/ofnode/glfw
+setup glfw 2a50139 https://github.com/ofnode/glfw
 
 # v 1.7.0 master
 setup poco 1b70142 https://github.com/pocoproject/poco

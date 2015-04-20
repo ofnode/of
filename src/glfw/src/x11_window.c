@@ -899,7 +899,9 @@ static void processEvent(XEvent *event)
         {
             const int key = translateKey(event->xkey.keycode);
             const int mods = translateState(event->xkey.state);
-            const int character = translateChar(&event->xkey);
+            KeySym keysym;
+            XLookupString(&event->xkey, NULL, 0, &keysym, NULL);
+            const int character = _glfwKeySym2Unicode(keysym);
             const int plain = !(mods & (GLFW_MOD_CONTROL | GLFW_MOD_ALT));
 
             if (event->xkey.keycode)
@@ -946,6 +948,9 @@ static void processEvent(XEvent *event)
         {
             const int key = translateKey(event->xkey.keycode);
             const int mods = translateState(event->xkey.state);
+            KeySym keysym;
+            XLookupString(&event->xkey, NULL, 0, &keysym, NULL);
+            const int character = _glfwKeySym2Unicode(keysym);
 
             if (!_glfw.x11.xkb.detectable)
             {

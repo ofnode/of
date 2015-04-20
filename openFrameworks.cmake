@@ -154,6 +154,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${X11_Xrandr_LIB}
         ${X11_Xcursor_LIB}
         ${X11_Xxf86vm_LIB}
+        ${X11_Xinerama_LIB}
         ${UDEV_LIBRARIES}
         ${GTK3_LIBRARIES}
         ${GLIB_LIBRARIES}
