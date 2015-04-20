@@ -91,48 +91,50 @@
  endif(WIN32)
  
  #===============================================================================
-@@ -197,36 +190,4 @@
- #           sources:        a list of files to add to ${out}
- #    Example: POCO_SOURCES_PLAT( SRCS Foundation ON src/Foundation.cpp )
- macro(POCO_GENERATE_PACKAGE target_name export_name package_destination)
+@@ -193,38 +193,6 @@
+ #           target_name             the name of the target. e.g. Foundation for PocoFoundation
+ #    Example: POCO_GENERATE_PACKAGE(Foundation)
+ macro(POCO_GENERATE_PACKAGE target_name)
 -include(CMakePackageConfigHelpers)
 -write_basic_package_version_file(
--  "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}ConfigVersion.cmake"
+-  "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}ConfigVersion.cmake"
 -  VERSION ${PROJECT_VERSION}
 -  COMPATIBILITY AnyNewerVersion
 -)
--export(EXPORT "${export_name}"
--  FILE "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}Targets.cmake"
--  NAMESPACE "Poco::"
+-export(EXPORT "${target_name}Targets"
+-  FILE "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}Targets.cmake"
+-  NAMESPACE "${PROJECT_NAME}::"
 -)
--configure_file(cmake/Poco${target_name}Config.cmake
--  "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}Config.cmake"
+-configure_file("cmake/Poco${target_name}Config.cmake"
+-  "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}Config.cmake"
 -  @ONLY
 -)
 -
--set(ConfigPackageLocation "${package_destination}")
+-set(ConfigPackageLocation "lib/cmake/${PROJECT_NAME}")
 -
 -install(
--    EXPORT "${export_name}"
--    FILE "Poco${target_name}Targets.cmake"
--    NAMESPACE "Poco::"
--    DESTINATION ${package_destination}
+-    EXPORT "${target_name}Targets"
+-    FILE "${PROJECT_NAME}${target_name}Targets.cmake"
+-    NAMESPACE "${PROJECT_NAME}::"
+-    DESTINATION "lib/cmake/${PROJECT_NAME}"
 -    )
 -
 -install(
 -    FILES
--        "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}Config.cmake"
--        "${CMAKE_CURRENT_BINARY_DIR}/Poco${target_name}ConfigVersion.cmake"
--    DESTINATION ${package_destination}
+-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}Config.cmake"
+-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}ConfigVersion.cmake"
+-    DESTINATION "lib/cmake/${PROJECT_NAME}"
 -    COMPONENT Devel
 -    )
 -
  endmacro()
+ 
+ #===============================================================================
 --- a/poco/Foundation/CMakeLists.txt
 +++ b/poco/Foundation/CMakeLists.txt
-@@ -34,9 +34,6 @@
-     include/Poco/EventLogChannel.h
-     )
+@@ -32,9 +32,6 @@
+ 	)
+ endif()
  
 -# Messages
 -POCO_MESSAGES( SRCS Logging src/pocomsg.mc)
@@ -140,10 +142,10 @@
  # If POCO_UNBUNDLED is enabled we try to find the required packages
  # The configuration will fail if the packages are not found
  if (POCO_UNBUNDLED)
-@@ -101,6 +98,17 @@
+@@ -99,6 +99,17 @@
  
  if(WIN32)
-     set(SYSLIBS ${SYSLIBS} iphlpapi)
+ 	set(SYSLIBS ${SYSLIBS} iphlpapi)
 +    add_definitions(
 +      -DPOCO_CTG_FATAL=0x00000001L
 +      -DPOCO_CTG_CRITICAL=0x00000002L
@@ -157,25 +159,18 @@
 +    )
  endif(WIN32)
  if (${CMAKE_CXX_COMPILER_ID} MATCHES "SunPro")
-     set_target_properties( "${LIBNAME}" PROPERTIES LINK_FLAGS "-library=stlport4")
+ 	set_target_properties( "${LIBNAME}" PROPERTIES LINK_FLAGS "-library=stlport4")
 --- a/poco/CMakeLists.txt
 +++ b/poco/CMakeLists.txt
-@@ -8,12 +8,12 @@
+@@ -8,7 +8,7 @@
  
  project(Poco)
  
 -cmake_minimum_required(VERSION 3.0.0)
 +cmake_minimum_required(VERSION 2.8)
  
--file(STRINGS "${CMAKE_SOURCE_DIR}/libversion" SHARED_LIBRARY_VERSION)
-+file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/libversion" SHARED_LIBRARY_VERSION)
+ file(STRINGS "${PROJECT_SOURCE_DIR}/libversion" SHARED_LIBRARY_VERSION)
  
- # Read the version information from the VERSION file
--file (STRINGS "${CMAKE_SOURCE_DIR}/VERSION" PACKAGE_VERSION )
-+file (STRINGS "${CMAKE_CURRENT_LIST_DIR}/VERSION" PACKAGE_VERSION )
- message(STATUS "Poco package version: ${PACKAGE_VERSION}")
- string(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION})
- string(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" CPACK_PACKAGE_VERSION_MINOR ${PACKAGE_VERSION})
 @@ -23,12 +23,6 @@
  set(RELEASE_NAME "Unstable-trunk")
  set(PROJECT_VERSION ${COMPLETE_VERSION})
@@ -189,7 +184,7 @@
  # Windows DLLs are "runtime" for CMake. Output them to "bin" like the Visual Studio projects do.
  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
  
-@@ -61,9 +55,6 @@
+@@ -63,9 +63,6 @@
  #    * RelWithDebInfo (CMAKE_C_FLAGS_RELWITHDEBINFO or CMAKE_CXX_FLAGS_RELWITHDEBINFO
  #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL)
  
@@ -199,17 +194,7 @@
  # Include some common macros to simpilfy the Poco CMake files
  include(PocoMacros)
  
-@@ -71,34 +62,34 @@
- option(ENABLE_XML "Enable the XML" ON)
- option(ENABLE_JSON "Enable the JSON" ON)
- option(ENABLE_MONGODB "Enable MongoDB" ON)
--option(ENABLE_PDF "Enable PDF" ON)
-+option(ENABLE_PDF "Enable PDF" OFF)
- option(ENABLE_UTIL "Enable Util" ON)
- option(ENABLE_NET "Enable Net" ON)
- option(ENABLE_NETSSL "Enable NetSSL" ON)
--option(ENABLE_NETSSL_WIN "Enable NetSSL Windows" ON)
-+option(ENABLE_NETSSL_WIN "Enable NetSSL Windows" OFF)
+@@ -81,30 +81,30 @@
  option(ENABLE_CRYPTO "Enable Crypto" ON)
  option(ENABLE_DATA "Enable Data" ON)
  option(ENABLE_DATA_SQLITE "Enable Data SQlite" ON)
@@ -217,9 +202,15 @@
 -option(ENABLE_DATA_ODBC "Enable Data ODBC" ON)
 +option(ENABLE_DATA_MYSQL "Enable Data MySQL" OFF)
 +option(ENABLE_DATA_ODBC "Enable Data ODBC" OFF)
- option(ENABLE_SEVENZIP "Enable SevenZip" ON)
+ option(ENABLE_SEVENZIP "Enable SevenZip" OFF)
  option(ENABLE_ZIP "Enable Zip" ON)
- option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" ON)
+ option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
+ option(ENABLE_CPPPARSER "Enable C++ parser" OFF)
+ option(ENABLE_POCODOC "Enable Poco Documentation Generator" OFF)
+-option(ENABLE_PAGECOMPILER "Enable PageCompiler" ON)
+-option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" ON)
++option(ENABLE_PAGECOMPILER "Enable PageCompiler" OFF)
++option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" OFF)
  
 -option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
 +option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" ON)
@@ -241,7 +232,7 @@
      set( LIB_MODE STATIC )
      message(STATUS "Building static libraries")
  else(POCO_STATIC)
-@@ -106,6 +97,10 @@
+@@ -112,6 +112,10 @@
      message(STATUS "Building dynamic libraries")
  endif(POCO_STATIC)
  
@@ -252,14 +243,12 @@
  if (ENABLE_TESTS)
    include(CTest)
    enable_testing()
-@@ -146,9 +141,7 @@
+@@ -157,7 +157,7 @@
  
  if (CMAKE_COMPILER_IS_MINGW)
    add_definitions(-DWC_NO_BEST_FIT_CHARS=0x400  -DPOCO_WIN32_UTF8)
--  add_definitions(-mno-cygwin -D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
--  link_directories(/usr/local/lib /usr/lib)
--  include_directories(/usr/local/include /usr/include)
-+  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED )
+-  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE)
++  add_definitions(-D_WIN32 -DMINGW32 -DWINVER=0x500 -DODBCVER=0x0300 -DPOCO_THREAD_STACK_SIZE -DFoundation_Config_INCLUDED)
  endif (CMAKE_COMPILER_IS_MINGW)
  
  if (CYGWIN)

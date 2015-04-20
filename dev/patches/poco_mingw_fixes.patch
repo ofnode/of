@@ -29,28 +29,6 @@
  	}
  
  	schannelCred.grbitEnabledProtocols = proto();
---- a/poco/Foundation/src/Environment_WIN32.cpp
-+++ b/poco/Foundation/src/Environment_WIN32.cpp
-@@ -19,6 +19,8 @@
- #include <sstream>
- #include <cstring>
- #include "Poco/UnWindows.h"
-+#include <ws2tcpip.h>
-+#include <wincrypt.h>
- #include <iphlpapi.h>
- 
- 
---- a/poco/Foundation/src/Environment_WIN32U.cpp
-+++ b/poco/Foundation/src/Environment_WIN32U.cpp
-@@ -21,6 +21,8 @@
- #include <sstream>
- #include <cstring>
- #include "Poco/UnWindows.h"
-+#include <ws2tcpip.h>
-+#include <wincrypt.h>
- #include <iphlpapi.h>
- 
- 
 --- a/poco/Foundation/src/EventLogChannel.cpp
 +++ b/poco/Foundation/src/EventLogChannel.cpp
 @@ -17,7 +17,6 @@
@@ -60,14 +38,4 @@
 -#include "pocomsg.h"
  #if defined(POCO_WIN32_UTF8)
  #include "Poco/UnicodeConverter.h"
- #endif
---- a/poco/Net/src/NetworkInterface.cpp
-+++ b/poco/Net/src/NetworkInterface.cpp
-@@ -30,6 +30,7 @@
- 		#include "Poco/UnicodeConverter.h"
- 	#endif
- 	#include "Poco/Error.h"
-+	#include <wincrypt.h>
- 	#include <iphlpapi.h>
- 	#include <ipifcons.h>
  #endif
