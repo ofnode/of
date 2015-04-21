@@ -28,7 +28,7 @@ setup freeimage 62b55b2 https://github.com/ofnode/freeimage
 # v 1.11.0 release
 setup glew fef9d94 https://github.com/ofnode/glew
 
-# v 3.1.0 master
+# v 3.1.0 release
 setup glfw 2a50139 https://github.com/ofnode/glfw
 
 # v 1.7.0 master
