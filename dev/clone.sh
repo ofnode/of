@@ -17,16 +17,16 @@ function setup() {
 cd src
 
 # v 2.0 release
-setup assimp 7e2ead4 https://github.com/ofnode/assimp
+setup assimp a287f99 https://github.com/ofnode/assimp
 
 # v 2.8.1 release
-setup freeglut b3d5bc6 https://github.com/ofnode/freeglut
+setup freeglut 9f63860 https://github.com/ofnode/freeglut
 
 # v 3.16.0 release
-setup freeimage 62b55b2 https://github.com/ofnode/freeimage
+setup freeimage bc08d9b https://github.com/ofnode/freeimage
 
 # v 1.11.0 release
-setup glew fef9d94 https://github.com/ofnode/glew
+setup glew 77af46a https://github.com/ofnode/glew
 
 # v 3.1.0 release
 setup glfw 2a50139 https://github.com/ofnode/glfw
@@ -35,7 +35,7 @@ setup glfw 2a50139 https://github.com/ofnode/glfw
 setup poco 1b70142 https://github.com/pocoproject/poco
 
 # v 4.0.12 master
-setup rtaudio 02c1527 https://github.com/ofnode/rtaudio
+setup rtaudio a0261ea https://github.com/ofnode/rtaudio
 
 # v 0.9.0 master
 setup openFrameworks 1f5515b https://github.com/openframeworks/openFrameworks

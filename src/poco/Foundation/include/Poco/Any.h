@@ -46,8 +46,6 @@ template <class> class VarHolderImpl;
 	#error "Any SOO can only be enabled with C++11 support"
 #endif
 
-#define POCO_SMALL_OBJECT_SIZE 32
-
 template <typename PlaceholderT, unsigned int SizeV = POCO_SMALL_OBJECT_SIZE>
 union Placeholder
 	/// ValueHolder union (used by Poco::Any and Poco::Dynamic::Var for small

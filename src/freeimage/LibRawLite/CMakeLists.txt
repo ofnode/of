@@ -22,5 +22,8 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 add_library(rawlite STATIC ${HEADERS} ${SRCS})
 
 set_target_properties(rawlite PROPERTIES COMPILE_DEFINITIONS "NO_LCMS")
-set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-w -fPIC")
+
+if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
+    set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-g -fPIC")
+endif()
 

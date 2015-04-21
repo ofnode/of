@@ -59,5 +59,8 @@ set(SRCS bio.c
 add_library(openjpeg STATIC ${HEADERS} ${SRCS})
 
 set_target_properties(openjpeg PROPERTIES COMPILE_DEFINITIONS "OPJ_STATIC")
-set_target_properties(openjpeg PROPERTIES COMPILE_FLAGS "-w -fPIC")
+
+if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
+    set_target_properties(openjpeg PROPERTIES COMPILE_FLAGS "-g -fPIC")
+endif()
 

@@ -17,5 +17,7 @@ set(SRCS IexBaseExc.cpp
 # Declaration of the library
 add_library(iex STATIC ${HEADERS} ${SRCS})
 
-set_target_properties(iex PROPERTIES COMPILE_FLAGS "-w -fPIC")
+if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
+    set_target_properties(iex PROPERTIES COMPILE_FLAGS "-g -fPIC")
+endif()
 

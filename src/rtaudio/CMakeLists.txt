@@ -60,7 +60,10 @@ elseif(UNIX)
         set(ALSA_LIBRARY "-lasound -lpthread")
         INCLUDE_DIRECTORIES(${ALSA_INCLUDE_DIR})
         add_library(rtaudio STATIC ${SRCS} ${HEADERS})
-        set_target_properties(rtaudio PROPERTIES COMPILE_FLAGS -fPIC)
+
+        if(CMAKE_BUILD_TYPE STREQUAL Debug)
+            set_target_properties(rtaudio PROPERTIES COMPILE_FLAGS "-g -fPIC")
+        endif()
         
         if(JACK_FOUND)
             target_link_libraries(rtaudio ${ALSA_LIBRARY} ${JACK_LIBRARIES})

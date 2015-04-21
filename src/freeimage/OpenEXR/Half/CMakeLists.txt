@@ -20,7 +20,9 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 # Declaration of the library
 add_library(half STATIC ${HEADERS} ${SRCS})
 
-set_target_properties(half PROPERTIES COMPILE_FLAGS "-w -fPIC")
+if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
+    set_target_properties(half PROPERTIES COMPILE_FLAGS "-g -fPIC")
+endif()
 
 target_link_libraries(half ${ZLIB_LIBRARIES})
 

@@ -66,5 +66,7 @@ set(SRCS jaricom.c
 # Declaration of the library
 add_library(jpeg STATIC ${HEADERS} ${SRCS})
 
-set_target_properties(jpeg PROPERTIES COMPILE_FLAGS "-w -fPIC")
+if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
+    set_target_properties(jpeg PROPERTIES COMPILE_FLAGS "-g -fPIC")
+endif()
 

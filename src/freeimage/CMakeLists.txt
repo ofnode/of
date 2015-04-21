@@ -8,6 +8,7 @@ find_package(ZLIB REQUIRED)
 add_subdirectory(LibJPEG)
 add_subdirectory(LibOpenJPEG)
 add_subdirectory(LibPNG)
+add_subdirectory(LibRawLite)
 add_subdirectory(LibTIFF4)
 add_subdirectory(LibWebP)
 add_subdirectory(OpenEXR/Half)
@@ -82,6 +83,7 @@ set(SRCS FreeImage/BitmapAccess.cpp
          FreeImage/PluginPNM.cpp
          FreeImage/PluginPSD.cpp
          FreeImage/PluginRAS.cpp
+         FreeImage/PluginRAW.cpp
          FreeImage/PluginSGI.cpp
          FreeImage/PluginTARGA.cpp
          FreeImage/PluginTIFF.cpp
@@ -136,12 +138,14 @@ add_library(freeimage STATIC ${HEADERS} ${SRCS})
 add_definitions(-DOPJ_STATIC -DFREEIMAGE_LIB -DNO_LCMS -DDISABLE_PERF_MEASUREMENT)
 
 if(UNIX AND NOT APPLE)
-add_definitions(-D__ANSI__)
+    add_definitions(-D__ANSI__)
 elseif(WIN32)
-add_definitions(-DWINVER=0x0500)
+    add_definitions(-DWINVER=0x0500)
 endif()
 
 target_link_libraries(freeimage)
 
-set_target_properties(freeimage PROPERTIES COMPILE_FLAGS "-w -fPIC")
+if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
+    set_target_properties(freeimage PROPERTIES COMPILE_FLAGS "-g -fPIC")
+endif()
 
