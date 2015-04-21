@@ -7,7 +7,6 @@ set(RELEASE_FLAGS "
 
 set(DEBUG_FLAGS "
     -Winline
-    -Wconversion
     -fno-omit-frame-pointer
     -fno-optimize-sibling-calls
 ")
