@@ -23,7 +23,7 @@
 // Define to enable Windows Unicode (UTF-8) support
 // NOTE: As of POCO C++ Libraries release 1.6.0, compiling POCO
 // without POCO_WIN32_UTF8 defined on Windows is deprecated.
-#define POCO_WIN32_UTF8
+// #define POCO_WIN32_UTF8
 
 
 // Define to enable C++11 support
@@ -90,7 +90,7 @@
 // !!! for std::aligned_storage.                           !!!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // 
-#define POCO_NO_SOO
+// #define POCO_NO_SOO
 
 
 // Small object size in bytes. When assigned to Any or Var,
