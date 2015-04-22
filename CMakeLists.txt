@@ -288,7 +288,6 @@ endif()
 list(APPEND DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
-    -DPOCO_ENABLE_CPP11
 )
 
 add_definitions(${DEFINITIONS})

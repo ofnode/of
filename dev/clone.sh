@@ -23,7 +23,7 @@ setup assimp a287f99 https://github.com/ofnode/assimp
 setup freeglut 9f63860 https://github.com/ofnode/freeglut
 
 # v 3.16.0 release
-setup freeimage 7ce1544 https://github.com/ofnode/freeimage
+setup freeimage 2b18017 https://github.com/ofnode/freeimage
 
 # v 1.11.0 release
 setup glew 77af46a https://github.com/ofnode/glew

@@ -135,7 +135,7 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 # Declaration of the library
 add_library(freeimage STATIC ${HEADERS} ${SRCS})
 
-add_definitions(-DOPJ_STATIC -DFREEIMAGE_LIB -DNO_LCMS -DDISABLE_PERF_MEASUREMENT)
+add_definitions(-DOPJ_STATIC -DFREEIMAGE_LIB -DNO_LCMS -DLIBRAW_NODLL -DDISABLE_PERF_MEASUREMENT)
 
 if(UNIX AND NOT APPLE)
     add_definitions(-D__ANSI__)

@@ -23,9 +23,6 @@ set(COMPLETE_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINO
 set(RELEASE_NAME "Unstable-trunk")
 set(PROJECT_VERSION ${COMPLETE_VERSION})
 
-# Windows DLLs are "runtime" for CMake. Output them to "bin" like the Visual Studio projects do.
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 # Append our module directory to CMake
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -95,17 +92,16 @@ option(POCO_UNBUNDLED
 
 # Uncomment from next two lines to force statitc or dynamic library, default is autodetection
 if(POCO_STATIC)
-    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS -DPOCO_ENABLE_CPP11 -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_GCC_DIAG )
+    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
     set( LIB_MODE STATIC )
     message(STATUS "Building static libraries")
+    if(CMAKE_SYSTEM MATCHES Linux)
+        add_definitions(-fPIC)
+    endif()
 else(POCO_STATIC)
     set( LIB_MODE SHARED )
     message(STATUS "Building dynamic libraries")
 endif(POCO_STATIC)
-
-if(POCO_STATIC AND CMAKE_SYSTEM MATCHES "Linux")
-    add_definitions( -fPIC )
-endif()
 
 if (ENABLE_TESTS)
   include(CTest)

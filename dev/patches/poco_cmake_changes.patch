@@ -1,3 +1,80 @@
+--- a/poco/CMakeLists.txt
++++ b/poco/CMakeLists.txt
+@@ -8,7 +8,7 @@
+ 
+ project(Poco)
+ 
+-cmake_minimum_required(VERSION 3.0.0)
++cmake_minimum_required(VERSION 2.8)
+ 
+ file(STRINGS "${PROJECT_SOURCE_DIR}/libversion" SHARED_LIBRARY_VERSION)
+ 
+@@ -23,15 +23,6 @@
+ set(RELEASE_NAME "Unstable-trunk")
+ set(PROJECT_VERSION ${COMPLETE_VERSION})
+ 
+-# Put the libaries and binaries that get built into directories at the
+-# top of the build tree rather than in hard-to-find leaf
+-# directories. This simplifies manual testing and the use of the build
+-# tree rather than installed Boost libraries.
+-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+-# Windows DLLs are "runtime" for CMake. Output them to "bin" like the Visual Studio projects do.
+-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+-
+ # Append our module directory to CMake
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+ 
+@@ -63,9 +54,6 @@
+ #    * RelWithDebInfo (CMAKE_C_FLAGS_RELWITHDEBINFO or CMAKE_CXX_FLAGS_RELWITHDEBINFO
+ #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL)
+ 
+-# For Debug build types, append a "d" to the library names.
+-set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Set debug library postfix" FORCE)
+-
+ # Include some common macros to simpilfy the Poco CMake files
+ include(PocoMacros)
+ 
+@@ -81,23 +69,23 @@
+ option(ENABLE_CRYPTO "Enable Crypto" ON)
+ option(ENABLE_DATA "Enable Data" ON)
+ option(ENABLE_DATA_SQLITE "Enable Data SQlite" ON)
+-option(ENABLE_DATA_MYSQL "Enable Data MySQL" ON)
+-option(ENABLE_DATA_ODBC "Enable Data ODBC" ON)
++option(ENABLE_DATA_MYSQL "Enable Data MySQL" OFF)
++option(ENABLE_DATA_ODBC "Enable Data ODBC" OFF)
+ option(ENABLE_SEVENZIP "Enable SevenZip" OFF)
+ option(ENABLE_ZIP "Enable Zip" ON)
+ option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
+ option(ENABLE_CPPPARSER "Enable C++ parser" OFF)
+ option(ENABLE_POCODOC "Enable Poco Documentation Generator" OFF)
+-option(ENABLE_PAGECOMPILER "Enable PageCompiler" ON)
+-option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" ON)
++option(ENABLE_PAGECOMPILER "Enable PageCompiler" OFF)
++option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" OFF)
+ 
+-option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
++option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" ON)
+ 
+ option(ENABLE_TESTS
+   "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
+ 
+ option(POCO_STATIC
+-  "Set to OFF|ON (default is OFF) to control build of POCO as STATIC library" OFF)
++  "Set to OFF|ON (default is ON) to control build of POCO as STATIC library" ON)
+ 
+ option(POCO_UNBUNDLED
+   "Set to OFF|ON (default is OFF) to control linking dependencies as external" OFF)
+@@ -107,6 +95,9 @@
+     add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
+     set( LIB_MODE STATIC )
+     message(STATUS "Building static libraries")
++    if(CMAKE_SYSTEM MATCHES Linux)
++        add_definitions(-fPIC)
++    endif()
+ else(POCO_STATIC)
+     set( LIB_MODE SHARED )
+     message(STATUS "Building dynamic libraries")
 --- a/poco/cmake/PocoMacros.cmake
 +++ b/poco/cmake/PocoMacros.cmake
 @@ -24,13 +24,6 @@
@@ -83,86 +160,3 @@
  endif(WIN32)
  if (${CMAKE_CXX_COMPILER_ID} MATCHES "SunPro")
  	set_target_properties( "${LIBNAME}" PROPERTIES LINK_FLAGS "-library=stlport4")
---- a/poco/CMakeLists.txt
-+++ b/poco/CMakeLists.txt
-@@ -8,7 +8,7 @@
- 
- project(Poco)
- 
--cmake_minimum_required(VERSION 3.0.0)
-+cmake_minimum_required(VERSION 2.8)
- 
- file(STRINGS "${PROJECT_SOURCE_DIR}/libversion" SHARED_LIBRARY_VERSION)
- 
-@@ -23,12 +23,6 @@
- set(RELEASE_NAME "Unstable-trunk")
- set(PROJECT_VERSION ${COMPLETE_VERSION})
- 
--# Put the libaries and binaries that get built into directories at the
--# top of the build tree rather than in hard-to-find leaf
--# directories. This simplifies manual testing and the use of the build
--# tree rather than installed Boost libraries.
--set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
--set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
- # Windows DLLs are "runtime" for CMake. Output them to "bin" like the Visual Studio projects do.
- set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
- 
-@@ -63,9 +63,6 @@
- #    * RelWithDebInfo (CMAKE_C_FLAGS_RELWITHDEBINFO or CMAKE_CXX_FLAGS_RELWITHDEBINFO
- #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL)
- 
--# For Debug build types, append a "d" to the library names.
--set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Set debug library postfix" FORCE)
--
- # Include some common macros to simpilfy the Poco CMake files
- include(PocoMacros)
- 
-@@ -81,30 +81,30 @@
- option(ENABLE_CRYPTO "Enable Crypto" ON)
- option(ENABLE_DATA "Enable Data" ON)
- option(ENABLE_DATA_SQLITE "Enable Data SQlite" ON)
--option(ENABLE_DATA_MYSQL "Enable Data MySQL" ON)
--option(ENABLE_DATA_ODBC "Enable Data ODBC" ON)
-+option(ENABLE_DATA_MYSQL "Enable Data MySQL" OFF)
-+option(ENABLE_DATA_ODBC "Enable Data ODBC" OFF)
- option(ENABLE_SEVENZIP "Enable SevenZip" OFF)
- option(ENABLE_ZIP "Enable Zip" ON)
- option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
- option(ENABLE_CPPPARSER "Enable C++ parser" OFF)
- option(ENABLE_POCODOC "Enable Poco Documentation Generator" OFF)
--option(ENABLE_PAGECOMPILER "Enable PageCompiler" ON)
--option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" ON)
-+option(ENABLE_PAGECOMPILER "Enable PageCompiler" OFF)
-+option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" OFF)
- 
--option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
-+option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" ON)
- 
- option(ENABLE_TESTS
-   "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
- 
- option(POCO_STATIC
--  "Set to OFF|ON (default is OFF) to control build of POCO as STATIC library" OFF)
-+  "Set to OFF|ON (default is ON) to control build of POCO as STATIC library" ON)
- 
- option(POCO_UNBUNDLED
-   "Set to OFF|ON (default is OFF) to control linking dependencies as external" OFF)
- 
- # Uncomment from next two lines to force statitc or dynamic library, default is autodetection
- if(POCO_STATIC)
--    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
-+    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS -DPOCO_ENABLE_CPP11 -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_GCC_DIAG )
-     set( LIB_MODE STATIC )
-     message(STATUS "Building static libraries")
- else(POCO_STATIC)
-@@ -112,6 +112,10 @@
-     message(STATUS "Building dynamic libraries")
- endif(POCO_STATIC)
- 
-+if(POCO_STATIC AND CMAKE_SYSTEM MATCHES "Linux")
-+    add_definitions( -fPIC )
-+endif()
-+
- if (ENABLE_TESTS)
-   include(CTest)
-   enable_testing()

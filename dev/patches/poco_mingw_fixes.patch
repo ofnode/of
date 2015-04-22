@@ -30,16 +30,50 @@
  #endif
 --- a/poco/Foundation/include/Poco/Config.h
 +++ b/poco/Foundation/include/Poco/Config.h
-@@ -23,7 +23,7 @@
+@@ -20,14 +20,30 @@
+ #define Foundation_Config_INCLUDED
+ 
+ 
++#ifdef GCC_DIAG_ON
++#undef GCC_DIAG_ON
++#endif
++
++#ifdef GCC_DIAG_OFF
++#undef GCC_DIAG_OFF
++#endif
++
++#define GCC_DIAG_ON(x)
++#define GCC_DIAG_OFF(x)
++
++
  // Define to enable Windows Unicode (UTF-8) support
  // NOTE: As of POCO C++ Libraries release 1.6.0, compiling POCO
  // without POCO_WIN32_UTF8 defined on Windows is deprecated.
--#define POCO_WIN32_UTF8
-+// #define POCO_WIN32_UTF8
++#ifndef POCO_WIN32_UTF8
+ #define POCO_WIN32_UTF8
++#endif
  
  
  // Define to enable C++11 support
-@@ -90,7 +90,7 @@
+-// #define POCO_ENABLE_CPP11
++#ifndef POCO_ENABLE_CPP11
++#define POCO_ENABLE_CPP11
++#endif
+ 
+ 
+ // Define to disable implicit linking
+@@ -43,7 +59,9 @@
+ 
+ 
+ // Define to disable FPEnvironment support
+-// #define POCO_NO_FPENVIRONMENT
++#ifndef POCO_NO_FPENVIRONMENT
++#define POCO_NO_FPENVIRONMENT
++#endif
+ 
+ 
+ // Define if std::wstring is not available
+@@ -90,7 +108,7 @@
  // !!! for std::aligned_storage.                           !!!
  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  // 
