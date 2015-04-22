@@ -38,7 +38,7 @@ setup poco 1b70142 https://github.com/pocoproject/poco
 setup rtaudio 4d0492e https://github.com/ofnode/rtaudio
 
 # v 0.9.0 master
-setup openFrameworks 1f5515b https://github.com/openframeworks/openFrameworks
+setup openFrameworks a2feaee https://github.com/openframeworks/openFrameworks
 
 rm -rf videoinput
 mkdir  videoinput
