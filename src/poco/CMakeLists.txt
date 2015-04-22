@@ -95,7 +95,7 @@ option(POCO_UNBUNDLED
 
 # Uncomment from next two lines to force statitc or dynamic library, default is autodetection
 if(POCO_STATIC)
-    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS -DPOCO_ENABLE_CPP11 -DPOCO_NO_FPENVIRONMENT )
+    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS -DPOCO_ENABLE_CPP11 -DPOCO_NO_FPENVIRONMENT -DPOCO_NO_GCC_DIAG )
     set( LIB_MODE STATIC )
     message(STATUS "Building static libraries")
 else(POCO_STATIC)
