@@ -1,5 +1,5 @@
 #include "ofMesh.h"
-#include "ofGraphics.h"
+#include "ofAppRunner.h"
 #include <map>
 
 //--------------------------------------------------------------
@@ -1267,6 +1267,17 @@ void ofMesh::mergeDuplicateVertices() {
         addNormals( newNormals );
     }
     
+}
+
+//----------------------------------------------------------
+ofMeshFace ofMesh::getFace(int faceId) const{
+	const vector<ofMeshFace> & faces = getUniqueFaces();
+	if(faces.size()>faceId){
+		return faces[faceId];
+	}else{
+		ofLogError() << "couldn't find face " << faceId;
+		return ofMeshFace();
+	}
 }
 
 //----------------------------------------------------------

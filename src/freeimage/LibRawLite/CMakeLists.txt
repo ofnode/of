@@ -21,6 +21,11 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 # Declaration of the library
 add_library(rawlite STATIC ${HEADERS} ${SRCS})
 
-set_target_properties(rawlite PROPERTIES COMPILE_DEFINITIONS "NO_LCMS")
-set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-w -fPIC")
+set_target_properties(rawlite PROPERTIES COMPILE_DEFINITIONS "LIBRAW_NODLL;NO_LCMS")
+
+if(UNIX)
+    add_definitions(-fPIC)
+endif()
+
+set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-w -Wno-c++11-narrowing")
 

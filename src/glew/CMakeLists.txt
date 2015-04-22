@@ -5,8 +5,6 @@ SET( SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src )
 SET( INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include )
 SET( RC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build )
 
-SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
-
 OPTION( glew-cmake_BUILD_SHARED "Build the shared glew library" OFF)
 OPTION( glew-cmake_BUILD_STATIC "Build the static glew library" ON)
 
@@ -43,6 +41,9 @@ IF ( glew-cmake_BUILD_STATIC )
 	SET_PROPERTY( TARGET libglew_static PROPERTY ARCHIVE_OUTPUT_NAME "glew" )
 	INSTALL( TARGETS libglew_static DESTINATION lib )
 	TARGET_LINK_LIBRARIES( libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES} )
+	IF ( UNIX )
+		ADD_DEFINITIONS( -fPIC )
+	ENDIF (  )
 ENDIF (  )
 
 IF ( glew-cmake_BUILD_SHARED )
@@ -62,24 +63,3 @@ ENDIF (  )
 FILE( GLOB PUBLIC_HEADERS "include/GL/*.h" )
 INSTALL( FILES ${PUBLIC_HEADERS} DESTINATION include/GL/ )
 
-IF( FALSE )
-	SET( GLEWINFO_SRCS ${SRC_DIR}/glewinfo.c )
-	SET( VISUALINFO_SRCS ${SRC_DIR}/visualinfo.c )
-	IF( MSVS )
-		LIST( APPEND GLEWINFO_SRCS ${RC_DIR}/glewinfo.rc )
-		LIST( APPEND VISUALINFO_SRCS ${RC_DIR}/visualinfo.rc )
-	ENDIF(  )
-
-	ADD_EXECUTABLE( glewinfo ${GLEWINFO_SRCS} )
-	ADD_EXECUTABLE( visualinfo ${VISUALINFO_SRCS} )
-
-	IF ( glew-cmake_BUILD_STATIC )
-		TARGET_LINK_LIBRARIES( glewinfo libglew_static )
-		TARGET_LINK_LIBRARIES( visualinfo libglew_static )
-	ELSE ( )
-		TARGET_LINK_LIBRARIES( glewinfo libglew_shared )
-		TARGET_LINK_LIBRARIES( visualinfo libglew_shared )
-	ENDIF (  )
-
-	INSTALL( TARGETS glewinfo visualinfo DESTINATION bin )
-ENDIF(  )

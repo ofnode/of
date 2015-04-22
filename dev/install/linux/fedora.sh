@@ -12,6 +12,7 @@ git                     \
 pkgconfig               \
 libstdc++-static        \
 xorg-x11-server-devel   \
+libXinerama-devel       \
 libXcursor-devel        \
 libXrandr-devel         \
 libXi-devel             \

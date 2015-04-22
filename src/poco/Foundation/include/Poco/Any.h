@@ -46,8 +46,6 @@ template <class> class VarHolderImpl;
 	#error "Any SOO can only be enabled with C++11 support"
 #endif
 
-#define POCO_SMALL_OBJECT_SIZE 32
-
 template <typename PlaceholderT, unsigned int SizeV = POCO_SMALL_OBJECT_SIZE>
 union Placeholder
 	/// ValueHolder union (used by Poco::Any and Poco::Dynamic::Var for small
@@ -205,7 +203,7 @@ public:
 	Any& swap(Any& other)
 		/// Swaps the content of the two Anys.
 		/// 
-		/// When small object optimizaton is enabled, swap only
+		/// When small object optimization is enabled, swap only
 		/// has no-throw guarantee when both (*this and other)
 		/// objects are allocated on the heap.
 	{
@@ -518,7 +516,7 @@ ValueType AnyCast(Any& operand)
 	/// Example Usage: 
 	///	 MyType tmp = AnyCast<MyType>(anAny).
 	/// Will throw a BadCastException if the cast fails.
-	/// Dont use an AnyCast in combination with references, i.e. MyType& tmp = ... or const MyType& tmp = ...
+	/// Do not use an AnyCast in combination with references, i.e. MyType& tmp = ... or const MyType& tmp = ...
 	/// Some compilers will accept this code although a copy is returned. Use the RefAnyCast in
 	/// these cases.
 {
@@ -537,7 +535,7 @@ ValueType AnyCast(const Any& operand)
 	/// Example Usage: 
 	///	 MyType tmp = AnyCast<MyType>(anAny).
 	/// Will throw a BadCastException if the cast fails.
-	/// Dont use an AnyCast in combination with references, i.e. MyType& tmp = ... or const MyType& = ...
+	/// Do not use an AnyCast in combination with references, i.e. MyType& tmp = ... or const MyType& = ...
 	/// Some compilers will accept this code although a copy is returned. Use the RefAnyCast in
 	/// these cases.
 {

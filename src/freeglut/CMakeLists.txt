@@ -87,3 +87,7 @@ elseif ( UNIX AND NOT APPLE )
     target_link_libraries ( freeglut ${OPENGL_LIBRARIES} ${X11_LIBRARIES} )
 endif ( )
 
+if ( UNIX )
+    add_definitions ( -fPIC )
+endif ( )
+

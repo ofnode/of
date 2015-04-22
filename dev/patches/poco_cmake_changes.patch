@@ -1,0 +1,162 @@
+--- a/poco/CMakeLists.txt
++++ b/poco/CMakeLists.txt
+@@ -8,7 +8,7 @@
+ 
+ project(Poco)
+ 
+-cmake_minimum_required(VERSION 3.0.0)
++cmake_minimum_required(VERSION 2.8)
+ 
+ file(STRINGS "${PROJECT_SOURCE_DIR}/libversion" SHARED_LIBRARY_VERSION)
+ 
+@@ -23,15 +23,6 @@
+ set(RELEASE_NAME "Unstable-trunk")
+ set(PROJECT_VERSION ${COMPLETE_VERSION})
+ 
+-# Put the libaries and binaries that get built into directories at the
+-# top of the build tree rather than in hard-to-find leaf
+-# directories. This simplifies manual testing and the use of the build
+-# tree rather than installed Boost libraries.
+-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+-# Windows DLLs are "runtime" for CMake. Output them to "bin" like the Visual Studio projects do.
+-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+-
+ # Append our module directory to CMake
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+ 
+@@ -63,9 +54,6 @@
+ #    * RelWithDebInfo (CMAKE_C_FLAGS_RELWITHDEBINFO or CMAKE_CXX_FLAGS_RELWITHDEBINFO
+ #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL)
+ 
+-# For Debug build types, append a "d" to the library names.
+-set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Set debug library postfix" FORCE)
+-
+ # Include some common macros to simpilfy the Poco CMake files
+ include(PocoMacros)
+ 
+@@ -81,23 +69,23 @@
+ option(ENABLE_CRYPTO "Enable Crypto" ON)
+ option(ENABLE_DATA "Enable Data" ON)
+ option(ENABLE_DATA_SQLITE "Enable Data SQlite" ON)
+-option(ENABLE_DATA_MYSQL "Enable Data MySQL" ON)
+-option(ENABLE_DATA_ODBC "Enable Data ODBC" ON)
++option(ENABLE_DATA_MYSQL "Enable Data MySQL" OFF)
++option(ENABLE_DATA_ODBC "Enable Data ODBC" OFF)
+ option(ENABLE_SEVENZIP "Enable SevenZip" OFF)
+ option(ENABLE_ZIP "Enable Zip" ON)
+ option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
+ option(ENABLE_CPPPARSER "Enable C++ parser" OFF)
+ option(ENABLE_POCODOC "Enable Poco Documentation Generator" OFF)
+-option(ENABLE_PAGECOMPILER "Enable PageCompiler" ON)
+-option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" ON)
++option(ENABLE_PAGECOMPILER "Enable PageCompiler" OFF)
++option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" OFF)
+ 
+-option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
++option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" ON)
+ 
+ option(ENABLE_TESTS
+   "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
+ 
+ option(POCO_STATIC
+-  "Set to OFF|ON (default is OFF) to control build of POCO as STATIC library" OFF)
++  "Set to OFF|ON (default is ON) to control build of POCO as STATIC library" ON)
+ 
+ option(POCO_UNBUNDLED
+   "Set to OFF|ON (default is OFF) to control linking dependencies as external" OFF)
+@@ -107,6 +95,9 @@
+     add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
+     set( LIB_MODE STATIC )
+     message(STATUS "Building static libraries")
++    if( UNIX )
++        add_definitions( -fPIC )
++    endif()
+ else(POCO_STATIC)
+     set( LIB_MODE SHARED )
+     message(STATUS "Building dynamic libraries")
+--- a/poco/cmake/PocoMacros.cmake
++++ b/poco/cmake/PocoMacros.cmake
+@@ -24,13 +24,6 @@
+       set(kit_bindir "${kit_dir}/bin/x86")
+     endif (X64)
+   endif ()
+-  find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" "${kit_bindir}"
+-    DOC "path to message compiler")
+-  if (NOT CMAKE_MC_COMPILER)
+-    message(FATAL_ERROR "message compiler not found: required to build")
+-  endif (NOT CMAKE_MC_COMPILER)
+-  message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
+-  mark_as_advanced(CMAKE_MC_COMPILER)
+ endif(WIN32)
+ 
+ #===============================================================================
+@@ -193,38 +193,6 @@
+ #           target_name             the name of the target. e.g. Foundation for PocoFoundation
+ #    Example: POCO_GENERATE_PACKAGE(Foundation)
+ macro(POCO_GENERATE_PACKAGE target_name)
+-include(CMakePackageConfigHelpers)
+-write_basic_package_version_file(
+-  "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}ConfigVersion.cmake"
+-  VERSION ${PROJECT_VERSION}
+-  COMPATIBILITY AnyNewerVersion
+-)
+-export(EXPORT "${target_name}Targets"
+-  FILE "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}Targets.cmake"
+-  NAMESPACE "${PROJECT_NAME}::"
+-)
+-configure_file("cmake/Poco${target_name}Config.cmake"
+-  "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}Config.cmake"
+-  @ONLY
+-)
+-
+-set(ConfigPackageLocation "lib/cmake/${PROJECT_NAME}")
+-
+-install(
+-    EXPORT "${target_name}Targets"
+-    FILE "${PROJECT_NAME}${target_name}Targets.cmake"
+-    NAMESPACE "${PROJECT_NAME}::"
+-    DESTINATION "lib/cmake/${PROJECT_NAME}"
+-    )
+-
+-install(
+-    FILES
+-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}Config.cmake"
+-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}ConfigVersion.cmake"
+-    DESTINATION "lib/cmake/${PROJECT_NAME}"
+-    COMPONENT Devel
+-    )
+-
+ endmacro()
+ 
+ #===============================================================================
+--- a/poco/Foundation/CMakeLists.txt
++++ b/poco/Foundation/CMakeLists.txt
+@@ -32,9 +32,6 @@
+ 	)
+ endif()
+ 
+-# Messages
+-POCO_MESSAGES( SRCS Logging src/pocomsg.mc)
+-
+ # If POCO_UNBUNDLED is enabled we try to find the required packages
+ # The configuration will fail if the packages are not found
+ if (POCO_UNBUNDLED)
+@@ -99,6 +99,17 @@
+ 
+ if(WIN32)
+ 	set(SYSLIBS ${SYSLIBS} iphlpapi)
++    add_definitions(
++      -DPOCO_CTG_FATAL=0x00000001L
++      -DPOCO_CTG_CRITICAL=0x00000002L
++      -DPOCO_CTG_ERROR=0x00000003L
++      -DPOCO_CTG_WARNING=0x00000004L
++      -DPOCO_CTG_NOTICE=0x00000005L
++      -DPOCO_CTG_INFORMATION=0x00000006L
++      -DPOCO_CTG_DEBUG=0x00000007L
++      -DPOCO_CTG_TRACE=0x00000008L
++      -DPOCO_MSG_LOG=0x00001000L
++    )
+ endif(WIN32)
+ if (${CMAKE_CXX_COMPILER_ID} MATCHES "SunPro")
+ 	set_target_properties( "${LIBNAME}" PROPERTIES LINK_FLAGS "-library=stlport4")

@@ -3,7 +3,7 @@
 #include "ofConstants.h"
 #include "ofColor.h"
 
-#if (_MSC_VER) || ((defined(TARGET_EMSCRIPTEN) || defined(TARGET_LINUX)) && __cplusplus>=201103L)
+#if (_MSC_VER) || ((defined(TARGET_EMSCRIPTEN) || defined(TARGET_LINUX) || defined(TARGET_ANDROID)) && __cplusplus>=201103L)
 #include <memory>
 #else
 #include <tr1/memory>
@@ -171,7 +171,7 @@ class ofStyle{
 		/// \brief Create a default ofStyle.
 		ofStyle(){
 			bFill				= true;
-			blendingMode		= OF_BLENDMODE_DISABLED;
+			blendingMode		= OF_BLENDMODE_ALPHA;
 			smoothing			= false;
 			circleResolution	= 20;
 			sphereResolution	= 20;
@@ -285,6 +285,9 @@ public:
 
 	/// \brief The video device hardware name.
 	string hardwareName;
+
+	/// \brief Unique identifier for the device if it has one. 
+	string serialID;
 
 	/// \brief A list of video device formats provided by the device.
 	/// \sa ofVideoFormat

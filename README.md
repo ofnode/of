@@ -82,5 +82,5 @@ See `licenses` folder. OF **can** be used for commercial applications without di
   [6]: https://github.com/ofnode/of/releases
   [7]: https://github.com/ofnode/ofApp
   [8]: https://github.com/ofnode/ofxAddon
-  [9]: https://gist.github.com/009e7cc15c531e121907
-  [10]: https://gist.github.com/d8d080134eb3851a33d7
+  [9]: https://gist.github.com/0470684110f443ce3f01
+  [10]: https://gist.github.com/9e7635b1a51f65f72062

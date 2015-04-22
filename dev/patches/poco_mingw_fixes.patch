@@ -1,14 +1,3 @@
---- a/poco/Foundation/include/Poco/Any.h
-+++ b/poco/Foundation/include/Poco/Any.h
-@@ -46,6 +46,8 @@
- 	#error "Any SOO can only be enabled with C++11 support"
- #endif
- 
-+#define POCO_SMALL_OBJECT_SIZE 32
-+
- template <typename PlaceholderT, unsigned int SizeV = POCO_SMALL_OBJECT_SIZE>
- union Placeholder
- 	/// ValueHolder union (used by Poco::Any and Poco::Dynamic::Var for small
 --- a/poco/NetSSL_Win/src/Context.cpp
 +++ b/poco/NetSSL_Win/src/Context.cpp
 @@ -218,7 +218,7 @@
@@ -29,28 +18,6 @@
  	}
  
  	schannelCred.grbitEnabledProtocols = proto();
---- a/poco/Foundation/src/Environment_WIN32.cpp
-+++ b/poco/Foundation/src/Environment_WIN32.cpp
-@@ -19,6 +19,8 @@
- #include <sstream>
- #include <cstring>
- #include "Poco/UnWindows.h"
-+#include <ws2tcpip.h>
-+#include <wincrypt.h>
- #include <iphlpapi.h>
- 
- 
---- a/poco/Foundation/src/Environment_WIN32U.cpp
-+++ b/poco/Foundation/src/Environment_WIN32U.cpp
-@@ -21,6 +21,8 @@
- #include <sstream>
- #include <cstring>
- #include "Poco/UnWindows.h"
-+#include <ws2tcpip.h>
-+#include <wincrypt.h>
- #include <iphlpapi.h>
- 
- 
 --- a/poco/Foundation/src/EventLogChannel.cpp
 +++ b/poco/Foundation/src/EventLogChannel.cpp
 @@ -17,7 +17,6 @@
@@ -61,13 +28,46 @@
  #if defined(POCO_WIN32_UTF8)
  #include "Poco/UnicodeConverter.h"
  #endif
---- a/poco/Net/src/NetworkInterface.cpp
-+++ b/poco/Net/src/NetworkInterface.cpp
-@@ -30,6 +30,7 @@
- 		#include "Poco/UnicodeConverter.h"
- 	#endif
- 	#include "Poco/Error.h"
-+	#include <wincrypt.h>
- 	#include <iphlpapi.h>
- 	#include <ipifcons.h>
- #endif
+--- a/poco/Foundation/include/Poco/Config.h
++++ b/poco/Foundation/include/Poco/Config.h
+@@ -20,14 +20,30 @@
+ #define Foundation_Config_INCLUDED
+ 
+ 
++#ifdef GCC_DIAG_ON
++#undef GCC_DIAG_ON
++#endif
++
++#ifdef GCC_DIAG_OFF
++#undef GCC_DIAG_OFF
++#endif
++
++#define GCC_DIAG_ON(x)
++#define GCC_DIAG_OFF(x)
++
++
+ // Define to enable Windows Unicode (UTF-8) support
+ // NOTE: As of POCO C++ Libraries release 1.6.0, compiling POCO
+ // without POCO_WIN32_UTF8 defined on Windows is deprecated.
++#ifndef POCO_WIN32_UTF8
+ #define POCO_WIN32_UTF8
++#endif
+ 
+ 
+ // Define to enable C++11 support
+-// #define POCO_ENABLE_CPP11
++#ifndef POCO_ENABLE_CPP11
++#define POCO_ENABLE_CPP11
++#endif
+ 
+ 
+ // Define to disable implicit linking
+@@ -90,7 +108,7 @@
+ // !!! for std::aligned_storage.                           !!!
+ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ // 
+-#define POCO_NO_SOO
++// #define POCO_NO_SOO
+ 
+ 
+ // Small object size in bytes. When assigned to Any or Var,

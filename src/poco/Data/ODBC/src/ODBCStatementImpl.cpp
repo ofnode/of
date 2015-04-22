@@ -380,7 +380,7 @@ std::string ODBCStatementImpl::nativeSQL()
 			delete [] pNative;
 			throw ConnectionException(_rConnection, "SQLNativeSql()");
 		}
-		++retlen;//accomodate for terminating '\0'
+		++retlen;//accommodate for terminating '\0'
 	}while (retlen > length);
 
 	std::string sql(pNative);
@@ -440,7 +440,7 @@ const MetaColumn& ODBCStatementImpl::metaColumn(std::size_t pos) const
 }
 
 
-std::size_t ODBCStatementImpl::affectedRowCount() const
+int ODBCStatementImpl::affectedRowCount() const
 {
 	if (0 == _affectedRowCount)
 	{

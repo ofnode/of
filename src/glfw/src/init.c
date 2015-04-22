@@ -33,14 +33,15 @@
 #include <stdarg.h>
 
 
+// The three global variables below comprise all global data in GLFW, except for
+// various static const translation tables.  Any other global variable is a bug.
+
 // Global state shared between compilation units of GLFW
 // These are documented in internal.h
 //
 GLboolean _glfwInitialized = GL_FALSE;
 _GLFWlibrary _glfw;
 
-
-// The current error callback
 // This is outside of _glfw so it can be initialized and usable before
 // glfwInit is called, which lets that function report errors
 //
@@ -128,7 +129,7 @@ GLFWAPI int glfwInit(void)
     }
 
     _glfw.monitors = _glfwPlatformGetMonitors(&_glfw.monitorCount);
-    if (_glfw.monitors == NULL)
+    if (!_glfw.monitorCount)
     {
         _glfwInputError(GLFW_PLATFORM_ERROR, "No monitors found");
         _glfwPlatformTerminate();
@@ -152,11 +153,9 @@ GLFWAPI void glfwTerminate(void)
 
     memset(&_glfw.callbacks, 0, sizeof(_glfw.callbacks));
 
-    // Close all remaining windows
     while (_glfw.windowListHead)
         glfwDestroyWindow((GLFWwindow*) _glfw.windowListHead);
 
-    // Destroy all cursors
     while (_glfw.cursorListHead)
         glfwDestroyCursor((GLFWcursor*) _glfw.cursorListHead);
 
@@ -173,6 +172,7 @@ GLFWAPI void glfwTerminate(void)
 
     _glfwPlatformTerminate();
 
+    memset(&_glfw, 0, sizeof(_glfw));
     _glfwInitialized = GL_FALSE;
 }
 

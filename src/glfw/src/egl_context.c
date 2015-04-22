@@ -167,6 +167,7 @@ static GLboolean chooseFBConfigs(const _GLFWctxconfig* ctxconfig,
         u->stencilBits = getConfigAttrib(n, EGL_STENCIL_SIZE);
 
         u->samples = getConfigAttrib(n, EGL_SAMPLES);
+        u->doublebuffer = GL_TRUE;
 
         u->egl = n;
         usableCount++;
@@ -235,7 +236,7 @@ void _glfwTerminateContextAPI(void)
     assert((size_t) index < sizeof(attribs) / sizeof(attribs[0])); \
 }
 
-// Prepare for creation of the OpenGL context
+// Create the OpenGL or OpenGL ES context
 //
 int _glfwCreateContext(_GLFWwindow* window,
                        const _GLFWctxconfig* ctxconfig,
@@ -295,8 +296,7 @@ int _glfwCreateContext(_GLFWwindow* window,
 
         window->egl.visual = XGetVisualInfo(_glfw.x11.display,
                                             mask, &info, &count);
-
-        if (window->egl.visual == NULL)
+        if (!window->egl.visual)
         {
             _glfwInputError(GLFW_PLATFORM_ERROR,
                             "EGL: Failed to retrieve visual for EGLConfig");
@@ -344,7 +344,7 @@ int _glfwCreateContext(_GLFWwindow* window,
                 flags |= EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR;
         }
 
-        if (ctxconfig->robustness != GLFW_NO_ROBUSTNESS)
+        if (ctxconfig->robustness)
         {
             if (ctxconfig->robustness == GLFW_NO_RESET_NOTIFICATION)
                 strategy = EGL_NO_RESET_NOTIFICATION_KHR;
@@ -380,6 +380,9 @@ int _glfwCreateContext(_GLFWwindow* window,
 
         setEGLattrib(EGL_NONE, EGL_NONE);
     }
+
+    // Context release behaviors (GL_KHR_context_flush_control) are not yet
+    // supported on EGL but are not a hard constraint, so ignore and continue
 
     window->egl.context = eglCreateContext(_glfw.egl.display,
                                            config, share, attribs);
@@ -510,21 +513,21 @@ GLFWglproc _glfwPlatformGetProcAddress(const char* procname)
 
 GLFWAPI EGLDisplay glfwGetEGLDisplay(void)
 {
-    _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
+    _GLFW_REQUIRE_INIT_OR_RETURN(EGL_NO_DISPLAY);
     return _glfw.egl.display;
 }
 
 GLFWAPI EGLContext glfwGetEGLContext(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
-    _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
+    _GLFW_REQUIRE_INIT_OR_RETURN(EGL_NO_CONTEXT);
     return window->egl.context;
 }
 
 GLFWAPI EGLSurface glfwGetEGLSurface(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
-    _GLFW_REQUIRE_INIT_OR_RETURN(0);
+    _GLFW_REQUIRE_INIT_OR_RETURN(EGL_NO_SURFACE);
     return window->egl.surface;
 }
 

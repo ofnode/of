@@ -8,7 +8,6 @@
 #pragma once
 
 #include <jni.h>
-#include "ofxAndroidApp.h"
 #include "ofSoundStream.h"
 
 JavaVM * ofGetJavaVMPtr();
@@ -16,10 +15,30 @@ JNIEnv * ofGetJNIEnv();
 jclass ofGetJavaOFAndroid();
 jobject ofGetOFActivityObject();
 
-//void ofRunApp( ofxAndroidApp * app);
+jmethodID ofxJavaGetMethodID(jclass classID, std::string methodName, std::string methodSignature);
+jmethodID ofxJavaGetStaticMethodID(jclass classID, std::string methodName, std::string methodSignature);
+std::string ofxJavaGetClassName(jclass classID);
+jclass ofxJavaGetClassID(std::string className);
+jfieldID ofxJavaGetStaticFieldID(jclass classID, std::string fieldName, std::string fieldType);
 
+jobject ofxJavaGetStaticObjectField(jclass classID, std::string fieldName, std::string fieldType);
+jobject ofxJavaGetStaticObjectField(std::string className, std::string fieldName, std::string fieldType);
 
-void ofxRegisterMultitouch(ofxAndroidApp * app);
+void ofxJavaCallVoidMethod(jobject object, jclass classID, std::string methodName, std::string methodSignature, va_list args);
+void ofxJavaCallVoidMethod(jobject object, jclass classID, std::string methodName, std::string methodSignature, ...);
+void ofxJavaCallVoidMethod(jobject object, std::string className, std::string methodName, std::string methodSignature, ...);
+
+jobject ofxJavaCallStaticObjectMethod(jclass classID, std::string methodName, std::string methodSignature, va_list args);
+jobject ofxJavaCallStaticObjectMethod(jclass classID, std::string methodName, std::string methodSignature, ...);
+jobject ofxJavaCallStaticObjectMethod(std::string className, std::string methodName, std::string methodSignature, ...);
+
+jobject ofxJavaCallObjectMethod(jobject object, jclass classID, std::string methodName, std::string methodSignature, va_list args);
+jobject ofxJavaCallObjectMethod(jobject object, jclass classID, std::string methodName, std::string methodSignature, ...);
+jobject ofxJavaCallObjectMethod(jobject object, std::string className, std::string methodName, std::string methodSignature, ...);
+
+void ofxJavaCallStaticVoidMethod(jclass classID, std::string methodName, std::string methodSignature, va_list args);
+void ofxJavaCallStaticVoidMethod(jclass classID, std::string methodName, std::string methodSignature, ...);
+void ofxJavaCallStaticVoidMethod(std::string className, std::string methodName, std::string methodSignature, ...);
 
 void ofxAndroidAlertBox(string msg);
 int ofxAndroidProgressBox(string msg);
@@ -70,11 +89,33 @@ inline void ofxAndroidSetViewItemChecked(string item_name, bool checked){
 	ofGetJNIEnv()->CallStaticVoidMethod(javaClass,setViewItemChecked,ofGetJNIEnv()->NewStringUTF(item_name.c_str()),checked);
 }
 
+enum ofxAndroidSwipeDir{
+	OFX_ANDROID_SWIPE_UP    = 1,
+	OFX_ANDROID_SWIPE_DOWN  = 2,
+	OFX_ANDROID_SWIPE_LEFT  = 3,
+	OFX_ANDROID_SWIPE_RIGHT = 4
+};
+
+struct ofxAndroidSwipeEventArgs{
+	ofxAndroidSwipeDir dir;
+	int id;
+};
+
 class ofxAndroidEventsClass{
 public:
-	ofEvent<bool> okPressed;
-	ofEvent<bool> cancelPressed;
+	ofEvent<void> okPressed;
+	ofEvent<void> cancelPressed;
+	ofEvent<void> backPressed;
 	ofEvent<bool> networkConnected;
+	ofEvent<void> pause;
+	ofEvent<void> resume;
+	ofEvent<void> unloadGL;
+	ofEvent<void> reloadGL;
+	ofEvent<ofxAndroidSwipeEventArgs> swipe;
+
+	ofEvent<std::string> menuItemSelected;
+	ofEvent<std::string> menuItemChecked;
+
 };
 
 ofxAndroidEventsClass & ofxAndroidEvents();

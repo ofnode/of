@@ -205,6 +205,7 @@ set(SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGlutWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppNoWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppRunner.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofMainLoop.cpp"
 
     "${OF_ROOT_DIR}/src/openframeworks/communication/ofArduino.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/communication/ofSerial.cpp"
@@ -242,8 +243,10 @@ set(SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/math/ofVec2f.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/math/ofVec4f.cpp"
 
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBuffer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundStream.cpp"
 
@@ -295,13 +298,13 @@ include_directories(${INCLUDE_DIRS})
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(O_FLAG -O0)
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
-    if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
+  if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_FLAG -Og)
-    elseif(CMAKE_SYSTEM MATCHES Windows)
+  elseif(CMAKE_SYSTEM MATCHES Windows)
     set(O_FLAG -O2)
-    else()
+  else()
     set(O_FLAG -O0)
-    endif()
+  endif()
 endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)

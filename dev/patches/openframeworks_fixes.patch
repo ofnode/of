@@ -1,21 +1,6 @@
---- a/openframeworks/app/ofAppGlutWindow.cpp
-+++ b/openframeworks/app/ofAppGlutWindow.cpp
-@@ -169,10 +169,10 @@
- 	DragAcceptFiles (handle, TRUE);
- 
- 	//store the current message event handler for the window
--	currentWndProc = (WNDPROC)GetWindowLongPtr(handle, GWL_WNDPROC);
-+	currentWndProc = (WNDPROC)GetWindowLongPtr(handle, GWLP_WNDPROC);
- 
- 	//tell the window to now use our event handler!
--	SetWindowLongPtr(handle, GWL_WNDPROC, (long)winProc);
-+	SetWindowLongPtr(handle, GWLP_WNDPROC, (LONG_PTR)winProc);
- }
- 
- #endif
 --- a/openframeworks/app/ofAppRunner.cpp
 +++ b/openframeworks/app/ofAppRunner.cpp
-@@ -20,7 +20,7 @@
+@@ -21,7 +21,7 @@
  
  
  // adding this for vc2010 compile: error C3861: 'closeQuicktime': identifier not found
@@ -24,55 +9,6 @@
  	#include "ofQtUtils.h"
  #endif
  
---- a/openframeworks/graphics/ofTrueTypeFont.cpp
-+++ b/openframeworks/graphics/ofTrueTypeFont.cpp
-@@ -3,18 +3,11 @@
- 
- #include "ft2build.h"
- 
--#ifdef TARGET_LINUX
- #include FT_FREETYPE_H
- #include FT_GLYPH_H
- #include FT_OUTLINE_H
- #include FT_TRIGONOMETRY_H
- #include <fontconfig/fontconfig.h>
--#else
--#include "freetype2/freetype/freetype.h"
--#include "freetype2/freetype/ftglyph.h"
--#include "freetype2/freetype/ftoutln.h"
--#include "freetype2/freetype/fttrigon.h"
--#endif
- 
- #include <algorithm>
- 
---- a/openframeworks/utils/ofSystemUtils.cpp
-+++ b/openframeworks/utils/ofSystemUtils.cpp
-@@ -372,7 +372,7 @@
- 		ofn.lStructSize = sizeof(ofn);
- 		HWND hwnd = WindowFromDC(wglGetCurrentDC());
- 		ofn.hwndOwner = hwnd;
--#ifdef __MINGW32_VERSION
-+#ifdef __MINGW32__
- 		char szFileName[MAX_PATH];
-         memset(szFileName,0,260);
- 		if(defaultPath!=""){
-@@ -405,14 +405,14 @@
- 		ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
- 		ofn.lpstrDefExt = 0;
-         
--#ifdef __MINGW32_VERSION
-+#ifdef __MINGW32__
- 		ofn.lpstrTitle = windowTitle.c_str();
- #else
- 		ofn.lpstrTitle = windowTitleW.c_str();
- #endif 
- 
- 		if(GetOpenFileName(&ofn)) {
--#ifdef __MINGW32_VERSION
-+#ifdef __MINGW32__
- 			results.filePath = string(szFileName);
- #else
- 			results.filePath = convertWideToNarrow(szFileName);
 --- a/openframeworks/video/ofDirectShowPlayer.cpp
 +++ b/openframeworks/video/ofDirectShowPlayer.cpp
 @@ -14,15 +14,14 @@
@@ -96,7 +32,7 @@
  #include <process.h>
 --- a/openframeworks/app/ofAppGlutWindow.cpp
 +++ b/openframeworks/app/ofAppGlutWindow.cpp
-@@ -9,7 +9,7 @@
+@@ -6,7 +6,7 @@
  
  #ifdef TARGET_WIN32
  	#define GLUT_BUILDING_LIB
@@ -105,29 +41,9 @@
  #endif
  #ifdef TARGET_OSX
      #include <OpenGL/OpenGL.h>
---- a/openframeworks/graphics/ofGraphics.cpp
-+++ b/openframeworks/graphics/ofGraphics.cpp
-@@ -26,7 +26,7 @@
- 	#endif
- 
- 	#ifdef TARGET_WIN32
--		#include "glu.h"
-+		#include "GL/glu.h"
- 	#endif
- #endif
- 
-@@ -37,7 +37,7 @@
- 
- #ifdef TARGET_WIN32
- 	#define GLUT_BUILDING_LIB
--	#include "glut.h"
-+	#include "GL/glut.h"
- #endif
- #ifdef TARGET_OSX
- 	#include <GLUT/glut.h>
 --- a/openframeworks/utils/ofConstants.h
 +++ b/openframeworks/utils/ofConstants.h
-@@ -106,7 +106,7 @@
+@@ -108,7 +108,7 @@
  	#define GLEW_STATIC
  	#include "GL/glew.h"
  	#include "GL/wglew.h"

@@ -64,7 +64,11 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 # Declaration of the library
 add_library(tiff STATIC ${HEADERS} ${SRCS})
 
-set_target_properties(tiff PROPERTIES COMPILE_FLAGS "-w -fPIC")
+if(UNIX)
+    add_definitions(-fPIC)
+endif()
+
+set_target_properties(tiff PROPERTIES COMPILE_FLAGS "-w")
 
 target_link_libraries(tiff ${ZLIB_LIBRARIES})
 

@@ -2,12 +2,7 @@
 #include "ofUtils.h"
 #include "ofBaseTypes.h"
 #include "ofConstants.h"
-#include "ofGraphics.h"
-
-#ifdef TARGET_ANDROID
-	extern bool ofxAndroidInitGrabber(ofVideoGrabber * grabber);
-	extern bool ofxAndroidCloseGrabber(ofVideoGrabber * grabber);
-#endif
+#include "ofAppRunner.h"
 
 //--------------------------------------------------------------------
 ofVideoGrabber::ofVideoGrabber(){
@@ -18,18 +13,10 @@ ofVideoGrabber::ofVideoGrabber(){
 	height				= 0;
 	width				= 0;
 	tex.resize(1);
-
-#ifdef TARGET_ANDROID
-	if(!ofxAndroidInitGrabber(this)) return;
-#endif
-
 }
 
 //--------------------------------------------------------------------
 ofVideoGrabber::~ofVideoGrabber(){
-#ifdef TARGET_ANDROID
-	ofxAndroidCloseGrabber(this);
-#endif
 }
 
 //--------------------------------------------------------------------
@@ -82,7 +69,7 @@ bool ofVideoGrabber::setup(int w, int h, bool setUseTexture){
 				ofPixels plane = grabber->getPixels().getPlane(i);
 				tex.push_back(ofTexture());
 				tex[i].allocate(plane);
-				if(ofGetGLProgrammableRenderer() && plane.getPixelFormat() == OF_PIXELS_GRAY){
+				if(ofIsGLProgrammableRenderer() && plane.getPixelFormat() == OF_PIXELS_GRAY){
 					tex[i].setRGToRGBASwizzles(true);
 				}
 			}
@@ -250,11 +237,12 @@ void ofVideoGrabber::update(){
 				bool bDiffPixFormat = ( tex[i].isAllocated() && tex[i].texData.glTypeInternal != ofGetGLInternalFormatFromPixelFormat(plane.getPixelFormat()) );
 				if(width==0 || height==0 || bDiffPixFormat || !tex[i].isAllocated() ){
 					tex[i].allocate(plane);
-					if(ofGetGLProgrammableRenderer() && plane.getPixelFormat() == OF_PIXELS_GRAY){
+					if(ofIsGLProgrammableRenderer() && plane.getPixelFormat() == OF_PIXELS_GRAY){
 						tex[i].setRGToRGBASwizzles(true);
 					}
+				}else{
+					tex[i].loadData(plane);
 				}
-				tex[i].loadData(plane);
 			}
 		}
 	}
@@ -314,12 +302,18 @@ void ofVideoGrabber::draw(float _x, float _y) const{
 
 //------------------------------------
 void ofVideoGrabber::bind() const{
-	ofGetCurrentRenderer()->bind(*this);
+	shared_ptr<ofBaseGLRenderer> renderer = ofGetGLRenderer();
+	if(renderer){
+		renderer->bind(*this);
+	}
 }
 
 //------------------------------------
 void ofVideoGrabber::unbind() const{
-	ofGetCurrentRenderer()->unbind(*this);
+	shared_ptr<ofBaseGLRenderer> renderer = ofGetGLRenderer();
+	if(renderer){
+		renderer->unbind(*this);
+	}
 }
 
 //----------------------------------------------------------

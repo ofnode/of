@@ -98,5 +98,9 @@ set(SRCS src/dec/dec_alpha.c
 # Declaration of the library
 add_library(webp STATIC ${HEADERS} ${SRCS})
 
-set_target_properties(webp PROPERTIES COMPILE_FLAGS "-w -fPIC")
+if(UNIX)
+    add_definitions(-fPIC)
+endif()
+
+set_target_properties(webp PROPERTIES COMPILE_FLAGS "-w")
 

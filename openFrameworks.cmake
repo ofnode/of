@@ -7,7 +7,6 @@ set(RELEASE_FLAGS "
 
 set(DEBUG_FLAGS "
     -Winline
-    -Wconversion
     -fno-omit-frame-pointer
     -fno-optimize-sibling-calls
 ")
@@ -154,6 +153,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${X11_Xrandr_LIB}
         ${X11_Xcursor_LIB}
         ${X11_Xxf86vm_LIB}
+        ${X11_Xinerama_LIB}
         ${UDEV_LIBRARIES}
         ${GTK3_LIBRARIES}
         ${GLIB_LIBRARIES}
@@ -372,13 +372,13 @@ include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(O_FLAG -O0)
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
-    if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
+  if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_FLAG -Og)
-    elseif(CMAKE_SYSTEM MATCHES Windows)
+  elseif(CMAKE_SYSTEM MATCHES Windows)
     set(O_FLAG -O2)
-    else()
+  else()
     set(O_FLAG -O0)
-    endif()
+  endif()
 endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)
@@ -584,20 +584,6 @@ function(ofxaddon OFXADDON)
         )
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs/svgTiny/src")
-
-
-    elseif(OFXADDON STREQUAL ofxSynth)
-        set(OFXADDON_DIR "${OF_ROOT_DIR}/addons/ofxSynth")
-        set(OFXSOURCES
-            "${OFXADDON_DIR}/src/ofxSoundEffect.cpp"
-            "${OFXADDON_DIR}/src/ofxSoundUnit.cpp"
-            "${OFXADDON_DIR}/src/ofxSynth.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthDelayLine.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthEnvelope.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthFilter.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthSampler.cpp"
-            "${OFXADDON_DIR}/src/ofxSynthWaveWriter.cpp"
-        )
 
 
     elseif(OFXADDON STREQUAL ofxThreadedImageLoader)

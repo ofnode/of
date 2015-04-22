@@ -133,5 +133,9 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}
 # Declaration of the library
 add_library(ilmimf STATIC ${HEADERS} ${SRCS})
 
-set_target_properties(ilmimf PROPERTIES COMPILE_FLAGS "-w -fPIC")
+if(UNIX)
+    add_definitions(-fPIC)
+endif()
+
+set_target_properties(ilmimf PROPERTIES COMPILE_FLAGS "-w")
 

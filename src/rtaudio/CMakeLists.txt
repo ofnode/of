@@ -54,13 +54,12 @@ elseif(UNIX)
             add_definitions(-D__UNIX_JACK__)
             include_directories(${JACK_INCLUDE_DIR})
         endif()
-    
-        #find_package(ALSA REQUIRED)
+
         add_definitions(-D__LINUX_ALSA__)
         set(ALSA_LIBRARY "-lasound -lpthread")
-        INCLUDE_DIRECTORIES(${ALSA_INCLUDE_DIR})
+        include_directories(${ALSA_INCLUDE_DIR})
         add_library(rtaudio STATIC ${SRCS} ${HEADERS})
-        set_target_properties(rtaudio PROPERTIES COMPILE_FLAGS -fPIC)
+        add_definitions(-fPIC)
         
         if(JACK_FOUND)
             target_link_libraries(rtaudio ${ALSA_LIBRARY} ${JACK_LIBRARIES})
