@@ -87,7 +87,7 @@ elseif ( UNIX AND NOT APPLE )
     target_link_libraries ( freeglut ${OPENGL_LIBRARIES} ${X11_LIBRARIES} )
 endif ( )
 
-if ( UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug )
-    set_target_properties( freeglut PROPERTIES COMPILE_FLAGS "-g -fPIC" )
-endif( )
+if ( UNIX )
+    add_definitions ( -fPIC )
+endif ( )
 

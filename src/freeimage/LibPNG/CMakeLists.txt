@@ -35,11 +35,11 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 # Declaration of the library
 add_library(png STATIC ${HEADERS} ${SRCS})
 
-if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
-    set_target_properties(png PROPERTIES COMPILE_FLAGS "-w -g -fPIC")
-else()
-    set_target_properties(png PROPERTIES COMPILE_FLAGS "-w")
+if(UNIX)
+    add_definitions(-fPIC)
 endif()
+
+set_target_properties(png PROPERTIES COMPILE_FLAGS "-w")
 
 target_link_libraries(png ${ZLIB_LIBRARIES})
 
