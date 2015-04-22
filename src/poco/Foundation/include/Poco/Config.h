@@ -59,9 +59,7 @@
 
 
 // Define to disable FPEnvironment support
-#ifndef POCO_NO_FPENVIRONMENT
-#define POCO_NO_FPENVIRONMENT
-#endif
+// #define POCO_NO_FPENVIRONMENT
 
 
 // Define if std::wstring is not available

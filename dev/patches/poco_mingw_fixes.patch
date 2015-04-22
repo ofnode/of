@@ -62,17 +62,6 @@
  
  
  // Define to disable implicit linking
-@@ -43,7 +59,9 @@
- 
- 
- // Define to disable FPEnvironment support
--// #define POCO_NO_FPENVIRONMENT
-+#ifndef POCO_NO_FPENVIRONMENT
-+#define POCO_NO_FPENVIRONMENT
-+#endif
- 
- 
- // Define if std::wstring is not available
 @@ -90,7 +108,7 @@
  // !!! for std::aligned_storage.                           !!!
  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
