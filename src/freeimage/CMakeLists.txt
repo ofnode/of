@@ -146,6 +146,8 @@ endif()
 target_link_libraries(freeimage)
 
 if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
-    set_target_properties(freeimage PROPERTIES COMPILE_FLAGS "-g -fPIC")
+    set_target_properties(freeimage PROPERTIES COMPILE_FLAGS "-w -g -fPIC")
+else()
+    set_target_properties(freeimage PROPERTIES COMPILE_FLAGS "-w")
 endif()
 

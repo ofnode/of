@@ -99,6 +99,8 @@ set(SRCS src/dec/dec_alpha.c
 add_library(webp STATIC ${HEADERS} ${SRCS})
 
 if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
-    set_target_properties(webp PROPERTIES COMPILE_FLAGS "-g -fPIC")
+    set_target_properties(webp PROPERTIES COMPILE_FLAGS "-w -g -fPIC")
+else()
+    set_target_properties(webp PROPERTIES COMPILE_FLAGS "-w")
 endif()
 

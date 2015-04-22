@@ -24,6 +24,8 @@ add_library(rawlite STATIC ${HEADERS} ${SRCS})
 set_target_properties(rawlite PROPERTIES COMPILE_DEFINITIONS "NO_LCMS")
 
 if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
-    set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-g -fPIC")
+    set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-w -g -fPIC")
+else()
+    set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-w")
 endif()
 

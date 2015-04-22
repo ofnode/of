@@ -23,6 +23,8 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/..
 add_library(ilmthread STATIC ${HEADERS} ${SRCS})
 
 if(UNIX AND CMAKE_BUILD_TYPE STREQUAL Debug)
-    set_target_properties(ilmthread PROPERTIES COMPILE_FLAGS "-g -fPIC")
+    set_target_properties(ilmthread PROPERTIES COMPILE_FLAGS "-w -g -fPIC")
+else()
+    set_target_properties(ilmthread PROPERTIES COMPILE_FLAGS "-w")
 endif()
 
