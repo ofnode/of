@@ -65,7 +65,3 @@
  
  
  // Small object size in bytes. When assigned to Any or Var,
-@@ -168,4 +172,4 @@
- // This allows the use of these macros in a release version.
- // #define POCO_LOG_DEBUG
- 
