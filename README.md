@@ -24,7 +24,7 @@ The only difference is that this project targets CMake build system and stores s
 Installing
 ----------
 
-1. `git clone --recursive --depth 1 https://github.com/ofnode/of` will clone this repository.
+1. `git clone --recursive --depth 1 https://github.com/ofnode/of` will clone this repo.
 2. Install developer files for your Linux distro with a script from `dev/install/linux` folder.
 3. Download precompiled libraries from [releases](https://github.com/ofnode/of/releases) page and extract `lib-linux` folder to `of`.
 
