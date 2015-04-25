@@ -25,7 +25,8 @@ set_target_properties(rawlite PROPERTIES COMPILE_DEFINITIONS "LIBRAW_NODLL;NO_LC
 
 if(UNIX)
     add_definitions(-fPIC)
+    set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-w -Wno-c++11-narrowing")
+else()
+    set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-w")
 endif()
-
-set_target_properties(rawlite PROPERTIES COMPILE_FLAGS "-w -Wno-c++11-narrowing")
 

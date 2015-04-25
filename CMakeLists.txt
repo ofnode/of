@@ -4,34 +4,54 @@ cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
-#// Compiler-neutral flags /////////////////////////////////////////////////////
+#// MSVC flags /////////////////////////////////////////////////////////////////
 
-set(RELEASE_FLAGS "
-")
+if(MSVC)
 
-set(DEBUG_FLAGS "
-    -fno-omit-frame-pointer
-    -fno-optimize-sibling-calls
-")
+    set(RELEASE_FLAGS "
+    ")
 
-#// Clang specific flags ///////////////////////////////////////////////////////
+    set(DEBUG_FLAGS "
+    ")
+
+else()
+
+#// GCC and Clang flags ////////////////////////////////////////////////////////
+
+    set(RELEASE_FLAGS "
+    ")
+
+    set(DEBUG_FLAGS "
+        -fno-omit-frame-pointer
+        -fno-optimize-sibling-calls
+    ")
+
+endif()
+
+#// Clang specific C flags /////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+
     set(RELEASE_C_FLAGS_CLANG "
         -Wno-deprecated-register
     ")
 
     set(DEBUG_C_FLAGS_CLANG "
     ")
+
 endif()
 
+#// Clang specific C++ flags ///////////////////////////////////////////////////
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+
     set(RELEASE_CXX_FLAGS_CLANG "
         -Wno-deprecated-register
     ")
 
     set(DEBUG_CXX_FLAGS_CLANG "
     ")
+
 endif()
 
 #// Setup //////////////////////////////////////////////////////////////////////
@@ -48,15 +68,11 @@ endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
-    if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib-linux/release")
-    elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib-linux/debug")
-    endif()
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug")
 
     set(DEFINITIONS
         -DOF_USING_GTK
-        -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_VIDEO_CAPTURE_GSTREAMER
@@ -70,7 +86,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
     find_package(Fontconfig REQUIRED)
@@ -86,7 +101,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIR}
@@ -98,14 +112,15 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
-    if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib-windows/release")
-    elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(LIBRARY_OUTPUT_PATH "${OF_ROOT_DIR}/lib-windows/debug")
+    if(MSVC)
+        set(CMAKE_RELEASE_POSTFIX "md")
+        set(CMAKE_DEBUG_POSTFIX "mdd")
     endif()
 
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug")
+
     set(DEFINITIONS
-        -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_VIDEO_CAPTURE_DIRECTSHOW
@@ -115,7 +130,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(Fontconfig REQUIRED)
 
@@ -127,7 +141,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIR}
     )
@@ -285,13 +298,22 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     )
 endif()
 
+if(MSVC)
+    list(APPEND DEFINITIONS
+      -D_SCL_SECURE_NO_WARNINGS
+      -D_CRT_SECURE_NO_WARNINGS
+    )
+
+    list(APPEND DEFINITIONS
+      -D_WIN32_WINNT=0x0501
+      -D_UNICODE -DUNICODE
+    )
+endif()
+
 list(APPEND DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
 )
-
-add_definitions(${DEFINITIONS})
-include_directories(${INCLUDE_DIRS})
 
 #// Compiler flags /////////////////////////////////////////////////////////////
 
@@ -309,6 +331,10 @@ endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
+endif()
+
+if(NOT MSVC)
+    set(CPP11_FLAG -std=gnu++11)
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
@@ -342,8 +368,8 @@ endif()
 string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
 string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG} ${O_FLAG}")
 
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_FLAG}")
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
@@ -375,6 +401,16 @@ add_subdirectory(src/tess2)
 add_subdirectory(src/assimp)
 
 add_library(openFrameworks STATIC ${SOURCES})
+
+target_include_directories(
+    openFrameworks PRIVATE
+    ${INCLUDE_DIRS}
+)
+
+target_compile_definitions(
+    openFrameworks PRIVATE
+    ${DEFINITIONS}
+)
 
 target_link_libraries(
     openFrameworks

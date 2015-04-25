@@ -57,6 +57,9 @@
 #include <vector>
 #include <assert.h>
 
+#ifdef _MSC_VER
+#include <algorithm>
+#endif
 
 namespace Imf {
 

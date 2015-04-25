@@ -30,7 +30,6 @@ glu                \
 openal             \
 opencv             \
 intel-tbb          \
-mpg123             \
 libsndfile         \
 gst-libav          \
 gstreamer          \

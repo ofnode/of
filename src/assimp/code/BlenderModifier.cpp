@@ -48,6 +48,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SceneCombiner.h"
 #include "Subdivision.h"
 
+#ifdef _MSC_VER
+#include <functional>
+#endif
+
 using namespace Assimp;
 using namespace Assimp::Blender;
 

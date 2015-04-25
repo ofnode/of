@@ -23,7 +23,6 @@ libglu1-mesa-dev          \
 libopenal-dev             \
 libopencv-dev             \
 libtbb-dev                \
-libmpg123-dev             \
 libasound2-dev            \
 libsndfile1-dev           \
 gstreamer1.0-x            \

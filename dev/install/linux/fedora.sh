@@ -32,7 +32,6 @@ mesa-libGLU-devel       \
 openal-soft-devel       \
 opencv-devel            \
 tbb-devel               \
-mpg123                  \
 flac-devel              \
 alsa-lib-devel          \
 libtheora-devel         \
@@ -40,7 +39,6 @@ libvorbis-devel         \
 libsndfile-devel        \
 pulseaudio-libs-devel   \
 ffmpeg-devel            \
-libmpg123-devel         \
 libraw1394-devel        \
 gstreamer1-devel        \
 gstreamer1-libav        \

@@ -121,13 +121,13 @@ set(SRCS FreeImage/BitmapAccess.cpp
 )
 
 # List the include paths
-include_directories(${CMAKE_SOURCE_DIR}
-                    ${CMAKE_SOURCE_DIR}/DeprecationManager
-                    ${CMAKE_SOURCE_DIR}/OpenEXR/Half
-                    ${CMAKE_SOURCE_DIR}/OpenEXR/Iex
-                    ${CMAKE_SOURCE_DIR}/OpenEXR/IlmImf
-                    ${CMAKE_SOURCE_DIR}/OpenEXR/IlmThread
-                    ${CMAKE_SOURCE_DIR}/OpenEXR/Imath
+include_directories(${PROJECT_SOURCE_DIR}
+                    ${PROJECT_SOURCE_DIR}/DeprecationManager
+                    ${PROJECT_SOURCE_DIR}/OpenEXR/Half
+                    ${PROJECT_SOURCE_DIR}/OpenEXR/Iex
+                    ${PROJECT_SOURCE_DIR}/OpenEXR/IlmImf
+                    ${PROJECT_SOURCE_DIR}/OpenEXR/IlmThread
+                    ${PROJECT_SOURCE_DIR}/OpenEXR/Imath
 )
 
 include_directories(${ZLIB_INCLUDE_DIRS})

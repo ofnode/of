@@ -1,3 +1,5 @@
+find_package(ZLIB REQUIRED)
+
 # List the header files
 set(HEADERS ImfAttribute.h
             ImfB44Compressor.h
@@ -121,7 +123,6 @@ set(SRCS ImfAttribute.cpp
          ImfZipCompressor.cpp
 )
 
-
 include_directories(${CMAKE_CURRENT_LIST_DIR}
                     ${CMAKE_CURRENT_LIST_DIR}/..
                     ${CMAKE_CURRENT_LIST_DIR}/../Half
@@ -129,6 +130,9 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}
                     ${CMAKE_CURRENT_LIST_DIR}/../IlmThread
                     ${CMAKE_CURRENT_LIST_DIR}/../Imath
 )
+
+# List the include paths
+include_directories(${ZLIB_INCLUDE_DIRS})
 
 # Declaration of the library
 add_library(ilmimf STATIC ${HEADERS} ${SRCS})
@@ -138,4 +142,3 @@ if(UNIX)
 endif()
 
 set_target_properties(ilmimf PROPERTIES COMPILE_FLAGS "-w")
-

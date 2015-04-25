@@ -1,34 +1,54 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
-#// Compiler-neutral flags /////////////////////////////////////////////////////
+#// MSVC flags /////////////////////////////////////////////////////////////////
 
-set(RELEASE_FLAGS "
-")
+if(MSVC)
 
-set(DEBUG_FLAGS "
-    -Winline
-    -fno-omit-frame-pointer
-    -fno-optimize-sibling-calls
-")
+    set(RELEASE_FLAGS "
+    ")
 
-#// Clang specific flags ///////////////////////////////////////////////////////
+    set(DEBUG_FLAGS "
+    ")
+
+else()
+
+#// GCC and Clang flags ////////////////////////////////////////////////////////
+
+    set(RELEASE_FLAGS "
+    ")
+
+    set(DEBUG_FLAGS "
+        -Winline
+        -fno-omit-frame-pointer
+        -fno-optimize-sibling-calls
+    ")
+
+endif()
+
+#// Clang specific C flags /////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+
     set(RELEASE_C_FLAGS_CLANG "
         -Wno-deprecated-register
     ")
 
     set(DEBUG_C_FLAGS_CLANG "
     ")
+
 endif()
 
+#// Clang specific C++ flags ///////////////////////////////////////////////////
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+
     set(RELEASE_CXX_FLAGS_CLANG "
         -Wno-deprecated-register
     ")
 
     set(DEBUG_CXX_FLAGS_CLANG "
     ")
+
 endif()
 
 #// Options ////////////////////////////////////////////////////////////////////
@@ -49,9 +69,11 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# Output shared libraries and executables to project local bin folder
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+# Output shared libraries and executables to a bin folder of your project
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 #///////////////////////////////////////////////////////////////////////////////
 
@@ -59,7 +81,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_GTK
-        -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_VIDEO_CAPTURE_GSTREAMER
@@ -115,7 +136,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(Sndfile REQUIRED)
     find_package(Threads REQUIRED)
@@ -137,7 +157,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
@@ -162,7 +181,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${OPENAL_LIBRARY}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
-        ${MPG123_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
@@ -181,22 +199,30 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
     set(OPENFRAMEWORKS_DEFINITIONS
-        -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_VIDEO_CAPTURE_DIRECTSHOW
         -DOF_VIDEO_PLAYER_DIRECTSHOW
     )
 
-    # Static C and C++
-    set(OPENFRAMEWORKS_LIBRARIES
-        -static-libgcc
-        -static-libstdc++
-    )
+    if(NOT MSVC)
+        # Static C and C++
+        set(OPENFRAMEWORKS_LIBRARIES
+            -static-libgcc
+            -static-libstdc++
+        )
+    endif()
 
-    # Hide console on app run
+    # Hide console by default
     if(NOT OF_ENABLE_CONSOLE)
-        list(APPEND OPENFRAMEWORKS_LIBRARIES -mwindows)
+      if(MSVC)
+          set(CMAKE_EXE_LINKER_FLAGS
+           "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+      else()
+          list(APPEND OPENFRAMEWORKS_LIBRARIES
+              -mwindows
+          )
+      endif()
     endif()
 
     #// Local dependencies /////////////////////////////////////////////////////
@@ -207,20 +233,37 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug")
     endif()
 
-    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
+    if(MSVC)
+        link_directories(${OF_LIB_DIR})
+        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.lib")
+    else()
+        list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
+        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
+    endif()
 
     if(NOT OPENFRAMEWORKS_LIBS)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
     endif()
 
-    list(APPEND OPENFRAMEWORKS_LIBRARIES
-        -Wl,-Bstatic
-        -Wl,--start-group
-        ${OPENFRAMEWORKS_LIBS}
-        -Wl,--end-group
-        -Wl,-Bdynamic
-    )
+    if(MSVC)
+        list(APPEND OPENFRAMEWORKS_LIBRARIES
+            ${OPENFRAMEWORKS_LIBS}
+        )
+    else()
+        list(APPEND OPENFRAMEWORKS_LIBRARIES
+            -Wl,-Bstatic
+            -Wl,--start-group
+            ${OPENFRAMEWORKS_LIBS}
+            -Wl,--end-group
+            -Wl,-Bdynamic
+        )
+    endif()
+
+    if(MSVC)
+        set(MSVC_PATHS
+            "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"
+        )
+    endif()
 
     #// Global dependencies ////////////////////////////////////////////////////
 
@@ -228,7 +271,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(BZip2 REQUIRED)
     find_package(Iconv REQUIRED)
     find_package(Cairo REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(Pixman REQUIRED)
@@ -239,15 +281,15 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Freetype REQUIRED)
     find_package(Fontconfig REQUIRED)
 
-    find_library(WINMM_LIB winmm)
-    find_library(GDI32_LIB gdi32)
-    find_library(DSOUND_LIB dsound)
-    find_library(WS2_32_LIB ws2_32)
-    find_library(CRYPT32_LIB crypt32)
-    find_library(WSOCK32_LIB wsock32)
-    find_library(IPHLPAPI_LIB iphlpapi)
-    find_library(STRMIIDS_LIB strmiids)
-    find_library(SETUPAPI_LIB setupapi)
+    find_library(WINMM_LIB winmm PATHS ${MSVC_PATHS})
+    find_library(GDI32_LIB gdi32 PATHS ${MSVC_PATHS})
+    find_library(DSOUND_LIB dsound PATHS ${MSVC_PATHS})
+    find_library(WS2_32_LIB ws2_32 PATHS ${MSVC_PATHS})
+    find_library(CRYPT32_LIB crypt32 PATHS ${MSVC_PATHS})
+    find_library(WSOCK32_LIB wsock32 PATHS ${MSVC_PATHS})
+    find_library(IPHLPAPI_LIB iphlpapi PATHS ${MSVC_PATHS})
+    find_library(STRMIIDS_LIB strmiids PATHS ${MSVC_PATHS})
+    find_library(SETUPAPI_LIB setupapi PATHS ${MSVC_PATHS})
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
         ${FONTCONFIG_DEFINITIONS}
@@ -260,7 +302,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${PIXMAN_INCLUDE_DIRS}
         ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
@@ -276,7 +317,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${ICONV_LIBRARIES}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
-        ${MPG123_LIBRARIES}
         ${PIXMAN_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${SNDFILE_LIBRARIES}
@@ -359,6 +399,18 @@ if(CMAKE_SYSTEM MATCHES Windows)
     )
 endif()
 
+if(MSVC)
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+      -D_SCL_SECURE_NO_WARNINGS
+      -D_CRT_SECURE_NO_WARNINGS
+    )
+
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+      -D_WIN32_WINNT=0x0501
+      -D_UNICODE -DUNICODE
+    )
+endif()
+
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
@@ -383,6 +435,10 @@ endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
+endif()
+
+if(NOT MSVC)
+    set(CPP11_FLAG -std=gnu++11)
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
@@ -416,8 +472,8 @@ endif()
 string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
 string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG}")
 
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} -std=gnu++11 ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG}")
 
 #// ofxAddons //////////////////////////////////////////////////////////////////
 
@@ -453,7 +509,15 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/src/ofxAssimpTexture.cpp"
         )
         include_directories("${OFXADDON_DIR}/src")
-        list(APPEND OFXADDONS_LIBRARIES -lassimp)
+        if(MSVC)
+          if(CMAKE_BUILD_TYPE MATCHES Release)
+            list(APPEND OFXADDONS_LIBRARIES assimpmd.lib)
+          elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+            list(APPEND OFXADDONS_LIBRARIES assimpmdd.lib)
+          endif()
+        else()
+          list(APPEND OFXADDONS_LIBRARIES -lassimp)
+        endif()
         include_directories("${OF_ROOT_DIR}/src/assimp/include")
 
 
@@ -534,7 +598,14 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
         pkg_check_modules(OPENCV REQUIRED opencv)
         include_directories(${OPENCV_INCLUDE_DIRS})
-        list(APPEND OFXADDONS_LIBRARIES ${OPENCV_LDFLAGS})
+        foreach(LIBRARY ${OPENCV_LIBRARIES})
+          if(NOT ${LIBRARY} MATCHES opencv_ts AND
+             NOT ${LIBRARY} MATCHES opengl32  AND
+             NOT ${LIBRARY} MATCHES glu32)
+               find_library(FOUND_${LIBRARY} ${LIBRARY})
+               list(APPEND OFXADDONS_LIBRARIES ${FOUND_${LIBRARY}})
+          endif()
+        endforeach()
         if (CMAKE_SYSTEM MATCHES Linux)
             find_package(TBB REQUIRED)
             include_directories(${TBB_INCLUDE_DIRS})
@@ -658,8 +729,10 @@ else()
     endfunction(cotire)
 endif()
 
-set(OFXADDONS_BEGIN -Wl,--start-group)
-set(OFXADDONS_END -Wl,--end-group)
+if(NOT MSVC)
+    set(OFXADDONS_BEGIN -Wl,--start-group)
+    set(OFXADDONS_END -Wl,--end-group)
+endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 

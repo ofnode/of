@@ -64,6 +64,9 @@
 #include <assert.h>
 #include <map>
 
+#ifdef _MSC_VER
+#include <algorithm>
+#endif
 
 namespace Imf {
 

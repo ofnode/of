@@ -78,7 +78,7 @@ file ( GLOB SRC_FREEGLUTLIB "src/*.c" )
 
 add_library ( freeglut STATIC ${SRC_FREEGLUTLIB} )
 
-if ( CYGWIN OR MSYS OR MINGW )
+if ( CYGWIN OR MSYS OR MINGW OR MSVC )
     add_definitions ( -DWIN32 -DFREEGLUT_EXPORTS )
     target_link_libraries ( freeglut winmm user32 gdi32 ${OPENGL_LIBRARIES} )
 elseif ( UNIX AND NOT APPLE )
@@ -91,3 +91,7 @@ if ( UNIX )
     add_definitions ( -fPIC )
 endif ( )
 
+if ( MSVC )
+	add_definitions ( -D_SCL_SECURE_NO_WARNINGS )
+	add_definitions ( -D_CRT_SECURE_NO_WARNINGS )
+endif ( MSVC )

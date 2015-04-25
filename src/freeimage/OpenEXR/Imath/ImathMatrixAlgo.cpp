@@ -45,6 +45,10 @@
 #include "ImathMatrixAlgo.h"
 #include <cmath>
 
+#ifdef _MSC_VER
+#include <algorithm>
+#endif
+
 #if defined(OPENEXR_DLL)
     #define EXPORT_CONST __declspec(dllexport)
 #else

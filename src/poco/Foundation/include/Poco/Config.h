@@ -20,18 +20,6 @@
 #define Foundation_Config_INCLUDED
 
 
-#ifdef GCC_DIAG_ON
-#undef GCC_DIAG_ON
-#endif
-
-#ifdef GCC_DIAG_OFF
-#undef GCC_DIAG_OFF
-#endif
-
-#define GCC_DIAG_ON(x)
-#define GCC_DIAG_OFF(x)
-
-
 // Define to enable Windows Unicode (UTF-8) support
 // NOTE: As of POCO C++ Libraries release 1.6.0, compiling POCO
 // without POCO_WIN32_UTF8 defined on Windows is deprecated.
@@ -55,7 +43,7 @@
 // initialization framework-wide (e.g. Net
 // on Windows, all Data back-ends, etc).
 // 
-// #define POCO_NO_AUTOMATIC_LIB_INIT
+#define POCO_NO_AUTOMATIC_LIB_INIT
 
 
 // Define to disable FPEnvironment support

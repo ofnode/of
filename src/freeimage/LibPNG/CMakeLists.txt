@@ -39,6 +39,10 @@ if(UNIX)
     add_definitions(-fPIC)
 endif()
 
+if(MSVC)
+    set_target_properties(png PROPERTIES COMPILE_DEFINITIONS "Z_SOLO")
+endif()
+
 set_target_properties(png PROPERTIES COMPILE_FLAGS "-w")
 
 target_link_libraries(png ${ZLIB_LIBRARIES})
