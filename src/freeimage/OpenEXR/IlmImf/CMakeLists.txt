@@ -131,6 +131,10 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}
                     ${CMAKE_CURRENT_LIST_DIR}/../Imath
 )
 
+if(MSVC)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/win32)
+endif()
+
 # List the include paths
 include_directories(${ZLIB_INCLUDE_DIRS})
 
