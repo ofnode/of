@@ -395,12 +395,15 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
 
 if(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/dev/include/windows"
     "${OF_ROOT_DIR}/src/videoinput"
     )
 endif()
 
 if(MSVC)
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/dev/include/msvc"
+    )
+
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
       -D_SCL_SECURE_NO_WARNINGS
       -D_CRT_SECURE_NO_WARNINGS

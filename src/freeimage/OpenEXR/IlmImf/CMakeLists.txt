@@ -132,7 +132,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}
 )
 
 if(MSVC)
-    include_directories(${CMAKE_CURRENT_LIST_DIR}/win32)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/msvc)
 endif()
 
 # List the include paths

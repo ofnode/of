@@ -147,65 +147,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
 endif()
 
-list(APPEND INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/freeglut"
-    "${OF_ROOT_DIR}/src/freeglut/include"
-
-    "${OF_ROOT_DIR}/src/freeimage"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Iex"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmImf"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmThread"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Imath"
-
-    "${OF_ROOT_DIR}/src/glew"
-    "${OF_ROOT_DIR}/src/glew/include"
-
-    "${OF_ROOT_DIR}/src/glfw"
-    "${OF_ROOT_DIR}/src/glfw/include"
-    "${OF_ROOT_DIR}/src/glfw/include/GLFW"
-
-    "${OF_ROOT_DIR}/src/kiss"
-    "${OF_ROOT_DIR}/src/kiss/include"
-    "${OF_ROOT_DIR}/src/kiss/src"
-
-    "${OF_ROOT_DIR}/src/poco"
-    "${OF_ROOT_DIR}/src/poco/Crypto/include"
-    "${OF_ROOT_DIR}/src/poco/Foundation/include"
-    "${OF_ROOT_DIR}/src/poco/Net/include"
-    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
-    "${OF_ROOT_DIR}/src/poco/Util/include"
-    "${OF_ROOT_DIR}/src/poco/XML/include"
-    "${OF_ROOT_DIR}/src/poco/Zip/include"
-
-    "${OF_ROOT_DIR}/src/rtaudio"
-    "${OF_ROOT_DIR}/src/rtaudio/include"
-
-    "${OF_ROOT_DIR}/src/tess2"
-    "${OF_ROOT_DIR}/src/tess2/include"
-    "${OF_ROOT_DIR}/src/tess2/Sources"
-
-    "${OF_ROOT_DIR}/src/openframeworks"
-    "${OF_ROOT_DIR}/src/openframeworks/3d"
-    "${OF_ROOT_DIR}/src/openframeworks/app"
-    "${OF_ROOT_DIR}/src/openframeworks/communication"
-    "${OF_ROOT_DIR}/src/openframeworks/events"
-    "${OF_ROOT_DIR}/src/openframeworks/gl"
-    "${OF_ROOT_DIR}/src/openframeworks/graphics"
-    "${OF_ROOT_DIR}/src/openframeworks/math"
-    "${OF_ROOT_DIR}/src/openframeworks/sound"
-    "${OF_ROOT_DIR}/src/openframeworks/types"
-    "${OF_ROOT_DIR}/src/openframeworks/utils"
-    "${OF_ROOT_DIR}/src/openframeworks/video"
-)
-
-if(CMAKE_SYSTEM MATCHES Windows)
-    list(APPEND INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/videoinput"
-    )
-endif()
-
 set(SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/3d/of3dPrimitives.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/3d/of3dUtils.cpp"
@@ -298,7 +239,70 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     )
 endif()
 
+list(APPEND INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/freeglut"
+    "${OF_ROOT_DIR}/src/freeglut/include"
+
+    "${OF_ROOT_DIR}/src/freeimage"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Iex"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmImf"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmThread"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Imath"
+
+    "${OF_ROOT_DIR}/src/glew"
+    "${OF_ROOT_DIR}/src/glew/include"
+
+    "${OF_ROOT_DIR}/src/glfw"
+    "${OF_ROOT_DIR}/src/glfw/include"
+    "${OF_ROOT_DIR}/src/glfw/include/GLFW"
+
+    "${OF_ROOT_DIR}/src/kiss"
+    "${OF_ROOT_DIR}/src/kiss/include"
+    "${OF_ROOT_DIR}/src/kiss/src"
+
+    "${OF_ROOT_DIR}/src/poco"
+    "${OF_ROOT_DIR}/src/poco/Crypto/include"
+    "${OF_ROOT_DIR}/src/poco/Foundation/include"
+    "${OF_ROOT_DIR}/src/poco/Net/include"
+    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
+    "${OF_ROOT_DIR}/src/poco/Util/include"
+    "${OF_ROOT_DIR}/src/poco/XML/include"
+    "${OF_ROOT_DIR}/src/poco/Zip/include"
+
+    "${OF_ROOT_DIR}/src/rtaudio"
+    "${OF_ROOT_DIR}/src/rtaudio/include"
+
+    "${OF_ROOT_DIR}/src/tess2"
+    "${OF_ROOT_DIR}/src/tess2/include"
+    "${OF_ROOT_DIR}/src/tess2/Sources"
+
+    "${OF_ROOT_DIR}/src/openframeworks"
+    "${OF_ROOT_DIR}/src/openframeworks/3d"
+    "${OF_ROOT_DIR}/src/openframeworks/app"
+    "${OF_ROOT_DIR}/src/openframeworks/communication"
+    "${OF_ROOT_DIR}/src/openframeworks/events"
+    "${OF_ROOT_DIR}/src/openframeworks/gl"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics"
+    "${OF_ROOT_DIR}/src/openframeworks/math"
+    "${OF_ROOT_DIR}/src/openframeworks/sound"
+    "${OF_ROOT_DIR}/src/openframeworks/types"
+    "${OF_ROOT_DIR}/src/openframeworks/utils"
+    "${OF_ROOT_DIR}/src/openframeworks/video"
+)
+
+if(CMAKE_SYSTEM MATCHES Windows)
+    list(APPEND INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/videoinput"
+    )
+endif()
+
 if(MSVC)
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/dev/include/msvc"
+    )
+
     list(APPEND DEFINITIONS
       -D_SCL_SECURE_NO_WARNINGS
       -D_CRT_SECURE_NO_WARNINGS
