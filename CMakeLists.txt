@@ -1,5 +1,4 @@
 project(openFrameworks)
-
 cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
@@ -71,12 +70,12 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug")
 
-    set(DEFINITIONS
+    set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_GTK
-        -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
-        -DOF_VIDEO_CAPTURE_GSTREAMER
+        -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_VIDEO_PLAYER_GSTREAMER
+        -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
     pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
@@ -90,11 +89,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(GStreamer REQUIRED)
     find_package(Fontconfig REQUIRED)
 
-    list(APPEND DEFINITIONS
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
         ${FONTCONFIG_DEFINITIONS}
     )
 
-    set(INCLUDE_DIRS
+    set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${GTK3_INCLUDE_DIRS}
         ${GLIB_INCLUDE_DIRS}
         ${ALSA_INCLUDE_DIRS}
@@ -120,7 +119,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug")
 
-    set(DEFINITIONS
+    set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_VIDEO_CAPTURE_DIRECTSHOW
@@ -133,11 +132,11 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Freetype REQUIRED)
     find_package(Fontconfig REQUIRED)
 
-    list(APPEND DEFINITIONS
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
         ${FONTCONFIG_DEFINITIONS}
     )
 
-    set(INCLUDE_DIRS
+    set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
@@ -147,7 +146,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
 endif()
 
-set(SOURCES
+set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/3d/of3dPrimitives.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/3d/of3dUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/3d/ofCamera.cpp"
@@ -226,20 +225,20 @@ set(SOURCES
 )
 
 if(CMAKE_SYSTEM MATCHES Linux)
-    list(APPEND SOURCES
+    list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
     )
 elseif(CMAKE_SYSTEM MATCHES Windows)
-    list(APPEND SOURCES
+    list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/videoinput/videoInput.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
     )
 endif()
 
-list(APPEND INCLUDE_DIRS
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/freeglut"
     "${OF_ROOT_DIR}/src/freeglut/include"
 
@@ -293,7 +292,7 @@ list(APPEND INCLUDE_DIRS
 )
 
 if(CMAKE_SYSTEM MATCHES Windows)
-    list(APPEND INCLUDE_DIRS
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/videoinput"
     )
 endif()
@@ -303,18 +302,18 @@ if(MSVC)
     "${OF_ROOT_DIR}/dev/include/msvc"
     )
 
-    list(APPEND DEFINITIONS
-      -D_SCL_SECURE_NO_WARNINGS
-      -D_CRT_SECURE_NO_WARNINGS
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -D_SCL_SECURE_NO_WARNINGS
+        -D_CRT_SECURE_NO_WARNINGS
     )
 
-    list(APPEND DEFINITIONS
-      -D_WIN32_WINNT=0x0501
-      -D_UNICODE -DUNICODE
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -D_WIN32_WINNT=0x0501
+        -D_UNICODE -DUNICODE
     )
 endif()
 
-list(APPEND DEFINITIONS
+list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
 )
@@ -327,6 +326,9 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
   if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_FLAG -Og)
   elseif(CMAKE_SYSTEM MATCHES Windows)
+    # If GNU compiler's version below 4.8.0 and we are on Windows,
+    # then we're using old MinGW compiler. To avoid "File too big"
+    # error we have to crank O level up to make object files small
     set(O_FLAG -O2)
   else()
     set(O_FLAG -O0)
@@ -382,15 +384,15 @@ message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
 message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
 message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message("++ CMAKE_C_FLAGS_DEBUG: "   ${CMAKE_C_FLAGS_DEBUG})
-    message("++ CMAKE_CXX_FLAGS_DEBUG: " ${CMAKE_CXX_FLAGS_DEBUG})
-endif()
-
 if(CMAKE_BUILD_TYPE MATCHES Release)
     message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
     message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
+elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+    message("++ CMAKE_C_FLAGS_DEBUG: "     ${CMAKE_C_FLAGS_DEBUG})
+    message("++ CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
 endif()
+
+message("++ OPENFRAMEWORKS_DEFINITIONS: ${OPENFRAMEWORKS_DEFINITIONS}")
 
 #// Build //////////////////////////////////////////////////////////////////////
 
@@ -404,20 +406,25 @@ add_subdirectory(src/rtaudio)
 add_subdirectory(src/tess2)
 add_subdirectory(src/assimp)
 
-add_library(openFrameworks STATIC ${SOURCES})
+add_library(
+    openFrameworks STATIC
+    ${OPENFRAMEWORKS_SOURCES}
+)
 
 target_include_directories(
     openFrameworks PRIVATE
-    ${INCLUDE_DIRS}
+    ${OPENFRAMEWORKS_INCLUDE_DIRS}
 )
 
 target_compile_definitions(
     openFrameworks PRIVATE
-    ${DEFINITIONS}
+    ${OPENFRAMEWORKS_DEFINITIONS}
 )
 
-target_link_libraries(
-    openFrameworks
-    -static-libgcc
-    -static-libstdc++
-)
+if(NOT MSVC)
+    target_link_libraries(
+        openFrameworks
+        -static-libgcc
+        -static-libstdc++
+    )
+endif()

@@ -69,7 +69,7 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# Output shared libraries and executables to a bin folder of your project
+# Output shared libraries and executables to bin folder of your project tree
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
@@ -81,10 +81,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_GTK
-        -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
-        -DOF_VIDEO_CAPTURE_GSTREAMER
+        -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_VIDEO_PLAYER_GSTREAMER
+        -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
     # Static C and C++
@@ -405,13 +405,13 @@ if(MSVC)
     )
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
-      -D_SCL_SECURE_NO_WARNINGS
-      -D_CRT_SECURE_NO_WARNINGS
+        -D_SCL_SECURE_NO_WARNINGS
+        -D_CRT_SECURE_NO_WARNINGS
     )
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
-      -D_WIN32_WINNT=0x0501
-      -D_UNICODE -DUNICODE
+        -D_WIN32_WINNT=0x0501
+        -D_UNICODE -DUNICODE
     )
 endif()
 
@@ -431,6 +431,9 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
   if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_FLAG -Og)
   elseif(CMAKE_SYSTEM MATCHES Windows)
+    # If GNU compiler's version below 4.8.0 and we are on Windows,
+    # then we're using old MinGW compiler. To avoid "File too big"
+    # error we have to crank O level up to make object files small
     set(O_FLAG -O2)
   else()
     set(O_FLAG -O0)
@@ -745,15 +748,15 @@ message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
 message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
 message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message("++ CMAKE_C_FLAGS_DEBUG: "   ${CMAKE_C_FLAGS_DEBUG})
-    message("++ CMAKE_CXX_FLAGS_DEBUG: " ${CMAKE_CXX_FLAGS_DEBUG})
-endif()
+message("++ OF_ENABLE_COTIRE: "  ${OF_ENABLE_COTIRE})
+message("++ OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})
 
 if(CMAKE_BUILD_TYPE MATCHES Release)
     message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
     message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
+elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+    message("++ CMAKE_C_FLAGS_DEBUG: "     ${CMAKE_C_FLAGS_DEBUG})
+    message("++ CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
 endif()
 
-message("++ OF_ENABLE_COTIRE: "  ${OF_ENABLE_COTIRE})
-message("++ OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})
+message("++ OPENFRAMEWORKS_DEFINITIONS: ${OPENFRAMEWORKS_DEFINITIONS}")
