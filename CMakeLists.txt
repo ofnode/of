@@ -107,8 +107,25 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug")
+    find_library(COCOA_LIBRARY Cocoa)
 
-    message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
+
+    #message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
+    # builds:
+    # assimp
+    # freeimage
+    # glew
+    # glfw
+    # kiss
+    # poco
+    # rtaudio
+
+    # doesn't build:
+    # freeglut
+    #/Users/felix/Source/of/src/freeglut/src/freeglut_internal.h:108:14: fatal error: 'GL/glx.h' file not found
+    #    include <GL/glx.h>
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
@@ -126,7 +143,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         -DOF_VIDEO_CAPTURE_DIRECTSHOW
         -DOF_VIDEO_PLAYER_DIRECTSHOW
     )
-    
+
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
