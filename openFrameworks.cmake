@@ -395,6 +395,7 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
 
 if(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/dev/include/windows"
     "${OF_ROOT_DIR}/src/videoinput"
     )
 endif()

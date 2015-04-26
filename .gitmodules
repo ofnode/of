@@ -1,3 +1,6 @@
 [submodule "examples/ofExamples"]
 	path = examples/ofExamples
 	url = https://github.com/ofnode/ofExamples
+[submodule "examples/res15-opengl"]
+	path = examples/res15-opengl
+	url = https://github.com/ofnode/res15-opengl
