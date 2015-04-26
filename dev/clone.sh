@@ -19,9 +19,6 @@ cd src
 # v 2.0 release
 setup assimp 997ce39 https://github.com/ofnode/assimp
 
-# v 2.8.1 release
-setup freeglut 6eecfb5 https://github.com/ofnode/freeglut
-
 # v 3.16.0 release
 setup freeimage 5291d94 https://github.com/ofnode/freeimage
 

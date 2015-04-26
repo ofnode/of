@@ -38,7 +38,6 @@ mingw-w64-x86_64-bzip2      \
 mingw-w64-x86_64-libiconv   \
 mingw-w64-x86_64-cairo      \
 mingw-w64-x86_64-openssl    \
-mingw-w64-x86_64-freeglut   \
 mingw-w64-x86_64-freetype   \
 mingw-w64-x86_64-fontconfig \
 mingw-w64-x86_64-opencv     \

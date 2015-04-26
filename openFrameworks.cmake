@@ -341,9 +341,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 endif()
 
 list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/freeglut"
-    "${OF_ROOT_DIR}/src/freeglut/include"
-
     "${OF_ROOT_DIR}/src/freeimage"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"

@@ -75,9 +75,6 @@
 #include "ofMainLoop.h"
 #if !defined( TARGET_OF_IOS ) & !defined(TARGET_ANDROID) & !defined(TARGET_EMSCRIPTEN)
 	#include "ofAppGLFWWindow.h"
-	#if !defined( TARGET_LINUX_ARM )
-		#include "ofAppGlutWindow.h"
-	#endif
 #endif
 
 //--------------------------
