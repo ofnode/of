@@ -2,7 +2,6 @@ project(openFrameworks)
 cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
-add_subdirectory(src/rtaudio)
 
 #// MSVC flags /////////////////////////////////////////////////////////////////
 
@@ -459,6 +458,7 @@ endif()
 message("++ OPENFRAMEWORKS_DEFINITIONS: ${OPENFRAMEWORKS_DEFINITIONS}")
 
 #// Build //////////////////////////////////////////////////////////////////////
+add_subdirectory(src/rtaudio)
 add_subdirectory(src/freeimage)
 add_subdirectory(src/glew)
 add_subdirectory(src/glfw)

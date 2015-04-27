@@ -21,7 +21,7 @@ if(WIN32)
         include/ginclude.h
         include/dsound.h
     )
-    
+
     add_library(rtaudio STATIC ${SRCS} ${HEADERS})
 
 elseif(UNIX)
@@ -33,23 +33,23 @@ elseif(UNIX)
     SET(SRCS
         RtAudio.cpp
     )
-    
+
     SET(HEADERS
         include/soundcard.h
         RtError.h
         RtAudio.h
         include/ginclude.h
     )
-    
+
     if(APPLE)
 
         add_definitions(-D__MACOSX_CORE__ -DMAC)
-        add_library(rtaudio SHARED ${SRCS} ${HEADERS} )
+        add_library(rtaudio STATIC ${SRCS} ${HEADERS} )
         target_link_libraries(rtaudio)
-        set_target_properties(rtaudio PROPERTIES LINK_FLAGS "-framework CoreFoundation -framework CoreAudio -framework AudioUnit -framework AudioToolbox") 
-    
+        set_target_properties(rtaudio PROPERTIES LINK_FLAGS "-framework CoreFoundation -framework CoreAudio -framework AudioUnit -framework AudioToolbox")
+
     else()
-    
+
         if(JACK_FOUND)
             add_definitions(-D__UNIX_JACK__)
             include_directories(${JACK_INCLUDE_DIR})
@@ -60,13 +60,13 @@ elseif(UNIX)
         include_directories(${ALSA_INCLUDE_DIR})
         add_library(rtaudio STATIC ${SRCS} ${HEADERS})
         add_definitions(-fPIC)
-        
+
         if(JACK_FOUND)
             target_link_libraries(rtaudio ${ALSA_LIBRARY} ${JACK_LIBRARIES})
         else()
             target_link_libraries(rtaudio ${ALSA_LIBRARY})
         endif()
-        
+
     endif()
-    
+
 endif()

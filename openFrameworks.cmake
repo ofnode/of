@@ -194,6 +194,27 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
+    set(OPENFRAMEWORKS_DEFINITIONS
+        -D__MACOSX_CORE__
+        -DOF_SOUND_PLAYER_OPENAL
+        -DOF_SOUNDSTREAM_RTAUDIO
+    )
+
+    #// Local dependencies /////////////////////////////////////////////////////
+
+    if(CMAKE_BUILD_TYPE MATCHES Release)
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/release")
+    elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug")
+    endif()
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
+    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
+
+    if(NOT OPENFRAMEWORKS_LIBS)
+        message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+    endif()
+
     message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
