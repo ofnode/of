@@ -109,9 +109,10 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug")
 
-    set(DEFINITIONS
+    set(OPENFRAMEWORKS_DEFINITIONS
         -D__MACOSX_CORE__
         -DOF_SOUND_PLAYER_OPENAL
+        -DOF_SOUNDSTREAM_RTAUDIO
     )
 
     set(CMAKE_CXX_FLAGS "-x objective-c++")
@@ -133,7 +134,9 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_library( AVFOUNDATION_LIB AVFoundation)
     find_library( CORE_MEDIA_LIB CoreMedia)
     find_library( QUARTZ_CORE_LIB QuartzCore)
-    message(${CORE_AUDIO_LIBRARY})
+    message(${CORE_AUDIO_LIB})
+
+    #don't show these variables in config
     MARK_AS_ADVANCED  ( ACCELERATE_LIB
                         QTKIT_LIB
                         GLUT_LIB
@@ -152,6 +155,13 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
                         CORE_MEDIA_LIB
                         QUARTZ_CORE_LIB
                       )
+
+    find_package(OpenAL REQUIRED)
+    find_package(SndFile REQUIRED)
+
+    set(OPENFRAMEWORKS_INCLUDE_DIRS
+        ${SNDFILE_INCLUDE_DIR}
+    )
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
