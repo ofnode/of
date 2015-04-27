@@ -1,8 +1,6 @@
 #!/bin/bash
 cd "`dirname "$(readlink -f $0)"`"
 cd ..
-OF="`pwd`"
-shopt -s extglob
 
 #-------------------------------------------------------------------------------
 
@@ -20,4 +18,3 @@ rm -rf src/videoinput
 rm -rf addons
 
 rm -rf lib
-rm     lib.tar.gz 2> /dev/null
