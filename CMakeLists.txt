@@ -106,7 +106,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
-    option(ENABLE_GSTREAMER_OSX "Enable GStreamer on OSX" ON)
+    option(ENABLE_GSTREAMER_OSX "Enable GStreamer on OSX" OFF)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug")
 
@@ -133,7 +133,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(Cairo REQUIRED)
     find_package(Freetype REQUIRED)
     if(ENABLE_GSTREAMER_OSX)
-      find_package(GStreamer REQUIRED)
+      find_package(GStreamer REQUIRED gstreamer-video)
       find_package(Glib REQUIRED)
     endif()
     #find_package(OpenAL REQUIRED)
@@ -150,6 +150,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
       set(OPENFRAMEWORKS_INCLUDE_DIRS
           ${OPENFRAMEWORKS_INCLUDE_DIRS}
           ${GSTREAMER_INCLUDE_DIRS}
+          ${GSTREAMER_VIDEO_INCLUDE_DIRS}
           ${GLIB_INCLUDE_DIRS}
       )
     endif()
