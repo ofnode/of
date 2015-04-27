@@ -16,5 +16,6 @@ examples/debug/*
 
 lib-linux/*
 lib-windows/*
+lib-osx/*
 
 src/assimp/test/*
