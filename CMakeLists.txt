@@ -257,7 +257,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 elseif(CMAKE_SYSTEM MATCHES Darwin)
     list(APPEND OPENFRAMEWORKS_SOURCES
-    #TODO AVFOundation Player and Stuff
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayerView.m"
     )
 elseif(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_SOURCES
