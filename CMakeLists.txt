@@ -158,9 +158,17 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     find_package(OpenAL REQUIRED)
     find_package(SndFile REQUIRED)
+    find_package(Glib REQUIRED)
+    find_package(Cairo REQUIRED)
+    find_package(OpenAL REQUIRED)
+    #find_package(OpenGL REQUIRED)
+    find_package(Freetype REQUIRED)
+    #find_package(GStreamer REQUIRED)
+    find_package(Fontconfig REQUIRED)
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${SNDFILE_INCLUDE_DIR}
+        ${CAIRO_INCLUDE_DIR}
     )
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
