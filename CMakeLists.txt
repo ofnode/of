@@ -260,6 +260,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayerView.m"
+    # will have to add QTKit for VideoGrabbing. (or quicktime?)
     )
 elseif(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_SOURCES
