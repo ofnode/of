@@ -137,7 +137,7 @@ FI_STRUCT (FIMULTIBITMAP) { void *data; };
 // define portable types for 32-bit / 64-bit OS
 #include <inttypes.h>
 //typedef int32_t BOOL;
-#define BOOL int32_t;
+#define BOOL int32_t
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
 typedef uint32_t DWORD;
