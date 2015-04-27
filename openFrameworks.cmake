@@ -215,7 +215,25 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
     endif()
 
-    message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -Wl,-Bstatic
+        -Wl,--start-group
+        ${OPENFRAMEWORKS_LIBS}
+        -Wl,--end-group
+        -Wl,-Bdynamic
+    )
+
+    #// Global dependencies ////////////////////////////////////////////////////
+    find_package(Cairo REQUIRED)
+    find_package(Sndfile REQUIRED)
+
+    set(OPENFRAMEWORKS_INCLUDE_DIRS
+        ${CAIRO_INCLUDE_DIR}
+        ${SNDFILE_INCLUDE_DIR}
+    )
+
+
+    #message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 

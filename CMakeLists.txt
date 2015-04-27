@@ -116,55 +116,18 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     )
 
     set(RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG} "-x objective-c++")
+    set(DEBUG_CXX_FLAGS_CLANG ${DEBUG_CXX_FLAGS_CLANG} "-x objective-c++")
 
-    find_library( ACCELERATE_LIB Accelerate)
-    find_library( QTKIT_LIB QTKit)
-    find_library( GLUT_LIB GLUT)
-    find_library( AGL_LIB AGL)
-    find_library( APPLICATION_SERVICES_LIB ApplicationServices)
-    find_library( AUDIO_TOOLBOX_LIB AudioToolbox)
-    find_library( CORE_AUDIO_LIB CoreAudio)
-    find_library( CORE_FOUNDATION_LIB CoreFoundation)
-    find_library( CORE_SERVICES_LIB CoreServices)
-    find_library( OPEN_GL_LIB OpenGL)
-    find_library( QUICKTIME_LIB QuickTime)
-    find_library( IOKIT_LIB IOKit)
-    find_library( COCOA_LIB Cocoa)
-    find_library( CORE_VIDEO_LIB CoreVideo)
-    find_library( AVFOUNDATION_LIB AVFoundation)
-    find_library( CORE_MEDIA_LIB CoreMedia)
-    find_library( QUARTZ_CORE_LIB QuartzCore)
-    message(${CORE_AUDIO_LIB})
 
-    #don't show these variables in config
-    MARK_AS_ADVANCED  ( ACCELERATE_LIB
-                        QTKIT_LIB
-                        GLUT_LIB
-                        AGL_LIB
-                        APPLICATION_SERVICES_LIB
-                        AUDIO_TOOLBOX_LIB
-                        CORE_AUDIO_LIB
-                        CORE_FOUNDATION_LIB
-                        CORE_SERVICES_LIB
-                        OPEN_GL_LIB
-                        QUICKTIME_LIB
-                        IOKIT_LIB
-                        COCOA_LIB
-                        CORE_VIDEO_LIB
-                        AVFOUNDATION_LIB
-                        CORE_MEDIA_LIB
-                        QUARTZ_CORE_LIB
-                      )
-
-    find_package(OpenAL REQUIRED)
     find_package(SndFile REQUIRED)
-    find_package(Glib REQUIRED)
     find_package(Cairo REQUIRED)
-    find_package(OpenAL REQUIRED)
-    #find_package(OpenGL REQUIRED)
     find_package(Freetype REQUIRED)
+    #find_package(Glib REQUIRED)
+    #find_package(OpenAL REQUIRED)
+    #find_package(OpenGL REQUIRED)
+    #find_package(OpenAL REQUIRED)
     #find_package(GStreamer REQUIRED)
-    find_package(Fontconfig REQUIRED)
+    #find_package(Fontconfig REQUIRED)
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${SNDFILE_INCLUDE_DIR}
