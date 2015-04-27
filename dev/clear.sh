@@ -7,7 +7,6 @@ shopt -s extglob
 #-------------------------------------------------------------------------------
 
 rm -rf src/assimp
-rm -rf src/freeglut
 rm -rf src/freeimage
 rm -rf src/glew
 rm -rf src/glfw

@@ -172,7 +172,6 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/3d/ofNode.cpp"
 
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGLFWWindow.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGlutWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppNoWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppRunner.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofMainLoop.cpp"
@@ -256,9 +255,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 endif()
 
 list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/freeglut"
-    "${OF_ROOT_DIR}/src/freeglut/include"
-
     "${OF_ROOT_DIR}/src/freeimage"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
@@ -413,7 +409,6 @@ message("++ OPENFRAMEWORKS_DEFINITIONS: ${OPENFRAMEWORKS_DEFINITIONS}")
 
 #// Build //////////////////////////////////////////////////////////////////////
 
-add_subdirectory(src/freeglut)
 add_subdirectory(src/freeimage)
 add_subdirectory(src/glew)
 add_subdirectory(src/glfw)
