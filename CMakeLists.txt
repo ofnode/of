@@ -2,6 +2,7 @@ project(openFrameworks)
 cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
+add_subdirectory(src/rtaudio)
 
 #// MSVC flags /////////////////////////////////////////////////////////////////
 
@@ -115,7 +116,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         -DOF_SOUNDSTREAM_RTAUDIO
     )
 
-    set(CMAKE_CXX_FLAGS "-x objective-c++")
+    set(RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG} "-x objective-c++")
 
     find_library( ACCELERATE_LIB Accelerate)
     find_library( QTKIT_LIB QTKit)
@@ -292,6 +293,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
     )
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+    list(APPEND OPENFRAMEWORKS_SOURCES
+    #TODO AVFOundation Player and Stuff
+    )
 elseif(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/videoinput/videoInput.cpp"
@@ -454,13 +459,11 @@ endif()
 message("++ OPENFRAMEWORKS_DEFINITIONS: ${OPENFRAMEWORKS_DEFINITIONS}")
 
 #// Build //////////////////////////////////////////////////////////////////////
-
 add_subdirectory(src/freeimage)
 add_subdirectory(src/glew)
 add_subdirectory(src/glfw)
 add_subdirectory(src/kiss)
 add_subdirectory(src/poco)
-add_subdirectory(src/rtaudio)
 add_subdirectory(src/tess2)
 add_subdirectory(src/assimp)
 
