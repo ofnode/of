@@ -28,7 +28,7 @@
 # 2) For easy environment variable editing you can use a free program called Windows Environment Variables Editor: http://eveditor.com
 # 3) Don't generate project files from Git console: its folder is included by default which causes linker to link against its libz.dll
 # 
-# Run commands below from MSYS2 Shell
+# Run the commands below from MSYS2 Shell:
 
 yes | pacman -Sy --needed   \
 mingw-w64-x86_64-pkg-config \
@@ -44,4 +44,3 @@ mingw-w64-x86_64-opencv     \
 mingw-w64-x86_64-openal     \
 mingw-w64-x86_64-libusb     \
 mingw-w64-x86_64-libsndfile
-
