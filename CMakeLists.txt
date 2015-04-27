@@ -108,23 +108,50 @@ if(CMAKE_SYSTEM MATCHES Linux)
 elseif(CMAKE_SYSTEM MATCHES Darwin)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug")
-    find_library(COCOA_LIBRARY Cocoa)
 
+    set(DEFINITIONS
+        -D__MACOSX_CORE__
+        -DOF_SOUND_PLAYER_OPENAL
+    )
 
-    #message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
-    # builds:
-    # assimp
-    # freeimage
-    # glew
-    # glfw
-    # kiss
-    # poco
-    # rtaudio
+    set(CMAKE_CXX_FLAGS "-x objective-c++")
 
-    # doesn't build:
-    # freeglut
-    #/Users/felix/Source/of/src/freeglut/src/freeglut_internal.h:108:14: fatal error: 'GL/glx.h' file not found
-    #    include <GL/glx.h>
+    find_library( ACCELERATE_LIB Accelerate)
+    find_library( QTKIT_LIB QTKit)
+    find_library( GLUT_LIB GLUT)
+    find_library( AGL_LIB AGL)
+    find_library( APPLICATION_SERVICES_LIB ApplicationServices)
+    find_library( AUDIO_TOOLBOX_LIB AudioToolbox)
+    find_library( CORE_AUDIO_LIB CoreAudio)
+    find_library( CORE_FOUNDATION_LIB CoreFoundation)
+    find_library( CORE_SERVICES_LIB CoreServices)
+    find_library( OPEN_GL_LIB OpenGL)
+    find_library( QUICKTIME_LIB QuickTime)
+    find_library( IOKIT_LIB IOKit)
+    find_library( COCOA_LIB Cocoa)
+    find_library( CORE_VIDEO_LIB CoreVideo)
+    find_library( AVFOUNDATION_LIB AVFoundation)
+    find_library( CORE_MEDIA_LIB CoreMedia)
+    find_library( QUARTZ_CORE_LIB QuartzCore)
+    message(${CORE_AUDIO_LIBRARY})
+    MARK_AS_ADVANCED  ( ACCELERATE_LIB
+                        QTKIT_LIB
+                        GLUT_LIB
+                        AGL_LIB
+                        APPLICATION_SERVICES_LIB
+                        AUDIO_TOOLBOX_LIB
+                        CORE_AUDIO_LIB
+                        CORE_FOUNDATION_LIB
+                        CORE_SERVICES_LIB
+                        OPEN_GL_LIB
+                        QUICKTIME_LIB
+                        IOKIT_LIB
+                        COCOA_LIB
+                        CORE_VIDEO_LIB
+                        AVFOUNDATION_LIB
+                        CORE_MEDIA_LIB
+                        QUARTZ_CORE_LIB
+                      )
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
