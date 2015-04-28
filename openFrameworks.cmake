@@ -213,23 +213,63 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     if(NOT OPENFRAMEWORKS_LIBS)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+    else()
+        message(${OPENFRAMEWORKS_LIBS})
     endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
-        -Wl,-Bstatic
-        -Wl,--start-group
+        #-Wl,-Bstatic
+        # not supported by osx ld: -Wl,--start-group
         ${OPENFRAMEWORKS_LIBS}
-        -Wl,--end-group
-        -Wl,-Bdynamic
+        # not supported by osx ld: -Wl,--end-group
+        #-Wl,-Bdynamic
     )
 
     #// Global dependencies ////////////////////////////////////////////////////
     find_package(Cairo REQUIRED)
     find_package(Sndfile REQUIRED)
+    find_package(Freetype REQUIRED)
+    find_package(OpenAL REQUIRED) # should be provided by CoreAudio
+    find_package(ZLIB REQUIRED)
+
+    #find_package(OpenSSL REQUIRED)
+    set(OPENSSL_INCLUDE_DIR "/usr/local/opt/openssl/include") #homebrew version
+    set(OPENSSL_LIBRARIES
+      "/usr/local/opt/openssl/lib/libcrypto.a"
+      "/usr/local/opt/openssl/lib/libssl.a"
+    )
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GLIB_INCLUDE_DIRS}
+        ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
+        ${OPENAL_INCLUDE_DIR}
+        ${OPENGL_INCLUDE_DIR}
+        ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
+        ${FREETYPE_INCLUDE_DIRS}
+        #${FONTCONFIG_INCLUDE_DIR}
+    )
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${GLIB_LIBRARIES}
+        ${ZLIB_LIBRARIES}
+        ${OPENAL_LIBRARY}
+        ${CAIRO_LIBRARIES}
+        ${OPENGL_LIBRARIES}
+        ${OPENSSL_LIBRARIES}
+        ${SNDFILE_LIBRARIES}
+        ${FREETYPE_LIBRARIES}
+        ${FONTCONFIG_LIBRARIES}
+        #${CMAKE_THREAD_LIBS_INIT}
+    )
+
+    # Frameworks
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        "-framework OpenGL"
+        "-framework Cocoa"
+        "-framework IOKit"
+        "-framework CoreVideo"
     )
 
 
@@ -285,6 +325,10 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     endif()
 
     if(MSVC)
+        list(APPEND OPENFRAMEWORKS_LIBRARIES
+            ${OPENFRAMEWORKS_LIBS}
+        )
+    elseif(CMAKE_SYSTEM MATCHES Darwin)
         list(APPEND OPENFRAMEWORKS_LIBRARIES
             ${OPENFRAMEWORKS_LIBS}
         )
@@ -772,7 +816,7 @@ else()
     endfunction(cotire)
 endif()
 
-if(NOT MSVC)
+if((NOT MSVC) AND (NOT(CMAKE_SYSTEM MATCHES Darwin)) )
     set(OFXADDONS_BEGIN -Wl,--start-group)
     set(OFXADDONS_END -Wl,--end-group)
 endif()
