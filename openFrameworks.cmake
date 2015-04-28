@@ -268,6 +268,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         "-framework Cocoa"
         "-framework IOKit"
         "-framework CoreVideo"
+        "-framework QTKit"
+        "-framework Accelerate"
+        "-framework CoreAudio"
+        "-framework AVFoundation"
+        "-framework CoreMedia"
     )
 
 
@@ -713,6 +718,11 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/src/ofxOscSender.cpp"
         )
         if(CMAKE_SYSTEM MATCHES Linux)
+            list(APPEND OFXSOURCES
+            "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/NetworkingUtils.cpp"
+            "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/UdpSocket.cpp"
+            )
+        elseif(CMAKE_SYSTEM MATCHES Darwin)
             list(APPEND OFXSOURCES
             "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/NetworkingUtils.cpp"
             "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/UdpSocket.cpp"
