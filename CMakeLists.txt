@@ -280,6 +280,9 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayerView.m"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
+    #"${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitMovieRenderer.m"
+    #"${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitPlayer.mm"
     # will have to add QTKit for VideoGrabbing. (or quicktime?) or GStreamer!
     )
     if(ENABLE_GSTREAMER_OSX)

@@ -213,8 +213,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     if(NOT OPENFRAMEWORKS_LIBS)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
-    else()
-        message(${OPENFRAMEWORKS_LIBS})
     endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
