@@ -216,11 +216,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
-        #-Wl,-Bstatic
-        # not supported by osx ld: -Wl,--start-group
         ${OPENFRAMEWORKS_LIBS}
-        # not supported by osx ld: -Wl,--end-group
-        #-Wl,-Bdynamic
     )
 
     #// Global dependencies ////////////////////////////////////////////////////
@@ -274,9 +270,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         "-framework AVFoundation"
         "-framework CoreMedia"
     )
-
-
-    #message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
+    message("OS X support is experimental. Please report issues if you run into something.")
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 

@@ -136,9 +136,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
       find_package(GStreamer REQUIRED gstreamer-video)
       find_package(Glib REQUIRED)
     endif()
-    #find_package(OpenAL REQUIRED)
-    #find_package(OpenGL REQUIRED)
-    #find_package(Fontconfig REQUIRED)
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${SNDFILE_INCLUDE_DIR}
@@ -154,6 +151,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
           ${GLIB_INCLUDE_DIRS}
       )
     endif()
+    message("OS X support is experimental. Please report issues if you run into something.")
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
