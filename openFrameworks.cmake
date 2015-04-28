@@ -194,7 +194,83 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
-    message(FATAL_ERROR "OS X systems are not supported yet. Feel free to add support by yourself and pull request changes!")
+    set(OPENFRAMEWORKS_DEFINITIONS
+        -D__MACOSX_CORE__
+        -DOF_SOUND_PLAYER_OPENAL
+        -DOF_SOUNDSTREAM_RTAUDIO
+    )
+
+    #// Local dependencies /////////////////////////////////////////////////////
+
+    if(CMAKE_BUILD_TYPE MATCHES Release)
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/release")
+    elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug")
+    endif()
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
+    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
+
+    if(NOT OPENFRAMEWORKS_LIBS)
+        message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+    endif()
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${OPENFRAMEWORKS_LIBS}
+    )
+
+    #// Global dependencies ////////////////////////////////////////////////////
+    find_package(Cairo REQUIRED)
+    find_package(Sndfile REQUIRED)
+    find_package(Freetype REQUIRED)
+    find_package(OpenAL REQUIRED) # should be provided by CoreAudio
+    find_package(ZLIB REQUIRED)
+
+    #find_package(OpenSSL REQUIRED)
+    set(OPENSSL_INCLUDE_DIR "/usr/local/opt/openssl/include") #homebrew version
+    set(OPENSSL_LIBRARIES
+      "/usr/local/opt/openssl/lib/libcrypto.a"
+      "/usr/local/opt/openssl/lib/libssl.a"
+    )
+
+    set(OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GLIB_INCLUDE_DIRS}
+        ${ZLIB_INCLUDE_DIRS}
+        ${CAIRO_INCLUDE_DIR}
+        ${OPENAL_INCLUDE_DIR}
+        ${OPENGL_INCLUDE_DIR}
+        ${OPENSSL_INCLUDE_DIR}
+        ${SNDFILE_INCLUDE_DIR}
+        ${FREETYPE_INCLUDE_DIRS}
+        #${FONTCONFIG_INCLUDE_DIR}
+    )
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${GLIB_LIBRARIES}
+        ${ZLIB_LIBRARIES}
+        ${OPENAL_LIBRARY}
+        ${CAIRO_LIBRARIES}
+        ${OPENGL_LIBRARIES}
+        ${OPENSSL_LIBRARIES}
+        ${SNDFILE_LIBRARIES}
+        ${FREETYPE_LIBRARIES}
+        ${FONTCONFIG_LIBRARIES}
+        #${CMAKE_THREAD_LIBS_INIT}
+    )
+
+    # Frameworks
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        "-framework OpenGL"
+        "-framework Cocoa"
+        "-framework IOKit"
+        "-framework CoreVideo"
+        "-framework QTKit"
+        "-framework Accelerate"
+        "-framework CoreAudio"
+        "-framework AVFoundation"
+        "-framework CoreMedia"
+    )
+    message("OS X support is experimental. Please report issues if you run into something.")
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
@@ -246,6 +322,10 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     endif()
 
     if(MSVC)
+        list(APPEND OPENFRAMEWORKS_LIBRARIES
+            ${OPENFRAMEWORKS_LIBS}
+        )
+    elseif(CMAKE_SYSTEM MATCHES Darwin)
         list(APPEND OPENFRAMEWORKS_LIBRARIES
             ${OPENFRAMEWORKS_LIBS}
         )
@@ -633,6 +713,11 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/NetworkingUtils.cpp"
             "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/UdpSocket.cpp"
             )
+        elseif(CMAKE_SYSTEM MATCHES Darwin)
+            list(APPEND OFXSOURCES
+            "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/NetworkingUtils.cpp"
+            "${OFXADDON_DIR}/libs/oscpack/src/ip/posix/UdpSocket.cpp"
+            )
         elseif(CMAKE_SYSTEM MATCHES Windows)
             list(APPEND OFXSOURCES
             "${OFXADDON_DIR}/libs/oscpack/src/ip/win32/NetworkingUtils.cpp"
@@ -730,7 +815,7 @@ else()
     endfunction(cotire)
 endif()
 
-if(NOT MSVC)
+if((NOT MSVC) AND (NOT(CMAKE_SYSTEM MATCHES Darwin)) )
     set(OFXADDONS_BEGIN -Wl,--start-group)
     set(OFXADDONS_END -Wl,--end-group)
 endif()

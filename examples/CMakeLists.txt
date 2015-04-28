@@ -179,7 +179,8 @@ example( xmlExample                           ofExamples/utils/xmlExample )
 
 example( asciiVideo                           ofExamples/video/asciiVideo )
 if(CMAKE_SYSTEM MATCHES Darwin)
-example( osxHighPerformanceVideoPlayerExample ofExamples/video/osxHighPerformanceVideoPlayerExample )
+#This is based on QTKit and deprecated, doesn't even compile on vanilla of
+    #example( osxHighPerformanceVideoPlayerExample ofExamples/video/osxHighPerformanceVideoPlayerExample )
 example( osxVideoRecorderExample              ofExamples/video/osxVideoRecorderExample )
 endif()
 example( videoGrabberExample                  ofExamples/video/videoGrabberExample )
