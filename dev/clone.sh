@@ -14,6 +14,7 @@ function setup() {
 
 #-------------------------------------------------------------------------------
 
+mkdir -p src
 cd src
 
 # v 2.0 release
@@ -35,7 +36,7 @@ setup poco c6cf535 https://github.com/pocoproject/poco
 setup rtaudio 4d0492e https://github.com/ofnode/rtaudio
 
 # v 0.9.0 master
-setup openFrameworks a2feaee https://github.com/openframeworks/openFrameworks
+setup openFrameworks c931915 https://github.com/openframeworks/openFrameworks
 
 rm -rf videoinput
 mkdir  videoinput

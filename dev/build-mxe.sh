@@ -14,6 +14,3 @@ mkdir -p "$OF/build/mxe/debug"
 cd       "$OF/build/mxe/debug"
 cmake    "$OF" -G Ninja -DCMAKE_TOOLCHAIN_FILE=`find /opt/mxe -name mxe-conf.cmake` -DCMAKE_BUILD_TYPE=Debug
 ninja
-
-cd  "$OF"
-tar -czvf lib-windows-mxe.tar.gz lib-windows

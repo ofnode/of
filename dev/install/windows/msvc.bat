@@ -16,7 +16,6 @@ call :genlib  zlib1                     zlib
 call :genlib  libeay32                  libeay32
 call :genlib  ssleay32                  ssleay32
 call :genlib  libbz2-1                  bz2
-call :genlib  libiconv-2                iconv
 call :genlib  libpixman-1-0             pixman-1
 call :genlib  libintl-8                 libintl
 call :genlib  libsndfile-1              sndfile

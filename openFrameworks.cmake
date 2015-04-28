@@ -349,7 +349,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     find_package(ZLIB REQUIRED)
     find_package(BZip2 REQUIRED)
-    find_package(Iconv REQUIRED)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
@@ -378,7 +377,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     set(OPENFRAMEWORKS_INCLUDE_DIRS
         ${ZLIB_INCLUDE_DIRS}
         ${BZIP2_INCLUDE_DIR}
-        ${ICONV_INCLUDE_DIR}
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
@@ -394,7 +392,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${OPENAL_LIBRARY}
         ${ZLIB_LIBRARIES}
         ${BZIP2_LIBRARIES}
-        ${ICONV_LIBRARIES}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
         ${PIXMAN_LIBRARIES}
