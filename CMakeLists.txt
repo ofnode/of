@@ -109,7 +109,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     message("OS X support is experimental. Please report issues if you run into something.")
 
-    option(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL "Enable GStreamer on OSX")
+    set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL "Enable GStreamer on OSX")
 
     if(OF_ENABLE_GSTREAMER_OSX)
     message("Enabling GStreamer on OSX - make sure you installed it with ${OF_ROOT_DIR}/dev/install/osx/gstreamer.sh")
