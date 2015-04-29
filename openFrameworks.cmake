@@ -194,6 +194,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
+    message("OS X support is experimental. Please report issues if you run into something.")
+
     set(OPENFRAMEWORKS_DEFINITIONS
         -D__MACOSX_CORE__
         -DOF_SOUND_PLAYER_OPENAL
@@ -208,8 +210,8 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug")
     endif()
 
-    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
+    set(OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
+    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
 
     if(NOT OPENFRAMEWORKS_LIBS)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
@@ -220,17 +222,20 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     )
 
     #// Global dependencies ////////////////////////////////////////////////////
+
+    find_package(ZLIB REQUIRED)
     find_package(Cairo REQUIRED)
+    find_package(OpenAL REQUIRED) # Should be provided by CoreAudio
     find_package(Sndfile REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(OpenAL REQUIRED) # should be provided by CoreAudio
-    find_package(ZLIB REQUIRED)
 
-    #find_package(OpenSSL REQUIRED)
-    set(OPENSSL_INCLUDE_DIR "/usr/local/opt/openssl/include") #homebrew version
+    # Homebrew version
+    set(OPENSSL_INCLUDE_DIR
+        "/usr/local/opt/openssl/include"
+    )
     set(OPENSSL_LIBRARIES
-      "/usr/local/opt/openssl/lib/libcrypto.a"
-      "/usr/local/opt/openssl/lib/libssl.a"
+        "/usr/local/opt/openssl/lib/libcrypto.a"
+        "/usr/local/opt/openssl/lib/libssl.a"
     )
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
@@ -242,7 +247,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
-        #${FONTCONFIG_INCLUDE_DIR}
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -255,7 +259,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
-        #${CMAKE_THREAD_LIBS_INIT}
     )
 
     # Frameworks
@@ -270,7 +273,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         "-framework AVFoundation"
         "-framework CoreMedia"
     )
-    message("OS X support is experimental. Please report issues if you run into something.")
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
@@ -321,11 +323,9 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
     endif()
 
+    # If we are on Windows using MSVC
+    # we don't need GCC's link groups
     if(MSVC)
-        list(APPEND OPENFRAMEWORKS_LIBRARIES
-            ${OPENFRAMEWORKS_LIBS}
-        )
-    elseif(CMAKE_SYSTEM MATCHES Darwin)
         list(APPEND OPENFRAMEWORKS_LIBRARIES
             ${OPENFRAMEWORKS_LIBS}
         )
@@ -336,12 +336,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
             ${OPENFRAMEWORKS_LIBS}
             -Wl,--end-group
             -Wl,-Bdynamic
-        )
-    endif()
-
-    if(MSVC)
-        set(MSVC_PATHS
-            "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"
         )
     endif()
 
@@ -359,6 +353,12 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(LibIntl REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(Fontconfig REQUIRED)
+
+    if(MSVC)
+    set(MSVC_PATHS
+        "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"
+    )
+    endif()
 
     find_library(WINMM_LIB winmm PATHS ${MSVC_PATHS})
     find_library(GDI32_LIB gdi32 PATHS ${MSVC_PATHS})

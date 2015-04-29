@@ -14,8 +14,8 @@ debug/*
 examples/build/*
 examples/debug/*
 
+lib-osx/*
 lib-linux/*
 lib-windows/*
-lib-osx/*
 
 src/assimp/test/*

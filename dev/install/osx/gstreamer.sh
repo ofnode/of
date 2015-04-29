@@ -1,6 +1,9 @@
 #!/bin/bash
+
 brew update
-brew install  gstreamer         \
-              gst-plugins-base	\
-              gst-libav	        \
-              gst-plugins-good
+
+brew install     \
+gstreamer        \
+gst-libav        \
+gst-plugins-base \
+gst-plugins-good

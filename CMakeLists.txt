@@ -106,7 +106,15 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
-    option(ENABLE_GSTREAMER_OSX "Enable GStreamer on OSX" OFF)
+
+    message("OS X support is experimental. Please report issues if you run into something.")
+
+    option(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL "Enable GStreamer on OSX")
+
+    if(OF_ENABLE_GSTREAMER_OSX)
+    message("Enabling GStreamer on OSX - make sure you installed it with ${OF_ROOT_DIR}/dev/install/osx/gstreamer.sh")
+    endif()
+
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug")
 
@@ -116,42 +124,38 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         -DOF_SOUNDSTREAM_RTAUDIO
     )
 
-    if(ENABLE_GSTREAMER_OSX)
-      message("Enabling GStreamer on OSX - make sure you installed it with ${OF_ROOT_DIR}/dev/install/osx/gstreamer.sh")
-      set(OPENFRAMEWORKS_DEFINITIONS
-          ${OPENFRAMEWORKS_DEFINITIONS}
-          -DOF_VIDEO_PLAYER_GSTREAMER
-          -DOF_VIDEO_CAPTURE_GSTREAMER
-      )
+    if(OF_ENABLE_GSTREAMER_OSX)
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DOF_VIDEO_PLAYER_GSTREAMER
+        -DOF_VIDEO_CAPTURE_GSTREAMER
+    )
     endif()
 
     set(RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG} "-x objective-c++")
-    set(DEBUG_CXX_FLAGS_CLANG ${DEBUG_CXX_FLAGS_CLANG} "-x objective-c++")
+    set(  DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG} "-x objective-c++")
 
-
-    find_package(SndFile REQUIRED)
     find_package(Cairo REQUIRED)
+    find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
-    if(ENABLE_GSTREAMER_OSX)
-      find_package(GStreamer REQUIRED gstreamer-video)
-      find_package(Glib REQUIRED)
+    
+    if(OF_ENABLE_GSTREAMER_OSX)
+    find_package(Glib REQUIRED)
+    find_package(GStreamer REQUIRED gstreamer-video)
     endif()
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
-        ${SNDFILE_INCLUDE_DIR}
         ${CAIRO_INCLUDE_DIR}
+        ${SNDFILE_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
     )
 
-    if(ENABLE_GSTREAMER_OSX)
-      set(OPENFRAMEWORKS_INCLUDE_DIRS
-          ${OPENFRAMEWORKS_INCLUDE_DIRS}
-          ${GSTREAMER_INCLUDE_DIRS}
-          ${GSTREAMER_VIDEO_INCLUDE_DIRS}
-          ${GLIB_INCLUDE_DIRS}
-      )
+    if(OF_ENABLE_GSTREAMER_OSX)
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GLIB_INCLUDE_DIRS}
+        ${GSTREAMER_INCLUDE_DIRS}
+        ${GSTREAMER_VIDEO_INCLUDE_DIRS}
+    )
     endif()
-    message("OS X support is experimental. Please report issues if you run into something.")
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
@@ -279,16 +283,13 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayerView.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
-    # deprecated:
-    #"${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitMovieRenderer.m"
-    #"${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitPlayer.mm"
     )
-    if(ENABLE_GSTREAMER_OSX)
-      list(APPEND OPENFRAMEWORKS_SOURCES
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
-      )
+    if(OF_ENABLE_GSTREAMER_OSX)
+    list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
+    )
     endif()
 elseif(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_SOURCES
