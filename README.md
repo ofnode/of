@@ -24,7 +24,7 @@ The only difference is that this project targets CMake build system and stores s
 Step 1: Clone
 -------------
 
-`git clone --recursive --depth 1 https://github.com/ofnode/of` will clone this repo and example folders.
+Run `git clone https://github.com/ofnode/of --depth 1 --recursive` in a command line or download it by clicking on a Github's "Download ZIP" button.
 
 
 Step 2: Install
@@ -65,6 +65,8 @@ xcodebuild -configuration Release
 ```
 
 #### For Windows:
+
+Open the Start menu and run `VS2013 x64 Native Tools Command Prompt`, then `cd /d` into `of` directory and enter:
 
 ```batch
 mkdir build\windows
