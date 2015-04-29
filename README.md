@@ -21,40 +21,59 @@ Difference
 The only difference is that this project targets CMake build system and stores source code of some libraries on which openFrameworks depends locally with patches applied if needed.
 
 
-Installing
-----------
+Step 1: Clone
+-------------
 
-1. `git clone --recursive --depth 1 https://github.com/ofnode/of` will clone this repo.
-2. Install developer files for your Linux distro with a script from `dev/install/linux` folder.
-3. Download precompiled libraries from [releases](https://github.com/ofnode/of/releases) page and extract `lib-linux` folder to `of`.
+`git clone --recursive --depth 1 https://github.com/ofnode/of` will clone this repo and example folders.
 
 
-Compiling
----------
+Step 2: Install
+---------------
 
-Release build:
+#### For Linux:
+
+Install needed developer packages for your Linux distro with a script from [`dev/install/linux`](https://github.com/ofnode/of/tree/master/dev/install/linux) folder.
+
+#### For OS X:
+
+Install needed developer packages with the [`dev/install/osx/homebrew.sh`](https://github.com/ofnode/of/tree/master/dev/install/osx/homebrew.sh) script.
+
+#### For Windows:
+
+[See wiki](https://github.com/ofnode/of/wiki/Instructions-for-Windows)
+
+
+Step 3: Compile
+---------------
+
+#### For Linux:
 
 ```bash
-mkdir build
-cd build
-cmake .. -G Ninja
+mkdir -p build/linux
+cd build/linux
+cmake ../.. -G Ninja -DCMAKE_BUILD_TYPE=Release
 ninja
 ```
 
-Debug build:
+#### For OS X:
 
 ```bash
-mkdir build
-cd build
-cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Debug
-ninja
+mkdir -p build/osx
+cd build/osx
+cmake ../.. -G Xcode -DCMAKE_BUILD_TYPE=Release
+xcodebuild -configuration Release
 ```
 
+#### For Windows:
 
-Windows
--------
+```batch
+mkdir build\windows
+cd build\windows
+cmake ..\.. -G "Visual Studio 12 2013 Win64" -DCMAKE_BUILD_TYPE=Release
+msbuild openFrameworks.sln /m /p:Configuration=Release
+```
 
-### [See wiki](https://github.com/ofnode/of/wiki)
+You can always skip this step by downloading precompiled libraries from [releases](https://github.com/ofnode/of/releases) page and extract `lib-linux`, `lib-osx` or `lib-windows` folders to `of` root directory.
 
 
 Templates
