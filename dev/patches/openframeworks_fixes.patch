@@ -64,4 +64,14 @@
  	#define __WINDOWS_DS__
  	#define __WINDOWS_MM__
  	#if (_MSC_VER)       // microsoft visual studio
-
+--- a/openframeworks/types/ofTypes.h
++++ b/openframeworks/types/ofTypes.h
+@@ -3,7 +3,7 @@
+ #include "ofConstants.h"
+ #include "ofColor.h"
+ 
+-#if (_MSC_VER) || ((defined(TARGET_EMSCRIPTEN) || defined(TARGET_LINUX) || defined(TARGET_ANDROID)) && __cplusplus>=201103L)
++#if (_MSC_VER) || ((defined(TARGET_EMSCRIPTEN) || defined(TARGET_OSX) || defined(TARGET_LINUX) || defined(TARGET_ANDROID)) && __cplusplus>=201103L)
+ #include <memory>
+ #else
+ #include <tr1/memory>

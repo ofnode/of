@@ -21,7 +21,7 @@ cd src
 setup assimp 997ce39 https://github.com/ofnode/assimp
 
 # v 3.16.0 release
-setup freeimage 5291d94 https://github.com/ofnode/freeimage
+setup freeimage 8a60364 https://github.com/ofnode/freeimage
 
 # v 1.11.0 release
 setup glew 4c7a8db https://github.com/ofnode/glew
@@ -33,7 +33,7 @@ setup glfw 2a50139 https://github.com/ofnode/glfw
 setup poco c6cf535 https://github.com/pocoproject/poco
 
 # v 4.0.12 master
-setup rtaudio 4d0492e https://github.com/ofnode/rtaudio
+setup rtaudio 981b1ae https://github.com/ofnode/rtaudio
 
 # v 0.9.0 master
 setup openFrameworks c931915 https://github.com/openframeworks/openFrameworks
