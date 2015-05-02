@@ -32,6 +32,7 @@ endif()
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
     set(RELEASE_C_FLAGS_CLANG "
+        -Wno-switch
         -Wno-deprecated-register
     ")
 
@@ -45,6 +46,7 @@ endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
     set(RELEASE_CXX_FLAGS_CLANG "
+        -Wno-switch
         -Wno-deprecated-register
     ")
 
@@ -379,17 +381,32 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
 #// Compiler flags /////////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
-    set(O_FLAG -O0)
+    set(O_C_FLAG -O0)
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
   if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
-    set(O_FLAG -Og)
+    set(O_C_FLAG -Og)
   elseif(CMAKE_SYSTEM MATCHES Windows)
     # If GNU compiler's version below 4.8.0 and we are on Windows,
     # then we're using old MinGW compiler. To avoid "File too big"
     # error we have to crank O level up to make object files small
-    set(O_FLAG -O2)
+    set(O_C_FLAG -O2)
   else()
-    set(O_FLAG -O0)
+    set(O_C_FLAG -O0)
+  endif()
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+    set(O_CXX_FLAG -O0)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8.0)
+    set(O_CXX_FLAG -Og)
+  elseif(CMAKE_SYSTEM MATCHES Windows)
+    # If GNU compiler's version below 4.8.0 and we are on Windows,
+    # then we're using old MinGW compiler. To avoid "File too big"
+    # error we have to crank O level up to make object files small
+    set(O_CXX_FLAG -O2)
+  else()
+    set(O_CXX_FLAG -O0)
   endif()
 endif()
 
@@ -399,6 +416,10 @@ endif()
 
 if(NOT MSVC)
     set(CPP11_FLAG -std=gnu++11)
+endif()
+
+if(MINGW)
+    set(STRIP_FLAG -s)
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
@@ -429,11 +450,11 @@ string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
 endif()
 
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG} ${O_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${PIC_FLAG} ${STRIP_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG} ${O_C_FLAG}")
 
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG} ${STRIP_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_CXX_FLAG}")
 
 #// Messages ///////////////////////////////////////////////////////////////////
 

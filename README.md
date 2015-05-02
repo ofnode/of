@@ -51,7 +51,7 @@ Step 3: Compile
 ```bash
 mkdir -p build/linux
 cd build/linux
-cmake ../.. -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake ../.. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release
 ninja
 ```
 

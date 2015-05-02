@@ -30,6 +30,7 @@ endif()
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
     set(RELEASE_C_FLAGS_CLANG "
+        -Wno-switch
         -Wno-deprecated-register
     ")
 
@@ -43,6 +44,7 @@ endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
     set(RELEASE_CXX_FLAGS_CLANG "
+        -Wno-switch
         -Wno-deprecated-register
     ")
 
@@ -115,11 +117,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
     endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
-        -Wl,-Bstatic
-        -Wl,--start-group
         ${OPENFRAMEWORKS_LIBS}
-        -Wl,--end-group
-        -Wl,-Bdynamic
+        ${OPENFRAMEWORKS_LIBS}
     )
 
     #// Global dependencies ////////////////////////////////////////////////////
@@ -354,19 +353,16 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
     endif()
 
-    # If we are on Windows using MSVC
-    # we don't need GCC's link groups
+    # If we are on Windows, using MSVC
+    # we don't need to link libs twice
     if(MSVC)
         list(APPEND OPENFRAMEWORKS_LIBRARIES
             ${OPENFRAMEWORKS_LIBS}
         )
     else()
         list(APPEND OPENFRAMEWORKS_LIBRARIES
-            -Wl,-Bstatic
-            -Wl,--start-group
             ${OPENFRAMEWORKS_LIBS}
-            -Wl,--end-group
-            -Wl,-Bdynamic
+            ${OPENFRAMEWORKS_LIBS}
         )
     endif()
 
@@ -531,17 +527,32 @@ include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
 #// Compiler flags /////////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
-    set(O_FLAG -O0)
+    set(O_C_FLAG -O0)
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
   if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
-    set(O_FLAG -Og)
+    set(O_C_FLAG -Og)
   elseif(CMAKE_SYSTEM MATCHES Windows)
     # If GNU compiler's version below 4.8.0 and we are on Windows,
     # then we're using old MinGW compiler. To avoid "File too big"
     # error we have to crank O level up to make object files small
-    set(O_FLAG -O2)
+    set(O_C_FLAG -O2)
   else()
-    set(O_FLAG -O0)
+    set(O_C_FLAG -O0)
+  endif()
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+    set(O_CXX_FLAG -O0)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8.0)
+    set(O_CXX_FLAG -Og)
+  elseif(CMAKE_SYSTEM MATCHES Windows)
+    # If GNU compiler's version below 4.8.0 and we are on Windows,
+    # then we're using old MinGW compiler. To avoid "File too big"
+    # error we have to crank O level up to make object files small
+    set(O_CXX_FLAG -O2)
+  else()
+    set(O_CXX_FLAG -O0)
   endif()
 endif()
 
@@ -551,6 +562,10 @@ endif()
 
 if(NOT MSVC)
     set(CPP11_FLAG -std=gnu++11)
+endif()
+
+if(MINGW)
+    set(STRIP_FLAG -s)
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
@@ -581,11 +596,11 @@ string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
 endif()
 
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${PIC_FLAG} ${STRIP_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG} ${O_C_FLAG}")
 
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG} ${STRIP_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_CXX_FLAG}")
 
 #// ofxAddons //////////////////////////////////////////////////////////////////
 
@@ -825,12 +840,7 @@ function(ofxaddon OFXADDON)
     endif()
 
     if(OFXSOURCES)
-        if(ARGV1 STREQUAL SHARED)
-            add_library(${OFXADDON} SHARED ${OFXSOURCES})
-        else()
-            add_library(${OFXADDON} STATIC ${OFXSOURCES})
-        endif()
-        set(OFXADDONS_LIBRARIES ${OFXADDONS_LIBRARIES} ${OFXADDON} PARENT_SCOPE)
+        set(OFXADDONS_SOURCES ${OFXADDONS_SOURCES} ${OFXSOURCES} PARENT_SCOPE)
     endif()
 
 endfunction(ofxaddon)
@@ -844,11 +854,6 @@ if(OF_ENABLE_COTIRE)
 else()
     function(cotire NO)
     endfunction(cotire)
-endif()
-
-if((NOT MSVC) AND (NOT(CMAKE_SYSTEM MATCHES Darwin)) )
-    set(OFXADDONS_BEGIN -Wl,--start-group)
-    set(OFXADDONS_END -Wl,--end-group)
 endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
