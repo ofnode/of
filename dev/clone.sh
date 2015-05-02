@@ -18,7 +18,7 @@ mkdir -p src
 cd src
 
 # v 2.0 release
-setup assimp 997ce39 https://github.com/ofnode/assimp
+setup assimp 96f76d3 https://github.com/ofnode/assimp
 
 # v 3.16.0 release
 setup freeimage 8a60364 https://github.com/ofnode/freeimage
