@@ -55,7 +55,7 @@
      #include <OpenGL/OpenGL.h>
 --- a/openframeworks/utils/ofConstants.h
 +++ b/openframeworks/utils/ofConstants.h
-@@ -108,7 +108,7 @@
+@@ -109,7 +109,7 @@
  	#define GLEW_STATIC
  	#include "GL/glew.h"
  	#include "GL/wglew.h"
