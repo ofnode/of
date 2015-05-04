@@ -142,7 +142,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     
     if(OF_ENABLE_GSTREAMER_OSX)
     find_package(Glib REQUIRED)
-    find_package(GStreamer REQUIRED)
+    find_package(GStreamer REQUIRED gstreamer-video)
     endif()
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS

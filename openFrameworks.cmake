@@ -201,13 +201,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         -DOF_SOUNDSTREAM_RTAUDIO
     )
 
-    if(OF_ENABLE_GSTREAMER_OSX)
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -DOF_VIDEO_PLAYER_GSTREAMER
-        -DOF_VIDEO_CAPTURE_GSTREAMER
-    )
-    endif()
-
     #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
@@ -235,11 +228,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(Sndfile REQUIRED)
     find_package(Freetype REQUIRED)
 
-    if(OF_ENABLE_GSTREAMER_OSX)
-    find_package(Glib REQUIRED gobject)
-    find_package(GStreamer REQUIRED)
-    endif()
-
     # Homebrew version
     set(OPENSSL_INCLUDE_DIR
         "/usr/local/opt/openssl/include"
@@ -250,6 +238,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     )
 
     set(OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
@@ -259,15 +248,8 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${FREETYPE_INCLUDE_DIRS}
     )
 
-    if(OF_ENABLE_GSTREAMER_OSX)
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${GLIB_INCLUDE_DIRS}
-        ${GSTREAMER_INCLUDE_DIRS}
-        ${GSTREAMER_VIDEO_INCLUDE_DIRS}
-    )
-    endif()
-
     list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${GLIB_LIBRARIES}
         ${ZLIB_LIBRARIES}
         ${OPENAL_LIBRARY}
         ${CAIRO_LIBRARIES}
@@ -277,19 +259,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
     )
-
-    if(OF_ENABLE_GSTREAMER_OSX)
-    list(APPEND OPENFRAMEWORKS_LIBRARIES
-        ${GLIB_LIBRARIES}
-        ${GLIB_GOBJECT_LIBRARIES}
-        ${GSTREAMER_LIBRARIES}
-        ${GSTREAMER_APP_LIBRARIES}
-        ${GSTREAMER_BASE_LIBRARIES}
-        ${GSTREAMER_VIDEO_LIBRARIES}
-    )
-    message(${GLIB_LIBRARIES})
-    message(${GLIB_GOBJECT_LIBRARIES})
-    endif()
 
     # Frameworks
     list(APPEND OPENFRAMEWORKS_LIBRARIES

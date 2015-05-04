@@ -389,13 +389,8 @@ int64_t ofGstUtils::getDurationNanos() const{
 	if(!gst_element_query_duration(getPipeline(),&format,&durationNanos))
 		ofLogWarning("ofGstUtils") << "getDurationNanos(): couldn't query time duration";
 #else
-	gint64 durationNanosGst;
-	if(!gst_element_query_duration(getPipeline(),format,&durationNanosGst)){
+	if(!gst_element_query_duration(getPipeline(),format,&durationNanos))
 		ofLogWarning("ofGstUtils") << "getDurationNanos(): couldn't query time duration";
-	}
-	else {
-			durationNanos = (int64_t)durationNanosGst;
-	}
 #endif
 	return durationNanos;
 
@@ -580,13 +575,7 @@ bool ofGstUtils::gstHandleMessage(GstBus * bus, GstMessage * msg){
 		}break;
 #else
 		case GST_MESSAGE_DURATION_CHANGED:
-			gint64 durationNanosGst;
-			if(!gst_element_query_duration(getPipeline(),GST_FORMAT_TIME,&durationNanosGst)){
-				ofLogWarning("ofGstUtils") << "getDurationNanos(): couldn't query time duration";
-			}
-			else {
-					durationNanos = (int64_t)durationNanosGst;
-			}
+			gst_element_query_duration(gstPipeline,GST_FORMAT_TIME,&durationNanos);
 			break;
 
 #endif

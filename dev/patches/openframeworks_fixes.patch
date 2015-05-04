@@ -75,35 +75,3 @@
  #include <memory>
  #else
  #include <tr1/memory>
---- a/openframeworks/video/ofGstUtils.cpp
-+++ b/openframeworks/video/ofGstUtils.cpp
-@@ -389,8 +389,13 @@
- 	if(!gst_element_query_duration(getPipeline(),&format,&durationNanos))
- 		ofLogWarning("ofGstUtils") << "getDurationNanos(): couldn't query time duration";
- #else
--	if(!gst_element_query_duration(getPipeline(),format,&durationNanos))
-+	gint64 durationNanosGst;
-+	if(!gst_element_query_duration(getPipeline(),format,&durationNanosGst)){
- 		ofLogWarning("ofGstUtils") << "getDurationNanos(): couldn't query time duration";
-+	}
-+	else {
-+			durationNanos = (int64_t)durationNanosGst;
-+	}
- #endif
- 	return durationNanos;
- 
-@@ -575,7 +580,13 @@
- 		}break;
- #else
- 		case GST_MESSAGE_DURATION_CHANGED:
--			gst_element_query_duration(gstPipeline,GST_FORMAT_TIME,&durationNanos);
-+			gint64 durationNanosGst;
-+			if(!gst_element_query_duration(getPipeline(),GST_FORMAT_TIME,&durationNanosGst)){
-+				ofLogWarning("ofGstUtils") << "getDurationNanos(): couldn't query time duration";
-+			}
-+			else {
-+					durationNanos = (int64_t)durationNanosGst;
-+			}
- 			break;
- 
- #endif
