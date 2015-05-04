@@ -310,6 +310,18 @@ void ofTexture::allocate(const ofFloatPixels& pix, bool bUseARBExtention){
 	loadData(pix);
 }
 
+#ifndef TARGET_OPENGLES
+//----------------------------------------------------------
+void ofTexture::allocate(const ofBufferObject & buffer, int glInternalFormat){
+	texData.glTypeInternal = glInternalFormat;
+	texData.textureTarget = GL_TEXTURE_BUFFER;
+	allocate(texData);
+	glBindTexture(texData.textureTarget,texData.textureID);
+	glTexBuffer(GL_TEXTURE_BUFFER,GL_RGBA32F,buffer.getId());
+	glBindTexture(texData.textureTarget,0);
+}
+#endif
+
 //----------------------------------------------------------
 void ofTexture::allocate(int w, int h, int internalGlDataType, bool bUseARBExtension, int glFormat, int pixelType){
 	texData.width = w;
@@ -338,9 +350,15 @@ void ofTexture::allocate(const ofTextureData & textureData){
 //----------------------------------------------------------
 
 void ofTexture::allocate(const ofTextureData & textureData, int glFormat, int pixelType){
-	if( textureData.width <= 0.0 || textureData.height <= 0.0 ){
-		ofLogError("ofTexture") << "allocate(): ofTextureData has 0 width and/or height: " << textureData.width << "x" << textureData.height;
-		return;
+#ifndef TARGET_OPENGLES
+	if(texData.textureTarget == GL_TEXTURE_2D || texData.textureTarget == GL_TEXTURE_RECTANGLE_ARB){
+#else
+	if(texData.textureTarget == GL_TEXTURE_2D){
+#endif
+		if( textureData.width <= 0.0 || textureData.height <= 0.0 ){
+			ofLogError("ofTexture") << "allocate(): ofTextureData has 0 width and/or height: " << textureData.width << "x" << textureData.height;
+			return;
+		}
 	}
 
 	texData = textureData;
@@ -351,7 +369,7 @@ void ofTexture::allocate(const ofTextureData & textureData, int glFormat, int pi
 		texData.tex_h = texData.height;
 		texData.tex_t = texData.width;
 		texData.tex_u = texData.height;
-	}else
+	}else if(texData.textureTarget == GL_TEXTURE_2D)
 #endif
 	{
 		if(ofGLSupportsNPOTTextures()){
@@ -366,10 +384,6 @@ void ofTexture::allocate(const ofTextureData & textureData, int glFormat, int pi
 
 		texData.tex_t = texData.width / texData.tex_w;
 		texData.tex_u = texData.height / texData.tex_h;
-
-//#ifndef TARGET_OPENGLES
-//		if( texData.textureTarget==GL_TEXTURE_RECTANGLE_ARB ) texData.textureTarget = GL_TEXTURE_2D;
-//#endif
 	}
 
 	// attempt to free the previous bound texture, if we can:
