@@ -23,11 +23,9 @@ else()
         -fno-optimize-sibling-calls
     ")
 
-endif()
-
 #// Clang specific C flags /////////////////////////////////////////////////////
 
-if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+  if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
     set(RELEASE_C_FLAGS_CLANG "
         -Wno-switch
@@ -37,11 +35,11 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(DEBUG_C_FLAGS_CLANG "
     ")
 
-endif()
+  endif()
 
 #// Clang specific C++ flags ///////////////////////////////////////////////////
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
     set(RELEASE_CXX_FLAGS_CLANG "
         -Wno-switch
@@ -50,6 +48,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
     set(DEBUG_CXX_FLAGS_CLANG "
     ")
+
+  endif()
+
+#///////////////////////////////////////////////////////////////////////////////
 
 endif()
 
