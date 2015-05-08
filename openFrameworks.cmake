@@ -33,6 +33,8 @@ else()
     ")
 
     set(DEBUG_C_FLAGS_CLANG "
+        -Wno-switch
+        -Wno-deprecated-register
     ")
 
   endif()
@@ -47,6 +49,8 @@ else()
     ")
 
     set(DEBUG_CXX_FLAGS_CLANG "
+        -Wno-switch
+        -Wno-deprecated-register
     ")
 
   endif()
