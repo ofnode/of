@@ -577,6 +577,13 @@ string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG} ${STRIP_FLAG}")
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_CXX_FLAG}")
 
+if(MSVC)
+string(REPLACE "/MD"  "/MT"  CMAKE_C_FLAGS_RELEASE   ${CMAKE_C_FLAGS_RELEASE})
+string(REPLACE "/MDd" "/MTd" CMAKE_C_FLAGS_DEBUG     ${CMAKE_C_FLAGS_DEBUG})
+string(REPLACE "/MD"  "/MT"  CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
+string(REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG})
+endif()
+
 #// ofxAddons //////////////////////////////////////////////////////////////////
 
 function(ofxaddon OFXADDON)
@@ -613,9 +620,9 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
         if(MSVC)
           if(CMAKE_BUILD_TYPE MATCHES Release)
-            list(APPEND OPENFRAMEWORKS_LIBRARIES assimpmd.lib)
+            list(APPEND OPENFRAMEWORKS_LIBRARIES assimpmt.lib)
           elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-            list(APPEND OPENFRAMEWORKS_LIBRARIES assimpmdd.lib)
+            list(APPEND OPENFRAMEWORKS_LIBRARIES assimpmtd.lib)
           endif()
         else()
           list(APPEND OPENFRAMEWORKS_LIBRARIES -lassimp)
