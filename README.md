@@ -82,6 +82,7 @@ Templates
 ---------
 
 ### [ofApp](https://github.com/ofnode/ofApp)
+### [ofLiveApp](https://github.com/ofnode/ofLiveApp)
 ### [ofxAddon](https://github.com/ofnode/ofxAddon)
 
 
