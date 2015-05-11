@@ -83,6 +83,7 @@ list(APPEND OFXADDONS_SOURCES
 
 add_library(ofxAddons STATIC ${OFXADDONS_SOURCES})
 
+
 #// ofExamples /////////////////////////////////////////////////////////////////
 
 
