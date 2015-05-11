@@ -24,8 +24,13 @@ The only difference is that this project targets CMake build system and stores s
 Step 1: Clone
 -------------
 
-Run `git clone https://github.com/ofnode/of --depth 1 --recursive` in a command line or download it by clicking on a Github's "Download ZIP" button.
+Run `git clone https://github.com/ofnode/of --depth 1` in a command line or download repository from the Github page by clicking on the "Download ZIP" button.
 
+To clone examples, open a console, change directory to `of` folder and run this command:
+
+```bash
+git submodule update --init --recursive
+```
 
 Step 2: Install
 ---------------
