@@ -4,3 +4,18 @@
 [submodule "examples/res15-opengl"]
 	path = examples/res15-opengl
 	url = https://github.com/ofnode/res15-opengl
+[submodule "examples/openFrameworksDemos"]
+	path = examples/openFrameworksDemos
+	url = https://github.com/ofnode/openFrameworksDemos
+[submodule "examples/OF_GenerativeTypography"]
+	path = examples/OF_GenerativeTypography
+	url = https://github.com/ofnode/OF_GenerativeTypography
+[submodule "examples/addons/ofxPointInMesh"]
+	path = examples/addons/ofxPointInMesh
+	url = https://github.com/ofnode/ofxPointInMesh
+[submodule "examples/addons/ofxVoro"]
+	path = examples/addons/ofxVoro
+	url = https://github.com/ofnode/ofxVoro
+[submodule "examples/addons/ofxVoronoi"]
+	path = examples/addons/ofxVoronoi
+	url = https://github.com/ofnode/ofxVoronoi
