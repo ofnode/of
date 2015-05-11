@@ -618,15 +618,6 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/src/ofxAssimpTexture.cpp"
         )
         include_directories("${OFXADDON_DIR}/src")
-        if(MSVC)
-          if(CMAKE_BUILD_TYPE MATCHES Release)
-            list(APPEND OPENFRAMEWORKS_LIBRARIES assimpmt.lib)
-          elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-            list(APPEND OPENFRAMEWORKS_LIBRARIES assimpmtd.lib)
-          endif()
-        else()
-          list(APPEND OPENFRAMEWORKS_LIBRARIES -lassimp)
-        endif()
         include_directories("${OF_ROOT_DIR}/src/assimp/include")
 
 
@@ -675,7 +666,8 @@ function(ofxaddon OFXADDON)
         find_package(LibUSB REQUIRED)
         add_definitions(${LIBUSB_1_DEFINITIONS})
         include_directories(${LIBUSB_1_INCLUDE_DIRS})
-        list(APPEND OPENFRAMEWORKS_LIBRARIES ${LIBUSB_1_LIBRARIES})
+        set(OPENFRAMEWORKS_LIBRARIES
+          ${OPENFRAMEWORKS_LIBRARIES} ${LIBUSB_1_LIBRARIES} PARENT_SCOPE)
 
 
     elseif(OFXADDON STREQUAL ofxMultiTouch)
@@ -712,14 +704,16 @@ function(ofxaddon OFXADDON)
              NOT ${LIBRARY} MATCHES opengl32  AND
              NOT ${LIBRARY} MATCHES glu32)
                find_library(FOUND_${LIBRARY} ${LIBRARY})
-               list(APPEND OPENFRAMEWORKS_LIBRARIES ${FOUND_${LIBRARY}})
+               set(OFXADDON_LIBRARIES ${OFXADDON_LIBRARIES} ${FOUND_${LIBRARY}})
           endif()
         endforeach()
-        if (CMAKE_SYSTEM MATCHES Linux)
-            find_package(TBB REQUIRED)
-            include_directories(${TBB_INCLUDE_DIRS})
-            list(APPEND OPENFRAMEWORKS_LIBRARIES ${TBB_LIBRARIES})
+        find_package(TBB)
+        if(TBB_FOUND)
+          include_directories(${TBB_INCLUDE_DIRS})
+          list(APPEND OFXADDON_LIBRARIES ${TBB_LIBRARIES})
         endif()
+        set(OPENFRAMEWORKS_LIBRARIES
+          ${OPENFRAMEWORKS_LIBRARIES} ${OFXADDON_LIBRARIES} PARENT_SCOPE)
 
 
     elseif(OFXADDON STREQUAL ofxOsc)

@@ -13,10 +13,17 @@ include(openFrameworks)
 
 function(example APP DIR)
 
+    if(MSVC)
+      set(NO_WARNINGS /w)
+    else()
+      set(NO_WARNINGS -w)
+    endif()
+
     file(GLOB_RECURSE SRC "${CMAKE_CURRENT_LIST_DIR}/${DIR}/*.cpp")
 
     add_executable(${APP} ${SRC})
     target_link_libraries(${APP} ofxAddons ${OPENFRAMEWORKS_LIBRARIES})
+    set_target_properties(${APP} PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
     set_target_properties(${APP} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
     set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
     set_target_properties(${APP} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
