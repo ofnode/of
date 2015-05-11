@@ -16,7 +16,7 @@ function(example APP DIR)
     file(GLOB_RECURSE SRC "${CMAKE_CURRENT_LIST_DIR}/${DIR}/*.cpp")
 
     add_executable(${APP} ${SRC})
-    target_link_libraries(${APP} ${OPENFRAMEWORKS_LIBRARIES} ofxAddons)
+    target_link_libraries(${APP} ofxAddons ${OPENFRAMEWORKS_LIBRARIES})
     set_target_properties(${APP} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
     set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
     set_target_properties(${APP} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
