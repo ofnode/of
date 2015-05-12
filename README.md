@@ -95,6 +95,7 @@ Issues
 ------
 
 ### [Known issues on Linux](https://gist.github.com/0470684110f443ce3f01)
+### [Known issues on OS X](https://gist.github.com/85bda4b8cf8016210e4a)
 ### [Known issues on Windows](https://gist.github.com/9e7635b1a51f65f72062)
 
 
