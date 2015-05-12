@@ -56,10 +56,12 @@ ofxaddon(addons/ofxPointInMesh)
 ofxaddon(addons/ofxVoronoi)
 ofxaddon(addons/ofxVoro)
 
+add_library(ofxAddons STATIC ${OFXADDONS_SOURCES})
+
 include_directories(
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D
 )
-list(APPEND OFXADDONS_SOURCES
+set(OFXVORONOI_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/cell_2d.cpp
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/cell_nc_2d.cpp
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/c_loops_2d.cpp
@@ -72,10 +74,13 @@ list(APPEND OFXADDONS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/wall_2d.cpp
 )
 
+add_library(ofxVoronoi STATIC ${OFXVORONOI_SOURCES})
+list(APPEND OPENFRAMEWORKS_LIBRARIES ofxVoronoi)
+
 include_directories(
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++
 )
-list(APPEND OFXADDONS_SOURCES
+set(OFXVORO_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/cell.cc
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/c_loops.cc
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/common.cc
@@ -88,7 +93,8 @@ list(APPEND OFXADDONS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/wall.cc
 )
 
-add_library(ofxAddons STATIC ${OFXADDONS_SOURCES})
+add_library(ofxVoro STATIC ${OFXVORO_SOURCES})
+list(APPEND OPENFRAMEWORKS_LIBRARIES ofxVoro)
 
 
 #// ofExamples /////////////////////////////////////////////////////////////////
