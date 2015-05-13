@@ -123,8 +123,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
     endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -Wl,-Bstatic
+        -Wl,--start-group
         ${OPENFRAMEWORKS_LIBS}
-        ${OPENFRAMEWORKS_LIBS}
+        -Wl,--end-group
+        -Wl,-Bdynamic
     )
 
     #// Global dependencies ////////////////////////////////////////////////////
@@ -328,16 +331,19 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
     endif()
 
-    # If we are on Windows, using MSVC
-    # we don't need to link libs twice
+    # If we are on Windows using MSVC
+    # we don't need GCC's link groups
     if(MSVC)
         list(APPEND OPENFRAMEWORKS_LIBRARIES
             ${OPENFRAMEWORKS_LIBS}
         )
     else()
         list(APPEND OPENFRAMEWORKS_LIBRARIES
+            -Wl,-Bstatic
+            -Wl,--start-group
             ${OPENFRAMEWORKS_LIBS}
-            ${OPENFRAMEWORKS_LIBS}
+            -Wl,--end-group
+            -Wl,-Bdynamic
         )
     endif()
 
