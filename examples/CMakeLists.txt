@@ -5,6 +5,7 @@ project(ofExamples)
 set(ofExamples              ON)
 set(res15-opengl            ON)
 set(ofDemystified           ON)
+set(BeyondInteraction       ON)
 set(openFrameworksDemos     ON)
 set(OF_GenerativeTypography ON)
 
@@ -12,13 +13,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/..")
 
 include(openFrameworks)
 
-function(example APP DIR)
+if(MSVC)
+    set(NO_WARNINGS /w)
+else()
+    set(NO_WARNINGS -w)
+endif()
 
-    if(MSVC)
-      set(NO_WARNINGS /w)
-    else()
-      set(NO_WARNINGS -w)
-    endif()
+function(example APP DIR)
 
     file(GLOB_RECURSE SRC "${CMAKE_CURRENT_LIST_DIR}/${DIR}/*.cpp")
 
@@ -53,48 +54,33 @@ ofxaddon(ofxThreadedImageLoader)
 ofxaddon(ofxVectorGraphics)
 ofxaddon(ofxXmlSettings)
 
+ofxaddon(addons/ofxBox2d)
 ofxaddon(addons/ofxPointInMesh)
 ofxaddon(addons/ofxVoronoi)
 ofxaddon(addons/ofxVoro)
 
 add_library(ofxAddons STATIC ${OFXADDONS_SOURCES})
 
-include_directories(
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D
-)
-set(OFXVORONOI_SOURCES
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/cell_2d.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/cell_nc_2d.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/c_loops_2d.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/common.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/container_2d.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/ctr_boundary_2d.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/v_base_2d.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/v_base_wl_2d.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/v_compute_2d.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D/wall_2d.cpp
-)
 
+#// LIBRARIES FOR OFXADDONS ////////////////////////////////////////////////////
+
+
+include_directories("${CMAKE_CURRENT_LIST_DIR}/addons/ofxBox2d/libs")
+file(GLOB_RECURSE OFXBOX2D_SOURCES "${CMAKE_CURRENT_LIST_DIR}/addons/ofxBox2d/libs/*.cpp")
+add_library(ofxBox2d STATIC ${OFXBOX2D_SOURCES})
+set_target_properties(ofxBox2d PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
+list(APPEND OPENFRAMEWORKS_LIBRARIES ofxBox2d)
+
+include_directories("${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D")
+file(GLOB_RECURSE OFXVORONOI_SOURCES "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/*.cpp")
 add_library(ofxVoronoi STATIC ${OFXVORONOI_SOURCES})
+set_target_properties(ofxVoronoi PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
 list(APPEND OPENFRAMEWORKS_LIBRARIES ofxVoronoi)
 
-include_directories(
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++
-)
-set(OFXVORO_SOURCES
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/cell.cc
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/c_loops.cc
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/common.cc
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/container.cc
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/container_prd.cc
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/pre_container.cc
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/unitcell.cc
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/v_base.cc
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/v_compute.cc
-    ${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/wall.cc
-)
-
+include_directories("${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++")
+file(GLOB_RECURSE OFXVORO_SOURCES "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/*.cc")
 add_library(ofxVoro STATIC ${OFXVORO_SOURCES})
+set_target_properties(ofxVoro PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
 list(APPEND OPENFRAMEWORKS_LIBRARIES ofxVoro)
 
 
@@ -276,7 +262,9 @@ example( triplanarTexturingExample_startingPoint res15-opengl/triplanarTexturing
 
 endif(res15-opengl)
 
+
 #// ofDemystified //////////////////////////////////////////////////////////////
+
 
 if(ofDemystified)
 
@@ -338,16 +326,91 @@ example( PerspectiveRemoving                     ofDemystified/09-OpenCV/03-Pers
 example( SearchingObjects                        ofDemystified/09-OpenCV/04-SearchingObjects )
 example( VideoMorphing                           ofDemystified/09-OpenCV/05-VideoMorphing )
 
-example( networkImageReceiver                    ofDemystified/11-Networking/networkImageReceiver )
-example( networkImageSender                      ofDemystified/11-Networking/networkImageSender )
-
 example( PerlinGraph                             ofDemystified/13-PerlinNoise/01-PerlinGraph )
 example( PerlinPoints                            ofDemystified/13-PerlinNoise/02-PerlinPoints )
 example( PerlinTexture                           ofDemystified/13-PerlinNoise/03-PerlinTexture )
 
 endif(ofDemystified)
 
+
+#// BeyondInteraction //////////////////////////////////////////////////////////
+
+
+if(BeyondInteraction)
+
+example( app-2-2_A                               BeyondInteraction/2-2_A )
+example( app-2-2_B                               BeyondInteraction/2-2_B )
+example( app-2-2_C                               BeyondInteraction/2-2_C )
+example( app-2-2_D                               BeyondInteraction/2-2_D )
+example( app-2-2_E                               BeyondInteraction/2-2_E )
+example( app-2-3_A                               BeyondInteraction/2-3_A )
+example( app-2-3_B                               BeyondInteraction/2-3_B )
+example( app-2-3_C                               BeyondInteraction/2-3_C )
+example( app-2-4_A                               BeyondInteraction/2-4_A )
+example( app-2-4_B                               BeyondInteraction/2-4_B )
+example( app-2-4_C                               BeyondInteraction/2-4_C )
+example( app-2-4_D                               BeyondInteraction/2-4_D )
+example( app-2-5_A                               BeyondInteraction/2-5_A )
+example( app-2-5_B                               BeyondInteraction/2-5_B )
+example( app-2-5_C                               BeyondInteraction/2-5_C )
+example( app-2-5_D                               BeyondInteraction/2-5_D )
+example( app-2-6_A                               BeyondInteraction/2-6_A )
+example( app-2-6_B                               BeyondInteraction/2-6_B )
+example( app-2-6_C                               BeyondInteraction/2-6_C )
+example( app-2-6_C-2                             BeyondInteraction/2-6_C-2 )
+example( app-2-6_C-3                             BeyondInteraction/2-6_C-3 )
+example( app-2-6_C-4                             BeyondInteraction/2-6_C-4 )
+example( app-2-7_A                               BeyondInteraction/2-7_A )
+example( app-2-8_A                               BeyondInteraction/2-8_A )
+example( app-2-8_B                               BeyondInteraction/2-8_B )
+example( app-2-9_A                               BeyondInteraction/2-9_A )
+example( app-2-9_B                               BeyondInteraction/2-9_B )
+example( app-2-9_C                               BeyondInteraction/2-9_C )
+example( app-2-9_D                               BeyondInteraction/2-9_D )
+example( app-2-10_A                              BeyondInteraction/2-10_A )
+example( app-2-10_B                              BeyondInteraction/2-10_B )
+example( app-2-10_C                              BeyondInteraction/2-10_C )
+example( app-2-11_A                              BeyondInteraction/2-11_A )
+example( app-2-11_B                              BeyondInteraction/2-11_B )
+example( app-3-1_A                               BeyondInteraction/3-1_A )
+example( app-3-1_B                               BeyondInteraction/3-1_B )
+example( app-3-2_A                               BeyondInteraction/3-2_A )
+example( app-3-2_B                               BeyondInteraction/3-2_B )
+example( app-3-2_C                               BeyondInteraction/3-2_C )
+example( app-3-2_D                               BeyondInteraction/3-2_D )
+example( app-3-2_E                               BeyondInteraction/3-2_E )
+example( app-3-2_F                               BeyondInteraction/3-2_F )
+example( app-3-2_G                               BeyondInteraction/3-2_G )
+example( app-3-2_H                               BeyondInteraction/3-2_H )
+example( app-3-2_I                               BeyondInteraction/3-2_I )
+example( app-3-2_J                               BeyondInteraction/3-2_J )
+example( app-3-2_K                               BeyondInteraction/3-2_K )
+example( app-3-3_A                               BeyondInteraction/3-3_A )
+example( app-3-3_B                               BeyondInteraction/3-3_B )
+example( app-3-3_C                               BeyondInteraction/3-3_C )
+example( app-3-3_D                               BeyondInteraction/3-3_D )
+example( app-3-3_E                               BeyondInteraction/3-3_E )
+example( app-3-3_F                               BeyondInteraction/3-3_F )
+example( app-3-3_G                               BeyondInteraction/3-3_G )
+example( app-3-4_A                               BeyondInteraction/3-4_A )
+example( app-3-4_B                               BeyondInteraction/3-4_B )
+example( app-3-4_C                               BeyondInteraction/3-4_C )
+example( app-3-4_D                               BeyondInteraction/3-4_D )
+example( app-3-4_E                               BeyondInteraction/3-4_E )
+example( app-3-4_F                               BeyondInteraction/3-4_F )
+example( app-3-4_G                               BeyondInteraction/3-4_G )
+example( app-3-5_A                               BeyondInteraction/3-5_A )
+example( Cosmos_full                             BeyondInteraction/4_Cosmos_full )
+example( Cosmos_simple                           BeyondInteraction/4_Cosmos_simple )
+example( LineSketch                              BeyondInteraction/4_LineSketch )
+example( OpticalFlowSketch1                      BeyondInteraction/4_OpticalFlowSketch1 )
+example( OpticalFlowSketch2                      BeyondInteraction/4_OpticalFlowSketch2 )
+
+endif(BeyondInteraction)
+
+
 #// openFrameworksDemos ////////////////////////////////////////////////////////
+
 
 if(openFrameworksDemos)
 
