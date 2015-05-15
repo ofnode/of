@@ -16,5 +16,3 @@ rm -rf src/openframeworks
 rm -rf src/videoinput
 
 rm -rf addons
-
-rm -rf lib
