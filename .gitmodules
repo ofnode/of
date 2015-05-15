@@ -19,3 +19,6 @@
 [submodule "examples/addons/ofxVoronoi"]
 	path = examples/addons/ofxVoronoi
 	url = https://github.com/ofnode/ofxVoronoi
+[submodule "examples/ofDemystified"]
+	path = examples/ofDemystified
+	url = https://github.com/ofnode/ofDemystified

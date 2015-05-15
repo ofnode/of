@@ -4,6 +4,7 @@ project(ofExamples)
 
 set(ofExamples              ON)
 set(res15-opengl            ON)
+set(ofDemystified           ON)
 set(openFrameworksDemos     ON)
 set(OF_GenerativeTypography ON)
 
@@ -274,6 +275,77 @@ example( triplanarTexturingExample_complete      res15-opengl/triplanarTexturing
 example( triplanarTexturingExample_startingPoint res15-opengl/triplanarTexturingExample_startingPoint )
 
 endif(res15-opengl)
+
+#// ofDemystified //////////////////////////////////////////////////////////////
+
+if(ofDemystified)
+
+example( Pendulum                                ofDemystified/01-Basics/01-Pendulum )
+
+example( PulsatingBackground                     ofDemystified/02-2D/01-PulsatingBackground )
+example( FlowerSimplest                          ofDemystified/02-2D/02-FlowerSimplest )
+example( FlowerControlPoints                     ofDemystified/02-2D/03-FlowerControlPoints )
+example( FlowerWithPetals                        ofDemystified/02-2D/04-FlowerWithPetals )
+example( Colors                                  ofDemystified/02-2D/05-Colors )
+example( Spirals                                 ofDemystified/02-2D/06-Spirals )
+
+example( SingleParticle                          ofDemystified/03-Particles/01-SingleParticle )
+example( ParticlesEmitter                        ofDemystified/03-Particles/02-ParticlesEmitter )
+example( ParticlesForces                         ofDemystified/03-Particles/03-ParticlesForces )
+example( Particles                               ofDemystified/03-Particles/04-Particles )
+
+example( ImageDraw                               ofDemystified/04-Images/01-ImageDraw )
+example( ImageSpiral                             ofDemystified/04-Images/02-ImageSpiral )
+example( ImageTransp                             ofDemystified/04-Images/03-ImageTransp )
+example( ColorWaves                              ofDemystified/04-Images/04-ColorWaves )
+example( ImageModify                             ofDemystified/04-Images/05-ImageModify )
+example( HorizontalDistortion                    ofDemystified/04-Images/06-HorizontalDistortion )
+example( VideoMapping                            ofDemystified/04-Images/07-VideoMapping )
+
+example( VideoPlayback                           ofDemystified/05-Video/01-VideoPlayback )
+example( VideoVerticals                          ofDemystified/05-Video/02-VideoVerticals )
+example( VideoReplacingColors                    ofDemystified/05-Video/03-VideoReplacingColors )
+example( VideoSlitScan                           ofDemystified/05-Video/04-VideoSlitScan )
+example( VideoCameraSynth                        ofDemystified/05-Video/05-VideoCameraSynth )
+example( VideoImageSequence                      ofDemystified/05-Video/06-VideoImageSequence )
+
+example( BouncingBall                            ofDemystified/06-Sound/01-BouncingBall )
+example( SingingVoices                           ofDemystified/06-Sound/02-SingingVoices )
+example( PWMSynth                                ofDemystified/06-Sound/03-PWMSynth )
+example( ImageToSound                            ofDemystified/06-Sound/04-ImageToSound )
+example( LoopSampler                             ofDemystified/06-Sound/05-LoopSampler )
+example( DancingCloud                            ofDemystified/06-Sound/06-DancingCloud )
+
+example( TrianglesCloud                          ofDemystified/07-3D/01-TrianglesCloud )
+example( PyramidMesh                             ofDemystified/07-3D/02-PyramidMesh )
+example( PyramidLighting                         ofDemystified/07-3D/03-PyramidLighting )
+example( PyramidSharpEdges                       ofDemystified/07-3D/04-PyramidSharpEdges )
+example( PyramidTextured                         ofDemystified/07-3D/05-PyramidTextured )
+example( OscillatingPlane                        ofDemystified/07-3D/06-OscillatingPlane )
+example( TwistingKnot                            ofDemystified/07-3D/07-TwistingKnot )
+
+example( ShaderInverting                         ofDemystified/08-Shaders/01-ShaderInverting )
+example( ShaderHorizDistortion                   ofDemystified/08-Shaders/02-ShaderHorizDistortion )
+example( ShaderLiquify                           ofDemystified/08-Shaders/03-ShaderLiquify )
+example( ShaderMasking                           ofDemystified/08-Shaders/04-ShaderMasking )
+example( ShaderAudioReactive                     ofDemystified/08-Shaders/05-ShaderAudioReactive )
+example( VertexDeformation                       ofDemystified/08-Shaders/06-VertexDeformation )
+example( GeometryFurryCarpet                     ofDemystified/08-Shaders/07-GeometryFurryCarpet )
+
+example( MotionDetection                         ofDemystified/09-OpenCV/01-MotionDetection )
+example( ImageFiltering                          ofDemystified/09-OpenCV/02-ImageFiltering )
+example( PerspectiveRemoving                     ofDemystified/09-OpenCV/03-PerspectiveRemoving )
+example( SearchingObjects                        ofDemystified/09-OpenCV/04-SearchingObjects )
+example( VideoMorphing                           ofDemystified/09-OpenCV/05-VideoMorphing )
+
+example( networkImageReceiver                    ofDemystified/11-Networking/networkImageReceiver )
+example( networkImageSender                      ofDemystified/11-Networking/networkImageSender )
+
+example( PerlinGraph                             ofDemystified/13-PerlinNoise/01-PerlinGraph )
+example( PerlinPoints                            ofDemystified/13-PerlinNoise/02-PerlinPoints )
+example( PerlinTexture                           ofDemystified/13-PerlinNoise/03-PerlinTexture )
+
+endif(ofDemystified)
 
 #// openFrameworksDemos ////////////////////////////////////////////////////////
 
