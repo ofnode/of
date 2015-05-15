@@ -338,4 +338,4 @@ example( VoronoiVariant                          OF_GenerativeTypography/Voronoi
 example( Waves                                   OF_GenerativeTypography/Waves )
 example( WavesPDF                                OF_GenerativeTypography/WavesPDF )
 
-endif()
+endif(OF_GenerativeTypography)
