@@ -37,10 +37,10 @@ libgstreamer1.0-dev       \
 libgstreamer-plugins-base1.0-dev
 
 # Use gold linker
-sudo rm /usr/bin/ld && sudo ln -s `which gold` /usr/bin/ld
+sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
 
 # Use default linker
-#sudo rm /usr/bin/ld && sudo apt-get install --reinstall binutils
+#sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld
 
 # Reinstall Mesa if CMake can't find OpenGL
 #sudo apt-get -y install --reinstall libgl1-mesa-glx libgl1-mesa-dev
