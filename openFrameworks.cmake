@@ -805,19 +805,27 @@ function(ofxaddon OFXADDON)
         endif()
 
         file(GLOB_RECURSE OFXHEADERS "${OFXADDON_DIR}/src/*.h"
+                                     "${OFXADDON_DIR}/src/*.hh"
                                      "${OFXADDON_DIR}/src/*.hpp"
                                      "${OFXADDON_DIR}/libs/*.h"
+                                     "${OFXADDON_DIR}/libs/*.hh"
                                      "${OFXADDON_DIR}/libs/*.hpp")
 
         file(GLOB_RECURSE OFXSOURCES "${OFXADDON_DIR}/src/*.c"
+                                     "${OFXADDON_DIR}/src/*.cc"
                                      "${OFXADDON_DIR}/src/*.cpp"
                                      "${OFXADDON_DIR}/libs/*.c"
+                                     "${OFXADDON_DIR}/libs/*.cc"
                                      "${OFXADDON_DIR}/libs/*.cpp")
 
         foreach(OFXHEADER_PATH ${OFXHEADERS})
             get_filename_component(OFXHEADER_DIR ${OFXHEADER_PATH} PATH)
-            include_directories(${OFXHEADER_DIR} ${OFXADDON_INCLUDE_DIR})
+            set(OFXHEADER_DIRS ${OFXHEADER_DIRS} ${OFXHEADER_DIR})
         endforeach()
+
+        include_directories(${OFXHEADER_DIRS})
+        include_directories("${OFXADDON_DIR}/src")
+        include_directories("${OFXADDON_DIR}/libs")
 
     endif()
 

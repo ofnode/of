@@ -25,6 +25,3 @@
 [submodule "examples/BeyondInteraction"]
 	path = examples/BeyondInteraction
 	url = https://github.com/ofnode/BeyondInteraction
-[submodule "examples/addons/ofxBox2d"]
-	path = examples/addons/ofxBox2d
-	url = https://github.com/ofnode/ofxBox2d
