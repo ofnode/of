@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 
-SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
-
 project(RtAudio)
 
 if(WIN32)
@@ -26,8 +24,6 @@ if(WIN32)
 
 elseif(UNIX)
 
-    find_package(Jack)
-
     include_directories(include)
 
     SET(SRCS
@@ -44,28 +40,16 @@ elseif(UNIX)
     if(APPLE)
 
         add_definitions(-D__MACOSX_CORE__ -DMAC)
-        add_library(rtaudio STATIC ${SRCS} ${HEADERS} )
-        target_link_libraries(rtaudio)
+        add_library(rtaudio STATIC ${SRCS} ${HEADERS})
         set_target_properties(rtaudio PROPERTIES LINK_FLAGS "-framework CoreFoundation -framework CoreAudio -framework AudioUnit -framework AudioToolbox")
 
     else()
 
-        if(JACK_FOUND)
-            add_definitions(-D__UNIX_JACK__)
-            include_directories(${JACK_INCLUDE_DIR})
-        endif()
-
-        add_definitions(-D__LINUX_ALSA__)
+        add_definitions(-D__LINUX_ALSA__ -fPIC)
         set(ALSA_LIBRARY "-lasound -lpthread")
         include_directories(${ALSA_INCLUDE_DIR})
         add_library(rtaudio STATIC ${SRCS} ${HEADERS})
-        add_definitions(-fPIC)
-
-        if(JACK_FOUND)
-            target_link_libraries(rtaudio ${ALSA_LIBRARY} ${JACK_LIBRARIES})
-        else()
-            target_link_libraries(rtaudio ${ALSA_LIBRARY})
-        endif()
+        target_link_libraries(rtaudio ${ALSA_LIBRARY})
 
     endif()
 
