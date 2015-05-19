@@ -4,6 +4,7 @@ cd ..
 OF="`pwd`"
 
 function apply() {
+  echo
   echo  "$1"
   patch -p1 < "$OF/dev/patches/$1"
 }

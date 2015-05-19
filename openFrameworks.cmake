@@ -624,7 +624,11 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/src/ofxAssimpTexture.cpp"
         )
         include_directories("${OFXADDON_DIR}/src")
-        include_directories("${OF_ROOT_DIR}/src/assimp/include")
+        pkg_check_modules(ASSIMP REQUIRED assimp)
+        include_directories(${ASSIMP_INCLUDE_DIRS})
+        link_directories(${ASSIMP_LIBRARY_DIRS})
+        set(OPENFRAMEWORKS_LIBRARIES
+          ${OPENFRAMEWORKS_LIBRARIES} ${ASSIMP_LIBRARIES} PARENT_SCOPE)
 
 
     elseif(OFXADDON STREQUAL ofxEmscripten)
@@ -705,6 +709,7 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
         pkg_check_modules(OPENCV REQUIRED opencv)
         include_directories(${OPENCV_INCLUDE_DIRS})
+        link_directories(${OPENCV_LIBRARY_DIRS})
         foreach(LIBRARY ${OPENCV_LIBRARIES})
           if(NOT ${LIBRARY} MATCHES opencv_ts AND
              NOT ${LIBRARY} MATCHES opengl32  AND
