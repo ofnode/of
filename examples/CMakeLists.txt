@@ -23,7 +23,7 @@ function(example APP DIR)
 
     file(GLOB_RECURSE SRC "${CMAKE_CURRENT_LIST_DIR}/${DIR}/*.cpp")
 
-    add_executable(${APP} ${SRC})
+    add_executable(${APP} MACOSX_BUNDLE ${SRC})
     target_link_libraries(${APP} ofxAddons ${OPENFRAMEWORKS_LIBRARIES})
     set_target_properties(${APP} PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
     set_target_properties(${APP} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
@@ -414,7 +414,7 @@ endif(BeyondInteraction)
 
 if(openFrameworksDemos)
 
-example( BarnesHut                               openFrameworksDemos/BarnesHut )     
+example( BarnesHut                               openFrameworksDemos/BarnesHut )
 example( BinnedParticleSystem                    openFrameworksDemos/BinnedParticleSystem )
 example( BulgeEffect                             openFrameworksDemos/BulgeEffect )
 example( BulgeEffectMulti                        openFrameworksDemos/BulgeEffectMulti )
@@ -436,8 +436,9 @@ example( TileMatching                            openFrameworksDemos/TileMatchin
 example( Timelapse                               openFrameworksDemos/Timelapse )
 example( Verlet                                  openFrameworksDemos/Verlet )
 if(CMAKE_SYSTEM MATCHES Darwin)
-example( VideoRecorder                           openFrameworksDemos/VideoRecorder )
-example( VideoShuffler                           openFrameworksDemos/VideoShuffler )
+# these two depend on an addon: ofxQTKitVideoPlayer.h not found
+#example( VideoRecorder                           openFrameworksDemos/VideoRecorder )
+#example( VideoShuffler                           openFrameworksDemos/VideoShuffler )
 endif()
 example( Worm                                    openFrameworksDemos/Worm )
 

@@ -1842,7 +1842,7 @@ static const string defaultFragmentShaderTexRectColor = fragment_shader_header +
 
 
 	void main(){
-		FRAG_COLOR = TEXTURE(src_tex_unit0, texCoordVarying) * colorVarying;
+        FRAG_COLOR = textureProj(src_tex_unit0, texCoordVarying) * colorVarying;
 	}
 );
 
