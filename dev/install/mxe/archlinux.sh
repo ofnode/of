@@ -22,6 +22,7 @@ openssl     \
 freetype    \
 fontconfig  \
 opencv      \
+assimp      \
 openal      \
 libusb1     \
 libsndfile
