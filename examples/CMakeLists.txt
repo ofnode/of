@@ -119,7 +119,10 @@ example( customEventExample                      ofExamples/events/customEventEx
 example( eventsExample                           ofExamples/events/eventsExample )
 example( multiWindowExample                      ofExamples/events/multiWindowExample )
 example( multiWindowOneAppExample                ofExamples/events/multiWindowOneAppExample )
+if(NOT APPLE)
+#see https://github.com/ofnode/of/issues/13
 example( simpleEventsExample                     ofExamples/events/simpleEventsExample )
+endif()
 example( simpleTimer                             ofExamples/events/simpleTimer )
 
 example( alphaMaskingShaderExample               ofExamples/gl/alphaMaskingShaderExample )
@@ -394,7 +397,7 @@ endif(BeyondInteraction)
 
 if(openFrameworksDemos)
 
-example( BarnesHut                               openFrameworksDemos/BarnesHut )     
+example( BarnesHut                               openFrameworksDemos/BarnesHut )
 example( BinnedParticleSystem                    openFrameworksDemos/BinnedParticleSystem )
 example( BulgeEffect                             openFrameworksDemos/BulgeEffect )
 example( BulgeEffectMulti                        openFrameworksDemos/BulgeEffectMulti )
@@ -415,7 +418,7 @@ example( StackedPlot                             openFrameworksDemos/StackedPlot
 example( TileMatching                            openFrameworksDemos/TileMatching )
 example( Timelapse                               openFrameworksDemos/Timelapse )
 example( Verlet                                  openFrameworksDemos/Verlet )
-if(CMAKE_SYSTEM MATCHES Darwin)
+if(APPLE)
 # these two depend on an addon: ofxQTKitVideoPlayer.h not found
 #example( VideoRecorder                           openFrameworksDemos/VideoRecorder )
 #example( VideoShuffler                           openFrameworksDemos/VideoShuffler )
@@ -448,7 +451,10 @@ example( ReactionDiffusion                       OF_GenerativeTypography/Reactio
 example( SpherePacking                           OF_GenerativeTypography/SpherePacking )
 example( StringAsPoints                          OF_GenerativeTypography/StringAsPoints )
 example( UsingFbo                                OF_GenerativeTypography/UsingFbo )
+if( NOT APPLE)
+# see: https://github.com/ofnode/of/issues/14
 example( Voronoi3D                               OF_GenerativeTypography/Voronoi3D )
+endif()
 example( VoronoiType                             OF_GenerativeTypography/VoronoiType )
 example( VoronoiVariant                          OF_GenerativeTypography/VoronoiVariant )
 example( Waves                                   OF_GenerativeTypography/Waves )
