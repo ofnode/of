@@ -624,7 +624,15 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/src/ofxAssimpTexture.cpp"
         )
         include_directories("${OFXADDON_DIR}/src")
-        include_directories("${OF_ROOT_DIR}/src/assimp/include")
+        pkg_check_modules(ASSIMP REQUIRED assimp)
+        include_directories(${ASSIMP_INCLUDE_DIRS})
+        if(MSVC)
+          # pkg-config point to a lib folder, but out lib is in bin folder
+          list(APPEND ASSIMP_LIBRARY_DIRS "${ASSIMP_LIBRARY_DIRS}/../bin")
+        endif()
+        link_directories(${ASSIMP_LIBRARY_DIRS})
+        set(OPENFRAMEWORKS_LIBRARIES
+          ${OPENFRAMEWORKS_LIBRARIES} ${ASSIMP_LIBRARIES} PARENT_SCOPE)
 
 
     elseif(OFXADDON STREQUAL ofxEmscripten)
@@ -705,6 +713,7 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
         pkg_check_modules(OPENCV REQUIRED opencv)
         include_directories(${OPENCV_INCLUDE_DIRS})
+        link_directories(${OPENCV_LIBRARY_DIRS})
         foreach(LIBRARY ${OPENCV_LIBRARIES})
           if(NOT ${LIBRARY} MATCHES opencv_ts AND
              NOT ${LIBRARY} MATCHES opengl32  AND
@@ -805,19 +814,27 @@ function(ofxaddon OFXADDON)
         endif()
 
         file(GLOB_RECURSE OFXHEADERS "${OFXADDON_DIR}/src/*.h"
+                                     "${OFXADDON_DIR}/src/*.hh"
                                      "${OFXADDON_DIR}/src/*.hpp"
                                      "${OFXADDON_DIR}/libs/*.h"
+                                     "${OFXADDON_DIR}/libs/*.hh"
                                      "${OFXADDON_DIR}/libs/*.hpp")
 
         file(GLOB_RECURSE OFXSOURCES "${OFXADDON_DIR}/src/*.c"
+                                     "${OFXADDON_DIR}/src/*.cc"
                                      "${OFXADDON_DIR}/src/*.cpp"
                                      "${OFXADDON_DIR}/libs/*.c"
+                                     "${OFXADDON_DIR}/libs/*.cc"
                                      "${OFXADDON_DIR}/libs/*.cpp")
 
         foreach(OFXHEADER_PATH ${OFXHEADERS})
             get_filename_component(OFXHEADER_DIR ${OFXHEADER_PATH} PATH)
-            include_directories(${OFXHEADER_DIR} ${OFXADDON_INCLUDE_DIR})
+            set(OFXHEADER_DIRS ${OFXHEADER_DIRS} ${OFXHEADER_DIR})
         endforeach()
+
+        include_directories(${OFXHEADER_DIRS})
+        include_directories("${OFXADDON_DIR}/src")
+        include_directories("${OFXADDON_DIR}/libs")
 
     endif()
 

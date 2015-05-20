@@ -21,6 +21,7 @@ libfreetype6-dev          \
 libfontconfig1-dev        \
 libglu1-mesa-dev          \
 libopenal-dev             \
+libassimp-dev             \
 libopencv-dev             \
 libtbb-dev                \
 libasound2-dev            \

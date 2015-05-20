@@ -8,6 +8,7 @@ for %%i in (*.lib) do call rm %%i
 
 :: ------------------------------
 
+call :genlib  libassimp                 assimp
 call :genlib  libcairo-2                cairo
 call :genlib  OpenAL32                  OpenAL32
 call :genlib  libfreetype-6             freetype

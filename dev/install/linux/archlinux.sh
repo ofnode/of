@@ -28,6 +28,7 @@ freetype2          \
 fontconfig         \
 glu                \
 openal             \
+assimp             \
 opencv             \
 intel-tbb          \
 libsndfile         \

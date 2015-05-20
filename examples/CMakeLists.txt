@@ -23,8 +23,8 @@ function(example APP DIR)
 
     file(GLOB_RECURSE SRC "${CMAKE_CURRENT_LIST_DIR}/${DIR}/*.cpp")
 
-    add_executable(${APP} MACOSX_BUNDLE ${SRC})
-    target_link_libraries(${APP} ofxAddons ${OPENFRAMEWORKS_LIBRARIES})
+    add_executable(${APP} ${SRC})
+    target_link_libraries(${APP} Addons ${OPENFRAMEWORKS_LIBRARIES})
     set_target_properties(${APP} PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
     set_target_properties(${APP} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
     set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
@@ -54,34 +54,18 @@ ofxaddon(ofxThreadedImageLoader)
 ofxaddon(ofxVectorGraphics)
 ofxaddon(ofxXmlSettings)
 
-ofxaddon(addons/ofxBox2d)
 ofxaddon(addons/ofxPointInMesh)
 ofxaddon(addons/ofxVoronoi)
 ofxaddon(addons/ofxVoro)
 
-add_library(ofxAddons STATIC ${OFXADDONS_SOURCES})
+# Special case for resolving GNU linker redefinition conflicts between Voro++ and Voro++2D
+file(GLOB_RECURSE VORO_SOURCES "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/*.cc")
+list(REMOVE_ITEM OFXADDONS_SOURCES ${VORO_SOURCES})
+add_library(Voro STATIC ${VORO_SOURCES})
+list(APPEND OPENFRAMEWORKS_LIBRARIES Voro)
 
-
-#// LIBRARIES FOR OFXADDONS ////////////////////////////////////////////////////
-
-
-include_directories("${CMAKE_CURRENT_LIST_DIR}/addons/ofxBox2d/libs")
-file(GLOB_RECURSE OFXBOX2D_SOURCES "${CMAKE_CURRENT_LIST_DIR}/addons/ofxBox2d/libs/*.cpp")
-add_library(ofxBox2d STATIC ${OFXBOX2D_SOURCES})
-set_target_properties(ofxBox2d PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
-list(APPEND OPENFRAMEWORKS_LIBRARIES ofxBox2d)
-
-include_directories("${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/Voro++2D")
-file(GLOB_RECURSE OFXVORONOI_SOURCES "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoronoi/libs/*.cpp")
-add_library(ofxVoronoi STATIC ${OFXVORONOI_SOURCES})
-set_target_properties(ofxVoronoi PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
-list(APPEND OPENFRAMEWORKS_LIBRARIES ofxVoronoi)
-
-include_directories("${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++")
-file(GLOB_RECURSE OFXVORO_SOURCES "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/*.cc")
-add_library(ofxVoro STATIC ${OFXVORO_SOURCES})
-set_target_properties(ofxVoro PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
-list(APPEND OPENFRAMEWORKS_LIBRARIES ofxVoro)
+add_library(Addons STATIC ${OFXADDONS_SOURCES})
+set_target_properties(Addons PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
 
 
 #// ofExamples /////////////////////////////////////////////////////////////////
@@ -392,14 +376,10 @@ example( app-3-3_D                               BeyondInteraction/3-3_D )
 example( app-3-3_E                               BeyondInteraction/3-3_E )
 example( app-3-3_F                               BeyondInteraction/3-3_F )
 example( app-3-3_G                               BeyondInteraction/3-3_G )
-example( app-3-4_A                               BeyondInteraction/3-4_A )
-example( app-3-4_B                               BeyondInteraction/3-4_B )
-example( app-3-4_C                               BeyondInteraction/3-4_C )
 example( app-3-4_D                               BeyondInteraction/3-4_D )
 example( app-3-4_E                               BeyondInteraction/3-4_E )
 example( app-3-4_F                               BeyondInteraction/3-4_F )
 example( app-3-4_G                               BeyondInteraction/3-4_G )
-example( app-3-5_A                               BeyondInteraction/3-5_A )
 example( Cosmos_full                             BeyondInteraction/4_Cosmos_full )
 example( Cosmos_simple                           BeyondInteraction/4_Cosmos_simple )
 example( LineSketch                              BeyondInteraction/4_LineSketch )
@@ -414,7 +394,7 @@ endif(BeyondInteraction)
 
 if(openFrameworksDemos)
 
-example( BarnesHut                               openFrameworksDemos/BarnesHut )
+example( BarnesHut                               openFrameworksDemos/BarnesHut )     
 example( BinnedParticleSystem                    openFrameworksDemos/BinnedParticleSystem )
 example( BulgeEffect                             openFrameworksDemos/BulgeEffect )
 example( BulgeEffectMulti                        openFrameworksDemos/BulgeEffectMulti )

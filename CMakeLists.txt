@@ -495,7 +495,6 @@ add_subdirectory(src/glfw)
 add_subdirectory(src/kiss)
 add_subdirectory(src/poco)
 add_subdirectory(src/tess2)
-add_subdirectory(src/assimp)
 
 add_library(
     openFrameworks STATIC

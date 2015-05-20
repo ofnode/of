@@ -17,9 +17,6 @@ function setup() {
 mkdir -p src
 cd src
 
-# v 2.0 release
-setup assimp 96f76d3 https://github.com/ofnode/assimp
-
 # v 3.16.0 release
 setup freeimage 8a60364 https://github.com/ofnode/freeimage
 
@@ -32,11 +29,11 @@ setup glfw 2a50139 https://github.com/ofnode/glfw
 # v 1.7.0 master
 setup poco c6cf535 https://github.com/pocoproject/poco
 
-# v 4.0.12 master
-setup rtaudio 981b1ae https://github.com/ofnode/rtaudio
+# v 4.0.12 release
+setup rtaudio d6956ae https://github.com/ofnode/rtaudio
 
 # v 0.9.0 master
-setup openFrameworks e40a810 https://github.com/openframeworks/openFrameworks
+setup openFrameworks 7601b8b https://github.com/openframeworks/openFrameworks
 
 rm -rf videoinput
 mkdir  videoinput

@@ -30,6 +30,7 @@ freetype-devel          \
 fontconfig-devel        \
 mesa-libGLU-devel       \
 openal-soft-devel       \
+assimp-devel            \
 opencv-devel            \
 tbb-devel               \
 flac-devel              \
