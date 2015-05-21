@@ -75,14 +75,3 @@
  	atexit(ofExitCallback);
  #endif
  
---- a/openframeworks/gl/ofGLProgrammableRenderer.cpp
-+++ b/openframeworks/gl/ofGLProgrammableRenderer.cpp
-@@ -1843,7 +1843,7 @@
- 
- 
- 	void main(){
--		FRAG_COLOR = TEXTURE(src_tex_unit0, texCoordVarying) * colorVarying;
-+		FRAG_COLOR = textureProj(src_tex_unit0, texCoordVarying) * colorVarying;
- 	}
- );
- 
