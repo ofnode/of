@@ -18,7 +18,7 @@ Features
 Difference
 ----------
 
-The only difference is that this project targets CMake build system and stores source code of some libraries on which openFrameworks depends locally with patches applied if needed.
+The only difference is that this project targets CMake build system and stores source code of some libraries on which openFrameworks depends locally with patches applied if needed. See [Architecture](https://github.com/ofnode/of/wiki/Architecture) wiki page for details.
 
 
 Step 1: Clone
@@ -26,11 +26,7 @@ Step 1: Clone
 
 Run `git clone https://github.com/ofnode/of --depth 1` in a command line or download repository from the Github page by clicking on the "Download ZIP" button.
 
-To clone examples, open a console, change directory to `of` folder and run this command:
-
-```bash
-git submodule update --init --recursive
-```
+To clone examples, open a console, change directory to `of` folder and run `git submodule update --init --recursive`.
 
 Step 2: Install
 ---------------
