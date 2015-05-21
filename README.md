@@ -26,9 +26,9 @@ See [Architecture](https://github.com/ofnode/of/wiki/Architecture) wiki page for
 Step 1: Clone
 -------------
 
-Run `git clone https://github.com/ofnode/of --depth 1` in a command line or download repository from the Github page by clicking on the "Download ZIP" button.
+Run `git clone https://github.com/ofnode/of --depth 1` in a command line.
 
-To clone examples, open a console, change directory to `of` folder and run:
+To clone examples, change directory to `of` folder and run:
 
 `git submodule update --init --recursive`
 
