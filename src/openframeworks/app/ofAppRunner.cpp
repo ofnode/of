@@ -73,7 +73,7 @@ void ofInit(){
 
 #if defined(TARGET_ANDROID) || defined(TARGET_OF_IOS)
     // manage own exit
-#else
+#elif !defined(__MINGW32__)
 	atexit(ofExitCallback);
 #endif
 
