@@ -18,7 +18,9 @@ Features
 Difference
 ----------
 
-The only difference is that this project targets CMake build system and stores source code of some libraries on which openFrameworks depends locally with patches applied if needed. See [Architecture](https://github.com/ofnode/of/wiki/Architecture) wiki page for details.
+The only difference is that this project targets CMake build system and stores source code of some libraries on which openFrameworks depends locally with patches applied if needed.
+
+See [Architecture](https://github.com/ofnode/of/wiki/Architecture) wiki page for details.
 
 
 Step 1: Clone
