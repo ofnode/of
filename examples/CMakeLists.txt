@@ -418,11 +418,6 @@ example( StackedPlot                             openFrameworksDemos/StackedPlot
 example( TileMatching                            openFrameworksDemos/TileMatching )
 example( Timelapse                               openFrameworksDemos/Timelapse )
 example( Verlet                                  openFrameworksDemos/Verlet )
-if(APPLE)
-# these two depend on an addon: ofxQTKitVideoPlayer.h not found
-#example( VideoRecorder                           openFrameworksDemos/VideoRecorder )
-#example( VideoShuffler                           openFrameworksDemos/VideoShuffler )
-endif()
 example( Worm                                    openFrameworksDemos/Worm )
 
 endif(openFrameworksDemos)
