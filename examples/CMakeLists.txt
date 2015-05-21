@@ -23,7 +23,7 @@ function(example APP DIR)
 
     file(GLOB_RECURSE SRC "${CMAKE_CURRENT_LIST_DIR}/${DIR}/*.cpp")
 
-    add_executable(${APP} ${SRC})
+    add_executable(${APP} MACOSX_BUNDLE ${SRC})
     target_link_libraries(${APP} Addons ${OPENFRAMEWORKS_LIBRARIES})
     set_target_properties(${APP} PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
     set_target_properties(${APP} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
