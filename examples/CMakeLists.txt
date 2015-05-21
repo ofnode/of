@@ -24,7 +24,7 @@ function(example APP DIR)
     file(GLOB_RECURSE SRC "${CMAKE_CURRENT_LIST_DIR}/${DIR}/*.cpp")
 
     add_executable(${APP} MACOSX_BUNDLE ${SRC})
-    target_link_libraries(${APP} Addons ${OPENFRAMEWORKS_LIBRARIES})
+    target_link_libraries(${APP} ${OPENFRAMEWORKS_LIBRARIES})
     set_target_properties(${APP} PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
     set_target_properties(${APP} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
     set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/${DIR}/bin")
@@ -56,17 +56,23 @@ ofxaddon(ofxXmlSettings)
 
 ofxaddon(addons/ofxPointInMesh)
 ofxaddon(addons/ofxVoronoi)
-ofxaddon(addons/ofxVoro)
 
-# Special case for resolving GNU linker redefinition conflicts between Voro++ and Voro++2D
-file(GLOB_RECURSE VORO_SOURCES "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/*.cc")
-list(REMOVE_ITEM OFXADDONS_SOURCES ${VORO_SOURCES})
+# Special case for resolving GNU linker redefinition conflicts
+file(GLOB_RECURSE VORO_SOURCES
+  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/*.cc")
+list(APPEND VORO_SOURCES
+  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/src/ofxVoro.cpp")
+include_directories(
+  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++"
+  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs"
+  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/src")
 add_library(Voro STATIC ${VORO_SOURCES})
-list(APPEND OPENFRAMEWORKS_LIBRARIES Voro)
+set_target_properties(Voro PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
 
 add_library(Addons STATIC ${OFXADDONS_SOURCES})
 set_target_properties(Addons PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
 
+set(OPENFRAMEWORKS_LIBRARIES Addons Voro ${OPENFRAMEWORKS_LIBRARIES})
 
 #// ofExamples /////////////////////////////////////////////////////////////////
 
@@ -443,10 +449,7 @@ example( ReactionDiffusion                       OF_GenerativeTypography/Reactio
 example( SpherePacking                           OF_GenerativeTypography/SpherePacking )
 example( StringAsPoints                          OF_GenerativeTypography/StringAsPoints )
 example( UsingFbo                                OF_GenerativeTypography/UsingFbo )
-if( NOT APPLE)
-# see: https://github.com/ofnode/of/issues/14
 example( Voronoi3D                               OF_GenerativeTypography/Voronoi3D )
-endif()
 example( VoronoiType                             OF_GenerativeTypography/VoronoiType )
 example( VoronoiVariant                          OF_GenerativeTypography/VoronoiVariant )
 example( Waves                                   OF_GenerativeTypography/Waves )
