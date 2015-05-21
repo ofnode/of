@@ -35,17 +35,19 @@ git submodule update --init --recursive
 Step 2: Install
 ---------------
 
+Install needed developer packages for your OS with:
+
 #### For Linux:
 
-Install needed developer packages for your Linux distro with a script from [`dev/install/linux`](https://github.com/ofnode/of/tree/master/dev/install/linux) folder.
+Scripts from [`dev/install/linux`](https://github.com/ofnode/of/tree/master/dev/install/linux)
 
 #### For OS X:
 
-Install needed developer packages with the [`dev/install/osx/homebrew.sh`](https://github.com/ofnode/of/tree/master/dev/install/osx/homebrew.sh) script.
+[`dev/install/osx/homebrew.sh`](https://github.com/ofnode/of/tree/master/dev/install/osx/homebrew.sh)
 
 #### For Windows:
 
-[See wiki](https://github.com/ofnode/of/wiki/Instructions-for-Windows)
+### [See wiki](https://github.com/ofnode/of/wiki/Instructions-for-Windows)
 
 
 Step 3: Compile
