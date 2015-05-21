@@ -119,10 +119,7 @@ example( customEventExample                      ofExamples/events/customEventEx
 example( eventsExample                           ofExamples/events/eventsExample )
 example( multiWindowExample                      ofExamples/events/multiWindowExample )
 example( multiWindowOneAppExample                ofExamples/events/multiWindowOneAppExample )
-if(NOT APPLE)
-#see https://github.com/ofnode/of/issues/13
 example( simpleEventsExample                     ofExamples/events/simpleEventsExample )
-endif()
 example( simpleTimer                             ofExamples/events/simpleTimer )
 
 example( alphaMaskingShaderExample               ofExamples/gl/alphaMaskingShaderExample )
