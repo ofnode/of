@@ -26,7 +26,10 @@ Step 1: Clone
 
 Run `git clone https://github.com/ofnode/of --depth 1` in a command line or download repository from the Github page by clicking on the "Download ZIP" button.
 
-To clone examples, open a console, change directory to `of` folder and run `git submodule update --init --recursive`.
+To clone examples, open a console, change directory to `of` folder and run:
+
+`git submodule update --init --recursive`
+
 
 Step 2: Install
 ---------------
@@ -48,6 +51,8 @@ Scripts from [`dev/install/linux`](https://github.com/ofnode/of/tree/master/dev/
 
 Step 3: Compile
 ---------------
+
+You can always skip this step by downloading precompiled libraries from [releases](https://github.com/ofnode/of/releases) page and extract `lib-linux`, `lib-osx` or `lib-windows` folders to `of` root directory.
 
 #### For Linux:
 
@@ -77,8 +82,6 @@ cd build\windows
 cmake ..\.. -G "Visual Studio 12 2013 Win64" -DCMAKE_BUILD_TYPE=Release
 msbuild openFrameworks.sln /m /p:Configuration=Release
 ```
-
-You can always skip this step by downloading precompiled libraries from [releases](https://github.com/ofnode/of/releases) page and extract `lib-linux`, `lib-osx` or `lib-windows` folders to `of` root directory.
 
 
 Templates
