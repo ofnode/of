@@ -19,7 +19,3 @@ apply poco_cmake_changes.patch
 apply glfw_cmake_changes.patch
 apply openframeworks_fixes.patch
 
-cd "$OF/addons"
-
-apply addons_fixes.patch
-
