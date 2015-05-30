@@ -321,12 +321,12 @@ class videoInput{
 
 		//Manual control over settings thanks.....
 		//These are experimental for now.
-		bool setVideoSettingFilter(int deviceID, long Property, long lValue, long Flags = 0, bool useDefaultValue = false);
-		bool setVideoSettingFilterPct(int deviceID, long Property, float pctValue, long Flags = 0);
+		bool setVideoSettingFilter(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
+		bool setVideoSettingFilterPct(int deviceID, long Property, float pctValue, long Flags = NULL);
 		bool getVideoSettingFilter(int deviceID, long Property, long &min, long &max, long &SteppingDelta, long &currentValue, long &flags, long &defaultValue);
 
-		bool setVideoSettingCamera(int deviceID, long Property, long lValue, long Flags = 0, bool useDefaultValue = false);
-		bool setVideoSettingCameraPct(int deviceID, long Property, float pctValue, long Flags = 0);
+		bool setVideoSettingCamera(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
+		bool setVideoSettingCameraPct(int deviceID, long Property, float pctValue, long Flags = NULL);
 		bool getVideoSettingCamera(int deviceID, long Property, long &min, long &max, long &SteppingDelta, long &currentValue, long &flags, long &defaultValue);
 
 		//bool setVideoSettingCam(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
