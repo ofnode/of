@@ -37,8 +37,8 @@ setup openFrameworks ec9f59f https://github.com/openframeworks/openFrameworks
 
 rm -rf videoinput
 mkdir  videoinput
-wget -q https://raw.githubusercontent.com/ofTheo/videoInput/221b16/videoInputSrcAndDemos/libs/videoInput/videoInput.cpp -O videoinput/videoInput.cpp
-wget -q https://raw.githubusercontent.com/ofTheo/videoInput/221b16/videoInputSrcAndDemos/libs/videoInput/videoInput.h   -O videoinput/videoInput.h
+wget -q https://raw.githubusercontent.com/ofTheo/videoInput/874840a/videoInputSrcAndDemos/libs/videoInput/videoInput.cpp -O videoinput/videoInput.cpp
+wget -q https://raw.githubusercontent.com/ofTheo/videoInput/874840a/videoInputSrcAndDemos/libs/videoInput/videoInput.h   -O videoinput/videoInput.h
 
 #-------------------------------------------------------------------------------
 
