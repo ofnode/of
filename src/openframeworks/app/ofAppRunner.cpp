@@ -160,7 +160,6 @@ shared_ptr<ofAppBaseWindow> ofCreateWindow(const ofWindowSettings & settings){
 void ofExitCallback(){
 	// controlled destruction of the mainLoop before
 	// any other deinitialization
-	mainLoop().reset();
 
 	// everything should be destroyed here, except for
 	// static objects

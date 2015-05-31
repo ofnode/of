@@ -64,3 +64,13 @@
  	#define __WINDOWS_DS__
  	#define __WINDOWS_MM__
  	#if (_MSC_VER)       // microsoft visual studio
+--- a/openframeworks/app/ofAppRunner.cpp
++++ b/openframeworks/app/ofAppRunner.cpp
+@@ -160,7 +160,6 @@
+ void ofExitCallback(){
+ 	// controlled destruction of the mainLoop before
+ 	// any other deinitialization
+-	mainLoop().reset();
+ 
+ 	// everything should be destroyed here, except for
+ 	// static objects
