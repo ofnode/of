@@ -4,6 +4,7 @@ project(ofExamples)
 
 set(ofExamples              ON)
 set(res15-opengl            ON)
+set(NoiseWorkshop           ON)
 set(ofDemystified           ON)
 set(BeyondInteraction       ON)
 set(openFrameworksDemos     ON)
@@ -54,6 +55,19 @@ ofxaddon(ofxThreadedImageLoader)
 ofxaddon(ofxVectorGraphics)
 ofxaddon(ofxXmlSettings)
 
+
+if(NoiseWorkshop)
+
+ofxaddon(addons/ofxAutoReloadedShader)
+ofxaddon(addons/ofxCv)
+
+include_directories(addons/ofxCv/libs/ofxCv/include)
+
+endif(NoiseWorkshop)
+
+
+if(OF_GenerativeTypography)
+
 ofxaddon(addons/ofxPointInMesh)
 ofxaddon(addons/ofxVoronoi)
 
@@ -69,10 +83,16 @@ include_directories(
 add_library(Voro STATIC ${VORO_SOURCES})
 set_target_properties(Voro PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
 
+set(OPENFRAMEWORKS_LIBRARIES Voro ${OPENFRAMEWORKS_LIBRARIES})
+
+endif(OF_GenerativeTypography)
+
+
 add_library(Addons STATIC ${OFXADDONS_SOURCES})
 set_target_properties(Addons PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
 
-set(OPENFRAMEWORKS_LIBRARIES Addons Voro ${OPENFRAMEWORKS_LIBRARIES})
+set(OPENFRAMEWORKS_LIBRARIES Addons ${OPENFRAMEWORKS_LIBRARIES})
+
 
 #// ofExamples /////////////////////////////////////////////////////////////////
 
@@ -251,6 +271,34 @@ example( triplanarTexturingExample_complete      res15-opengl/triplanarTexturing
 example( triplanarTexturingExample_startingPoint res15-opengl/triplanarTexturingExample_startingPoint )
 
 endif(res15-opengl)
+
+
+#// NoiseWorkshop //////////////////////////////////////////////////////////////
+
+
+if(NoiseWorkshop)
+
+example( Empty                                   NoiseWorkshop/Empty )
+example( Empty3D                                 NoiseWorkshop/Empty3D )
+example( EmptyGPUParticles                       NoiseWorkshop/EmptyGPUParticles )
+example( Frequency                               NoiseWorkshop/Frequency )
+example( Grass                                   NoiseWorkshop/Grass )
+example( KinectParticles                         NoiseWorkshop/KinectParticles )
+example( KinectParticlesOpticalFlow              NoiseWorkshop/KinectParticlesOpticalFlow )
+example( LiveCodingSurface                       NoiseWorkshop/LiveCodingSurface )
+example( NoiseGrid                               NoiseWorkshop/NoiseGrid )
+example( NoiseGridParticles                      NoiseWorkshop/NoiseGridParticles )
+example( NoiseThreshold                          NoiseWorkshop/NoiseThreshold )
+example( ParticleCloudGPU                        NoiseWorkshop/ParticleCloudGPU )
+example( ParticleSystemInstancedGPU              NoiseWorkshop/ParticleSystemInstancedGPU )
+example( ParticleSystemSpawnTexture              NoiseWorkshop/ParticleSystemSpawnTexture )
+example( PerlinClouds                            NoiseWorkshop/PerlinClouds )
+example( PerlinLayeringFBM                       NoiseWorkshop/PerlinLayeringFBM )
+example( ShapingFunctions                        NoiseWorkshop/ShapingFunctions )
+example( StepFunctions                           NoiseWorkshop/StepFunctions )
+example( Tendrils                                NoiseWorkshop/Tendrils )
+
+endif(NoiseWorkshop)
 
 
 #// ofDemystified //////////////////////////////////////////////////////////////

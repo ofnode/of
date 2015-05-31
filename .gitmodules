@@ -25,3 +25,12 @@
 [submodule "examples/BeyondInteraction"]
 	path = examples/BeyondInteraction
 	url = https://github.com/ofnode/BeyondInteraction
+[submodule "examples/NoiseWorkshop"]
+	path = examples/NoiseWorkshop
+	url = https://github.com/ofnode/NoiseWorkshop
+[submodule "examples/addons/ofxAutoReloadedShader"]
+	path = examples/addons/ofxAutoReloadedShader
+	url = https://github.com/ofnode/ofxAutoReloadedShader
+[submodule "examples/addons/ofxCv"]
+	path = examples/addons/ofxCv
+	url = https://github.com/ofnode/ofxCv
