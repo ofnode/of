@@ -64,14 +64,3 @@
  	#define __WINDOWS_DS__
  	#define __WINDOWS_MM__
  	#if (_MSC_VER)       // microsoft visual studio
---- a/openframeworks/app/ofAppRunner.cpp
-+++ b/openframeworks/app/ofAppRunner.cpp
-@@ -73,7 +73,7 @@
- 
- #if defined(TARGET_ANDROID) || defined(TARGET_OF_IOS)
-     // manage own exit
--#else
-+#elif !defined(__MINGW32__)
- 	atexit(ofExitCallback);
- #endif
- 
