@@ -484,8 +484,6 @@ elseif(CMAKE_BUILD_TYPE MATCHES Debug)
     message("++ CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
 endif()
 
-message("++ OPENFRAMEWORKS_DEFINITIONS: ${OPENFRAMEWORKS_DEFINITIONS}")
-
 #// Build //////////////////////////////////////////////////////////////////////
 
 add_subdirectory(src/rtaudio)
