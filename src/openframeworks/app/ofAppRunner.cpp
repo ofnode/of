@@ -192,6 +192,10 @@ void ofExitCallback(){
 		timeEndPeriod(1);
 	#endif
 
+	//------------------------
+	// try to close font libraries
+	ofTrueTypeShutdown();
+
 	// static deinitialization happens after this finishes
 	// every object should have ended by now and won't receive any
 	// events
