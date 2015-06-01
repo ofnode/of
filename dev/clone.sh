@@ -33,7 +33,7 @@ setup poco c6cf535 https://github.com/pocoproject/poco
 setup rtaudio d6956ae https://github.com/ofnode/rtaudio
 
 # v 0.9.0 master
-setup openFrameworks df80bbd https://github.com/openframeworks/openFrameworks
+setup openFrameworks 0b0e4a3 https://github.com/openframeworks/openFrameworks
 
 rm -rf videoinput
 mkdir  videoinput
