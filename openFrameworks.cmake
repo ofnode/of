@@ -5,9 +5,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 if(MSVC)
 
     set(RELEASE_FLAGS "
+      ${RELEASE_FLAGS}
     ")
 
     set(DEBUG_FLAGS "
+      ${DEBUG_FLAGS}
     ")
 
 else()
@@ -15,9 +17,11 @@ else()
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
     set(RELEASE_FLAGS "
+      ${RELEASE_FLAGS}
     ")
 
     set(DEBUG_FLAGS "
+      ${DEBUG_FLAGS}
         -Winline
         -fno-omit-frame-pointer
         -fno-optimize-sibling-calls
@@ -28,11 +32,13 @@ else()
   if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
     set(RELEASE_C_FLAGS_CLANG "
+      ${RELEASE_C_FLAGS_CLANG}
         -Wno-switch
         -Wno-deprecated-register
     ")
 
     set(DEBUG_C_FLAGS_CLANG "
+      ${DEBUG_C_FLAGS_CLANG}
         -Wno-switch
         -Wno-deprecated-register
     ")
@@ -44,11 +50,13 @@ else()
   if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
     set(RELEASE_CXX_FLAGS_CLANG "
+      ${RELEASE_CXX_FLAGS_CLANG}
         -Wno-switch
         -Wno-deprecated-register
     ")
 
     set(DEBUG_CXX_FLAGS_CLANG "
+      ${DEBUG_CXX_FLAGS_CLANG}
         -Wno-switch
         -Wno-deprecated-register
     ")
