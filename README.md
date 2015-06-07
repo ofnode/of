@@ -50,8 +50,6 @@ Scripts from [`dev/install/linux`](https://github.com/ofnode/of/tree/master/dev/
 Step 3: Compile
 ---------------
 
-You can always skip this step by downloading precompiled libraries from [releases](https://github.com/ofnode/of/releases) page and extract `lib-linux`, `lib-osx` or `lib-windows` folders to `of` root directory.
-
 #### For Linux:
 
 ```bash
