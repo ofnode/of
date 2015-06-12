@@ -10,17 +10,6 @@
  #endif
  
  //--------------------------
---- a/openframeworks/app/ofAppRunner.cpp
-+++ b/openframeworks/app/ofAppRunner.cpp
-@@ -21,7 +21,7 @@
- 
- 
- // adding this for vc2010 compile: error C3861: 'closeQuicktime': identifier not found
--#if defined (TARGET_WIN32) || defined(TARGET_OSX)
-+#if defined (OF_VIDEO_PLAYER_QUICKTIME) || defined(TARGET_OSX)
- 	#include "ofQtUtils.h"
- #endif
- 
 --- a/openframeworks/video/ofDirectShowPlayer.cpp
 +++ b/openframeworks/video/ofDirectShowPlayer.cpp
 @@ -14,15 +14,14 @@
@@ -55,7 +44,7 @@
      #include <OpenGL/OpenGL.h>
 --- a/openframeworks/utils/ofConstants.h
 +++ b/openframeworks/utils/ofConstants.h
-@@ -110,7 +110,7 @@
+@@ -98,7 +98,7 @@
  	#define GLEW_STATIC
  	#include "GL/glew.h"
  	#include "GL/wglew.h"
