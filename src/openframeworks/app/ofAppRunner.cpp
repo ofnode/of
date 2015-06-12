@@ -21,7 +21,7 @@
 
 
 // adding this for vc2010 compile: error C3861: 'closeQuicktime': identifier not found
-#if defined (OF_VIDEO_PLAYER_QUICKTIME) || defined(TARGET_OSX)
+#if defined(TARGET_OSX)
 	#include "ofQtUtils.h"
 #endif
 
