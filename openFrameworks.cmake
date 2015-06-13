@@ -18,6 +18,7 @@ else()
 
     set(RELEASE_FLAGS "
       ${RELEASE_FLAGS}
+        -g
     ")
 
     set(DEBUG_FLAGS "
