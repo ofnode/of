@@ -510,9 +510,8 @@ target_compile_definitions(
 )
 
 if(NOT MSVC)
-    target_link_libraries(
-        openFrameworks
-        -static-libgcc
-        -static-libstdc++
-    )
+set_target_properties(
+    openFrameworks PROPERTIES
+    COMPILE_FLAGS -g
+)
 endif()
