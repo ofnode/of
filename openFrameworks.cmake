@@ -636,7 +636,7 @@ function(ofxaddon OFXADDON)
         pkg_check_modules(ASSIMP REQUIRED assimp)
         include_directories(${ASSIMP_INCLUDE_DIRS})
         if(MSVC)
-          # pkg-config point to a lib folder, but out lib is in bin folder
+          # pkg-config point to a lib folder, but our lib is in bin folder
           list(APPEND ASSIMP_LIBRARY_DIRS "${ASSIMP_LIBRARY_DIRS}/../bin")
         endif()
         link_directories(${ASSIMP_LIBRARY_DIRS})
