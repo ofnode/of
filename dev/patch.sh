@@ -13,9 +13,12 @@ function apply() {
 
 cd "$OF/src"
 
-apply videoinput_fixes.patch
-apply poco_mingw_fixes.patch
-apply poco_cmake_changes.patch
-apply glfw_cmake_changes.patch
-apply openframeworks_fixes.patch
+apply poco.patch
+apply videoinput.patch
+apply poco_cmake.patch
+apply glfw_cmake.patch
+apply openframeworks.patch
 
+cd "$OF/src/libtess2"
+
+apply tess2.patch

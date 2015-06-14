@@ -33,34 +33,36 @@ setup poco c6cf535 https://github.com/pocoproject/poco
 setup rtaudio d6956ae https://github.com/ofnode/rtaudio
 
 # v 0.9.0 master
-setup openFrameworks 590bc7d https://github.com/openframeworks/openFrameworks
+setup openFrameworks 3ac6d39 https://github.com/openframeworks/openFrameworks
 
-rm -rf videoinput
-mkdir  videoinput
-wget -q https://raw.githubusercontent.com/ofTheo/videoInput/874840a/videoInputSrcAndDemos/libs/videoInput/videoInput.cpp -O videoinput/videoInput.cpp
-wget -q https://raw.githubusercontent.com/ofTheo/videoInput/874840a/videoInputSrcAndDemos/libs/videoInput/videoInput.h   -O videoinput/videoInput.h
+# v 1.0.1 master
+setup libtess2 24e4bdd https://github.com/memononen/libtess2
 
-#-------------------------------------------------------------------------------
+# v latest master
+setup videoInput 874840a https://github.com/ofTheo/videoInput
 
-rm -rf openframeworks
-mv     openFrameworks/libs/openFrameworks openframeworks
+if [ ! -f kiss_fft130.tar.gz ]; then
+  wget http://downloads.sourceforge.net/project/kissfft/kissfft/v1_3_0/kiss_fft130.tar.gz
+fi
 
-rm -rf tess2
-mkdir  tess2
+rm  -rf kiss
+tar -xf kiss_fft130.tar.gz
+mv      kiss_fft130 kiss
 
-mv     openFrameworks/libs/tess2/include tess2/include
-mv     openFrameworks/libs/tess2/Sources tess2/src
+cp      "$OF/dev/add/libtess2/CMakeLists.txt" libtess2
+cp      "$OF/dev/add/kiss/CMakeLists.txt"     kiss
 
-rm -rf kiss
-mkdir  kiss
+rm  -rf videoinput
+mkdir   videoinput
+mv      videoInput/videoInputSrcAndDemos/libs/videoInput/videoInput.cpp videoinput/
+mv      videoInput/videoInputSrcAndDemos/libs/videoInput/videoInput.h   videoinput/
+rm  -rf videoInput
 
-mv     openFrameworks/libs/kiss/include kiss/include
-mv     openFrameworks/libs/kiss/src     kiss/src
+rm  -rf openframeworks
+mv      openFrameworks/libs/openFrameworks openframeworks
 
-cp     "$OF/dev/add/kiss/CMakeLists.txt"  kiss
-cp     "$OF/dev/add/tess2/CMakeLists.txt" tess2
+rm  -rf "$OF/addons"
+mv      openFrameworks/addons "$OF"
 
-rm -rf "$OF/addons"
-mv     openFrameworks/addons "$OF"
+rm  -rf openFrameworks
 
-rm -rf openFrameworks

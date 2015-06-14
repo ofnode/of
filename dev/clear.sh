@@ -11,7 +11,7 @@ rm -rf src/kiss
 rm -rf src/openframeworks
 rm -rf src/poco
 rm -rf src/rtaudio
-rm -rf src/tess2
+rm -rf src/libtess2
 rm -rf src/videoinput
 
 rm -rf addons

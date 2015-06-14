@@ -9,16 +9,16 @@ endif()
 
 set(CMAKE_C_FLAGS_DEBUG "-g -fPIC")
 
-include_directories(include)
+include_directories(Include)
 
 set(SOURCES
-    src/bucketalloc.c
-    src/priorityq.c
-    src/sweep.c
-    src/dict.c
-    src/geom.c
-    src/mesh.c
-    src/tess.c
+    Source/bucketalloc.c
+    Source/priorityq.c
+    Source/sweep.c
+    Source/dict.c
+    Source/geom.c
+    Source/mesh.c
+    Source/tess.c
 )
 
 add_library(

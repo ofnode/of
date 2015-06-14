@@ -9,11 +9,12 @@ endif()
 
 set(CMAKE_C_FLAGS_DEBUG "-g -fPIC")
 
-include_directories(include)
+include_directories(.)
+include_directories(tools)
 
 set(SOURCES
-    src/kiss_fftr.c
-    src/kiss_fft.c
+    tools/kiss_fftr.c
+    kiss_fft.c
 )
 
 add_library(
