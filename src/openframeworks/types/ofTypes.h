@@ -68,13 +68,11 @@ class ofSerialDeviceInfo{
 		/// \endcond
 };
 
-
 //----------------------------------------------------------
 // ofMutex
 //----------------------------------------------------------
 
-#include "Poco/Mutex.h"
-
+#include <mutex>
 /// \brief A typedef for a cross-platform mutex.
 ///
 /// A mutex is used to lock data when it is accessible from multiple threads.
@@ -106,7 +104,10 @@ class ofSerialDeviceInfo{
 ///
 /// \sa http://www.cplusplus.com/reference/mutex/mutex/
 /// \sa http://www.appinf.com/docs/poco/Poco.FastMutex.html
-typedef Poco::FastMutex ofMutex;
+#ifndef _MSC_VER
+[[deprecated("Use std::mutex instead")]]
+#endif
+typedef std::mutex ofMutex;
 
 /// \brief A typedef for a cross-platform scoped mutex.
 ///
@@ -144,7 +145,10 @@ typedef Poco::FastMutex ofMutex;
 /// \sa http://en.cppreference.com/w/cpp/thread/lock_guard
 /// \sa http://www.appinf.com/docs/poco/Poco.ScopedLock.html
 /// \sa ofMutex
-typedef Poco::FastMutex::ScopedLock ofScopedLock;
+#ifndef _MSC_VER
+[[deprecated("use std::unique_lock instead")]]
+#endif
+typedef std::unique_lock<std::mutex> ofScopedLock;
 
 /// \brief Contains general information about the style of ofGraphics
 /// elements such as color, line width and others.
@@ -283,7 +287,5 @@ public:
 //----------------------------------------------------------
 // ofPtr
 //----------------------------------------------------------
-#if HAS_CPP11
 template <typename T>
 using ofPtr = std::shared_ptr<T>;
-#endif
