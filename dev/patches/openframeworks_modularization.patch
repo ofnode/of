@@ -1,6 +1,8 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e3d7ff3..f4c7ca8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -61,6 +61,14 @@
+@@ -61,6 +61,14 @@ else()
  
  endif()
  
@@ -15,7 +17,7 @@
  #// Setup //////////////////////////////////////////////////////////////////////
  
  set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
-@@ -89,12 +97,9 @@
+@@ -89,12 +97,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
      pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
  
      find_package(Glib REQUIRED)
@@ -28,7 +30,7 @@
      find_package(Fontconfig REQUIRED)
  
      list(APPEND OPENFRAMEWORKS_DEFINITIONS
-@@ -104,15 +109,40 @@
+@@ -104,15 +109,40 @@ if(CMAKE_SYSTEM MATCHES Linux)
      set(OPENFRAMEWORKS_INCLUDE_DIRS
          ${GTK3_INCLUDE_DIRS}
          ${GLIB_INCLUDE_DIRS}
@@ -72,7 +74,7 @@
  elseif(CMAKE_SYSTEM MATCHES Darwin)
  
      message("OS X support is experimental. Please report issues if you run into something.")
-@@ -251,13 +281,6 @@
+@@ -251,13 +281,6 @@ set(OPENFRAMEWORKS_SOURCES
      "${OF_ROOT_DIR}/src/openframeworks/math/ofVec2f.cpp"
      "${OF_ROOT_DIR}/src/openframeworks/math/ofVec4f.cpp"
  
@@ -86,7 +88,7 @@
      "${OF_ROOT_DIR}/src/openframeworks/types/ofBaseTypes.cpp"
      "${OF_ROOT_DIR}/src/openframeworks/types/ofColor.cpp"
      "${OF_ROOT_DIR}/src/openframeworks/types/ofParameter.cpp"
-@@ -274,17 +297,34 @@
+@@ -274,17 +297,34 @@ set(OPENFRAMEWORKS_SOURCES
      "${OF_ROOT_DIR}/src/openframeworks/utils/ofURLFileLoader.cpp"
      "${OF_ROOT_DIR}/src/openframeworks/utils/ofUtils.cpp"
      "${OF_ROOT_DIR}/src/openframeworks/utils/ofXml.cpp"
@@ -122,7 +124,7 @@
  elseif(CMAKE_SYSTEM MATCHES Darwin)
      list(APPEND OPENFRAMEWORKS_SOURCES
      "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
-@@ -476,6 +516,9 @@
+@@ -476,6 +516,9 @@ message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
  message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
  message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
  
@@ -132,9 +134,11 @@
  if(CMAKE_BUILD_TYPE MATCHES Release)
      message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
      message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
+diff --git a/openFrameworks.cmake b/openFrameworks.cmake
+index 32f8576..31cea70 100644
 --- a/openFrameworks.cmake
 +++ b/openFrameworks.cmake
-@@ -70,6 +70,12 @@
+@@ -70,6 +70,12 @@ endif()
  
  #// Options ////////////////////////////////////////////////////////////////////
  
@@ -147,7 +151,7 @@
  set(OF_ENABLE_COTIRE ON CACHE BOOL
    "Enable Cotire header precompiler")
  
-@@ -149,15 +155,11 @@
+@@ -149,15 +155,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
      find_package(UDev REQUIRED)
      find_package(Glib REQUIRED)
      find_package(ZLIB REQUIRED)
@@ -163,7 +167,7 @@
      find_package(Fontconfig REQUIRED)
  
      list(APPEND OPENFRAMEWORKS_DEFINITIONS
-@@ -170,12 +172,9 @@
+@@ -170,12 +172,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
          ${GTK3_INCLUDE_DIRS}
          ${GLIB_INCLUDE_DIRS}
          ${ZLIB_INCLUDE_DIRS}
@@ -176,7 +180,7 @@
          ${FREETYPE_INCLUDE_DIRS}
          ${GSTREAMER_INCLUDE_DIRS}
          ${FONTCONFIG_INCLUDE_DIR}
-@@ -194,20 +193,54 @@
+@@ -194,20 +193,54 @@ if(CMAKE_SYSTEM MATCHES Linux)
          ${GTK3_LIBRARIES}
          ${GLIB_LIBRARIES}
          ${ZLIB_LIBRARIES}
@@ -235,7 +239,7 @@
  
  elseif(CMAKE_SYSTEM MATCHES Darwin)
  
-@@ -871,6 +904,8 @@
+@@ -871,6 +904,8 @@ message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
  message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
  message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
  
@@ -244,6 +248,8 @@
  message("++ OF_ENABLE_COTIRE: "  ${OF_ENABLE_COTIRE})
  message("++ OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})
  
+diff --git a/src/openframeworks/app/ofBaseApp.h b/src/openframeworks/app/ofBaseApp.h
+index 65ee996..ba1eecc 100644
 --- a/src/openframeworks/app/ofBaseApp.h
 +++ b/src/openframeworks/app/ofBaseApp.h
 @@ -4,7 +4,11 @@
@@ -259,9 +265,11 @@
  
  	public:
          ofBaseApp() {
+diff --git a/src/openframeworks/ofMain.h b/src/openframeworks/ofMain.h
+index f719e81..c00b894 100644
 --- a/src/openframeworks/ofMain.h
 +++ b/src/openframeworks/ofMain.h
-@@ -90,8 +90,10 @@
+@@ -87,8 +87,10 @@
  
  //--------------------------
  // video
@@ -274,9 +282,11 @@
  
  //--------------------------
  // events
+diff --git a/src/openframeworks/types/ofBaseTypes.cpp b/src/openframeworks/types/ofBaseTypes.cpp
+index 0aa3aae..94a0454 100644
 --- a/src/openframeworks/types/ofBaseTypes.cpp
 +++ b/src/openframeworks/types/ofBaseTypes.cpp
-@@ -327,6 +327,7 @@
+@@ -327,6 +327,7 @@ void ofBaseMaterial::uploadMatrices(const ofShader & shader,ofGLProgrammableRend
  	shader.setUniformMatrix4f("normalMatrix",normalMatrix);
  }
  
@@ -284,15 +294,17 @@
  
  void ofBaseSoundInput::audioIn( ofSoundBuffer& buffer ){
  	audioIn(&buffer[0], buffer.getNumFrames(), buffer.getNumChannels(), buffer.getDeviceID(), buffer.getTickCount());
-@@ -352,3 +353,5 @@
+@@ -352,3 +353,5 @@ void ofBaseSoundOutput::audioOut( float * output, int bufferSize, int nChannels,
  void ofBaseSoundOutput::audioOut( float * output, int bufferSize, int nChannels ){
  	audioRequested(output, bufferSize, nChannels);
  }
 +
 +#endif // #ifndef TARGET_NO_SOUND
+diff --git a/src/openframeworks/utils/ofSystemUtils.cpp b/src/openframeworks/utils/ofSystemUtils.cpp
+index c735d3d..f864ca8 100644
 --- a/src/openframeworks/utils/ofSystemUtils.cpp
 +++ b/src/openframeworks/utils/ofSystemUtils.cpp
-@@ -76,7 +76,9 @@
+@@ -74,7 +74,9 @@ static void restoreAppWindowFocus(){
  
  #if defined( TARGET_LINUX ) && defined (OF_USING_GTK)
  #include <gtk/gtk.h>
@@ -302,7 +314,7 @@
  #include "Poco/Condition.h"
  
  #if GTK_MAJOR_VERSION>=3
-@@ -198,13 +198,16 @@
+@@ -196,13 +198,16 @@ static void initGTK(){
  		#endif
  		int argc=0; char **argv = NULL;
  		gtk_init (&argc, &argv);
@@ -319,7 +331,7 @@
  	initGTK();
  	FileDialogData dialogData;
  	dialogData.action = action;
-@@ -218,6 +218,41 @@
+@@ -216,6 +221,41 @@ static string gtkFileDialog(GtkFileChooserAction action,string windowTitle,strin
  		dialogData.condition.wait(dialogData.mutex);
  	}
  	return dialogData.results;
@@ -361,7 +373,7 @@
  }
  
  #endif
-@@ -275,6 +275,7 @@
+@@ -273,6 +313,7 @@ void ofSystemAlertDialog(string errorMessage){
  	#endif
  
  	#if defined( TARGET_LINUX ) && defined (OF_USING_GTK)
@@ -369,9 +381,9 @@
  		initGTK();
  		TextDialogData dialogData;
  		dialogData.text = errorMessage;
-@@ -284,6 +284,13 @@
- 			std::unique_lock<std::mutex> lock(dialogData.mutex);
- 			dialogData.condition.wait(lock);
+@@ -282,6 +323,13 @@ void ofSystemAlertDialog(string errorMessage){
+ 			dialogData.mutex.lock();
+ 			dialogData.condition.wait(dialogData.mutex);
  		}
 +		#else
 +		initGTK();
@@ -383,7 +395,7 @@
  	#endif
  
  	#ifdef TARGET_ANDROID
-@@ -588,6 +588,7 @@
+@@ -586,6 +634,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
  
  string ofSystemTextBoxDialog(string question, string text){
  #if defined( TARGET_LINUX ) && defined (OF_USING_GTK)
@@ -391,8 +403,8 @@
  	initGTK();
  	TextDialogData dialogData;
  	dialogData.text = text;
-@@ -599,6 +599,19 @@
- 		dialogData.condition.wait(lock);
+@@ -597,6 +646,19 @@ string ofSystemTextBoxDialog(string question, string text){
+ 		dialogData.condition.wait(dialogData.mutex);
  	}
  	text = dialogData.text;
 +	#else
