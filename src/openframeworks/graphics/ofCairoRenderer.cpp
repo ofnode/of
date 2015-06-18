@@ -98,6 +98,8 @@ void ofCairoRenderer::setup(string _filename, Type _type, bool multiPage_, bool 
 	page = 0;
 	b3D = b3D_;
 	multiPage = multiPage_;
+	setStyle(currentStyle);
+	clear();
 }
 
 void ofCairoRenderer::setupMemoryOnly(Type _type, bool multiPage_, bool b3D_, ofRectangle _viewport){
@@ -1161,7 +1163,6 @@ void ofCairoRenderer::setupGraphicDefaults(){
 	setStyle(ofStyle());
 	path.setMode(ofPath::COMMANDS);
 	path.setUseShapeColor(false);
-	clear();
 };
 
 //----------------------------------------------------------

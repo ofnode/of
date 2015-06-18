@@ -8,8 +8,7 @@
 #pragma once
 
 #include <jni.h>
-#include "ofConstants.h"
-#include "ofEvent.h"
+#include "ofSoundStream.h"
 
 JavaVM * ofGetJavaVMPtr();
 JNIEnv * ofGetJNIEnv();
@@ -90,7 +89,21 @@ bool ofxAndroidCheckSDCardMounted();
 void ofxAndroidEnableMulticast();
 void ofxAndroidDisableMulticast();
 
-void ofxAndroidSetViewItemChecked(string item_name, bool checked);
+inline void ofxAndroidSetViewItemChecked(string item_name, bool checked){
+	jclass javaClass = ofGetJavaOFAndroid();
+
+	if(javaClass==0){
+		ofLog(OF_LOG_ERROR,"ofxAndroidSetViewItemChecked: cannot find OFAndroid java class");
+		return;
+	}
+
+	jmethodID setViewItemChecked = ofGetJNIEnv()->GetStaticMethodID(javaClass,"setViewItemChecked","(Ljava/lang/String;Z)V");
+	if(!setViewItemChecked){
+		ofLog(OF_LOG_ERROR,"cannot find OFAndroid setViewItemChecked method");
+		return;
+	}
+	ofGetJNIEnv()->CallStaticVoidMethod(javaClass,setViewItemChecked,ofGetJNIEnv()->NewStringUTF(item_name.c_str()),checked);
+}
 
 enum ofxAndroidSwipeDir{
 	OFX_ANDROID_SWIPE_UP    = 1,

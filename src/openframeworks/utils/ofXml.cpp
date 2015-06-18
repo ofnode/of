@@ -1,6 +1,5 @@
 
 #include "ofXml.h"
-#include "Poco/AutoPtr.h"
 
 ofXml::~ofXml() {
 	releaseAll();

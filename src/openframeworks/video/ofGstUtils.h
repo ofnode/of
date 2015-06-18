@@ -12,10 +12,9 @@
 #include <gst/gst.h>
 #include <gst/gstpad.h>
 #include <gst/video/video.h>
+#include "Poco/Condition.h"
 #include "ofTexture.h"
 #include <queue>
-#include <condition_variable>
-#include <mutex>
 
 //#define OF_USE_GST_GL
 #ifdef OF_USE_GST_GL
@@ -108,8 +107,8 @@ private:
 	float				speed;
 	mutable int64_t		durationNanos;
 	bool				isAppSink;
-	std::condition_variable		eosCondition;
-	std::mutex			eosMutex;
+	Poco::Condition		eosCondition;
+	ofMutex				eosMutex;
 	guint				busWatchID;
 
 	class ofGstMainLoopThread: public ofThread{
@@ -212,7 +211,7 @@ private:
 	bool			bIsFrameNew;			// if we are new
 	bool			bHavePixelsChanged;
 	bool			bBackPixelsChanged;
-	std::mutex		mutex;
+	ofMutex			mutex;
 #if GST_VERSION_MAJOR==0
 	shared_ptr<GstBuffer> 	frontBuffer, backBuffer;
 #else

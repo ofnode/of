@@ -1,6 +1,21 @@
 #include "ofParameter.h"
 #include "ofParameterGroup.h"
-using namespace std;
+
+ofAbstractParameter::ofAbstractParameter(){
+
+}
+
+ofAbstractParameter::~ofAbstractParameter(){
+
+}
+
+string ofAbstractParameter::getName() const {
+	return "";
+}
+
+void ofAbstractParameter::setName(string name) {
+
+}
 
 string ofAbstractParameter::getEscapedName() const{
 	return escape(getName());
@@ -24,19 +39,54 @@ string ofAbstractParameter::escape(string str) const{
 	return str;
 }
 
+string ofAbstractParameter::toString() const {
+	return "";
+}
+
+void ofAbstractParameter::fromString(string str) {
+
+}
 
 string ofAbstractParameter::type() const{
 	return typeid(*this).name();
 }
 
+void ofAbstractParameter::setParent(ofParameterGroup * _parent){
+
+}
+
+const ofParameterGroup * ofAbstractParameter::getParent() const{
+	return NULL;
+}
+
+ofParameterGroup * ofAbstractParameter::getParent(){
+	return NULL;
+}
+
 vector<string> ofAbstractParameter::getGroupHierarchyNames() const{
 	vector<string> hierarchy;
-	auto p = getFirstParent();
-	if(p){
-		hierarchy = p.getGroupHierarchyNames();
+	if(getParent()){
+		hierarchy = getParent()->getGroupHierarchyNames();
 	}
 	hierarchy.push_back(getEscapedName());
 	return hierarchy;
+}
+
+
+void ofAbstractParameter::notifyParent(){
+	if(getParent()) getParent()->notifyParameterChanged(*this);
+}
+
+void ofAbstractParameter::setSerializable(bool serializable){
+
+}
+
+bool ofAbstractParameter::isSerializable() const{
+	return true;
+}
+
+shared_ptr<ofAbstractParameter> ofAbstractParameter::newReference() const{
+	return shared_ptr<ofAbstractParameter>(new ofAbstractParameter(*this));
 }
 
 ostream& operator<<(ostream& os, const ofAbstractParameter& p){

@@ -1,19 +1,8 @@
 #pragma once
 
 #include "ofConstants.h"
-#if _MSC_VER
-//#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-namespace std {
-	namespace filesystem = boost::filesystem;
-}
-#else
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-namespace std{
-	namespace filesystem = boost::filesystem;
-}
-#endif
+#include "Poco/File.h"
+
 //----------------------------------------------------------
 // ofBuffer
 //----------------------------------------------------------
@@ -148,12 +137,12 @@ public:
 	};
 
 	ofFile();
-	ofFile(const std::filesystem::path & path, Mode mode=ReadOnly, bool binary=true);
+	ofFile(string filePath, Mode mode=ReadOnly, bool binary=false);
 	ofFile(const ofFile & mom);
 	ofFile & operator= (const ofFile & mom);
 	~ofFile();
 
-	bool open(const std::filesystem::path & path, Mode mode=ReadOnly, bool binary=false);
+	bool open(string path, Mode mode=ReadOnly, bool binary=false);
 	bool changeMode(Mode mode, bool binary=false); // reopens a file to the same path with a different mode;
 	void close();
 	bool create();
@@ -191,6 +180,9 @@ public:
 	bool remove(bool recursive=false);
 
 	uint64_t getSize() const;
+
+	//if you want access to a few other things
+	Poco::File & getPocoFile();
 
 	//this allows to compare files by their paths, also provides sorting and use as key in stl containers
 	bool operator==(const ofFile & file) const;
@@ -236,7 +228,7 @@ private:
 	bool isWriteMode();
 	bool openStream(Mode _mode, bool binary);
 	void copyFrom(const ofFile & mom);
-	std::filesystem::path myFile;
+	Poco::File myFile;
 	Mode mode;
 	bool binary;
 };
@@ -245,9 +237,9 @@ class ofDirectory{
 
 public:
 	ofDirectory();
-	ofDirectory(const std::filesystem::path & path);
+	ofDirectory(string path);
 
-	void open(const std::filesystem::path & path);
+	void open(string path);
 	void close();
 	bool create(bool recursive = false);
 
@@ -285,7 +277,7 @@ public:
 	string getName(unsigned int position); // e.g., "image.png"
 	string getPath(unsigned int position);
 	ofFile getFile(unsigned int position, ofFile::Mode mode=ofFile::Reference, bool binary=false);
-	const vector<ofFile> & getFiles() const;
+	vector<ofFile> getFiles();
 
 	ofFile operator[](unsigned int position);
 
@@ -296,6 +288,11 @@ public:
 
 	unsigned int size();
 	int numFiles(); // numFiles is deprecated, use size()
+
+
+
+	//if you want access to a few other things
+	Poco::File & getPocoFile();
 
 	//this allows to compare dirs by their paths, also provides sorting and use as key in stl containers
 	bool operator==(const ofDirectory & dir);
@@ -315,13 +312,17 @@ public:
 	static bool doesDirectoryExist(string dirPath, bool bRelativeToData = true);
 	static bool removeDirectory(string path, bool deleteIfNotEmpty,  bool bRelativeToData = true);
 
+	vector<ofFile>::iterator begin();
+	vector<ofFile>::iterator end();
 	vector<ofFile>::const_iterator begin() const;
 	vector<ofFile>::const_iterator end() const;
+	vector<ofFile>::reverse_iterator rbegin();
+	vector<ofFile>::reverse_iterator rend();
 	vector<ofFile>::const_reverse_iterator rbegin() const;
 	vector<ofFile>::const_reverse_iterator rend() const;
 
 private:
-	std::filesystem::path myDir;
+	Poco::File myDir;
 	string originalDirectory;
 	vector <string> extensions;
 	vector <ofFile> files;

@@ -1,7 +1,7 @@
 #pragma once
-#include <mutex>
+#include "ofConstants.h"
 #include <queue>
-#include <condition_variable>
+#include "Poco/Condition.h"
 #include "ofUtils.h"
 
 /// Communication channel between different threads
@@ -23,12 +23,12 @@ public:
 	/// returns true if there was a new value
 	/// or false if the channel was closed
 	bool receive(T & ret){
-		std::unique_lock<std::mutex> lock(mutex);
+		ofScopedLock lock(mutex);
 		if(closed){
 			return false;
 		}
 		if(queue.empty()){
-			condition.wait(lock);
+			condition.wait(mutex);
 		}
 		if(!closed){
 			swap(ret,queue.front());
@@ -43,7 +43,7 @@ public:
 	/// and returns true or returns false if there
 	/// is no data available or the channel was closed
 	bool tryReceive(T & ret){
-		std::unique_lock<std::mutex> lock(mutex);
+		ofScopedLock lock(mutex);
 		if(closed){
 			return false;
 		}
@@ -61,12 +61,14 @@ public:
 	/// after the specified timeout in ms there is
 	/// no data available or the channel was closed
 	bool tryReceive(T & ret, int64_t timeoutMs){
-		std::unique_lock<std::mutex> lock(mutex);
+		ofScopedLock lock(mutex);
 		if(closed){
 			return false;
 		}
 		if(queue.empty()){
-			if(condition.wait_for(lock,std::chrono::milliseconds(timeoutMs))==std::cv_status::timeout){
+			try {
+				condition.wait(mutex,timeoutMs);
+			}catch (Poco::TimeoutException & e) {
 				return false;
 			}
 		}
@@ -84,15 +86,16 @@ public:
 	/// returns true if it was sent successfully
 	/// or false if the channel was closed
 	bool send(const T & val){
-		std::unique_lock<std::mutex> lock(mutex);
+		ofScopedLock lock(mutex);
 		if(closed){
 			return false;
 		}
 		queue.push(val);
-		condition.notify_all();
+		condition.signal();
 		return true;
 	}
 
+#if __cplusplus>=201103
 	/// sends a value by moving it to avoid a copy.
 	/// the original is invalidated. use like:
 	///
@@ -100,28 +103,29 @@ public:
 	///
 	/// only c++11
 	bool send(T && val){
-		std::unique_lock<std::mutex> lock(mutex);
+		ofScopedLock lock(mutex);
 		if(closed){
 			return false;
 		}
 		queue.push(val);
-		condition.notify_all();
+		condition.signal();
 		return true;
 	}
+#endif
 
 	/// closes the channel, from here on
 	/// no new messages can be sent or received
 	/// and any threads waiting to receive a value
 	/// are awaken and return false
 	void close(){
-		std::unique_lock<std::mutex> lock(mutex);
+		ofScopedLock lock(mutex);
 		closed = true;
-		condition.notify_all();
+		condition.signal();
 	}
 
 private:
 	std::queue<T> queue;
-	std::mutex mutex;
-	std::condition_variable condition;
+	ofMutex mutex;
+	Poco::Condition condition;
 	bool closed;
 };

@@ -1,12 +1,17 @@
 #include "ofUtils.h"
 #include "ofImage.h"
-#include "ofFileUtils.h"
+#include "ofTypes.h"
+#include "ofGraphics.h"
+#include "ofAppRunner.h"
 
-#include <chrono>
-#include <numeric>
-#include <locale>
-#include "utf8.h"
-#include <network/uri.hpp>
+#include "Poco/String.h"
+#include "Poco/UTF8String.h"
+#include "Poco/LocalDateTime.h"
+#include "Poco/DateTimeFormatter.h"
+#include "Poco/URI.h"
+
+#include <cctype> // for toupper
+
 
 
 #ifdef TARGET_WIN32
@@ -156,36 +161,16 @@ void ofSleepMillis(int millis){
 //default ofGetTimestampString returns in this format: 2011-01-15-18-29-35-299
 //--------------------------------------------------
 string ofGetTimestampString(){
-
 	string timeFormat = "%Y-%m-%d-%H-%M-%S-%i";
-
-	return ofGetTimestampString(timeFormat);
+	Poco::LocalDateTime now;
+	return Poco::DateTimeFormatter::format(now, timeFormat);
 }
 
 //specify the string format - eg: %Y-%m-%d-%H-%M-%S-%i ( 2011-01-15-18-29-35-299 )
 //--------------------------------------------------
 string ofGetTimestampString(const string& timestampFormat){
-	std::stringstream str;
-	auto now = std::chrono::system_clock::now();
-	auto t = std::chrono::system_clock::to_time_t(now);    std::chrono::duration<double> s = now - std::chrono::system_clock::from_time_t(t);
-    int ms = s.count() * 1000;
-	auto tm = *std::localtime(&t);
-	constexpr int bufsize = 256;
-	char buf[bufsize];
-
-	// Beware! an invalid timestamp string crashes windows apps.
-	// so we have to filter out %i (which is not supported by vs)
-	// earlier.
-	auto tmpTimestampFormat = timestampFormat;
-	ofStringReplace(tmpTimestampFormat, "%i", ofToString(ms));
-	
-	if (strftime(buf,bufsize, tmpTimestampFormat.c_str(),&tm) != 0){
-		str << buf;
-	}
-	auto ret = str.str();
-	
-
-    return ret;
+	Poco::LocalDateTime now;
+	return Poco::DateTimeFormatter::format(now, timestampFormat);
 }
 
 //--------------------------------------------------
@@ -277,39 +262,58 @@ string defaultDataPath(){
 }
 
 //--------------------------------------------------
-static std::filesystem::path & defaultWorkingDirectory(){
-	static auto * defaultWorkingDirectory = new std::filesystem::path();
+static Poco::Path & defaultWorkingDirectory(){
+	static Poco::Path * defaultWorkingDirectory = new Poco::Path();
 	return * defaultWorkingDirectory;
 }
 
 //--------------------------------------------------
-static std::filesystem::path & dataPathRoot(){
-	static auto * dataPathRoot = new std::filesystem::path(defaultDataPath());
+static Poco::Path & dataPathRoot(){
+	static Poco::Path * dataPathRoot = new Poco::Path(defaultDataPath());
 	return *dataPathRoot;
+}
+
+//--------------------------------------------------
+Poco::Path getWorkingDir(){
+#ifndef TARGET_EMSCRIPTEN
+	char charWorkingDir[MAXPATHLEN];
+	char* ret = getcwd(charWorkingDir, MAXPATHLEN);
+	if(ret)
+		return Poco::Path(charWorkingDir);
+	else
+		return Poco::Path();
+#else
+	return Poco::Path();
+#endif
 }
 
 //--------------------------------------------------
 void ofSetWorkingDirectoryToDefault(){
 #ifdef TARGET_OSX
 	#ifndef TARGET_OF_IOS
+		string newPath = "";
 		char path[MAXPATHLEN];
 		uint32_t size = sizeof(path);
 		
 		if (_NSGetExecutablePath(path, &size) == 0){
-			std::filesystem::path classPath(path);
-			classPath = classPath.parent_path();
-			chdir( classPath.native().c_str() );
+			Poco::Path classPath(path);
+			classPath.makeParent();
+			chdir( classPath.toString().c_str() );
 		}else{
 			ofLogFatalError("ofUtils") << "ofSetDataPathRoot(): path buffer too small, need size " << (unsigned int) size;
 		}
 	#endif
 #endif
-	defaultWorkingDirectory() = std::filesystem::absolute(std::filesystem::current_path());
+
+	defaultWorkingDirectory() = getWorkingDir();
+#ifndef TARGET_EMSCRIPTEN
+	defaultWorkingDirectory().makeAbsolute();
+#endif
 }
 	
 //--------------------------------------------------
 void ofSetDataPathRoot(const string& newRoot){
-	dataPathRoot() = newRoot;
+	dataPathRoot() = Poco::Path(newRoot);
 }
 
 //--------------------------------------------------
@@ -319,35 +323,36 @@ string ofToDataPath(const string& path, bool makeAbsolute){
 	
 	// if our Current Working Directory has changed (e.g. file open dialog)
 #ifdef TARGET_WIN32
-	if (defaultWorkingDirectory() != std::filesystem::current_path()) {
+	if (defaultWorkingDirectory().toString() != getWorkingDir().toString()) {
 		// change our cwd back to where it was on app load
-		int ret = chdir(defaultWorkingDirectory().string().c_str());
+		int ret = chdir(defaultWorkingDirectory().toString().c_str());
 		if(ret==-1){
-			ofLogWarning("ofUtils") << "ofToDataPath: error while trying to change back to default working directory " << defaultWorkingDirectory();
+			ofLogWarning("ofUtils") << "ofToDataPath: error while trying to change back to default working directory " << defaultWorkingDirectory().toString();
 		}
 	}
 #endif
 	// this could be performed here, or wherever we might think we accidentally change the cwd, e.g. after file dialogs on windows
 	
-	const auto  & dataPath = dataPathRoot();
-	std::filesystem::path inputPath(path);
-	std::filesystem::path outputPath;
+	Poco::Path const  & dataPath(dataPathRoot());
+	Poco::Path inputPath(path);
+	Poco::Path outputPath;
 	
 	// if path is already absolute, just return it
-	if (inputPath.is_absolute()) {
+	if (inputPath.isAbsolute()) {
 		return path;
 	}
 	
 	// here we check whether path already refers to the data folder by looking for common elements
 	// if the path begins with the full contents of dataPathRoot then the data path has already been added
 	// we compare inputPath.toString() rather that the input var path to ensure common formatting against dataPath.toString()
-	auto strippedDataPath = dataPath.string();
+	string strippedDataPath = dataPath.toString();
 	// also, we strip the trailing slash from dataPath since `path` may be input as a file formatted path even if it is a folder (i.e. missing trailing slash)
 	strippedDataPath = ofFilePath::removeTrailingSlash(strippedDataPath);
 	
-	if (inputPath.string().find(strippedDataPath) != 0) {
+	if (inputPath.toString().find(strippedDataPath) != 0) {
 		// inputPath doesn't contain data path already, so we build the output path as the inputPath relative to the dataPath
-		outputPath = dataPath / inputPath;
+		outputPath = dataPath;
+		outputPath.resolve(inputPath);
 	} else {
 		// inputPath already contains data path, so no need to change
 		outputPath = inputPath;
@@ -356,10 +361,10 @@ string ofToDataPath(const string& path, bool makeAbsolute){
 	// finally, if we do want an absolute path and we don't already have one
 	if (makeAbsolute) {
 		// then we return the absolute form of the path
-		return std::filesystem::absolute(outputPath).string();
+		return outputPath.absolute().toString();
 	} else {
 		// or output the relative path
-		return outputPath.string();
+		return outputPath.toString();
 	}
 }
 
@@ -471,11 +476,13 @@ double ofToDouble(const string& doubleString) {
 
 //----------------------------------------
 bool ofToBool(const string& boolString) {
-	auto lower = ofToLower(boolString);
-	if(lower == "true") {
+	static const string trueString = "true";
+	static const string falseString = "false";
+	string lower = Poco::toLower(boolString);
+	if(lower == trueString) {
 		return true;
 	}
-	if(lower == "false") {
+	if(lower == falseString) {
 		return false;
 	}
 	bool x = false;
@@ -560,7 +567,7 @@ vector <string> ofSplitString(const string & source, const string & delimiter, b
 		subend = search(substart, source.end(), delimiter.begin(), delimiter.end());
 		string sub(substart, subend);
 		if(trim) {
-			sub = ofTrim(sub);
+			Poco::trimInPlace(sub);
 		}
 		if (!ignoreEmpty || !sub.empty()) {
 			result.push_back(sub);
@@ -574,30 +581,13 @@ vector <string> ofSplitString(const string & source, const string & delimiter, b
 }
 
 //--------------------------------------------------
-string ofJoinString(const vector<string>& stringElements, const string & delimiter){
-	if(stringElements.empty()){
-		return "";
-	}
-	return std::accumulate(stringElements.cbegin() + 1, stringElements.cend(), stringElements[0],
-		[delimiter](std::string a, std::string b) -> const char *{
-			return (a + delimiter + b).c_str();
-		}
-	);
+string ofJoinString(const vector<string>& stringElements, const string& delimiter){
+    return Poco::cat(delimiter, stringElements.begin(), stringElements.end());
 }
 
 //--------------------------------------------------
 void ofStringReplace(string& input, const string& searchStr, const string& replaceStr){
-	auto pos = input.find(searchStr);
-	while(pos != std::string::npos){
-		input.replace(pos, searchStr.size(), replaceStr);
-		pos += replaceStr.size();
-		std::string nextfind(input.begin() + pos, input.end());
-		auto nextpos = nextfind.find(searchStr);
-		if(nextpos==std::string::npos){
-			break;
-		}
-		pos += nextpos;
-	}
+    input = Poco::replace(input, searchStr, replaceStr);
 }
 
 //--------------------------------------------------
@@ -621,59 +611,13 @@ int ofStringTimesInString(const string& haystack, const string& needle){
 }
 
 //--------------------------------------------------
-string ofToLower(const string & src, const string & locale){
-	std::string src_valid;
-	std::string dst;
-	utf8::replace_invalid(src.begin(),src.end(),back_inserter(src_valid));
-	utf8::iterator<const char*> it(&src_valid.front(), &src_valid.front(), (&src_valid.back())+1);
-	utf8::iterator<const char*> end((&src_valid.back())+1, &src_valid.front(), (&src_valid.back())+1);
-	std::locale loc(locale.c_str());
-	while(it!=end){
-		try{
-			auto next = *it++;
-			utf8::append(std::tolower<wchar_t>(next, loc), back_inserter(dst));
-		}catch(...){break;}
-	}
-	return dst;
+string ofToLower(const string & src){
+    return Poco::UTF8::toLower(src);
 }
 
 //--------------------------------------------------
-string ofToUpper(const string & src, const string & locale){
-	std::string src_valid;
-	std::string dst;
-	utf8::replace_invalid(src.begin(),src.end(),back_inserter(src_valid));
-	utf8::iterator<const char*> it(&src_valid.front(), &src_valid.front(), (&src_valid.back())+1);
-	utf8::iterator<const char*> end((&src_valid.back())+1, &src_valid.front(), (&src_valid.back())+1);
-	std::locale loc(locale.c_str());
-	while(it!=end){
-		try{
-			auto next = *it++;
-			utf8::append(std::toupper<wchar_t>(next, loc), back_inserter(dst));
-		}catch(...){break;}
-	}
-	return dst;
-}
-
-string ofTrimFront(const string & src){
-	auto front = std::find_if_not(src.begin(),src.end(),[](int c){return std::isspace(c);});
-	return std::string(front,src.end());
-}
-
-string ofTrimBack(const string & src){
-	auto back = std::find_if_not(src.rbegin(),src.rend(),[](int c){return std::isspace(c);}).base();
-	return std::string(src.begin(),back);
-}
-
-string ofTrim(const string & src){
-	auto front = std::find_if_not(src.begin(),src.end(),[](int c){return std::isspace(c);});
-	auto back = std::find_if_not(src.rbegin(),src.rend(),[](int c){return std::isspace(c);}).base();
-	return (back<=front ? std::string() : std::string(front,back));
-}
-
-void ofAppendUTF8(string & str, int utf8){
-	try{
-		utf8::append(utf8, back_inserter(str));
-	}catch(...){}
+string ofToUpper(const string & src){
+    return Poco::UTF8::toUpper(src);
 }
 
 //--------------------------------------------------
@@ -729,53 +673,44 @@ string ofVAArgsToString(const char * format, va_list args){
 }
 
 //--------------------------------------------------
-void ofLaunchBrowser(const string& url, bool uriEncodeQuery){
-    network::uri uri;
+void ofLaunchBrowser(const string& _url, bool uriEncodeQuery){
+
+    Poco::URI uri;
     
     try {
-        if(uriEncodeQuery) {
-        	auto pos_q = url.find("?");
-        	if(pos_q!=std::string::npos){
-				std::string encoded;
-				network::uri::encode_query(url.begin() + pos_q + 1, url.end(), std::back_inserter(encoded));
-				cout << encoded << endl;
-				uri = network::uri_builder(network::uri(url.begin(), url.begin() + pos_q))
-					.query(encoded)
-					.uri();
-        	}else{
-                uri = network::uri(url);
-        	}
-        }else{
-            uri = network::uri(url);
-        }
-    } catch(const std::exception& exc) {
-        ofLogError("ofUtils") << "ofLaunchBrowser(): malformed url \"" << url << "\": " << exc.what();
+        uri = Poco::URI(_url);
+    } catch(const Poco::SyntaxException& exc) {
+        ofLogError("ofUtils") << "ofLaunchBrowser(): malformed url \"" << _url << "\": " << exc.displayText();
         return;
+    }
+    
+    if(uriEncodeQuery) {
+        uri.setQuery(uri.getRawQuery()); // URI encodes during set
     }
         
 	// http://support.microsoft.com/kb/224816
 	// make sure it is a properly formatted url:
 	//   some platforms, like Android, require urls to start with lower-case http/https
     //   Poco::URI automatically converts the scheme to lower case
-	if(uri.scheme() != boost::none && uri.scheme().get() != "http" && uri.scheme().get() != "https"){
-		ofLogError("ofUtils") << "ofLaunchBrowser(): url does not begin with http:// or https://: \"" << uri.string() << "\"";
+	if(uri.getScheme() != "http" && uri.getScheme() != "https"){
+		ofLogError("ofUtils") << "ofLaunchBrowser(): url does not begin with http:// or https://: \"" << uri.toString() << "\"";
 		return;
 	}
 
 	#ifdef TARGET_WIN32
 		#if (_MSC_VER)
 		// microsoft visual studio yaks about strings, wide chars, unicode, etc
-		ShellExecuteA(NULL, "open", uri.string().c_str(),
+		ShellExecuteA(NULL, "open", uri.toString().c_str(),
                 NULL, NULL, SW_SHOWNORMAL);
 		#else
-		ShellExecute(NULL, "open", uri.string().c_str(),
+		ShellExecute(NULL, "open", uri.toString().c_str(),
                 NULL, NULL, SW_SHOWNORMAL);
 		#endif
 	#endif
 
 	#ifdef TARGET_OSX
         // could also do with LSOpenCFURLRef
-		string commandStr = "open \"" + uri.string() + "\"";
+		string commandStr = "open \"" + uri.toString() + "\"";
 		int ret = system(commandStr.c_str());
         if(ret!=0) {
 			ofLogError("ofUtils") << "ofLaunchBrowser(): couldn't open browser, commandStr \"" << commandStr << "\"";
@@ -783,8 +718,7 @@ void ofLaunchBrowser(const string& url, bool uriEncodeQuery){
 	#endif
 
 	#ifdef TARGET_LINUX
-        cout << uri.string() << endl;
-		string commandStr = "xdg-open \"" + uri.string() + "\"";
+		string commandStr = "xdg-open \"" + uri.toString() + "\"";
 		int ret = system(commandStr.c_str());
 		if(ret!=0) {
 			ofLogError("ofUtils") << "ofLaunchBrowser(): couldn't open browser, commandStr \"" << commandStr << "\"";
@@ -792,11 +726,11 @@ void ofLaunchBrowser(const string& url, bool uriEncodeQuery){
 	#endif
 
 	#ifdef TARGET_OF_IOS
-		ofxiOSLaunchBrowser(url);
+		ofxiOSLaunchBrowser(uri.toString());
 	#endif
 
 	#ifdef TARGET_ANDROID
-		ofxAndroidLaunchBrowser(url);
+		ofxAndroidLaunchBrowser(uri.toString());
 	#endif
 }
 

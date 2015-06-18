@@ -3,6 +3,7 @@
 #include "ofFileUtils.h"
 #include "ofGraphics.h"
 #include "ofGLProgrammableRenderer.h"
+#include "Poco/RegularExpression.h"
 #include "ofTexture.h"
 #include "ofMatrix4x4.h"
 #include "ofMatrix3x3.h"
@@ -11,35 +12,6 @@
 #include "ofVec4f.h"
 #include "ofParameterGroup.h"
 #include "ofParameter.h"
-
-#if HAS_CPP11
-	#include <regex>
-#else
-	#include "Poco/RegularExpression.h"
-	namespace std{
-		typedef Poco::RegularExpression regex;
-		class regmatch{
-			string str;
-		public:
-			regmatch(const string & str, Poco::RegularExpression::Match pocomatch)
-			:str(str.substr(pocomatch.offset, pocomatch.length)){}
-
-			operator string() const{
-				return str;
-			}
-		};
-		typedef vector<regmatch> smatch;
-		bool regex_match(const string & str, smatch & matches, const regex & re){
-			Poco::RegularExpression::MatchVec pocomatches;
-			auto ret = re.match( str, 0, pocomatches );
-			matches.clear();
-			for(const auto & m: pocomatches){
-				matches.push_back(regmatch(str,m));
-			}
-			return ret;
-		}
-	}
-#endif
 
 static const string COLOR_ATTRIBUTE="color";
 static const string POSITION_ATTRIBUTE="position";
@@ -265,17 +237,18 @@ string ofShader::parseForIncludes( const string& source, vector<string>& include
 	stringstream input;
 	input << source;
 	
-	std::regex re("^\\s*#\\s*pragma\\s+include\\s+[\"<](.*)[\">].*");
-	std::smatch matches;
+	Poco::RegularExpression re("^\\s*#\\s*pragma\\s+include\\s+[\"<](.*)[\">].*");
+	Poco::RegularExpression::MatchVec matches;
+	
 	string line;
 	while( std::getline( input, line ) ) {
-		std::regex_match( line, matches, re );
-		if ( matches.size() < 2 ) {
+		
+		if ( re.match( line, 0, matches ) < 2 ) {
 			output << line << endl;
 			continue;
 		}
 		
-		string include = matches[1];
+		string include = line.substr(matches[1].offset, matches[1].length);
 		
 		if ( std::find( included.begin(), included.end(), include ) != included.end() ) {
 			ofLogVerbose("ofShader") << include << " already included";
@@ -284,7 +257,7 @@ string ofShader::parseForIncludes( const string& source, vector<string>& include
 		
 		// we store the absolute paths so as have (more) unique file identifiers.
 		
-		include = ofFile(ofFilePath::join(sourceDirectoryPath, include)).getAbsolutePath();
+		include = ofFile(sourceDirectoryPath + include).getAbsolutePath();
 		included.push_back( include );
 		
 		
@@ -377,14 +350,14 @@ void ofShader::checkShaderInfoLog(GLuint shader, GLenum type, ofLogLevel logLeve
 		if (shaderSource.find(type) != shaderSource.end()) {
 			// The following regexp should match shader compiler error messages by Nvidia and ATI.
 			// Unfortunately, each vendor's driver formats error messages slightly different.
-			std::regex nvidia_ati("^.*[(:]{1}(\\d+)[:)]{1}.*");
-			std::regex intel("^[0-9]+:([0-9]+)\\([0-9]+\\):.*$");
-			std::smatch matches;
-			string infoString = (infoBuffer != NULL) ? ofTrim(infoBuffer): "";
-			if (std::regex_match(infoString, matches, intel) || std::regex_match(infoString, matches, nvidia_ati)){
-				ofBuffer buf = shaderSource[type];
-				ofBuffer::Line line = buf.getLines().begin();
-				int  offendingLineNumber = ofToInt(matches[1]);
+			Poco::RegularExpression re("^.*[(:]{1}(\\d+)[:)]{1}.*");
+			Poco::RegularExpression::MatchVec matches;
+			string infoString = (infoBuffer != NULL) ? string(infoBuffer): "";
+			re.match(infoString, 0, matches);
+			ofBuffer buf = shaderSource[type];
+			ofBuffer::Line line = buf.getLines().begin();
+			if (!matches.empty()){
+				int  offendingLineNumber = ofToInt(infoString.substr(matches[1].offset, matches[1].length));
 				ostringstream msg;
 				msg << "ofShader: " + nameForType(type) + ", offending line " << offendingLineNumber << " :"<< endl;
 				for(int i=0; line != buf.getLines().end(); line++, i++ ){
@@ -395,7 +368,7 @@ void ofShader::checkShaderInfoLog(GLuint shader, GLenum type, ofLogLevel logLeve
 				}
 				ofLog(logLevel) << msg.str();
 			}else{
-				ofLog(logLevel) << shaderSource[type];
+				ofLogError() << shaderSource[type];
 			}
 		}
 		delete [] infoBuffer;
@@ -412,10 +385,10 @@ void ofShader::checkProgramInfoLog(GLuint program) {
 		string msg = "ofShader: program reports:\n";
 #ifdef TARGET_RASPBERRYPI
 		if (shaderSource.find(GL_FRAGMENT_SHADER) != shaderSource.end()) {
-			std::regex re(",.line.([^\\)]*)");
-			std::smatch matches;
+			Poco::RegularExpression re(",.line.([^\\)]*)");
+			Poco::RegularExpression::MatchVec matches;
 			string infoString = (infoBuffer != NULL) ? string(infoBuffer): "";
-			std::regex_match(infoString, matches, re);
+			re.match(infoString, 0, matches);
 			ofBuffer buf = shaderSource[GL_FRAGMENT_SHADER];
 			ofBuffer::Line line = buf.getLines().begin();
 			if (!matches.empty()){

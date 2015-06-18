@@ -549,9 +549,8 @@ class DirectShowVideo : public ISampleGrabberCB{
                 tearDown(); 
                 return false;
             }
-            
-            //apparently setting to TRUE causes a small memory leak
-            hr = m_pGrabber->SetBufferSamples(FALSE);
+
+            hr = m_pGrabber->SetBufferSamples(TRUE);
             if (FAILED(hr)){
                 printf("unable to set buffer samples\n");
                 tearDown(); 

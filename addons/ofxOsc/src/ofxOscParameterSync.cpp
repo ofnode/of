@@ -8,17 +8,19 @@
 #include "ofxOscParameterSync.h"
 
 ofxOscParameterSync::ofxOscParameterSync() {
+	syncGroup = NULL;
 	updatingParameter = false;
 }
 
 ofxOscParameterSync::~ofxOscParameterSync(){
-	ofRemoveListener(syncGroup.parameterChangedE(),this,&ofxOscParameterSync::parameterChanged);
+	if(syncGroup)
+		ofRemoveListener(syncGroup->parameterChangedE,this,&ofxOscParameterSync::parameterChanged);
 }
 
 
 void ofxOscParameterSync::setup(ofParameterGroup & group, int localPort, string host, int remotePort){
-	syncGroup = group;
-	ofAddListener(syncGroup.parameterChangedE(),this,&ofxOscParameterSync::parameterChanged);
+	syncGroup = &group;
+	ofAddListener(group.parameterChangedE,this,&ofxOscParameterSync::parameterChanged);
 	sender.setup(host,remotePort);
 	receiver.setup(localPort);
 }
@@ -26,7 +28,7 @@ void ofxOscParameterSync::setup(ofParameterGroup & group, int localPort, string 
 void ofxOscParameterSync::update(){
 	if(receiver.hasWaitingMessages()){
 		updatingParameter = true;
-		receiver.getParameter(syncGroup);
+		receiver.getParameter(*syncGroup);
 		updatingParameter = false;
 	}
 }

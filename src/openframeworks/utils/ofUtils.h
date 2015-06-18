@@ -9,6 +9,8 @@
 	#include <shellapi.h>
 #endif
 
+#include "Poco/Path.h"
+
 /// \name Elapsed Time
 /// \{
 
@@ -130,7 +132,6 @@ string ofGetTimestampString();
 ///
 /// \param timestampFormat The formatting pattern.
 /// \returns the formatted timestamp as a string.
-/// \warning an invalid timestampFormat may crash windows apps.
 string ofGetTimestampString(const string& timestampFormat);
 
 /// \brief Get the current year.
@@ -414,7 +415,7 @@ int ofStringTimesInString(const string& haystack, const string& needle);
 ///
 /// \param src The UTF-8 encoded string to convert to lowercase.
 /// \returns the UTF-8 encoded string as all lowercase characters.
-string ofToLower(const string& src, const string & locale="C.UTF-8");
+string ofToLower(const string& src);
 
 /// \brief Converts all characters in the string to uppercase.
 ///
@@ -429,13 +430,7 @@ string ofToLower(const string& src, const string & locale="C.UTF-8");
 ///
 /// \param src The UTF-8 encoded string to convert to uppercase.
 /// \returns the UTF-8 encoded string as all uppercase characters.
-string ofToUpper(const string& src, const string & locale="C.UTF-8");
-
-string ofTrimFront(const string & src);
-string ofTrimBack(const string & src);
-string ofTrim(const string & src);
-
-void ofAppendUTF8(string & str, int utf8);
+string ofToUpper(const string& src);
 
 /// \brief Convert a variable length argument to a string.
 /// \param format a printf-style format string.
