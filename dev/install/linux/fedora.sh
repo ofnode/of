@@ -36,6 +36,7 @@ opencv-devel            \
 tbb-devel               \
 flac-devel              \
 alsa-lib-devel          \
+libmpg123-devel         \
 libtheora-devel         \
 libvorbis-devel         \
 libsndfile-devel        \

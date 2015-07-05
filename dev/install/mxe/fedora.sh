@@ -23,6 +23,7 @@ freetype    \
 fontconfig  \
 opencv      \
 assimp      \
+mpg123      \
 openal      \
 libusb1     \
 libsndfile

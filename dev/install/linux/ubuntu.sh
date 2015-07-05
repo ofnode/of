@@ -20,6 +20,7 @@ libssl-dev                \
 libfreetype6-dev          \
 libfontconfig1-dev        \
 libglu1-mesa-dev          \
+libmpg123-dev             \
 libopenal-dev             \
 libassimp-dev             \
 libopencv-dev             \

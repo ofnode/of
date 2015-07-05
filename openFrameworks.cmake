@@ -98,6 +98,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_GTK
+        -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_VIDEO_PLAYER_GSTREAMER
@@ -153,6 +154,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(Sndfile REQUIRED)
     find_package(Threads REQUIRED)
@@ -174,6 +176,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
@@ -198,6 +201,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${OPENAL_LIBRARY}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        ${MPG123_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
@@ -294,6 +298,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
     set(OPENFRAMEWORKS_DEFINITIONS
+        -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_VIDEO_CAPTURE_DIRECTSHOW
@@ -363,6 +368,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(Pixman REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(Sndfile REQUIRED)
@@ -397,6 +403,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${PIXMAN_INCLUDE_DIRS}
         ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
@@ -411,6 +418,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${BZIP2_LIBRARIES}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        ${MPG123_LIBRARIES}
         ${PIXMAN_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${SNDFILE_LIBRARIES}

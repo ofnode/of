@@ -27,6 +27,7 @@ openssl            \
 freetype2          \
 fontconfig         \
 glu                \
+mpg123             \
 openal             \
 assimp             \
 opencv             \

@@ -80,6 +80,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -DOF_USING_GTK
+        -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_VIDEO_PLAYER_GSTREAMER
@@ -93,6 +94,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
     find_package(Fontconfig REQUIRED)
@@ -108,6 +110,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIR}
@@ -176,6 +179,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug")
 
     set(OPENFRAMEWORKS_DEFINITIONS
+        -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_VIDEO_CAPTURE_DIRECTSHOW
@@ -185,6 +189,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(Fontconfig REQUIRED)
 
@@ -196,6 +201,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${CAIRO_INCLUDE_DIR}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIR}
     )

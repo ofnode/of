@@ -40,6 +40,7 @@ mingw-w64-x86_64-cairo      \
 mingw-w64-x86_64-openssl    \
 mingw-w64-x86_64-freetype   \
 mingw-w64-x86_64-fontconfig \
+mingw-w64-x86_64-mpg123     \
 mingw-w64-x86_64-openal     \
 mingw-w64-x86_64-assimp     \
 mingw-w64-x86_64-opencv     \
