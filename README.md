@@ -29,10 +29,10 @@ Step 1: Clone
 Run `git clone https://github.com/ofnode/of --depth 1 --recursive` in a command line.
 
 
-Step 2: Install
+Step 2: Prepare
 ---------------
 
-Install needed developer packages for your OS with:
+Install required developer packages for your OS with:
 
 #### For Linux:
 
