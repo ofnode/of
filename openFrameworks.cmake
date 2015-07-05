@@ -144,6 +144,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
+    set(Boost_USE_STATIC_LIBS ON)
+
     find_library(RT_LIB rt)
     find_library(DL_LIB dl)
     find_package(X11 REQUIRED)
@@ -161,6 +163,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(Freetype REQUIRED)
     find_package(GStreamer REQUIRED)
     find_package(Fontconfig REQUIRED)
+    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
         ${FONTCONFIG_DEFINITIONS}
@@ -174,6 +177,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${ZLIB_INCLUDE_DIRS}
         ${ALSA_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
@@ -211,6 +215,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${GSTREAMER_APP_LIBRARIES}
         ${GSTREAMER_BASE_LIBRARIES}
         ${GSTREAMER_VIDEO_LIBRARIES}
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${Boost_SYSTEM_LIBRARY}
     )
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
@@ -443,6 +449,19 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 endif()
 
 list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/openframeworks"
+    "${OF_ROOT_DIR}/src/openframeworks/3d"
+    "${OF_ROOT_DIR}/src/openframeworks/app"
+    "${OF_ROOT_DIR}/src/openframeworks/communication"
+    "${OF_ROOT_DIR}/src/openframeworks/events"
+    "${OF_ROOT_DIR}/src/openframeworks/gl"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics"
+    "${OF_ROOT_DIR}/src/openframeworks/math"
+    "${OF_ROOT_DIR}/src/openframeworks/sound"
+    "${OF_ROOT_DIR}/src/openframeworks/types"
+    "${OF_ROOT_DIR}/src/openframeworks/utils"
+    "${OF_ROOT_DIR}/src/openframeworks/video"
+
     "${OF_ROOT_DIR}/src/freeimage"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
@@ -462,6 +481,10 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/kiss/src"
     "${OF_ROOT_DIR}/src/kiss/tools"
 
+    "${OF_ROOT_DIR}/src/libtess2"
+    "${OF_ROOT_DIR}/src/libtess2/Include"
+    "${OF_ROOT_DIR}/src/libtess2/Source"
+
     "${OF_ROOT_DIR}/src/poco"
     "${OF_ROOT_DIR}/src/poco/Crypto/include"
     "${OF_ROOT_DIR}/src/poco/Foundation/include"
@@ -474,22 +497,8 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/rtaudio"
     "${OF_ROOT_DIR}/src/rtaudio/include"
 
-    "${OF_ROOT_DIR}/src/libtess2"
-    "${OF_ROOT_DIR}/src/libtess2/Include"
-    "${OF_ROOT_DIR}/src/libtess2/Source"
-
-    "${OF_ROOT_DIR}/src/openframeworks"
-    "${OF_ROOT_DIR}/src/openframeworks/3d"
-    "${OF_ROOT_DIR}/src/openframeworks/app"
-    "${OF_ROOT_DIR}/src/openframeworks/communication"
-    "${OF_ROOT_DIR}/src/openframeworks/events"
-    "${OF_ROOT_DIR}/src/openframeworks/gl"
-    "${OF_ROOT_DIR}/src/openframeworks/graphics"
-    "${OF_ROOT_DIR}/src/openframeworks/math"
-    "${OF_ROOT_DIR}/src/openframeworks/sound"
-    "${OF_ROOT_DIR}/src/openframeworks/types"
-    "${OF_ROOT_DIR}/src/openframeworks/utils"
-    "${OF_ROOT_DIR}/src/openframeworks/video"
+    "${OF_ROOT_DIR}/src/utf8cpp"
+    "${OF_ROOT_DIR}/src/utf8cpp/include"
 )
 
 if(CMAKE_SYSTEM MATCHES Windows)

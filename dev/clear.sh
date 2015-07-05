@@ -12,6 +12,7 @@ rm -rf src/openframeworks
 rm -rf src/poco
 rm -rf src/rtaudio
 rm -rf src/libtess2
+rm -rf src/utf8cpp
 rm -rf src/videoinput
 
 rm -rf addons

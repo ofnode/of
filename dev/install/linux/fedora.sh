@@ -21,6 +21,8 @@ libXcursor-devel        \
 libXrandr-devel         \
 libXi-devel             \
 gtk3-devel              \
+boost-devel             \
+boost-static            \
 libudev-devel           \
 clang                   \
 clang-analyzer          \
