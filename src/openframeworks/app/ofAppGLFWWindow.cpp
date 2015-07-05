@@ -5,7 +5,7 @@
 #include "ofGLRenderer.h"
 #include "ofGLProgrammableRenderer.h"
 #include "ofAppRunner.h"
-#include "Poco/URI.h"
+#include "ofFileUtils.h"
 
 #ifdef TARGET_LINUX
 	#include "ofIcon.h"
@@ -139,6 +139,7 @@ void ofAppGLFWWindow::setup(const ofGLFWWindowSettings & _settings){
 	glfwWindowHint(GLFW_ALPHA_BITS, settings.alphaBits);
 	glfwWindowHint(GLFW_DEPTH_BITS, settings.depthBits);
 	glfwWindowHint(GLFW_STENCIL_BITS, settings.stencilBits);
+	glfwWindowHint(GLFW_STEREO, settings.stereo);
 	glfwWindowHint(GLFW_VISIBLE,GL_FALSE);
 #ifndef TARGET_OSX
 	glfwWindowHint(GLFW_AUX_BUFFERS,settings.doubleBuffering?1:0);
@@ -947,7 +948,7 @@ void ofAppGLFWWindow::drop_cb(GLFWwindow* windowP_, int numFiles, const char** d
 	drag.position.set(instance->events().getMouseX(), instance->events().getMouseY());
 	drag.files.resize(numFiles);
 	for(int i=0; i<(int)drag.files.size(); i++){
-		drag.files[i] = Poco::Path(dropString[i]).toString();
+		drag.files[i] = std::filesystem::path(dropString[i]).string();
 	}
 	instance->events().notifyDragEvent(drag);
 }

@@ -6,7 +6,7 @@
 #
 # uses a CMake build system
  
-FORMULA_TYPES=( "osx" "ios" )
+FORMULA_TYPES=( "osx" "ios" "android" "emscripten" )
  
 # define the version
 VER=2.4.9
@@ -16,7 +16,7 @@ GIT_URL=https://github.com/Itseez/opencv.git
 GIT_TAG=$VER
 
 # these paths don't really matter - they are set correctly further down
-local LIB_FOLDER="$BUILD_ROOT_DIR/OpenCv"
+local LIB_FOLDER="$BUILD_ROOT_DIR/opencv"
 local LIB_FOLDER32="$LIB_FOLDER-32"
 local LIB_FOLDER64="$LIB_FOLDER-64"
 local LIB_FOLDER_IOS="$LIB_FOLDER-IOS"
@@ -27,7 +27,7 @@ local LIB_FOLDER_IOS_SIM="$LIB_FOLDER-IOSIM"
 function download() {
   curl -Lk https://github.com/Itseez/opencv/archive/$VER.tar.gz -o opencv-$VER.tar.gz
   tar -xf opencv-$VER.tar.gz
-  mv opencv-$VER opencv
+  mv opencv-$VER $1
   rm opencv*.tar.gz
 }
  
@@ -43,48 +43,25 @@ function prepare() {
   fi
   cd ../../../
 }
+
+# executed inside the lib src dir
+function build() {
+  rm -f CMakeCache.txt
  
-function build_osx() {
+  LIB_FOLDER="$BUILD_DIR/opencv/build/$TYPE/"
 
-  SDKVERSION=`xcrun -sdk iphoneos --show-sdk-version` 
-  set -e
-  CURRENTPATH=`pwd`
-
-  echo "--------------------"
-  echo $CURRENTPATH
-  # Validate environment
-  case $XCODE_DEV_ROOT in  
-       *\ * )
-             echo "Your Xcode path contains whitespaces, which is not supported."
-             exit 1
-            ;;
-  esac
-  case $CURRENTPATH in  
-       *\ * )
-             echo "Your path contains whitespaces, which is not supported by 'make install'."
-             exit 1
-            ;;
-  esac 
-
-  mkdir -p "$CURRENTPATH/build/$TYPE/"
-  
-  echo "--------------------"
-
-  isBuilding=true;
- 
-
-  echo "Running cmake"
-  if [ "$1" == "64" ] ; then
-    LOG="$CURRENTPATH/build/$TYPE/opencv2-x86_64-${VER}.log"
+  if [ "$TYPE" == "osx" ] ; then
+    rm -f CMakeCache.txt
+    LOG="$LIB_FOLDER/opencv2-${VER}.log"
+    echo "Logging to $LOG"
+    mkdir -p $LIB_FOLDER
+    cd build
     echo "Log:" >> "${LOG}" 2>&1
-    while $isBuilding; do theTail="$(tail -n 1 ${LOG})"; echo $theTail | cut -c -70 ; echo "...";sleep 30; done & # fix for 10 min time out travis
-
     set +e
-    cmake . -DCMAKE_INSTALL_PREFIX=$LIB_FOLDER64 \
+    cmake .. -DCMAKE_INSTALL_PREFIX=$LIB_FOLDER \
       -DGLFW_BUILD_UNIVERSAL=ON \
       -DCMAKE_OSX_DEPLOYMENT_TARGET=10.7 \
-      -DCMAKE_OSX_ARCHITECTURES="x86_64" \
-      -DENABLE_FAST_MATH=ON \
+      -DENABLE_FAST_MATH=OFF \
       -DCMAKE_CXX_FLAGS="-fvisibility-inlines-hidden -stdlib=libc++ -O3" \
       -DCMAKE_C_FLAGS="-fvisibility-inlines-hidden -stdlib=libc++ -O3" \
       -DCMAKE_BUILD_TYPE="Release" \
@@ -120,183 +97,34 @@ function build_osx() {
       -DWITH_V4L=OFF \
       -DWITH_PVAPI=OFF \
       -DBUILD_TESTS=OFF \
-      -DBUILD_PERF_TESTS=OFF >> "${LOG}" 2>&1
+      -DBUILD_PERF_TESTS=OFF | tee ${LOG}
+    echo "CMAKE Successful"
+    echo "--------------------"
+    echo "Running make clean"
 
-      if [ $? != 0 ];
-      then
-        tail -n 10 "${LOG}"
-        echo "Problem while CMAKE - Please check ${LOG}"
-        exit 1
-      else
-        tail -n 10 "${LOG}"
-        echo "CMAKE Successful for x86_64"
-      fi
-  elif [ "$1" == "32" ] ; then
-    LOG="$CURRENTPATH/build/$TYPE/opencv2-i386-${VER}.log"
-    while $isBuilding; do theTail="$(tail -n 1 ${LOG})"; echo $theTail | cut -c -70 ; echo "...";sleep 30; done & # fix for 10 min time out travis
-    echo "Log:" >> "${LOG}" 2>&1
-    set +e
-    # NB - using a special BUILD_ROOT_DIR
-    cmake . -DCMAKE_INSTALL_PREFIX=$LIB_FOLDER32 \
-      -DGLFW_BUILD_UNIVERSAL=ON \
-      -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 \
-      -DCMAKE_OSX_ARCHITECTURES="i386" \
-      -DENABLE_FAST_MATH=ON \
-      -DCMAKE_CXX_FLAGS="-fvisibility-inlines-hidden -stdlib=libstdc++ -O3" \
-      -DCMAKE_C_FLAGS="-fvisibility-inlines-hidden -stdlib=libstdc++ -O3" \
-      -DCMAKE_BUILD_TYPE="Release" \
-      -DBUILD_SHARED_LIBS=OFF \
-      -DBUILD_DOCS=OFF \
-      -DBUILD_EXAMPLES=OFF \
-      -DBUILD_FAT_JAVA_LIB=OFF \
-      -DBUILD_JASPER=OFF \
-      -DBUILD_PACKAGE=OFF \
-      -DBUILD_opencv_java=OFF \
-      -DBUILD_opencv_python=OFF \
-      -DBUILD_opencv_apps=OFF \
-      -DBUILD_JPEG=OFF \
-      -DBUILD_PNG=OFF \
-      -DWITH_1394=OFF \
-      -DWITH_CARBON=OFF \
-      -DWITH_FFMPEG=OFF \
-      -DWITH_OPENCL=OFF \
-      -DWITH_OPENCLAMDBLAS=OFF \
-      -DWITH_OPENCLAMDFFT=OFF \
-      -DWITH_GIGEAPI=OFF \
-      -DWITH_CUDA=OFF \
-      -DWITH_CUFFT=OFF \
-      -DWITH_JASPER=OFF \
-      -DWITH_JPEG=OFF \
-      -DWITH_PNG=OFF \
-      -DWITH_LIBV4L=OFF \
-      -DWITH_IMAGEIO=OFF \
-      -DWITH_IPP=OFF \
-      -DWITH_OPENNI=OFF \
-      -DWITH_QT=OFF \
-      -DWITH_QUICKTIME=OFF \
-      -DWITH_V4L=OFF \
-      -DWITH_PVAPI=OFF \
-      -DBUILD_TESTS=OFF \
-      -DBUILD_PERF_TESTS=OFF >> "${LOG}" 2>&1
+    make clean | tee ${LOG}
+    echo "Make Clean Successful"
 
-      if [ $? != 0 ];
-      then
-        tail -n 10 "${LOG}"
-        echo "Problem while CMAKE - Please check ${LOG}"
-        exit 1
-      else
-        tail -n 10 "${LOG}"
-        echo "CMAKE Successful for i386"
-      fi
-  fi
+    echo "--------------------"
+    echo "Running make"
+    make -j${PARALLEL_MAKE} | tee ${LOG}
+    echo "Make  Successful"
 
-  echo "--------------------"
-  echo "Running make clean"
- 
-  make clean >> "${LOG}" 2>&1
-  if [ $? != 0 ];
-    then
-      tail -n 10 "${LOG}"
-      echo "Problem while make clean- Please check ${LOG}"
-      exit 1
-    else
-      tail -n 10 "${LOG}"
-      echo "Make Clean Successful"
-  fi
+    echo "--------------------"
+    echo "Running make install"
+    make install | tee ${LOG}
+    echo "Make install Successful"
+    
+    echo "--------------------"
+    echo "Joining all libs in one"
+    outputlist="lib/lib*.a"
+    libtool -static $outputlist -o "$LIB_FOLDER/lib/opencv.a" | tee ${LOG}
+    echo "Joining all libs in one Successful"
+    
+  elif [ "$TYPE" == "ios" ] ; then
 
-  echo "--------------------"
-  echo "Running make"
-  make >> "${LOG}" 2>&1
-  if [ $? != 0 ];
-    then
-      tail -n 10 "${LOG}"
-      echo "Problem while make - Please check ${LOG}"
-      exit 1
-    else
-      tail -n 10 "${LOG}"
-      echo "Make  Successful"
-  fi
-  echo "--------------------"
-  echo "Running make install"
-  make install >> "${LOG}" 2>&1
-    if [ $? != 0 ];
-      then
-        tail -n 10 "${LOG}"
-        echo "Problem while make install - Please check ${LOG}"
-        exit 1
-      else
-        tail -n 10 "${LOG}"
-        echo "Make install Successful"
-    fi
-
-    isBuilding=false;
-}
-
-
-
-
-function make_universal_binary() {
-  shopt -s nullglob
-
-  src1="$1"
-  src2="$2"
-  dst="$3"
-
-  libs="$src1/lib/libopencv*.a"
-
-  for lib in $libs
-  do
-    fname=$(basename "$lib"); 
-    otherLib="$src2/lib/$fname"
-    echo "lipoing $fname"
-    lipo -create $lib $otherLib -o "$dst/lib/$fname" || true
-  done
-
-  thirdparty="$src1/share/OpenCV/3rdparty/lib/*.a"
-
-  for lib in $thirdparty
-  do
-    fname=$(basename "$lib"); 
-    otherLib="$src2/share/OpenCV/3rdparty/lib/$fname"
-    echo "lipoing $fname"
-    lipo -create $lib $otherLib -o "$dst/lib/$fname" || true
-  done
-
-  outputlist="$dst/lib/lib*.a"
-
-  libtool -static $outputlist -o "$dst/lib/opencv.a"
-}
-
-# executed inside the lib src dir
-function build() {
-  rm -f CMakeCache.txt
- 
-  LIB_FOLDER="$BUILD_ROOT_DIR/$TYPE/FAT/OpenCv"
-  LIB_FOLDER32="$BUILD_ROOT_DIR/$TYPE/32bit/OpenCv"
-  LIB_FOLDER64="$BUILD_ROOT_DIR/$TYPE/64bit/OpenCv"
-
-  if [ "$TYPE" == "osx" ] ; then
-    # 64-bit OF transition, build x86-64 and i386 separately
-    rm -f CMakeCache.txt
-    build_osx "64";
-    rm -f CMakeCache.txt
-    build_osx "32";
-
-	 mkdir -p $LIB_FOLDER/include
-	 mkdir -p $LIB_FOLDER/lib
- 
-    # lipo shit together
-    make_universal_binary "$LIB_FOLDER64" "$LIB_FOLDER32" "$LIB_FOLDER" 
-
-    # copy headers
-    cp -R $LIB_FOLDER64/include/opencv $LIB_FOLDER/include/opencv
-    cp -R $LIB_FOLDER64/include/opencv2 $LIB_FOLDER/include/opencv2
-  fi
-
-  if [ "$TYPE" == "ios" ] ; then
-
-    local LIB_FOLDER_IOS="$BUILD_ROOT_DIR/$TYPE/iOS/OpenCv"
-    local LIB_FOLDER_IOS_SIM="$BUILD_ROOT_DIR/$TYPE/iOS_SIMULATOR/OpenCv"
+    local LIB_FOLDER_IOS="$BUILD_ROOT_DIR/$TYPE/iOS/opencv"
+    local LIB_FOLDER_IOS_SIM="$BUILD_ROOT_DIR/$TYPE/iOS_SIMULATOR/opencv"
 
 
     # This was quite helpful as a reference: https://github.com/x2on/OpenSSL-for-iPhone
@@ -397,7 +225,7 @@ function build() {
       -DCMAKE_OSX_ARCHITECTURES="${IOS_ARCH}" \
       -DCMAKE_XCODE_EFFECTIVE_PLATFORMS="-$PLATFORM" \
       -DGLFW_BUILD_UNIVERSAL=ON \
-      -DENABLE_FAST_MATH=ON \
+      -DENABLE_FAST_MATH=OFF \
       -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fvisibility=hidden -fPIC -isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} -DNDEBUG -Os $MIN_TYPE$IPHONE_SDK_VERSION_MIN" \
       -DCMAKE_C_FLAGS="-stdlib=libc++ -fvisibility=hidden -fPIC -isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} -DNDEBUG -Os $MIN_TYPE$IPHONE_SDK_VERSION_MIN"  \
       -DCMAKE_BUILD_TYPE="Release" \
@@ -460,7 +288,7 @@ function build() {
 
     echo "--------------------"
     echo "Running make for ${IOS_ARCH}"
-    make >> "${LOG}" 2>&1
+    make -j${PARALLEL_MAKE} >> "${LOG}" 2>&1
     if [ $? != 0 ];
       then
         tail -n 10 "${LOG}"
@@ -532,6 +360,131 @@ function build() {
     cd ../../
 
   # end if iOS
+  
+  elif [ "$TYPE" == "android" ]; then
+    export ANDROID_NDK=${ANDROID_NDK_ROOT}
+    cd platforms
+    cp ${FORMULA_DIR}/android.toolchain.cmake android/
+    
+    rm -rf build_android_arm
+    rm -rf build_android_x86
+    
+    scripts/cmake_android_arm.sh \
+      -DCMAKE_BUILD_TYPE="Release" \
+      -DBUILD_SHARED_LIBS=OFF \
+      -DBUILD_DOCS=OFF \
+      -DBUILD_EXAMPLES=OFF \
+      -DBUILD_FAT_JAVA_LIB=OFF \
+      -DBUILD_JASPER=OFF \
+      -DBUILD_PACKAGE=OFF \
+      -DBUILD_opencv_java=OFF \
+      -DBUILD_opencv_python=OFF \
+      -DBUILD_opencv_apps=OFF \
+      -DBUILD_JPEG=OFF \
+      -DBUILD_PNG=OFF \
+      -DHAVE_opencv_androidcamera=OFF \
+      -DWITH_TIFF=OFF \
+      -DWITH_OPENEXR=OFF \
+      -DWITH_1394=OFF \
+      -DWITH_JPEG=OFF \
+      -DWITH_PNG=OFF \
+      -DWITH_FFMPEG=OFF \
+      -DWITH_OPENCL=OFF \
+      -DWITH_GIGEAPI=OFF \
+      -DWITH_CUDA=OFF \
+      -DWITH_CUFFT=OFF \
+      -DWITH_JASPER=OFF \
+      -DWITH_IMAGEIO=OFF \
+      -DWITH_IPP=OFF \
+      -DWITH_OPENNI=OFF \
+      -DWITH_QT=OFF \
+      -DWITH_QUICKTIME=OFF \
+      -DWITH_V4L=OFF \
+      -DWITH_PVAPI=OFF \
+      -DBUILD_TESTS=OFF \
+      -DBUILD_PERF_TESTS=OFF
+    cd build_android_arm
+    make -j${PARALLEL_MAKE}
+    cd ..
+    
+    scripts/cmake_android_x86.sh \
+      -DCMAKE_BUILD_TYPE="Release" \
+      -DBUILD_SHARED_LIBS=OFF \
+      -DBUILD_DOCS=OFF \
+      -DBUILD_EXAMPLES=OFF \
+      -DBUILD_FAT_JAVA_LIB=OFF \
+      -DBUILD_JASPER=OFF \
+      -DBUILD_PACKAGE=OFF \
+      -DBUILD_opencv_java=OFF \
+      -DBUILD_opencv_python=OFF \
+      -DBUILD_opencv_apps=OFF \
+      -DBUILD_JPEG=OFF \
+      -DBUILD_PNG=OFF \
+      -DHAVE_opencv_androidcamera=OFF \
+      -DWITH_TIFF=OFF \
+      -DWITH_OPENEXR=OFF \
+      -DWITH_1394=OFF \
+      -DWITH_JPEG=OFF \
+      -DWITH_PNG=OFF \
+      -DWITH_FFMPEG=OFF \
+      -DWITH_OPENCL=OFF \
+      -DWITH_GIGEAPI=OFF \
+      -DWITH_CUDA=OFF \
+      -DWITH_CUFFT=OFF \
+      -DWITH_JASPER=OFF \
+      -DWITH_IMAGEIO=OFF \
+      -DWITH_IPP=OFF \
+      -DWITH_OPENNI=OFF \
+      -DWITH_QT=OFF \
+      -DWITH_QUICKTIME=OFF \
+      -DWITH_V4L=OFF \
+      -DWITH_PVAPI=OFF \
+      -DBUILD_TESTS=OFF \
+      -DBUILD_PERF_TESTS=OFF
+    cd build_android_x86
+    make -j${PARALLEL_MAKE}
+    cd ..
+    
+  elif [ "$TYPE" == "emscripten" ]; then
+    mkdir -p build_${TYPE}
+    cd build_${TYPE}
+    emcmake cmake .. -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}/${1}/build_$TYPE/install" \
+      -DCMAKE_BUILD_TYPE="Release" \
+      -DCMAKE_C_FLAGS=-I${EMSCRIPTEN}/system/lib/libcxxabi/include/ \
+      -DCMAKE_CXX_FLAGS=-I${EMSCRIPTEN}/system/lib/libcxxabi/include/ \
+      -DBUILD_SHARED_LIBS=OFF \
+      -DBUILD_DOCS=OFF \
+      -DBUILD_EXAMPLES=OFF \
+      -DBUILD_FAT_JAVA_LIB=OFF \
+      -DBUILD_JASPER=OFF \
+      -DBUILD_PACKAGE=OFF \
+      -DBUILD_opencv_java=OFF \
+      -DBUILD_opencv_python=OFF \
+      -DBUILD_opencv_apps=OFF \
+      -DBUILD_JPEG=OFF \
+      -DBUILD_PNG=OFF \
+      -DWITH_TIFF=OFF \
+      -DWITH_OPENEXR=OFF \
+      -DWITH_1394=OFF \
+      -DWITH_JPEG=OFF \
+      -DWITH_PNG=OFF \
+      -DWITH_FFMPEG=OFF \
+      -DWITH_OPENCL=OFF \
+      -DWITH_GIGEAPI=OFF \
+      -DWITH_CUDA=OFF \
+      -DWITH_CUFFT=OFF \
+      -DWITH_JASPER=OFF \
+      -DWITH_IMAGEIO=OFF \
+      -DWITH_IPP=OFF \
+      -DWITH_OPENNI=OFF \
+      -DWITH_QT=OFF \
+      -DWITH_QUICKTIME=OFF \
+      -DWITH_V4L=OFF \
+      -DWITH_PVAPI=OFF \
+      -DBUILD_TESTS=OFF \
+      -DBUILD_PERF_TESTS=OFF
+    make -j${PARALLEL_MAKE}
+    make install
   fi 
 
 }
@@ -539,8 +492,6 @@ function build() {
 
 # executed inside the lib src dir, first arg $1 is the dest libs dir root
 function copy() {
-
-  LIB_FOLDER="$BUILD_ROOT_DIR/$TYPE/FAT/OpenCv"
 
   # prepare headers directory if needed
   mkdir -p $1/include
@@ -551,6 +502,9 @@ function copy() {
   if [ "$TYPE" == "osx" ] ; then
     # Standard *nix style copy.
     # copy headers
+
+    LIB_FOLDER="$BUILD_DIR/opencv/build/$TYPE/"
+    
     cp -R $LIB_FOLDER/include/ $1/include/
  
     # copy lib
@@ -561,9 +515,24 @@ function copy() {
     # Standard *nix style copy.
     # copy headers
 
+    LIB_FOLDER="$BUILD_ROOT_DIR/$TYPE/FAT/opencv"
+
     cp -Rv lib/include/ $1/include/
     mkdir -p $1/lib/$TYPE
     cp -v lib/$TYPE/*.a $1/lib/$TYPE
+  fi
+  
+  if [ "$TYPE" == "android" ]; then
+    cp -r include/opencv $1/include/
+    cp -r include/opencv2 $1/include/
+    
+    rm -f platforms/build_android_arm/lib/armeabi-v7a/*pch_dephelp.a
+    rm -f platforms/build_android_arm/lib/armeabi-v7a/*.so
+    cp -r platforms/build_android_arm/lib/armeabi-v7a $1/lib/$TYPE/
+    
+    rm -f platforms/build_android_x86/lib/x86/*pch_dephelp.a
+    rm -f platforms/build_android_x86/lib/x86/*.so
+    cp -r platforms/build_android_x86/lib/x86 $1/lib/$TYPE/
   fi
 
   # copy license file
