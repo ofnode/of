@@ -34,15 +34,15 @@ Step 2: Prepare
 
 Install required developer packages for your OS with:
 
-#### For Linux:
+#### Linux:
 
-Scripts from [`dev/install/linux`](https://github.com/ofnode/of/tree/master/dev/install/linux)
+[`dev/install/linux`](https://github.com/ofnode/of/tree/master/dev/install/linux) distro script
 
-#### For OS X:
+#### OS X:
 
 [`dev/install/osx/homebrew.sh`](https://github.com/ofnode/of/tree/master/dev/install/osx/homebrew.sh)
 
-#### For Windows:
+#### Windows:
 
 ### [See wiki](https://github.com/ofnode/of/wiki/Instructions-for-Windows)
 
@@ -50,7 +50,7 @@ Scripts from [`dev/install/linux`](https://github.com/ofnode/of/tree/master/dev/
 Step 3: Compile
 ---------------
 
-#### For Linux:
+#### Linux:
 
 ```bash
 mkdir -p build/linux
@@ -59,7 +59,7 @@ cmake ../.. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release
 ninja
 ```
 
-#### For OS X:
+#### OS X:
 
 ```bash
 mkdir -p build/osx
@@ -68,7 +68,7 @@ cmake ../.. -G Xcode -DCMAKE_BUILD_TYPE=Release
 xcodebuild -configuration Release
 ```
 
-#### For Windows:
+#### Windows:
 
 Open the Start menu and run `VS2013 x64 Native Tools Command Prompt`, then `cd /d` into `of` directory and enter:
 
