@@ -1,6 +1,6 @@
 --- a/openframeworks/ofMain.h
 +++ b/openframeworks/ofMain.h
-@@ -75,9 +75,6 @@
+@@ -78,9 +78,6 @@
  #include "ofMainLoop.h"
  #if !defined( TARGET_OF_IOS ) & !defined(TARGET_ANDROID) & !defined(TARGET_EMSCRIPTEN)
  	#include "ofAppGLFWWindow.h"
@@ -31,17 +31,6 @@
  
  //for threading
  #include <process.h>
---- a/openframeworks/app/ofAppGlutWindow.cpp
-+++ b/openframeworks/app/ofAppGlutWindow.cpp
-@@ -6,7 +6,7 @@
- 
- #ifdef TARGET_WIN32
- 	#define GLUT_BUILDING_LIB
--	#include "glut.h"
-+	#include "GL/glut.h"
- #endif
- #ifdef TARGET_OSX
-     #include <OpenGL/OpenGL.h>
 --- a/openframeworks/utils/ofConstants.h
 +++ b/openframeworks/utils/ofConstants.h
 @@ -98,7 +98,7 @@
@@ -55,7 +44,7 @@
  	#if (_MSC_VER)       // microsoft visual studio
 --- a/openframeworks/app/ofAppRunner.cpp
 +++ b/openframeworks/app/ofAppRunner.cpp
-@@ -160,7 +160,6 @@
+@@ -159,7 +159,6 @@
  void ofExitCallback(){
  	// controlled destruction of the mainLoop before
  	// any other deinitialization
@@ -63,19 +52,3 @@
  
  	// everything should be destroyed here, except for
  	// static objects
---- a/openframeworks/app/ofAppGLFWWindow.cpp
-+++ b/openframeworks/app/ofAppGLFWWindow.cpp
-@@ -296,10 +296,10 @@
- 	buffer[0]=iconPixels.getWidth();
- 	buffer[1]=iconPixels.getHeight();
- 	for(int i=0;i<iconPixels.getWidth()*iconPixels.getHeight();i++){
--		buffer[i+2] = iconPixels[i*4+3]<<24;
--		buffer[i+2] += iconPixels[i*4]<<16;
-+		buffer[i+2]  = iconPixels[i*4+3]<<24;
-+		buffer[i+2] += iconPixels[i*4+0]<<16;
- 		buffer[i+2] += iconPixels[i*4+1]<<8;
--		buffer[i+2] += iconPixels[i*4];
-+		buffer[i+2] += iconPixels[i*4+2];
- 	}
- 
- 	XChangeProperty(getX11Display(), getX11Window(), XInternAtom(getX11Display(), "_NET_WM_ICON", False), XA_CARDINAL, 32,

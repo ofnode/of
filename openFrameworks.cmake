@@ -784,6 +784,10 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/libs/oscpack/src/osc")
 
 
+    elseif(OFXADDON STREQUAL ofxProjectGenerator)
+        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
+
+
     elseif(OFXADDON STREQUAL ofxSvg)
         set(OFXADDON_DIR "${OF_ROOT_DIR}/addons/ofxSvg")
         set(OFXSOURCES
