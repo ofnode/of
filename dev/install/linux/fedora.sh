@@ -11,6 +11,7 @@ sudo dnf groups install "C Development Tools and Libraries"
 
 sudo dnf -y install     \
 git                     \
+wget                    \
 patch                   \
 pkgconfig               \
 libstdc++-static        \
