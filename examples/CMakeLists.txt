@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 2.8)
 
 project(ofExamples)
 
-set(ofExamples              ON)
-set(res15-opengl            ON)
-set(NoiseWorkshop           ON)
-set(ofDemystified           ON)
-set(BeyondInteraction       ON)
-set(openFrameworksDemos     ON)
-set(OF_GenerativeTypography ON)
+set(ofExamples              ON CACHE BOOL "")
+set(res15-opengl            ON CACHE BOOL "")
+set(NoiseWorkshop           ON CACHE BOOL "")
+set(ofDemystified           ON CACHE BOOL "")
+set(BeyondInteraction       ON CACHE BOOL "")
+set(openFrameworksDemos     ON CACHE BOOL "")
+set(OF_GenerativeTypography ON CACHE BOOL "")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/..")
 
