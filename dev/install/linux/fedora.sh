@@ -1,13 +1,15 @@
 #!/bin/bash
-# Tested on Fedora 20 and 21
+# Tested on Fedora 22
 
-sudo yum -y localinstall --nogpgcheck \
+sudo dnf -y install --nogpgcheck \
 http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
 http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
-sudo yum -y update
+sudo dnf -y update
 
-sudo yum -y install     \
+sudo dnf groups install "C Development Tools and Libraries"
+
+sudo dnf -y install     \
 git                     \
 pkgconfig               \
 libstdc++-static        \
@@ -18,7 +20,6 @@ libXrandr-devel         \
 libXi-devel             \
 gtk3-devel              \
 libudev-devel           \
-llvm                    \
 clang                   \
 clang-analyzer          \
 cmake                   \
@@ -50,4 +51,10 @@ gstreamer1-plugins-bad-free \
 gstreamer1-plugins-base-devel
 
 sudo ln -s /usr/bin/ninja-build /usr/bin/ninja 2> /dev/null
+
+# Use gold linker
+sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
+
+# Use default linker
+#sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld
 
