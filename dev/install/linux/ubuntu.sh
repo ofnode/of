@@ -14,7 +14,6 @@ libgtk-3-dev                \
 libboost-filesystem1.55-dev \
 libboost-system1.55-dev     \
 libudev-dev                 \
-llvm                        \
 clang                       \
 cmake                       \
 ninja-build                 \

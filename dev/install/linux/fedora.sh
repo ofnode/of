@@ -7,7 +7,7 @@ http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E
 
 sudo dnf -y update
 
-sudo dnf groups install "C Development Tools and Libraries"
+sudo dnf -y groups install "C Development Tools and Libraries"
 
 sudo dnf -y install     \
 git                     \
@@ -62,4 +62,3 @@ sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
 
 # Use default linker
 #sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld
-

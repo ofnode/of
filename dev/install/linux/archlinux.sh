@@ -3,7 +3,7 @@
 
 yes | sudo pacman -Syu
 
-yes | sudo pacman -Sy --needed \
+sudo pacman -S --needed \
 git                \
 make               \
 pkg-config         \
@@ -16,7 +16,7 @@ libxcursor         \
 libxrandr          \
 libxi              \
 gtk3               \
-llvm               \
+boost              \
 clang              \
 clang-analyzer     \
 cmake              \
@@ -39,3 +39,9 @@ gst-plugins-base   \
 gst-plugins-good   \
 gst-plugins-bad    \
 gst-plugins-ugly
+
+# Use gold linker
+sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
+
+# Use default linker
+#sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld
