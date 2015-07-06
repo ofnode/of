@@ -8,11 +8,11 @@
 *.txt.user
 *.DS_Store
 
-build/*
-debug/*
+build*/*
+debug*/*
 
-examples/build/*
-examples/debug/*
+examples/build*/*
+examples/debug*/*
 
 lib-osx/*
 lib-linux/*
