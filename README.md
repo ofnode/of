@@ -26,7 +26,7 @@ See [Architecture](https://github.com/ofnode/of/wiki/Architecture) wiki page for
 Step 1: Clone
 -------------
 
-Run `git clone https://github.com/ofnode/of --depth 1 --recursive` in a command line.
+Run `git clone https://github.com/ofnode/of --depth 1` in a command line.
 
 
 Step 2: Prepare
