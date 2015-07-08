@@ -825,19 +825,23 @@ function(ofxaddon OFXADDON)
             message(FATAL_ERROR "ofxaddon(${OFXADDON_DIR}): the folder doesn't exist.")
         endif()
 
-        file(GLOB_RECURSE OFXHEADERS "${OFXADDON_DIR}/src/*.h"
-                                     "${OFXADDON_DIR}/src/*.hh"
-                                     "${OFXADDON_DIR}/src/*.hpp"
-                                     "${OFXADDON_DIR}/libs/*.h"
-                                     "${OFXADDON_DIR}/libs/*.hh"
-                                     "${OFXADDON_DIR}/libs/*.hpp")
+        file(GLOB_RECURSE OFXHEADERS
+            "${OFXADDON_DIR}/src/*.h"
+            "${OFXADDON_DIR}/src/*.hh"
+            "${OFXADDON_DIR}/src/*.hpp"
+            "${OFXADDON_DIR}/libs/*.h"
+            "${OFXADDON_DIR}/libs/*.hh"
+            "${OFXADDON_DIR}/libs/*.hpp"
+        )
 
-        file(GLOB_RECURSE OFXSOURCES "${OFXADDON_DIR}/src/*.c"
-                                     "${OFXADDON_DIR}/src/*.cc"
-                                     "${OFXADDON_DIR}/src/*.cpp"
-                                     "${OFXADDON_DIR}/libs/*.c"
-                                     "${OFXADDON_DIR}/libs/*.cc"
-                                     "${OFXADDON_DIR}/libs/*.cpp")
+        file(GLOB_RECURSE OFXSOURCES
+            "${OFXADDON_DIR}/src/*.c"
+            "${OFXADDON_DIR}/src/*.cc"
+            "${OFXADDON_DIR}/src/*.cpp"
+            "${OFXADDON_DIR}/libs/*.c"
+            "${OFXADDON_DIR}/libs/*.cc"
+            "${OFXADDON_DIR}/libs/*.cpp"
+        )
 
         foreach(OFXHEADER_PATH ${OFXHEADERS})
             get_filename_component(OFXHEADER_DIR ${OFXHEADER_PATH} PATH)
