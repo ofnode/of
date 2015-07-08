@@ -71,8 +71,6 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
 
-#///////////////////////////////////////////////////////////////////////////////
-
 set(OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/freeimage"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
@@ -124,16 +122,18 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
 )
 
 if(CMAKE_SYSTEM MATCHES Windows)
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/videoinput"
-    )
+)
 endif()
 
 if(MSVC)
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/dev/include/msvc"
-    )
+)
 endif()
+
+#// Platform-specific commands /////////////////////////////////////////////////
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -270,6 +270,8 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
 endif()
 
+#// Source files ///////////////////////////////////////////////////////////////
+
 set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/3d/of3dPrimitives.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/3d/of3dUtils.cpp"
@@ -374,6 +376,8 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     )
 endif()
 
+#// Compiler flags /////////////////////////////////////////////////////////////
+
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
@@ -387,8 +391,6 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -D_UNICODE -DUNICODE
 )
 endif()
-
-#// Compiler flags /////////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(O_C_FLAG -O0)
@@ -488,7 +490,7 @@ elseif(CMAKE_BUILD_TYPE MATCHES Debug)
     message("++ CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
 endif()
 
-#// Build //////////////////////////////////////////////////////////////////////
+#// Build commands /////////////////////////////////////////////////////////////
 
 add_subdirectory(src/rtaudio)
 add_subdirectory(src/freeimage)

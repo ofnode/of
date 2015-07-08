@@ -92,7 +92,69 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
-#///////////////////////////////////////////////////////////////////////////////
+set(OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/freeimage"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Iex"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmImf"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmThread"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Imath"
+
+    "${OF_ROOT_DIR}/src/glew"
+    "${OF_ROOT_DIR}/src/glew/include"
+
+    "${OF_ROOT_DIR}/src/glfw"
+    "${OF_ROOT_DIR}/src/glfw/include"
+    "${OF_ROOT_DIR}/src/glfw/include/GLFW"
+
+    "${OF_ROOT_DIR}/src/kiss"
+    "${OF_ROOT_DIR}/src/kiss/src"
+    "${OF_ROOT_DIR}/src/kiss/tools"
+
+    "${OF_ROOT_DIR}/src/poco"
+    "${OF_ROOT_DIR}/src/poco/Crypto/include"
+    "${OF_ROOT_DIR}/src/poco/Foundation/include"
+    "${OF_ROOT_DIR}/src/poco/Net/include"
+    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
+    "${OF_ROOT_DIR}/src/poco/Util/include"
+    "${OF_ROOT_DIR}/src/poco/XML/include"
+    "${OF_ROOT_DIR}/src/poco/Zip/include"
+
+    "${OF_ROOT_DIR}/src/rtaudio"
+    "${OF_ROOT_DIR}/src/rtaudio/include"
+
+    "${OF_ROOT_DIR}/src/libtess2"
+    "${OF_ROOT_DIR}/src/libtess2/Include"
+    "${OF_ROOT_DIR}/src/libtess2/Source"
+
+    "${OF_ROOT_DIR}/src/openframeworks"
+    "${OF_ROOT_DIR}/src/openframeworks/3d"
+    "${OF_ROOT_DIR}/src/openframeworks/app"
+    "${OF_ROOT_DIR}/src/openframeworks/communication"
+    "${OF_ROOT_DIR}/src/openframeworks/events"
+    "${OF_ROOT_DIR}/src/openframeworks/gl"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics"
+    "${OF_ROOT_DIR}/src/openframeworks/math"
+    "${OF_ROOT_DIR}/src/openframeworks/sound"
+    "${OF_ROOT_DIR}/src/openframeworks/types"
+    "${OF_ROOT_DIR}/src/openframeworks/utils"
+    "${OF_ROOT_DIR}/src/openframeworks/video"
+)
+
+if(CMAKE_SYSTEM MATCHES Windows)
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/videoinput"
+)
+endif()
+
+if(MSVC)
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/dev/include/msvc"
+)
+endif()
+
+#// Platform-specific commands /////////////////////////////////////////////////
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -166,7 +228,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_DEFINITIONS}
     )
 
-    set(OPENFRAMEWORKS_INCLUDE_DIRS
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
         ${UDEV_INCLUDE_DIR}
         ${GTK3_INCLUDE_DIRS}
@@ -259,7 +321,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         "/usr/local/opt/openssl/lib/libssl.a"
     )
 
-    set(OPENFRAMEWORKS_INCLUDE_DIRS
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
@@ -397,7 +459,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${FONTCONFIG_DEFINITIONS}
     )
 
-    set(OPENFRAMEWORKS_INCLUDE_DIRS
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${ZLIB_INCLUDE_DIRS}
         ${BZIP2_INCLUDE_DIR}
         ${CAIRO_INCLUDE_DIR}
@@ -442,87 +504,24 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
 endif()
 
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/freeimage"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Iex"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmImf"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmThread"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Imath"
-
-    "${OF_ROOT_DIR}/src/glew"
-    "${OF_ROOT_DIR}/src/glew/include"
-
-    "${OF_ROOT_DIR}/src/glfw"
-    "${OF_ROOT_DIR}/src/glfw/include"
-    "${OF_ROOT_DIR}/src/glfw/include/GLFW"
-
-    "${OF_ROOT_DIR}/src/kiss"
-    "${OF_ROOT_DIR}/src/kiss/src"
-    "${OF_ROOT_DIR}/src/kiss/tools"
-
-    "${OF_ROOT_DIR}/src/poco"
-    "${OF_ROOT_DIR}/src/poco/Crypto/include"
-    "${OF_ROOT_DIR}/src/poco/Foundation/include"
-    "${OF_ROOT_DIR}/src/poco/Net/include"
-    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
-    "${OF_ROOT_DIR}/src/poco/Util/include"
-    "${OF_ROOT_DIR}/src/poco/XML/include"
-    "${OF_ROOT_DIR}/src/poco/Zip/include"
-
-    "${OF_ROOT_DIR}/src/rtaudio"
-    "${OF_ROOT_DIR}/src/rtaudio/include"
-
-    "${OF_ROOT_DIR}/src/libtess2"
-    "${OF_ROOT_DIR}/src/libtess2/Include"
-    "${OF_ROOT_DIR}/src/libtess2/Source"
-
-    "${OF_ROOT_DIR}/src/openframeworks"
-    "${OF_ROOT_DIR}/src/openframeworks/3d"
-    "${OF_ROOT_DIR}/src/openframeworks/app"
-    "${OF_ROOT_DIR}/src/openframeworks/communication"
-    "${OF_ROOT_DIR}/src/openframeworks/events"
-    "${OF_ROOT_DIR}/src/openframeworks/gl"
-    "${OF_ROOT_DIR}/src/openframeworks/graphics"
-    "${OF_ROOT_DIR}/src/openframeworks/math"
-    "${OF_ROOT_DIR}/src/openframeworks/sound"
-    "${OF_ROOT_DIR}/src/openframeworks/types"
-    "${OF_ROOT_DIR}/src/openframeworks/utils"
-    "${OF_ROOT_DIR}/src/openframeworks/video"
-)
-
-if(CMAKE_SYSTEM MATCHES Windows)
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/videoinput"
-    )
-endif()
-
-if(MSVC)
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/dev/include/msvc"
-    )
-
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -D_SCL_SECURE_NO_WARNINGS
-        -D_CRT_SECURE_NO_WARNINGS
-    )
-
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -D_WIN32_WINNT=0x0501
-        -D_UNICODE -DUNICODE
-    )
-endif()
+#// Compiler flags /////////////////////////////////////////////////////////////
 
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
 )
 
+if(MSVC)
+list(APPEND OPENFRAMEWORKS_DEFINITIONS
+    -D_SCL_SECURE_NO_WARNINGS
+    -D_CRT_SECURE_NO_WARNINGS
+    -D_WIN32_WINNT=0x0501
+    -D_UNICODE -DUNICODE
+)
+endif()
+
 add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
 include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
-
-#// Compiler flags /////////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(O_C_FLAG -O0)
