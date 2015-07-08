@@ -4,8 +4,6 @@
 sudo apt-get update
 sudo apt-get -y upgrade
 
-sudo add-apt-repository -y ppa:boost-latest/ppa
-
 sudo apt-get -y install     \
 git                         \
 pkg-config                  \
