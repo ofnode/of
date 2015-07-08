@@ -295,7 +295,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayerView.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
     )
     if(OF_ENABLE_GSTREAMER_OSX)
@@ -506,7 +505,7 @@ add_library(
 )
 
 target_include_directories(
-    openFrameworks PRIVATE
+    openFrameworks SYSTEM BEFORE PRIVATE
     ${OPENFRAMEWORKS_INCLUDE_DIRS}
 )
 
