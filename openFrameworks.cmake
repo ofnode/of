@@ -769,11 +769,6 @@ function(ofxaddon OFXADDON)
                set(OFXADDON_LIBRARIES ${OFXADDON_LIBRARIES} ${FOUND_${LIBRARY}})
           endif()
         endforeach()
-        find_package(TBB)
-        if(TBB_FOUND AND CMAKE_SYSTEM MATCHES Linux)
-            include_directories(${TBB_INCLUDE_DIRS})
-            list(APPEND OFXADDON_LIBRARIES ${TBB_LIBRARIES})
-        endif()
         set(OPENFRAMEWORKS_LIBRARIES
           ${OPENFRAMEWORKS_LIBRARIES} ${OFXADDON_LIBRARIES} PARENT_SCOPE)
 
