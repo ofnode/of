@@ -92,7 +92,72 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
-#///////////////////////////////////////////////////////////////////////////////
+set(OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/openframeworks"
+    "${OF_ROOT_DIR}/src/openframeworks/3d"
+    "${OF_ROOT_DIR}/src/openframeworks/app"
+    "${OF_ROOT_DIR}/src/openframeworks/communication"
+    "${OF_ROOT_DIR}/src/openframeworks/events"
+    "${OF_ROOT_DIR}/src/openframeworks/gl"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics"
+    "${OF_ROOT_DIR}/src/openframeworks/math"
+    "${OF_ROOT_DIR}/src/openframeworks/sound"
+    "${OF_ROOT_DIR}/src/openframeworks/types"
+    "${OF_ROOT_DIR}/src/openframeworks/utils"
+    "${OF_ROOT_DIR}/src/openframeworks/video"
+
+    "${OF_ROOT_DIR}/src/freeimage"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Iex"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmImf"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmThread"
+    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Imath"
+
+    "${OF_ROOT_DIR}/src/glew"
+    "${OF_ROOT_DIR}/src/glew/include"
+
+    "${OF_ROOT_DIR}/src/glfw"
+    "${OF_ROOT_DIR}/src/glfw/include"
+    "${OF_ROOT_DIR}/src/glfw/include/GLFW"
+
+    "${OF_ROOT_DIR}/src/kiss"
+    "${OF_ROOT_DIR}/src/kiss/src"
+    "${OF_ROOT_DIR}/src/kiss/tools"
+
+    "${OF_ROOT_DIR}/src/libtess2"
+    "${OF_ROOT_DIR}/src/libtess2/Include"
+    "${OF_ROOT_DIR}/src/libtess2/Source"
+
+    "${OF_ROOT_DIR}/src/poco"
+    "${OF_ROOT_DIR}/src/poco/Crypto/include"
+    "${OF_ROOT_DIR}/src/poco/Foundation/include"
+    "${OF_ROOT_DIR}/src/poco/Net/include"
+    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
+    "${OF_ROOT_DIR}/src/poco/Util/include"
+    "${OF_ROOT_DIR}/src/poco/XML/include"
+    "${OF_ROOT_DIR}/src/poco/Zip/include"
+
+    "${OF_ROOT_DIR}/src/rtaudio"
+    "${OF_ROOT_DIR}/src/rtaudio/include"
+
+    "${OF_ROOT_DIR}/src/utf8cpp"
+    "${OF_ROOT_DIR}/src/utf8cpp/include"
+)
+
+if(CMAKE_SYSTEM MATCHES Windows)
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/videoinput"
+)
+endif()
+
+if(MSVC)
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/dev/include/msvc"
+)
+endif()
+
+#// Platform-specific commands /////////////////////////////////////////////////
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -169,7 +234,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_DEFINITIONS}
     )
 
-    set(OPENFRAMEWORKS_INCLUDE_DIRS
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
         ${UDEV_INCLUDE_DIR}
         ${GTK3_INCLUDE_DIRS}
@@ -265,7 +330,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         "/usr/local/opt/openssl/lib/libssl.a"
     )
 
-    set(OPENFRAMEWORKS_INCLUDE_DIRS
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
@@ -403,7 +468,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${FONTCONFIG_DEFINITIONS}
     )
 
-    set(OPENFRAMEWORKS_INCLUDE_DIRS
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${ZLIB_INCLUDE_DIRS}
         ${BZIP2_INCLUDE_DIR}
         ${CAIRO_INCLUDE_DIR}
@@ -448,90 +513,24 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
 endif()
 
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/openframeworks"
-    "${OF_ROOT_DIR}/src/openframeworks/3d"
-    "${OF_ROOT_DIR}/src/openframeworks/app"
-    "${OF_ROOT_DIR}/src/openframeworks/communication"
-    "${OF_ROOT_DIR}/src/openframeworks/events"
-    "${OF_ROOT_DIR}/src/openframeworks/gl"
-    "${OF_ROOT_DIR}/src/openframeworks/graphics"
-    "${OF_ROOT_DIR}/src/openframeworks/math"
-    "${OF_ROOT_DIR}/src/openframeworks/sound"
-    "${OF_ROOT_DIR}/src/openframeworks/types"
-    "${OF_ROOT_DIR}/src/openframeworks/utils"
-    "${OF_ROOT_DIR}/src/openframeworks/video"
-
-    "${OF_ROOT_DIR}/src/freeimage"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Iex"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmImf"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmThread"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Imath"
-
-    "${OF_ROOT_DIR}/src/glew"
-    "${OF_ROOT_DIR}/src/glew/include"
-
-    "${OF_ROOT_DIR}/src/glfw"
-    "${OF_ROOT_DIR}/src/glfw/include"
-    "${OF_ROOT_DIR}/src/glfw/include/GLFW"
-
-    "${OF_ROOT_DIR}/src/kiss"
-    "${OF_ROOT_DIR}/src/kiss/src"
-    "${OF_ROOT_DIR}/src/kiss/tools"
-
-    "${OF_ROOT_DIR}/src/libtess2"
-    "${OF_ROOT_DIR}/src/libtess2/Include"
-    "${OF_ROOT_DIR}/src/libtess2/Source"
-
-    "${OF_ROOT_DIR}/src/poco"
-    "${OF_ROOT_DIR}/src/poco/Crypto/include"
-    "${OF_ROOT_DIR}/src/poco/Foundation/include"
-    "${OF_ROOT_DIR}/src/poco/Net/include"
-    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
-    "${OF_ROOT_DIR}/src/poco/Util/include"
-    "${OF_ROOT_DIR}/src/poco/XML/include"
-    "${OF_ROOT_DIR}/src/poco/Zip/include"
-
-    "${OF_ROOT_DIR}/src/rtaudio"
-    "${OF_ROOT_DIR}/src/rtaudio/include"
-
-    "${OF_ROOT_DIR}/src/utf8cpp"
-    "${OF_ROOT_DIR}/src/utf8cpp/include"
-)
-
-if(CMAKE_SYSTEM MATCHES Windows)
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/videoinput"
-    )
-endif()
-
-if(MSVC)
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/dev/include/msvc"
-    )
-
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -D_SCL_SECURE_NO_WARNINGS
-        -D_CRT_SECURE_NO_WARNINGS
-    )
-
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -D_WIN32_WINNT=0x0501
-        -D_UNICODE -DUNICODE
-    )
-endif()
+#// Compiler flags /////////////////////////////////////////////////////////////
 
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
 )
 
+if(MSVC)
+list(APPEND OPENFRAMEWORKS_DEFINITIONS
+    -D_SCL_SECURE_NO_WARNINGS
+    -D_CRT_SECURE_NO_WARNINGS
+    -D_WIN32_WINNT=0x0501
+    -D_UNICODE -DUNICODE
+)
+endif()
+
 add_definitions(${OPENFRAMEWORKS_DEFINITIONS})
 include_directories(${OPENFRAMEWORKS_INCLUDE_DIRS})
-
-#// Compiler flags /////////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(O_C_FLAG -O0)
@@ -571,10 +570,6 @@ if(NOT MSVC)
     set(CPP11_FLAG -std=gnu++11)
 endif()
 
-if(MINGW)
-    set(STRIP_FLAG -s)
-endif()
-
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
@@ -603,10 +598,10 @@ string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
 endif()
 
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${PIC_FLAG} ${STRIP_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${PIC_FLAG}")
 string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG} ${O_C_FLAG}")
 
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG} ${STRIP_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG}")
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_CXX_FLAG}")
 
 if(MSVC)
@@ -843,19 +838,23 @@ function(ofxaddon OFXADDON)
             message(FATAL_ERROR "ofxaddon(${OFXADDON_DIR}): the folder doesn't exist.")
         endif()
 
-        file(GLOB_RECURSE OFXHEADERS "${OFXADDON_DIR}/src/*.h"
-                                     "${OFXADDON_DIR}/src/*.hh"
-                                     "${OFXADDON_DIR}/src/*.hpp"
-                                     "${OFXADDON_DIR}/libs/*.h"
-                                     "${OFXADDON_DIR}/libs/*.hh"
-                                     "${OFXADDON_DIR}/libs/*.hpp")
+        file(GLOB_RECURSE OFXHEADERS
+            "${OFXADDON_DIR}/src/*.h"
+            "${OFXADDON_DIR}/src/*.hh"
+            "${OFXADDON_DIR}/src/*.hpp"
+            "${OFXADDON_DIR}/libs/*.h"
+            "${OFXADDON_DIR}/libs/*.hh"
+            "${OFXADDON_DIR}/libs/*.hpp"
+        )
 
-        file(GLOB_RECURSE OFXSOURCES "${OFXADDON_DIR}/src/*.c"
-                                     "${OFXADDON_DIR}/src/*.cc"
-                                     "${OFXADDON_DIR}/src/*.cpp"
-                                     "${OFXADDON_DIR}/libs/*.c"
-                                     "${OFXADDON_DIR}/libs/*.cc"
-                                     "${OFXADDON_DIR}/libs/*.cpp")
+        file(GLOB_RECURSE OFXSOURCES
+            "${OFXADDON_DIR}/src/*.c"
+            "${OFXADDON_DIR}/src/*.cc"
+            "${OFXADDON_DIR}/src/*.cpp"
+            "${OFXADDON_DIR}/libs/*.c"
+            "${OFXADDON_DIR}/libs/*.cc"
+            "${OFXADDON_DIR}/libs/*.cpp"
+        )
 
         foreach(OFXHEADER_PATH ${OFXHEADERS})
             get_filename_component(OFXHEADER_DIR ${OFXHEADER_PATH} PATH)
