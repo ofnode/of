@@ -181,19 +181,13 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    # Static C and C++
-    set(OPENFRAMEWORKS_LIBRARIES
-        -static-libgcc
-        -static-libstdc++
-    )
+    #// Local dependencies /////////////////////////////////////////////////////
 
-    # The folder with executable will be
-    # a search path for shared libraries
-    list(APPEND OPENFRAMEWORKS_LIBRARIES
+    # The folder of executable will be
+    # search path for shared libraries
+    set(OPENFRAMEWORKS_LIBRARIES
         -Wl,-rpath,'$$ORIGIN'
     )
-
-    #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release")
@@ -412,26 +406,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         -DOF_VIDEO_PLAYER_DIRECTSHOW
     )
 
-    if(NOT MSVC)
-        # Static C and C++
-        set(OPENFRAMEWORKS_LIBRARIES
-            -static-libgcc
-            -static-libstdc++
-        )
-    endif()
-
-    # Hide console by default
-    if(NOT OF_ENABLE_CONSOLE)
-      if(MSVC)
-          set(CMAKE_EXE_LINKER_FLAGS
-           "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:windows /ENTRY:mainCRTStartup")
-      else()
-          list(APPEND OPENFRAMEWORKS_LIBRARIES
-              -mwindows
-          )
-      endif()
-    endif()
-
     #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
@@ -442,30 +416,42 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     if(MSVC)
         link_directories(${OF_LIB_DIR})
-        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.lib")
+        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.lib")
     else()
-        list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
+        set(OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
+        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
     endif()
 
     if(NOT OPENFRAMEWORKS_LIBS)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
     endif()
 
+    # Hide console by default
+    if(NOT OF_ENABLE_CONSOLE)
+      if(MSVC)
+        set(CMAKE_EXE_LINKER_FLAGS
+         "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+      else()
+        list(APPEND OPENFRAMEWORKS_LIBRARIES
+            -mwindows
+        )
+      endif()
+    endif()
+
     # If we are on Windows using MSVC
     # we don't need GCC's link groups
     if(MSVC)
-        list(APPEND OPENFRAMEWORKS_LIBRARIES
-            ${OPENFRAMEWORKS_LIBS}
-        )
+      set(OPENFRAMEWORKS_LIBRARIES
+        ${OPENFRAMEWORKS_LIBS}
+      )
     else()
-        list(APPEND OPENFRAMEWORKS_LIBRARIES
-            -Wl,-Bstatic
-            -Wl,--start-group
-            ${OPENFRAMEWORKS_LIBS}
-            -Wl,--end-group
-            -Wl,-Bdynamic
-        )
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -Wl,-Bstatic
+        -Wl,--start-group
+        ${OPENFRAMEWORKS_LIBS}
+        -Wl,--end-group
+        -Wl,-Bdynamic
+      )
     endif()
 
     #// Global dependencies ////////////////////////////////////////////////////
@@ -485,9 +471,9 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Fontconfig REQUIRED)
 
     if(MSVC)
-    set(MSVC_PATHS
+      set(MSVC_PATHS
         "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"
-    )
+      )
     endif()
 
     find_library(WINMM_LIB winmm PATHS ${MSVC_PATHS})
