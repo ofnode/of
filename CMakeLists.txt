@@ -61,6 +61,14 @@ else()
 
 endif()
 
+#// Options ////////////////////////////////////////////////////////////////////
+
+set(OF_ENABLE_AUDIO ON CACHE BOOL
+  "Compile audio features of openFrameworks")
+
+set(OF_ENABLE_VIDEO ON CACHE BOOL
+  "Compile video features of openFrameworks")
+
 #// Setup //////////////////////////////////////////////////////////////////////
 
 set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
@@ -155,14 +163,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
     pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
     find_package(Glib REQUIRED)
-    find_package(ALSA REQUIRED)
     find_package(Cairo REQUIRED)
     find_package(Boost REQUIRED)
-    find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(GStreamer REQUIRED)
     find_package(Fontconfig REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
@@ -172,16 +176,42 @@ if(CMAKE_SYSTEM MATCHES Linux)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${GTK3_INCLUDE_DIRS}
         ${GLIB_INCLUDE_DIRS}
-        ${ALSA_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
-        ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
-        ${GSTREAMER_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIR}
     )
+
+    if(OF_ENABLE_AUDIO)
+    find_package(ALSA REQUIRED)
+    find_package(OpenAL REQUIRED)
+    find_package(MPG123 REQUIRED)
+    find_package(Sndfile REQUIRED)
+
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${ALSA_INCLUDE_DIRS}
+        ${OPENAL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
+        ${SNDFILE_INCLUDE_DIR}
+    )
+    else()
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_SOUND
+    )
+    endif()
+
+    if(OF_ENABLE_VIDEO)
+    find_package(GStreamer REQUIRED)
+
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GSTREAMER_INCLUDE_DIRS}
+    )
+    else()
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_VIDEO
+    )
+    endif()
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
@@ -326,13 +356,6 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/math/ofVec2f.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/math/ofVec4f.cpp"
 
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBuffer.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundPlayer.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundStream.cpp"
-
     "${OF_ROOT_DIR}/src/openframeworks/types/ofBaseTypes.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/types/ofColor.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/types/ofParameter.cpp"
@@ -349,17 +372,34 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofURLFileLoader.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofXml.cpp"
-
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
 )
 
+if(OF_ENABLE_AUDIO)
+    list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBuffer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundPlayer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundStream.cpp"
+    )
+endif()
+
+if(OF_ENABLE_VIDEO)
+    list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
+    )
+endif()
+
 if(CMAKE_SYSTEM MATCHES Linux)
+    if(OF_ENABLE_VIDEO)
     list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
     )
+    endif()
 elseif(CMAKE_SYSTEM MATCHES Darwin)
     list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
@@ -482,6 +522,9 @@ message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
 
 message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
 message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
+
+message("++ OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
+message("++ OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
 
 if(CMAKE_BUILD_TYPE MATCHES Release)
     message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})

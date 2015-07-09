@@ -70,6 +70,12 @@ endif()
 
 #// Options ////////////////////////////////////////////////////////////////////
 
+set(OF_ENABLE_AUDIO ON CACHE BOOL
+  "Enable audio features of openFrameworks")
+
+set(OF_ENABLE_VIDEO ON CACHE BOOL
+  "Enable video features of openFrameworks")
+
 set(OF_ENABLE_COTIRE ON CACHE BOOL
   "Enable Cotire header precompiler")
 
@@ -217,16 +223,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(UDev REQUIRED)
     find_package(Glib REQUIRED)
     find_package(ZLIB REQUIRED)
-    find_package(ALSA REQUIRED)
     find_package(Cairo REQUIRED)
-    find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(OpenSSL REQUIRED)
-    find_package(Sndfile REQUIRED)
     find_package(Threads REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(GStreamer REQUIRED)
     find_package(Fontconfig REQUIRED)
     find_package(Boost COMPONENTS filesystem system REQUIRED)
 
@@ -240,14 +241,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${GTK3_INCLUDE_DIRS}
         ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
-        ${ALSA_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
-        ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${OPENSSL_INCLUDE_DIR}
-        ${SNDFILE_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIR}
@@ -266,23 +263,58 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${GTK3_LIBRARIES}
         ${GLIB_LIBRARIES}
         ${ZLIB_LIBRARIES}
-        ${ALSA_LIBRARIES}
-        ${OPENAL_LIBRARY}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
-        ${MPG123_LIBRARIES}
         ${OPENSSL_LIBRARIES}
-        ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
-        ${GSTREAMER_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
-        ${GSTREAMER_APP_LIBRARIES}
-        ${GSTREAMER_BASE_LIBRARIES}
-        ${GSTREAMER_VIDEO_LIBRARIES}
         ${Boost_FILESYSTEM_LIBRARY}
         ${Boost_SYSTEM_LIBRARY}
     )
+    if(OF_ENABLE_AUDIO)
+    find_package(ALSA REQUIRED)
+    find_package(OpenAL REQUIRED)
+    find_package(MPG123 REQUIRED)
+    find_package(Sndfile REQUIRED)
+
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${ALSA_INCLUDE_DIRS}
+        ${OPENAL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
+        ${SNDFILE_INCLUDE_DIR}
+    )
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${ALSA_LIBRARIES}
+        ${OPENAL_LIBRARY}
+        ${MPG123_LIBRARIES}
+        ${SNDFILE_LIBRARIES}
+    )
+    else()
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_SOUND
+    )
+    endif()
+
+    if(OF_ENABLE_VIDEO)
+    find_package(GStreamer REQUIRED)
+
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GSTREAMER_INCLUDE_DIRS}
+    )
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${GSTREAMER_LIBRARIES}
+        ${GSTREAMER_APP_LIBRARIES}
+        ${GSTREAMER_BASE_LIBRARIES}
+        ${GSTREAMER_VIDEO_LIBRARIES}
+    )
+    else()
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_VIDEO
+    )
+    endif()
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
@@ -891,6 +923,8 @@ message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
 message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
 message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
+message("++ OF_ENABLE_AUDIO: "   ${OF_ENABLE_AUDIO})
+message("++ OF_ENABLE_VIDEO: "   ${OF_ENABLE_VIDEO})
 message("++ OF_ENABLE_COTIRE: "  ${OF_ENABLE_COTIRE})
 message("++ OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})
 
