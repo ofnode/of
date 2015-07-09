@@ -5,6 +5,8 @@
 *.dll
 *.zip
 *.tar*
+*.rej
+*.orig
 *.txt.user
 *.DS_Store
 
