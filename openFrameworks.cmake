@@ -220,10 +220,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     set(Boost_USE_STATIC_LIBS ON)
 
-    find_library(RT_LIB rt)
-    find_library(DL_LIB dl)
     find_package(X11 REQUIRED)
-    find_package(UDev REQUIRED)
     find_package(ZLIB REQUIRED)
     find_package(Cairo REQUIRED)
     find_package(OpenGL REQUIRED)
@@ -239,7 +236,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
-        ${UDEV_INCLUDE_DIR}
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
@@ -250,15 +246,12 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
-        ${RT_LIB}
-        ${DL_LIB}
         ${X11_Xi_LIB}
         ${X11_LIBRARIES}
         ${X11_Xrandr_LIB}
         ${X11_Xcursor_LIB}
         ${X11_Xxf86vm_LIB}
         ${X11_Xinerama_LIB}
-        ${UDEV_LIBRARIES}
         ${ZLIB_LIBRARIES}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
@@ -304,17 +297,20 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_USING_GTK
       )
 
+      find_package(UDev REQUIRED)
       find_package(Glib REQUIRED)
       find_package(GStreamer REQUIRED)
       pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${UDEV_INCLUDE_DIR}
         ${GLIB_INCLUDE_DIRS}
         ${GTK3_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
       )
 
       list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${UDEV_LIBRARIES}
         ${GLIB_LIBRARIES}
         ${GTK3_LIBRARIES}
         ${GSTREAMER_LIBRARIES}
