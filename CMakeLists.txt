@@ -63,11 +63,15 @@ endif()
 
 #// Options ////////////////////////////////////////////////////////////////////
 
-set(OF_ENABLE_AUDIO ON CACHE BOOL
-  "Compile audio features of openFrameworks")
+if(CMAKE_SYSTEM MATCHES Linux)
 
-set(OF_ENABLE_VIDEO ON CACHE BOOL
-  "Compile video features of openFrameworks")
+  set(OF_ENABLE_AUDIO ON CACHE BOOL
+     "Compile audio features of openFrameworks on Linux")
+
+  set(OF_ENABLE_VIDEO ON CACHE BOOL
+     "Compile video features of openFrameworks on Linux")
+
+endif()
 
 #// Setup //////////////////////////////////////////////////////////////////////
 
@@ -198,19 +202,20 @@ if(CMAKE_SYSTEM MATCHES Linux)
     else()
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
         -DTARGET_NO_SOUND
+        -DOF_NO_SOUND
     )
     endif()
 
     if(OF_ENABLE_VIDEO)
-    find_package(GStreamer REQUIRED)
+      find_package(GStreamer REQUIRED)
 
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${GSTREAMER_INCLUDE_DIRS}
-    )
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+          ${GSTREAMER_INCLUDE_DIRS}
+      )
     else()
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -DTARGET_NO_VIDEO
-    )
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+          -DOF_NO_VIDEO
+      )
     endif()
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
@@ -375,50 +380,48 @@ set(OPENFRAMEWORKS_SOURCES
 )
 
 if(OF_ENABLE_AUDIO)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBuffer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundStream.cpp"
-    )
+)
 endif()
 
 if(OF_ENABLE_VIDEO)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
-    )
+)
 endif()
 
-if(CMAKE_SYSTEM MATCHES Linux)
-    if(OF_ENABLE_VIDEO)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+if(CMAKE_SYSTEM MATCHES Linux AND OF_ENABLE_VIDEO)
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
-    )
-    endif()
+  )
 elseif(CMAKE_SYSTEM MATCHES Darwin)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
-    )
-    if(OF_ENABLE_GSTREAMER_OSX)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+  )
+  if(OF_ENABLE_GSTREAMER_OSX)
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
-    )
-    endif()
+  )
+  endif()
 elseif(CMAKE_SYSTEM MATCHES Windows)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/videoinput/videoInput.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
-    )
+  )
 endif()
 
 #// Compiler flags /////////////////////////////////////////////////////////////
@@ -442,11 +445,6 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
   if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_C_FLAG -Og)
-  elseif(CMAKE_SYSTEM MATCHES Windows)
-    # If GNU compiler's version below 4.8.0 and we are on Windows,
-    # then we're using old MinGW compiler. To avoid "File too big"
-    # error we have to crank O level up to make object files small
-    set(O_C_FLAG -O2)
   else()
     set(O_C_FLAG -O0)
   endif()
@@ -457,11 +455,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_CXX_FLAG -Og)
-  elseif(CMAKE_SYSTEM MATCHES Windows)
-    # If GNU compiler's version below 4.8.0 and we are on Windows,
-    # then we're using old MinGW compiler. To avoid "File too big"
-    # error we have to crank O level up to make object files small
-    set(O_CXX_FLAG -O2)
   else()
     set(O_CXX_FLAG -O0)
   endif()
@@ -472,23 +465,23 @@ if(CMAKE_SYSTEM MATCHES Linux)
 endif()
 
 if(NOT MSVC)
-    set(CPP11_FLAG -std=gnu++11)
+    set(CPP11_FLAG -std=gnu++14)
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
-    if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.9.0)
+  if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.9.0)
     set(C_COLORIZATION "-fdiagnostics-color")
-    endif()
+  endif()
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     set(CXX_COLORIZATION "-fcolor-diagnostics")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.9.0)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.9.0)
     set(CXX_COLORIZATION "-fdiagnostics-color")
-    endif()
+  endif()
 endif()
 
 string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
@@ -523,15 +516,17 @@ message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
 message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
 message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
+if(CMAKE_SYSTEM MATCHES Linux)
 message("++ OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
 message("++ OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
+endif()
 
 if(CMAKE_BUILD_TYPE MATCHES Release)
-    message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
-    message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
+  message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
+  message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
 elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-    message("++ CMAKE_C_FLAGS_DEBUG: "     ${CMAKE_C_FLAGS_DEBUG})
-    message("++ CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
+  message("++ CMAKE_C_FLAGS_DEBUG: "     ${CMAKE_C_FLAGS_DEBUG})
+  message("++ CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
 endif()
 
 #// Build commands /////////////////////////////////////////////////////////////
