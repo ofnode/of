@@ -163,9 +163,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-
-    find_package(Glib REQUIRED)
     find_package(Cairo REQUIRED)
     find_package(Boost REQUIRED)
     find_package(OpenGL REQUIRED)
@@ -177,8 +174,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${GTK3_INCLUDE_DIRS}
-        ${GLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
@@ -213,9 +208,13 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_USING_GTK
       )
 
+      find_package(Glib REQUIRED)
       find_package(GStreamer REQUIRED)
+      pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GLIB_INCLUDE_DIRS}
+        ${GTK3_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
       )
     endif()
