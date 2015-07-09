@@ -156,7 +156,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug")
 
     set(OPENFRAMEWORKS_DEFINITIONS
-        -DOF_USING_GTK
         -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
@@ -187,34 +186,37 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_INCLUDE_DIR}
     )
 
-    if(OF_ENABLE_AUDIO)
-    find_package(ALSA REQUIRED)
-    find_package(OpenAL REQUIRED)
-    find_package(MPG123 REQUIRED)
-    find_package(Sndfile REQUIRED)
+    if(NOT OF_ENABLE_AUDIO)
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_SOUND
+      )
+    else()
+      find_package(ALSA REQUIRED)
+      find_package(OpenAL REQUIRED)
+      find_package(MPG123 REQUIRED)
+      find_package(Sndfile REQUIRED)
 
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${ALSA_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
-    )
-    else()
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -DTARGET_NO_SOUND
-        -DOF_NO_SOUND
-    )
+      )
     endif()
 
-    if(OF_ENABLE_VIDEO)
-      find_package(GStreamer REQUIRED)
-
-      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-          ${GSTREAMER_INCLUDE_DIRS}
+    if(NOT OF_ENABLE_VIDEO)
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_VIDEO
       )
     else()
       list(APPEND OPENFRAMEWORKS_DEFINITIONS
-          -DOF_NO_VIDEO
+        -DOF_USING_GTK
+      )
+
+      find_package(GStreamer REQUIRED)
+
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GSTREAMER_INCLUDE_DIRS}
       )
     endif()
 
