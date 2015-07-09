@@ -1,0 +1,35 @@
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//THE SOFTWARE.
+
+//////////////////////////////////////////////////////////
+//Written by Theodore Watson - theo.watson@gmail.com    //
+//Do whatever you want with this code but if you find   //
+//a bug or make an improvement I would love to know!    //
+//														//
+//Warning This code is experimental 					//
+//use at your own risk :)								//
+//////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/*                     Shoutouts
+
+Thanks to:
+
+		   Dillip Kumar Kara for crossbar code.
+		   Zachary Lieberman for getting me into this stuff
+		   and for being so generous with time and code.
+		   The guys at Potion Design for helping me with VC++
+		   Josh Fisher for being a serious C++ nerd :)
+		   Golan Levin for helping me debug the strangest
+		   and slowest bug in the world!
+
+		   And all the people using this library who send in
+		   bugs, suggestions and improvements who keep me working on
+		   the next version - yeah thanks a lot ;)
+
+*/
+/////////////////////////////////////////////////////////
