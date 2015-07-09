@@ -1,5 +1,5 @@
---- a/openframeworks/ofMain.h
-+++ b/openframeworks/ofMain.h
+--- a/ofMain.h
++++ b/ofMain.h
 @@ -78,9 +78,6 @@
  #include "ofMainLoop.h"
  #if !defined( TARGET_OF_IOS ) & !defined(TARGET_ANDROID) & !defined(TARGET_EMSCRIPTEN)
@@ -10,8 +10,8 @@
  #endif
  
  //--------------------------
---- a/openframeworks/video/ofDirectShowPlayer.cpp
-+++ b/openframeworks/video/ofDirectShowPlayer.cpp
+--- a/video/ofDirectShowPlayer.cpp
++++ b/video/ofDirectShowPlayer.cpp
 @@ -14,15 +14,14 @@
  //-------------------------------------------------------------------------------------------------------------------------------------------------------------
  
@@ -31,8 +31,8 @@
  
  //for threading
  #include <process.h>
---- a/openframeworks/utils/ofConstants.h
-+++ b/openframeworks/utils/ofConstants.h
+--- a/utils/ofConstants.h
++++ b/utils/ofConstants.h
 @@ -98,7 +98,7 @@
  	#define GLEW_STATIC
  	#include "GL/glew.h"

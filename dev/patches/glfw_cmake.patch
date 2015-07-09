@@ -1,5 +1,5 @@
---- a/glfw/CMakeLists.txt
-+++ b/glfw/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -19,11 +19,11 @@
  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
  
@@ -16,8 +16,8 @@
  
  if (WIN32)
      option(GLFW_USE_DWM_SWAP_INTERVAL "Set swap interval even when DWM compositing is enabled" OFF)
---- a/glfw/src/CMakeLists.txt
-+++ b/glfw/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
 @@ -57,7 +57,7 @@
      set_source_files_properties(${glfw_SOURCES} PROPERTIES LANGUAGE C)
  endif()

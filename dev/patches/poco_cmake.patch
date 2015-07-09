@@ -1,5 +1,5 @@
---- a/poco/CMakeLists.txt
-+++ b/poco/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -8,7 +8,7 @@
  
  project(Poco)
@@ -92,8 +92,8 @@
  # Enable packaging
  
  include(InstallRequiredSystemLibraries)
---- a/poco/cmake/PocoMacros.cmake
-+++ b/poco/cmake/PocoMacros.cmake
+--- a/cmake/PocoMacros.cmake
++++ b/cmake/PocoMacros.cmake
 @@ -24,13 +24,6 @@
        set(kit_bindir "${kit_dir}/bin/x86")
      endif (X64)
@@ -147,8 +147,8 @@
  endmacro()
  
  #===============================================================================
---- a/poco/Foundation/CMakeLists.txt
-+++ b/poco/Foundation/CMakeLists.txt
+--- a/Foundation/CMakeLists.txt
++++ b/Foundation/CMakeLists.txt
 @@ -32,9 +32,6 @@
  	)
  endif()
