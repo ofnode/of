@@ -597,7 +597,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 endif()
 
 if(NOT MSVC)
-    set(CPP11_FLAG -std=gnu++14)
+    set(CPP11_FLAG -std=gnu++11)
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
