@@ -90,8 +90,10 @@
 
 //--------------------------
 // video
-#include "ofVideoGrabber.h"
-#include "ofVideoPlayer.h"
+#ifndef TARGET_NO_VIDEO
+	#include "ofVideoGrabber.h"
+	#include "ofVideoPlayer.h"
+#endif
 
 //--------------------------
 // events

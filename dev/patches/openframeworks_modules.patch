@@ -1,0 +1,46 @@
+--- a/ofMain.h
++++ b/ofMain.h
+@@ -90,8 +90,10 @@
+ 
+ //--------------------------
+ // video
+-#include "ofVideoGrabber.h"
+-#include "ofVideoPlayer.h"
++#ifndef TARGET_NO_VIDEO
++	#include "ofVideoGrabber.h"
++	#include "ofVideoPlayer.h"
++#endif
+ 
+ //--------------------------
+ // events
+--- a/app/ofBaseApp.h
++++ b/app/ofBaseApp.h
+@@ -4,7 +4,11 @@
+ #include "ofEvents.h"
+ #include "ofBaseTypes.h"
+ 
+-class ofBaseApp : public ofBaseSoundInput, public ofBaseSoundOutput{
++class ofBaseApp
++#ifndef TARGET_NO_SOUND
++: public ofBaseSoundInput, public ofBaseSoundOutput
++#endif
++{
+ 
+ 	public:
+         ofBaseApp() {
+--- a/types/ofBaseTypes.cpp
++++ b/types/ofBaseTypes.cpp
+@@ -327,6 +327,7 @@
+ 	shader.setUniformMatrix4f("normalMatrix",normalMatrix);
+ }
+ 
++#ifndef TARGET_NO_SOUND
+ 
+ void ofBaseSoundInput::audioIn( ofSoundBuffer& buffer ){
+ 	audioIn(&buffer[0], buffer.getNumFrames(), buffer.getNumChannels(), buffer.getDeviceID(), buffer.getTickCount());
+@@ -352,3 +353,5 @@
+ void ofBaseSoundOutput::audioOut( float * output, int bufferSize, int nChannels ){
+ 	audioRequested(output, bufferSize, nChannels);
+ }
++
++#endif // #ifndef TARGET_NO_SOUND
