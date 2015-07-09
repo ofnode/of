@@ -381,21 +381,21 @@ set(OPENFRAMEWORKS_SOURCES
 )
 
 if(OF_ENABLE_AUDIO)
-list(APPEND OPENFRAMEWORKS_SOURCES
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBuffer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundStream.cpp"
-)
+  )
 endif()
 
 if(OF_ENABLE_VIDEO)
-list(APPEND OPENFRAMEWORKS_SOURCES
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
-)
+  )
 endif()
 
 if(CMAKE_SYSTEM MATCHES Linux AND OF_ENABLE_VIDEO)
