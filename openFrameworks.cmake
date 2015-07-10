@@ -329,7 +329,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
-        ${FREETYPE_INCLUDE_DIRS}
+    )
+
+    # Hardcode FreeType path, see issue #15
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        "/usr/local/include/freetype2"
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES

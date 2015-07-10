@@ -219,7 +219,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
         ${SNDFILE_INCLUDE_DIR}
-        ${FREETYPE_INCLUDE_DIRS}
+    )
+
+    # Hardcode FreeType path, see issue #15
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        "/usr/local/include/freetype2"
     )
 
     if(OF_ENABLE_GSTREAMER_OSX)
