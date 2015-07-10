@@ -512,22 +512,22 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
+message(STATUS "CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
 
-message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
-message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
+message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
+message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
 if(CMAKE_SYSTEM MATCHES Linux)
-message("++ OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
-message("++ OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
+message(STATUS "OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
+message(STATUS "OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES Release)
-  message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
-  message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
+message(STATUS "CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
+message(STATUS "CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
 elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-  message("++ CMAKE_C_FLAGS_DEBUG: "     ${CMAKE_C_FLAGS_DEBUG})
-  message("++ CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
+message(STATUS "CMAKE_C_FLAGS_DEBUG: "     ${CMAKE_C_FLAGS_DEBUG})
+message(STATUS "CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
 endif()
 
 #// Build commands /////////////////////////////////////////////////////////////
