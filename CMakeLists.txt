@@ -71,6 +71,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
   set(OF_ENABLE_VIDEO ON CACHE BOOL
      "Compile video features of openFrameworks on Linux")
 
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+
+  set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL
+     "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
+
 endif()
 
 #// Setup //////////////////////////////////////////////////////////////////////
@@ -222,12 +227,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     message("OS X support is experimental. Please report issues if you run into something.")
-
-    set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL "Enable GStreamer on OSX")
-
-    if(OF_ENABLE_GSTREAMER_OSX)
-    message("Enabling GStreamer on OSX - make sure you installed it with ${OF_ROOT_DIR}/dev/install/osx/gstreamer.sh")
-    endif()
 
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug")
