@@ -441,6 +441,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(OpenAL REQUIRED) # Should be provided by CoreAudio
     find_package(Sndfile REQUIRED)
     find_package(Freetype REQUIRED)
+    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     # Homebrew version
     set(OPENSSL_INCLUDE_DIR
@@ -455,6 +456,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
@@ -476,6 +478,8 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
     )
 
     # Frameworks

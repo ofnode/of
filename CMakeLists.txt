@@ -248,6 +248,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     set(  DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG} "-x objective-c++")
 
     find_package(Cairo REQUIRED)
+    find_package(Boost REQUIRED)
     find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
     
@@ -258,6 +259,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
     )
 
