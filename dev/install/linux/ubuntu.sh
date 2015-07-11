@@ -12,7 +12,7 @@ libgtk-3-dev                \
 libboost-filesystem1.55-dev \
 libboost-system1.55-dev     \
 libudev-dev                 \
-clang                       \
+clang-3.5                   \
 cmake                       \
 ninja-build                 \
 libcairo2-dev               \
@@ -39,7 +39,11 @@ gstreamer1.0-plugins-ugly   \
 libgstreamer1.0-dev         \
 libgstreamer-plugins-base1.0-dev
 
-sudo ln -s /usr/bin/llvm-symbolizer* /usr/bin/llvm-symbolizer 2> /dev/null
+# Use clang 3.5 as default clang
+sudo rm /usr/bin/clang   && sudo ln -s /usr/bin/clang-3.5   /usr/bin/clang
+sudo rm /usr/bin/clang++ && sudo ln -s /usr/bin/clang++-3.5 /usr/bin/clang++
+
+sudo rm /usr/bin/llvm-symbolizer && sudo ln -s /usr/bin/llvm-symbolizer-3.5 /usr/bin/llvm-symbolizer
 
 # Use gold linker
 sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
