@@ -129,7 +129,7 @@ void ofVideoGrabber::setVerbose(bool bTalkToMe){
 void ofVideoGrabber::setDeviceID(int _deviceID){
 	requestedDeviceID = _deviceID;
 	if( grabber && grabber->isInitialized() ){
-		ofLogWarning("ofxVideoGrabber") << "setDeviceID(): can't set device while grabber is running";
+		ofLogWarning("ofVideoGrabber") << "setDeviceID(): can't set device while grabber is running.";
 	}
 }
 
@@ -228,7 +228,7 @@ void ofVideoGrabber::update(){
 			}
 			for(int i=0;i<grabber->getPixels().getNumPlanes();i++){
 				ofPixels plane = grabber->getPixels().getPlane(i);
-				bool bDiffPixFormat = ( tex[i].isAllocated() && tex[i].texData.glTypeInternal != ofGetGLInternalFormatFromPixelFormat(plane.getPixelFormat()) );
+				bool bDiffPixFormat = ( tex[i].isAllocated() && tex[i].texData.glInternalFormat != ofGetGLInternalFormatFromPixelFormat(plane.getPixelFormat()) );
 				if(bDiffPixFormat || !tex[i].isAllocated() ){
 					tex[i].allocate(plane);
 					if(ofIsGLProgrammableRenderer() && plane.getPixelFormat() == OF_PIXELS_GRAY){
