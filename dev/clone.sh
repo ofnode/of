@@ -33,7 +33,7 @@ setup poco c6cf535 https://github.com/pocoproject/poco
 setup rtaudio d6956ae https://github.com/ofnode/rtaudio
 
 # v 0.9.0 master
-setup openFrameworks fa780eb https://github.com/openframeworks/openFrameworks
+setup openFrameworks d292ad5 https://github.com/openframeworks/openFrameworks
 
 # v 1.0.1 master
 setup libtess2 24e4bdd https://github.com/memononen/libtess2
