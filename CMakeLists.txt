@@ -73,6 +73,12 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
+  set(OF_ENABLE_AUDIO ON CACHE BOOL
+     "Compile audio features of openFrameworks on OSX")
+
+  set(OF_ENABLE_VIDEO ON CACHE BOOL
+     "Compile video features of openFrameworks on OSX")
+
   set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL
      "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
 
@@ -251,7 +257,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(Boost REQUIRED)
     find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
-    
+
     if(OF_ENABLE_GSTREAMER_OSX)
     find_package(Glib REQUIRED)
     find_package(GStreamer REQUIRED gstreamer-video)
@@ -409,7 +415,7 @@ if(CMAKE_SYSTEM MATCHES Linux AND OF_ENABLE_VIDEO)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
   )
-elseif(CMAKE_SYSTEM MATCHES Darwin)
+elseif(CMAKE_SYSTEM MATCHES Darwin AND OF_ENABLE_VIDEO)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
