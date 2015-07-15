@@ -233,6 +233,66 @@ set(LIBTIFF_SOURCES
   LibTIFF4/tif_zip.c
 )
 
+set(LIBWEBP_SOURCES
+  LibWebP/src/dec/dec_alpha.c
+  LibWebP/src/dec/dec_buffer.c
+  LibWebP/src/dec/dec_frame.c
+  LibWebP/src/dec/dec_idec.c
+  LibWebP/src/dec/dec_io.c
+  LibWebP/src/dec/dec_layer.c
+  LibWebP/src/dec/dec_quant.c
+  LibWebP/src/dec/dec_tree.c
+  LibWebP/src/dec/dec_vp8.c
+  LibWebP/src/dec/dec_vp8l.c
+  LibWebP/src/dec/dec_webp.c
+  LibWebP/src/dsp/cpu.c
+  LibWebP/src/dsp/dec.c
+  LibWebP/src/dsp/dec_clip_tables.c
+  LibWebP/src/dsp/dec_neon.c
+  LibWebP/src/dsp/dec_sse2.c
+  LibWebP/src/dsp/enc.c
+  LibWebP/src/dsp/enc_neon.c
+  LibWebP/src/dsp/enc_sse2.c
+  LibWebP/src/dsp/lossless.c
+  LibWebP/src/dsp/upsampling.c
+  LibWebP/src/dsp/upsampling_neon.c
+  LibWebP/src/dsp/upsampling_sse2.c
+  LibWebP/src/dsp/yuv.c
+  LibWebP/src/enc/enc_alpha.c
+  LibWebP/src/enc/enc_analysis.c
+  LibWebP/src/enc/enc_backward_references.c
+  LibWebP/src/enc/enc_config.c
+  LibWebP/src/enc/enc_cost.c
+  LibWebP/src/enc/enc_filter.c
+  LibWebP/src/enc/enc_frame.c
+  LibWebP/src/enc/enc_histogram.c
+  LibWebP/src/enc/enc_iterator.c
+  LibWebP/src/enc/enc_layer.c
+  LibWebP/src/enc/enc_picture.c
+  LibWebP/src/enc/enc_quant.c
+  LibWebP/src/enc/enc_syntax.c
+  LibWebP/src/enc/enc_tree.c
+  LibWebP/src/enc/enc_vp8l.c
+  LibWebP/src/enc/enc_webpenc.c
+  LibWebP/src/enc/token.c
+  LibWebP/src/mux/muxedit.c
+  LibWebP/src/mux/muxinternal.c
+  LibWebP/src/mux/muxread.c
+  LibWebP/src/utils/alpha_processing.c
+  LibWebP/src/utils/bit_reader.c
+  LibWebP/src/utils/bit_writer.c
+  LibWebP/src/utils/color_cache.c
+  LibWebP/src/utils/filters.c
+  LibWebP/src/utils/huffman.c
+  LibWebP/src/utils/huffman_encode.c
+  LibWebP/src/utils/quant_levels.c
+  LibWebP/src/utils/quant_levels_dec.c
+  LibWebP/src/utils/random.c
+  LibWebP/src/utils/rescaler.c
+  LibWebP/src/utils/thread.c
+  LibWebP/src/utils/utils.c
+)
+
 set(OPENEXR_SOURCES
   OpenEXR/Half/eLut.cpp
   OpenEXR/Half/toFloat.cpp
@@ -362,6 +422,7 @@ add_library(
   ${LIBPNG_SOURCES}
   ${LIBRAWLITE_SOURCES}
   ${LIBTIFF_SOURCES}
+  ${LIBWEBP_SOURCES}
   ${OPENEXR_SOURCES}
 )
 
