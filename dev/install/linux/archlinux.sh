@@ -41,7 +41,7 @@ gst-plugins-bad    \
 gst-plugins-ugly
 
 # Use gold linker
-sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
+sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
 
 # Use default linker
-#sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld
+#sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld

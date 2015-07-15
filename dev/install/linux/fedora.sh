@@ -55,10 +55,10 @@ gstreamer1-plugins-ugly \
 gstreamer1-plugins-bad-free \
 gstreamer1-plugins-base-devel
 
-sudo ln -s /usr/bin/ninja-build /usr/bin/ninja 2> /dev/null
+sudo rm -f /usr/bin/ninja && sudo ln -s /usr/bin/ninja-build /usr/bin/ninja
 
 # Use gold linker
-sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
+sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
 
 # Use default linker
-#sudo rm /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld
+#sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld
