@@ -3,7 +3,6 @@
 # Git: http://git-scm.com/download/win
 # CMake: http://www.cmake.org/download
 # MSYS2: http://msys2.github.io
-# TDM-GCC: http://tdm-gcc.tdragon.net
 # 
 # PATH environment:
 # 
@@ -15,12 +14,6 @@
 # C:\msys64\mingw64\include
 # C:\msys64\mingw64\include\AL
 # C:\msys64\mingw64\include\cairo
-# C:\TDM-GCC-64\bin
-# C:\TDM-GCC-64\lib
-# C:\TDM-GCC-64\include
-# C:\TDM-GCC-64\x86_64-w64-mingw32\bin
-# C:\TDM-GCC-64\x86_64-w64-mingw32\lib
-# C:\TDM-GCC-64\x86_64-w64-mingw32\include
 # 
 # Windows Dev Tips:
 # 
@@ -45,4 +38,6 @@ mingw-w64-x86_64-openal     \
 mingw-w64-x86_64-assimp     \
 mingw-w64-x86_64-opencv     \
 mingw-w64-x86_64-libusb     \
-mingw-w64-x86_64-libsndfile
+mingw-w64-x86_64-libsndfile \
+mingw-w64-x86_64-boost      \
+mingw-w64-x86_64-gcc

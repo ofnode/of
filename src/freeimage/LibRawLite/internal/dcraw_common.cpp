@@ -3776,7 +3776,7 @@ void CLASS lin_interpolate()
  */
 void CLASS vng_interpolate()
 {
-  static const signed char *cp, terms[] = {
+  static const int *cp, terms[] = {
     -2,-2,+0,-1,0,0x01, -2,-2,+0,+0,1,0x01, -2,-1,-1,+0,0,0x01,
     -2,-1,+0,-1,0,0x02, -2,-1,+0,+0,0,0x03, -2,-1,+0,+1,1,0x01,
     -2,+0,+0,-1,0,0x06, -2,+0,+0,+0,1,0x02, -2,+0,+0,+1,0,0x03,
@@ -6652,7 +6652,7 @@ void CLASS adobe_coeff (const char *t_make, const char *t_model)
 {
   static const struct {
     const char *prefix;
-    short t_black, t_maximum, trans[12];
+    int t_black, t_maximum, trans[12];
   } table[] = {
     { "AgfaPhoto DC-833m", 0, 0,	/* DJC */
 	{ 11438,-3762,-1115,-2409,9914,2497,-1227,2295,5300 } },

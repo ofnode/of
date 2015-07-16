@@ -426,7 +426,7 @@ add_library(
   ${OPENEXR_SOURCES}
 )
 
-if(UNIX)
+if(NOT MSVC)
 set_target_properties(
   freeimage PROPERTIES
   COMPILE_FLAGS "-w -Wno-c++11-narrowing"

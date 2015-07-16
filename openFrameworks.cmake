@@ -19,11 +19,13 @@ else()
     set(RELEASE_FLAGS "
       ${RELEASE_FLAGS}
         -g
+        -Wno-conversion-null
     ")
 
     set(DEBUG_FLAGS "
       ${DEBUG_FLAGS}
         -Winline
+        -Wno-conversion-null
         -fno-omit-frame-pointer
         -fno-optimize-sibling-calls
     ")
@@ -85,6 +87,9 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
   set(OF_ENABLE_CONSOLE OFF CACHE BOOL
      "Enable console window on Windows")
+
+  set(OF_ENABLE_AUDIO ON)
+  set(OF_ENABLE_VIDEO ON)
 
 endif()
 
@@ -568,6 +573,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(LibIntl REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(Fontconfig REQUIRED)
+    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     if(MSVC)
       set(MSVC_PATHS
@@ -582,7 +588,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_library(CRYPT32_LIB crypt32 PATHS ${MSVC_PATHS})
     find_library(WSOCK32_LIB wsock32 PATHS ${MSVC_PATHS})
     find_library(IPHLPAPI_LIB iphlpapi PATHS ${MSVC_PATHS})
-    find_library(STRMIIDS_LIB strmiids PATHS ${MSVC_PATHS})
     find_library(SETUPAPI_LIB setupapi PATHS ${MSVC_PATHS})
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
@@ -593,6 +598,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${ZLIB_INCLUDE_DIRS}
         ${BZIP2_INCLUDE_DIR}
         ${CAIRO_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
@@ -617,6 +623,8 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${LIBINTL_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
@@ -628,7 +636,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${CRYPT32_LIB}
         ${WSOCK32_LIB}
         ${IPHLPAPI_LIB}
-        ${STRMIIDS_LIB}
         ${SETUPAPI_LIB}
     )
 

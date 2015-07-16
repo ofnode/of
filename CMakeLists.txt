@@ -18,11 +18,15 @@ else()
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
     set(RELEASE_FLAGS "
+        -Wno-conversion-null
+        -Wno-deprecated-declarations
     ")
 
     set(DEBUG_FLAGS "
         -fno-omit-frame-pointer
         -fno-optimize-sibling-calls
+        -Wno-conversion-null
+        -Wno-deprecated-declarations
     ")
 
 #// Clang specific C flags /////////////////////////////////////////////////////
@@ -81,6 +85,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
   set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL
      "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
+
+elseif(CMAKE_SYSTEM MATCHES Windows)
+
+  set(OF_ENABLE_AUDIO ON)
+  set(OF_ENABLE_VIDEO ON)
 
 endif()
 
@@ -301,6 +310,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     )
 
     find_package(Cairo REQUIRED)
+    find_package(Boost REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
@@ -313,6 +323,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
