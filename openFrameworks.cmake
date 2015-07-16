@@ -138,9 +138,9 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/glfw/include"
     "${OF_ROOT_DIR}/src/glfw/include/GLFW"
 
-    "${OF_ROOT_DIR}/src/kiss"
-    "${OF_ROOT_DIR}/src/kiss/src"
-    "${OF_ROOT_DIR}/src/kiss/tools"
+    "${OF_ROOT_DIR}/src/kissfft"
+    "${OF_ROOT_DIR}/src/kissfft/src"
+    "${OF_ROOT_DIR}/src/kissfft/tools"
 
     "${OF_ROOT_DIR}/src/libtess2"
     "${OF_ROOT_DIR}/src/libtess2/Include"

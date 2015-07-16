@@ -132,9 +132,9 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/glfw/include"
     "${OF_ROOT_DIR}/src/glfw/include/GLFW"
 
-    "${OF_ROOT_DIR}/src/kiss"
-    "${OF_ROOT_DIR}/src/kiss/src"
-    "${OF_ROOT_DIR}/src/kiss/tools"
+    "${OF_ROOT_DIR}/src/kissfft"
+    "${OF_ROOT_DIR}/src/kissfft/src"
+    "${OF_ROOT_DIR}/src/kissfft/tools"
 
     "${OF_ROOT_DIR}/src/libtess2"
     "${OF_ROOT_DIR}/src/libtess2/Include"
@@ -554,13 +554,13 @@ endif()
 
 #// Build commands /////////////////////////////////////////////////////////////
 
-add_subdirectory(src/rtaudio)
 add_subdirectory(src/freeimage)
 add_subdirectory(src/glew)
 add_subdirectory(src/glfw)
-add_subdirectory(src/kiss)
-add_subdirectory(src/poco)
+add_subdirectory(src/kissfft)
 add_subdirectory(src/libtess2)
+add_subdirectory(src/poco)
+add_subdirectory(src/rtaudio)
 
 add_library(
     openFrameworks STATIC

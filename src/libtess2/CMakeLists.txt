@@ -7,7 +7,9 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-set(CMAKE_C_FLAGS_DEBUG "-g -fPIC")
+if(UNIX)
+add_definitions(-fPIC)
+endif()
 
 include_directories(Include)
 

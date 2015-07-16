@@ -38,19 +38,14 @@ setup openFrameworks d292ad5 https://github.com/openframeworks/openFrameworks
 # v 1.0.1 master
 setup libtess2 24e4bdd https://github.com/memononen/libtess2
 
-# v latest master
+# v none master
 setup videoInput 874840a https://github.com/ofTheo/videoInput
 
-if [ ! -f kiss_fft130.tar.gz ]; then
-  wget http://downloads.sourceforge.net/project/kissfft/kissfft/v1_3_0/kiss_fft130.tar.gz
-fi
-
-rm  -rf kiss
-tar -xf kiss_fft130.tar.gz
-mv      kiss_fft130 kiss
+# v 1.3.0 release
+setup kissfft 7d00183 https://github.com/itdaniher/kissfft
 
 cp      "$OF/dev/add/libtess2/CMakeLists.txt" libtess2
-cp      "$OF/dev/add/kiss/CMakeLists.txt"     kiss
+cp      "$OF/dev/add/kissfft/CMakeLists.txt"  kissfft
 
 rm  -rf videoinput
 mkdir   videoinput
