@@ -83,6 +83,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
   set(OF_ENABLE_VIDEO ON CACHE BOOL
      "Enable video features of openFrameworks on Linux")
 
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+
+  set(OF_ENABLE_AUDIO ON)
+  set(OF_ENABLE_VIDEO ON)
+
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
   set(OF_ENABLE_CONSOLE OFF CACHE BOOL

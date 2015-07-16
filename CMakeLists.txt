@@ -77,14 +77,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
-  set(OF_ENABLE_AUDIO ON CACHE BOOL
-     "Compile audio features of openFrameworks on OSX")
-
-  set(OF_ENABLE_VIDEO ON CACHE BOOL
-     "Compile video features of openFrameworks on OSX")
-
   set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL
      "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
+
+  set(OF_ENABLE_AUDIO ON)
+  set(OF_ENABLE_VIDEO ON)
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
