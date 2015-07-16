@@ -531,23 +531,14 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
-
-message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
-message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
-
 if(CMAKE_SYSTEM MATCHES Linux)
 message(STATUS "OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
 message(STATUS "OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
 endif()
 
-if(CMAKE_BUILD_TYPE MATCHES Release)
-message(STATUS "CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
-message(STATUS "CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
-elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-message(STATUS "CMAKE_C_FLAGS_DEBUG: "     ${CMAKE_C_FLAGS_DEBUG})
-message(STATUS "CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
-endif()
+message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
+message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
+message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
 #// Build commands /////////////////////////////////////////////////////////////
 
