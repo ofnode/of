@@ -75,7 +75,7 @@
  else(POCO_STATIC)
      set( LIB_MODE SHARED )
      message(STATUS "Building dynamic libraries")
-@@ -279,16 +279,6 @@
+@@ -279,60 +279,3 @@
  endif()
  
  #############################################################
@@ -89,9 +89,53 @@
 -  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 -
 -#############################################################
- # Enable packaging
- 
- include(InstallRequiredSystemLibraries)
+-# Enable packaging
+-
+-include(InstallRequiredSystemLibraries)
+-
+-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Poco Libraries")
+-set(CPACK_PACKAGE_VENDOR "Applied Informatics Software Engineering GmbH")
+-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
+-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+-set(CPACK_PACKAGE_INSTALL_DIRECTORY "/usr/local")
+-
+-include(CPack)
+-
+-#############################################################
+-# cmake config files 
+-
+-include(CMakePackageConfigHelpers)
+-write_basic_package_version_file(
+-  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}ConfigVersion.cmake"
+-  VERSION ${PROJECT_VERSION}
+-  COMPATIBILITY AnyNewerVersion
+-)
+-
+-configure_file(cmake/${PROJECT_NAME}Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" @ONLY)
+-install(
+-    FILES
+-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake
+-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}ConfigVersion.cmake
+-    DESTINATION
+-        "lib/cmake/${PROJECT_NAME}"
+-    COMPONENT
+-        Devel
+-)
+-
+-# in tree build settings
+-#configure_file(PocoBuildTreeSettings.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/PocoBuildTreeSettings.cmake @ONLY)
+-
+-
+-message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
+-message(STATUS "Installation target path: ${CMAKE_INSTALL_PREFIX}")
+-
+-message(STATUS "C_FLAGS:  =${CMAKE_C_FLAGS}")
+-message(STATUS "CXX_FLAGS:=${CMAKE_CXX_FLAGS}")
+-
+-foreach(component ${Poco_COMPONENTS})
+-message(STATUS "Building: ${component}")
+-endforeach()
+-
 --- a/cmake/PocoMacros.cmake
 +++ b/cmake/PocoMacros.cmake
 @@ -24,13 +24,6 @@
