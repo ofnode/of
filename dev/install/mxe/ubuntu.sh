@@ -19,6 +19,7 @@ cd /opt/mxe
 sudo make MXE_TARGETS=x86_64-w64-mingw32.shared \
 mingw-w64   \
 winpthreads \
+boost       \
 cairo       \
 openssl     \
 freetype    \
