@@ -11,6 +11,7 @@
 # C:\msys64\usr\include
 # C:\msys64\mingw64\bin
 # C:\msys64\mingw64\lib
+# C:\msys64\mingw64\msvc
 # C:\msys64\mingw64\include
 # C:\msys64\mingw64\include\AL
 # C:\msys64\mingw64\include\cairo
@@ -24,20 +25,21 @@
 # Run the commands below from MSYS2 Shell:
 
 yes | pacman -Sy --needed   \
-mingw-w64-x86_64-pkg-config \
-mingw-w64-x86_64-ninja      \
+mingw-w64-x86_64-gcc        \
 mingw-w64-x86_64-zlib       \
+mingw-w64-x86_64-tools      \
 mingw-w64-x86_64-bzip2      \
-mingw-w64-x86_64-libiconv   \
+mingw-w64-x86_64-ninja      \
+mingw-w64-x86_64-boost      \
 mingw-w64-x86_64-cairo      \
-mingw-w64-x86_64-openssl    \
-mingw-w64-x86_64-freetype   \
-mingw-w64-x86_64-fontconfig \
 mingw-w64-x86_64-mpg123     \
 mingw-w64-x86_64-openal     \
 mingw-w64-x86_64-assimp     \
 mingw-w64-x86_64-opencv     \
 mingw-w64-x86_64-libusb     \
+mingw-w64-x86_64-openssl    \
+mingw-w64-x86_64-libiconv   \
+mingw-w64-x86_64-freetype   \
 mingw-w64-x86_64-libsndfile \
-mingw-w64-x86_64-boost      \
-mingw-w64-x86_64-gcc
+mingw-w64-x86_64-fontconfig \
+mingw-w64-x86_64-pkg-config
