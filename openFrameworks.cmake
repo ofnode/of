@@ -19,13 +19,11 @@ else()
     set(RELEASE_FLAGS "
       ${RELEASE_FLAGS}
         -g
-        -Wno-conversion-null
     ")
 
     set(DEBUG_FLAGS "
       ${DEBUG_FLAGS}
         -Winline
-        -Wno-conversion-null
         -fno-omit-frame-pointer
         -fno-optimize-sibling-calls
     ")

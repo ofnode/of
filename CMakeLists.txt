@@ -18,14 +18,12 @@ else()
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
     set(RELEASE_FLAGS "
-        -Wno-conversion-null
         -Wno-deprecated-declarations
     ")
 
     set(DEBUG_FLAGS "
         -fno-omit-frame-pointer
         -fno-optimize-sibling-calls
-        -Wno-conversion-null
         -Wno-deprecated-declarations
     ")
 
