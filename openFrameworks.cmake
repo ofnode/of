@@ -70,7 +70,7 @@ endif()
 
 #// Options ////////////////////////////////////////////////////////////////////
 
-set(OF_ENABLE_COTIRE ON CACHE BOOL
+set(OF_ENABLE_COTIRE OFF CACHE BOOL
    "Enable Cotire header precompiler")
 
 if(CMAKE_SYSTEM MATCHES Linux)
