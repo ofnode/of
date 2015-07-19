@@ -39,7 +39,7 @@ setup openFrameworks d292ad5 https://github.com/openframeworks/openFrameworks
 setup libtess2 24e4bdd https://github.com/memononen/libtess2
 
 # v none master
-setup videoInput 874840a https://github.com/ofTheo/videoInput
+setup videoInput 3815d73 https://github.com/ofTheo/videoInput
 
 # v 1.3.0 release
 setup kissfft 7d00183 https://github.com/itdaniher/kissfft
