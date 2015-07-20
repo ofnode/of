@@ -373,21 +373,21 @@ set(OPENEXR_SOURCES
 find_package(ZLIB REQUIRED)
 
 include_directories(
-  ${ZLIB_INCLUDE_DIRS}
-  ${PROJECT_SOURCE_DIR}
-  ${PROJECT_SOURCE_DIR}/DeprecationManager
-  ${PROJECT_SOURCE_DIR}/LibJPEG
-  ${PROJECT_SOURCE_DIR}/LibOpenJPEG
-  ${PROJECT_SOURCE_DIR}/LibPNG
-  ${PROJECT_SOURCE_DIR}/LibRawLite
-  ${PROJECT_SOURCE_DIR}/LibTIFF4
-  ${PROJECT_SOURCE_DIR}/LibWebP
-  ${PROJECT_SOURCE_DIR}/OpenEXR
-  ${PROJECT_SOURCE_DIR}/OpenEXR/Half
-  ${PROJECT_SOURCE_DIR}/OpenEXR/Iex
-  ${PROJECT_SOURCE_DIR}/OpenEXR/IlmImf
-  ${PROJECT_SOURCE_DIR}/OpenEXR/IlmThread
-  ${PROJECT_SOURCE_DIR}/OpenEXR/Imath
+  "${ZLIB_INCLUDE_DIRS}"
+  "${PROJECT_SOURCE_DIR}"
+  "${PROJECT_SOURCE_DIR}/DeprecationManager"
+  "${PROJECT_SOURCE_DIR}/LibJPEG"
+  "${PROJECT_SOURCE_DIR}/LibOpenJPEG"
+  "${PROJECT_SOURCE_DIR}/LibPNG"
+  "${PROJECT_SOURCE_DIR}/LibRawLite"
+  "${PROJECT_SOURCE_DIR}/LibTIFF4"
+  "${PROJECT_SOURCE_DIR}/LibWebP"
+  "${PROJECT_SOURCE_DIR}/OpenEXR"
+  "${PROJECT_SOURCE_DIR}/OpenEXR/Half"
+  "${PROJECT_SOURCE_DIR}/OpenEXR/Iex"
+  "${PROJECT_SOURCE_DIR}/OpenEXR/IlmImf"
+  "${PROJECT_SOURCE_DIR}/OpenEXR/IlmThread"
+  "${PROJECT_SOURCE_DIR}/OpenEXR/Imath"
 )
 
 add_definitions(
@@ -411,7 +411,7 @@ add_definitions(-DWINVER=0x0500)
 endif()
 
 if(MSVC)
-include_directories(${PROJECT_SOURCE_DIR}/msvc)
+include_directories("${PROJECT_SOURCE_DIR}/msvc")
 endif()
 
 add_library(

@@ -406,7 +406,7 @@ bool ofSerial::setup(string portName, int baud){
 		// now try the settings:
 		COMMCONFIG cfg;
 		DWORD cfgSize;
-		TBYTE buf[80];
+		WCHAR buf[80];
 
 		cfgSize=sizeof(cfg);
 		GetCommConfig(hComm,&cfg,&cfgSize);

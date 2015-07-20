@@ -393,11 +393,9 @@ ofFileDialogResult ofSystemLoadDialog(string windowTitle, bool bFolderSelection,
 
 		ofn.lpstrFilter = L"All\0";
 		ofn.lpstrFile = szFileName;
-
 		ofn.nMaxFile = MAX_PATH;
 		ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
 		ofn.lpstrDefExt = 0;
-
 		ofn.lpstrTitle = windowTitleW.c_str();
 
 		if(GetOpenFileName(&ofn)) {
