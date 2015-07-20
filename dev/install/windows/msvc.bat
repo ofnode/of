@@ -15,6 +15,7 @@ call :genlib  libbz2-1                  bz2
 call :genlib  zlib1                     zlib
 call :genlib  libcairo-2                cairo
 call :genlib  libassimp                 assimp
+call :genlib  libmpg123-0               mpg123
 call :genlib  libintl-8                 libintl
 call :genlib  libsndfile-1              sndfile
 call :genlib  libusb-1.0                usb-1.0

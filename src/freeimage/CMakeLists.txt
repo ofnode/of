@@ -411,7 +411,7 @@ add_definitions(-DWINVER=0x0500)
 endif()
 
 if(MSVC)
-add_definitions(-DZ_SOLO)
+include_directories(${PROJECT_SOURCE_DIR}/msvc)
 endif()
 
 add_library(

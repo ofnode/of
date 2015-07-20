@@ -565,7 +565,7 @@ string ofFile::getAbsolutePath() const {
 bool ofFile::canRead() const {
 	auto perm = std::filesystem::status(myFile).permissions();
 #ifdef TARGET_WIN32
-	DWORD attr = GetFileAttributes((LPSTR)myFile.native().c_str());
+	DWORD attr = GetFileAttributes(myFile.native().c_str());
 	if (attr == INVALID_FILE_ATTRIBUTES)
 	{
 		return false;
@@ -588,7 +588,7 @@ bool ofFile::canRead() const {
 bool ofFile::canWrite() const {
 	auto perm = std::filesystem::status(myFile).permissions();
 #ifdef TARGET_WIN32
-	DWORD attr = GetFileAttributes((LPSTR)myFile.native().c_str());
+	DWORD attr = GetFileAttributes(myFile.native().c_str());
 	if (attr == INVALID_FILE_ATTRIBUTES){
 		return false;
 	}else{
