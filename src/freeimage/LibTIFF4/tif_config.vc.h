@@ -47,8 +47,9 @@
 /* Set the native cpu bit order */
 #define HOST_FILLORDER FILLORDER_LSB2MSB
 
-#if _MSC_VER < 1900
-# define snprintf _snprintf
+/* Visual Studio 2015 / VC 14 / MSVC 19.00 finally has snprintf() */
+#if defined(_MSC_VER) && _MSC_VER < 1900
+#define snprintf _snprintf
 #endif
 
 /* Define to 1 if your processor stores words with the most significant byte

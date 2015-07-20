@@ -17,6 +17,7 @@
 #include "Poco/EventLogChannel.h"
 #include "Poco/Message.h"
 #include "Poco/String.h"
+#include "pocomsg.h"
 #if defined(POCO_WIN32_UTF8)
 #include "Poco/UnicodeConverter.h"
 #endif

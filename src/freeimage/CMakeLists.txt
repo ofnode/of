@@ -15,6 +15,8 @@ set(FREEIMAGE_SOURCES
   FreeImage/Conversion8.cpp
   FreeImage/ConversionFloat.cpp
   FreeImage/ConversionRGB16.cpp
+  FreeImage/ConversionRGBA16.cpp
+  FreeImage/ConversionRGBAF.cpp
   FreeImage/ConversionRGBF.cpp
   FreeImage/ConversionType.cpp
   FreeImage/ConversionUINT16.cpp
@@ -23,6 +25,7 @@ set(FREEIMAGE_SOURCES
   FreeImage/GetType.cpp
   FreeImage/Halftoning.cpp
   FreeImage/J2KHelper.cpp
+  FreeImage/LFPQuantizer.cpp
   FreeImage/MemoryIO.cpp
   FreeImage/MNGHelper.cpp
   FreeImage/MultiPage.cpp
@@ -234,63 +237,76 @@ set(LIBTIFF_SOURCES
 )
 
 set(LIBWEBP_SOURCES
-  LibWebP/src/dec/dec_alpha.c
-  LibWebP/src/dec/dec_buffer.c
-  LibWebP/src/dec/dec_frame.c
-  LibWebP/src/dec/dec_idec.c
-  LibWebP/src/dec/dec_io.c
-  LibWebP/src/dec/dec_layer.c
-  LibWebP/src/dec/dec_quant.c
-  LibWebP/src/dec/dec_tree.c
-  LibWebP/src/dec/dec_vp8.c
-  LibWebP/src/dec/dec_vp8l.c
-  LibWebP/src/dec/dec_webp.c
-  LibWebP/src/dsp/cpu.c
-  LibWebP/src/dsp/dec.c
-  LibWebP/src/dsp/dec_clip_tables.c
-  LibWebP/src/dsp/dec_neon.c
-  LibWebP/src/dsp/dec_sse2.c
-  LibWebP/src/dsp/enc.c
-  LibWebP/src/dsp/enc_neon.c
-  LibWebP/src/dsp/enc_sse2.c
-  LibWebP/src/dsp/lossless.c
-  LibWebP/src/dsp/upsampling.c
-  LibWebP/src/dsp/upsampling_neon.c
-  LibWebP/src/dsp/upsampling_sse2.c
-  LibWebP/src/dsp/yuv.c
-  LibWebP/src/enc/enc_alpha.c
-  LibWebP/src/enc/enc_analysis.c
-  LibWebP/src/enc/enc_backward_references.c
-  LibWebP/src/enc/enc_config.c
-  LibWebP/src/enc/enc_cost.c
-  LibWebP/src/enc/enc_filter.c
-  LibWebP/src/enc/enc_frame.c
-  LibWebP/src/enc/enc_histogram.c
-  LibWebP/src/enc/enc_iterator.c
-  LibWebP/src/enc/enc_layer.c
-  LibWebP/src/enc/enc_picture.c
-  LibWebP/src/enc/enc_quant.c
-  LibWebP/src/enc/enc_syntax.c
-  LibWebP/src/enc/enc_tree.c
-  LibWebP/src/enc/enc_vp8l.c
-  LibWebP/src/enc/enc_webpenc.c
-  LibWebP/src/enc/token.c
-  LibWebP/src/mux/muxedit.c
-  LibWebP/src/mux/muxinternal.c
-  LibWebP/src/mux/muxread.c
-  LibWebP/src/utils/alpha_processing.c
-  LibWebP/src/utils/bit_reader.c
-  LibWebP/src/utils/bit_writer.c
-  LibWebP/src/utils/color_cache.c
-  LibWebP/src/utils/filters.c
-  LibWebP/src/utils/huffman.c
-  LibWebP/src/utils/huffman_encode.c
-  LibWebP/src/utils/quant_levels.c
-  LibWebP/src/utils/quant_levels_dec.c
-  LibWebP/src/utils/random.c
-  LibWebP/src/utils/rescaler.c
-  LibWebP/src/utils/thread.c
-  LibWebP/src/utils/utils.c
+  LibWebP/src/dec/dec.alpha.c
+  LibWebP/src/dec/dec.buffer.c
+  LibWebP/src/dec/dec.frame.c
+  LibWebP/src/dec/dec.idec.c
+  LibWebP/src/dec/dec.io.c
+  LibWebP/src/dec/dec.quant.c
+  LibWebP/src/dec/dec.tree.c
+  LibWebP/src/dec/dec.vp8.c
+  LibWebP/src/dec/dec.vp8l.c
+  LibWebP/src/dec/dec.webp.c
+  LibWebP/src/demux/demux.demux.c
+  LibWebP/src/dsp/dsp.alpha_processing.c
+  LibWebP/src/dsp/dsp.alpha_processing_sse2.c
+  LibWebP/src/dsp/dsp.argb.c
+  LibWebP/src/dsp/dsp.argb_sse2.c
+  LibWebP/src/dsp/dsp.cost.c
+  LibWebP/src/dsp/dsp.cost_sse2.c
+  LibWebP/src/dsp/dsp.cpu.c
+  LibWebP/src/dsp/dsp.dec.c
+  LibWebP/src/dsp/dsp.dec_clip_tables.c
+  LibWebP/src/dsp/dsp.dec_sse2.c
+  LibWebP/src/dsp/dsp.enc_avx2.c
+  LibWebP/src/dsp/dsp.enc.c
+  LibWebP/src/dsp/dsp.enc_sse2.c
+  LibWebP/src/dsp/dsp.filters.c
+  LibWebP/src/dsp/dsp.filters_sse2.c
+  LibWebP/src/dsp/dsp.lossless.c
+  LibWebP/src/dsp/dsp.lossless_sse2.c
+  LibWebP/src/dsp/dsp.rescaler.c
+  LibWebP/src/dsp/dsp.upsampling.c
+  LibWebP/src/dsp/dsp.upsampling_sse2.c
+  LibWebP/src/dsp/dsp.yuv.c
+  LibWebP/src/dsp/dsp.yuv_sse2.c
+  LibWebP/src/enc/enc.alpha.c
+  LibWebP/src/enc/enc.analysis.c
+  LibWebP/src/enc/enc.backward_references.c
+  LibWebP/src/enc/enc.config.c
+  LibWebP/src/enc/enc.cost.c
+  LibWebP/src/enc/enc.filter.c
+  LibWebP/src/enc/enc.frame.c
+  LibWebP/src/enc/enc.histogram.c
+  LibWebP/src/enc/enc.iterator.c
+  LibWebP/src/enc/enc.near_lossless.c
+  LibWebP/src/enc/enc.picture.c
+  LibWebP/src/enc/enc.picture_csp.c
+  LibWebP/src/enc/enc.picture_psnr.c
+  LibWebP/src/enc/enc.picture_rescale.c
+  LibWebP/src/enc/enc.picture_tools.c
+  LibWebP/src/enc/enc.quant.c
+  LibWebP/src/enc/enc.syntax.c
+  LibWebP/src/enc/enc.token.c
+  LibWebP/src/enc/enc.tree.c
+  LibWebP/src/enc/enc.vp8l.c
+  LibWebP/src/enc/enc.webpenc.c
+  LibWebP/src/mux/mux.anim_encode.c
+  LibWebP/src/mux/mux.muxedit.c
+  LibWebP/src/mux/mux.muxinternal.c
+  LibWebP/src/mux/mux.muxread.c
+  LibWebP/src/utils/utils.bit_reader.c
+  LibWebP/src/utils/utils.bit_writer.c
+  LibWebP/src/utils/utils.color_cache.c
+  LibWebP/src/utils/utils.filters.c
+  LibWebP/src/utils/utils.huffman.c
+  LibWebP/src/utils/utils.huffman_encode.c
+  LibWebP/src/utils/utils.quant_levels.c
+  LibWebP/src/utils/utils.quant_levels_dec.c
+  LibWebP/src/utils/utils.random.c
+  LibWebP/src/utils/utils.rescaler.c
+  LibWebP/src/utils/utils.thread.c
+  LibWebP/src/utils/utils.utils.c
 )
 
 set(OPENEXR_SOURCES
@@ -299,6 +315,8 @@ set(OPENEXR_SOURCES
   OpenEXR/Half/half.cpp
   OpenEXR/Iex/IexBaseExc.cpp
   OpenEXR/Iex/IexThrowErrnoExc.cpp
+  OpenEXR/IexMath/IexMathFloatExc.cpp
+  OpenEXR/IexMath/IexMathFpu.cpp
   OpenEXR/IlmImf/ImfAttribute.cpp
   OpenEXR/IlmImf/ImfB44Compressor.cpp
   OpenEXR/IlmImf/ImfBoxAttribute.cpp
@@ -306,19 +324,38 @@ set(OPENEXR_SOURCES
   OpenEXR/IlmImf/ImfChannelListAttribute.cpp
   OpenEXR/IlmImf/ImfChromaticities.cpp
   OpenEXR/IlmImf/ImfChromaticitiesAttribute.cpp
+  OpenEXR/IlmImf/ImfCompositeDeepScanLine.cpp
   OpenEXR/IlmImf/ImfCompressionAttribute.cpp
   OpenEXR/IlmImf/ImfCompressor.cpp
   OpenEXR/IlmImf/ImfConvert.cpp
+  OpenEXR/IlmImf/ImfDeepCompositing.cpp
+  OpenEXR/IlmImf/ImfDeepFrameBuffer.cpp
+  OpenEXR/IlmImf/ImfDeepImageStateAttribute.cpp
+  OpenEXR/IlmImf/ImfDeepScanLineInputFile.cpp
+  OpenEXR/IlmImf/ImfDeepScanLineInputPart.cpp
+  OpenEXR/IlmImf/ImfDeepScanLineOutputFile.cpp
+  OpenEXR/IlmImf/ImfDeepScanLineOutputPart.cpp
+  OpenEXR/IlmImf/ImfDeepTiledInputFile.cpp
+  OpenEXR/IlmImf/ImfDeepTiledInputPart.cpp
+  OpenEXR/IlmImf/ImfDeepTiledOutputFile.cpp
+  OpenEXR/IlmImf/ImfDeepTiledOutputPart.cpp
   OpenEXR/IlmImf/ImfCRgbaFile.cpp
   OpenEXR/IlmImf/ImfDoubleAttribute.cpp
+  OpenEXR/IlmImf/ImfDwaCompressor.cpp
   OpenEXR/IlmImf/ImfEnvmap.cpp
   OpenEXR/IlmImf/ImfEnvmapAttribute.cpp
+  OpenEXR/IlmImf/ImfFastHuf.cpp
   OpenEXR/IlmImf/ImfFloatAttribute.cpp
+  OpenEXR/IlmImf/ImfFloatVectorAttribute.cpp
   OpenEXR/IlmImf/ImfFrameBuffer.cpp
   OpenEXR/IlmImf/ImfFramesPerSecond.cpp
+  OpenEXR/IlmImf/ImfGenericInputFile.cpp
+  OpenEXR/IlmImf/ImfGenericOutputFile.cpp
   OpenEXR/IlmImf/ImfHeader.cpp
   OpenEXR/IlmImf/ImfHuf.cpp
   OpenEXR/IlmImf/ImfInputFile.cpp
+  OpenEXR/IlmImf/ImfInputPart.cpp
+  OpenEXR/IlmImf/ImfInputPartData.cpp
   OpenEXR/IlmImf/ImfIntAttribute.cpp
   OpenEXR/IlmImf/ImfIO.cpp
   OpenEXR/IlmImf/ImfKeyCode.cpp
@@ -327,8 +364,13 @@ set(OPENEXR_SOURCES
   OpenEXR/IlmImf/ImfLut.cpp
   OpenEXR/IlmImf/ImfMatrixAttribute.cpp
   OpenEXR/IlmImf/ImfMisc.cpp
+  OpenEXR/IlmImf/ImfMultiPartInputFile.cpp
+  OpenEXR/IlmImf/ImfMultiPartOutputFile.cpp
   OpenEXR/IlmImf/ImfOpaqueAttribute.cpp
   OpenEXR/IlmImf/ImfOutputFile.cpp
+  OpenEXR/IlmImf/ImfOutputPart.cpp
+  OpenEXR/IlmImf/ImfOutputPartData.cpp
+  OpenEXR/IlmImf/ImfPartType.cpp
   OpenEXR/IlmImf/ImfPizCompressor.cpp
   OpenEXR/IlmImf/ImfPreviewImage.cpp
   OpenEXR/IlmImf/ImfPreviewImageAttribute.cpp
@@ -337,18 +379,22 @@ set(OPENEXR_SOURCES
   OpenEXR/IlmImf/ImfRationalAttribute.cpp
   OpenEXR/IlmImf/ImfRgbaFile.cpp
   OpenEXR/IlmImf/ImfRgbaYca.cpp
+  OpenEXR/IlmImf/ImfRle.cpp
   OpenEXR/IlmImf/ImfRleCompressor.cpp
   OpenEXR/IlmImf/ImfScanLineInputFile.cpp
   OpenEXR/IlmImf/ImfStandardAttributes.cpp
   OpenEXR/IlmImf/ImfStdIO.cpp
   OpenEXR/IlmImf/ImfStringAttribute.cpp
   OpenEXR/IlmImf/ImfStringVectorAttribute.cpp
+  OpenEXR/IlmImf/ImfSystemSpecific.cpp
   OpenEXR/IlmImf/ImfTestFile.cpp
   OpenEXR/IlmImf/ImfThreading.cpp
   OpenEXR/IlmImf/ImfTileDescriptionAttribute.cpp
   OpenEXR/IlmImf/ImfTiledInputFile.cpp
+  OpenEXR/IlmImf/ImfTiledInputPart.cpp
   OpenEXR/IlmImf/ImfTiledMisc.cpp
   OpenEXR/IlmImf/ImfTiledOutputFile.cpp
+  OpenEXR/IlmImf/ImfTiledOutputPart.cpp
   OpenEXR/IlmImf/ImfTiledRgbaFile.cpp
   OpenEXR/IlmImf/ImfTileOffsets.cpp
   OpenEXR/IlmImf/ImfTimeCode.cpp
@@ -356,6 +402,7 @@ set(OPENEXR_SOURCES
   OpenEXR/IlmImf/ImfVecAttribute.cpp
   OpenEXR/IlmImf/ImfVersion.cpp
   OpenEXR/IlmImf/ImfWav.cpp
+  OpenEXR/IlmImf/ImfZip.cpp
   OpenEXR/IlmImf/ImfZipCompressor.cpp
   OpenEXR/IlmThread/IlmThread.cpp
   OpenEXR/IlmThread/IlmThreadMutex.cpp
@@ -385,6 +432,7 @@ include_directories(
   "${PROJECT_SOURCE_DIR}/OpenEXR"
   "${PROJECT_SOURCE_DIR}/OpenEXR/Half"
   "${PROJECT_SOURCE_DIR}/OpenEXR/Iex"
+  "${PROJECT_SOURCE_DIR}/OpenEXR/IexMath"
   "${PROJECT_SOURCE_DIR}/OpenEXR/IlmImf"
   "${PROJECT_SOURCE_DIR}/OpenEXR/IlmThread"
   "${PROJECT_SOURCE_DIR}/OpenEXR/Imath"

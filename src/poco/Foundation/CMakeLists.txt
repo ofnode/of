@@ -32,6 +32,9 @@ POCO_SOURCES_AUTO_PLAT( SRCS WIN32
 	)
 endif()
 
+# Messages
+POCO_MESSAGES( SRCS Logging src/pocomsg.mc)
+
 # If POCO_UNBUNDLED is enabled we try to find the required packages
 # The configuration will fail if the packages are not found
 if (POCO_UNBUNDLED)
@@ -96,17 +99,6 @@ endif (POCO_UNBUNDLED)
 
 if(WIN32)
 	set(SYSLIBS ${SYSLIBS} iphlpapi)
-	add_definitions(
-		-DPOCO_CTG_FATAL=0x00000001L
-		-DPOCO_CTG_CRITICAL=0x00000002L
-		-DPOCO_CTG_ERROR=0x00000003L
-		-DPOCO_CTG_WARNING=0x00000004L
-		-DPOCO_CTG_NOTICE=0x00000005L
-		-DPOCO_CTG_INFORMATION=0x00000006L
-		-DPOCO_CTG_DEBUG=0x00000007L
-		-DPOCO_CTG_TRACE=0x00000008L
-		-DPOCO_MSG_LOG=0x00001000L
-	)
 endif(WIN32)
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "SunPro")
 	set_target_properties( "${LIBNAME}" PROPERTIES LINK_FLAGS "-library=stlport4")

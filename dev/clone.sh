@@ -17,8 +17,8 @@ function setup() {
 mkdir -p src
 cd src
 
-# v 3.16.0 release
-setup freeimage 759f6ba https://github.com/ofnode/freeimage
+# v 3.17.0 release
+setup freeimage bac8fd9 https://github.com/ofnode/freeimage
 
 # v 1.11.0 release
 setup glew 4c7a8db https://github.com/ofnode/glew

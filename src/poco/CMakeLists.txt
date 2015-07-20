@@ -8,7 +8,7 @@
 
 project(Poco)
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0.0)
 
 file(STRINGS "${PROJECT_SOURCE_DIR}/libversion" SHARED_LIBRARY_VERSION)
 
@@ -22,6 +22,15 @@ string(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" CPACK_PACKAGE_VERSION_
 set(COMPLETE_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
 set(RELEASE_NAME "Unstable-trunk")
 set(PROJECT_VERSION ${COMPLETE_VERSION})
+
+# Put the libaries and binaries that get built into directories at the
+# top of the build tree rather than in hard-to-find leaf
+# directories. This simplifies manual testing and the use of the build
+# tree rather than installed Boost libraries.
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+# Windows DLLs are "runtime" for CMake. Output them to "bin" like the Visual Studio projects do.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Append our module directory to CMake
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -54,6 +63,9 @@ endif ()
 #    * RelWithDebInfo (CMAKE_C_FLAGS_RELWITHDEBINFO or CMAKE_CXX_FLAGS_RELWITHDEBINFO
 #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL)
 
+# For Debug build types, append a "d" to the library names.
+set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Set debug library postfix" FORCE)
+
 # Include some common macros to simpilfy the Poco CMake files
 include(PocoMacros)
 
@@ -69,23 +81,23 @@ option(ENABLE_NETSSL_WIN "Enable NetSSL Windows" OFF)
 option(ENABLE_CRYPTO "Enable Crypto" ON)
 option(ENABLE_DATA "Enable Data" ON)
 option(ENABLE_DATA_SQLITE "Enable Data SQlite" ON)
-option(ENABLE_DATA_MYSQL "Enable Data MySQL" OFF)
-option(ENABLE_DATA_ODBC "Enable Data ODBC" OFF)
+option(ENABLE_DATA_MYSQL "Enable Data MySQL" ON)
+option(ENABLE_DATA_ODBC "Enable Data ODBC" ON)
 option(ENABLE_SEVENZIP "Enable SevenZip" OFF)
 option(ENABLE_ZIP "Enable Zip" ON)
 option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
 option(ENABLE_CPPPARSER "Enable C++ parser" OFF)
 option(ENABLE_POCODOC "Enable Poco Documentation Generator" OFF)
-option(ENABLE_PAGECOMPILER "Enable PageCompiler" OFF)
-option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" OFF)
+option(ENABLE_PAGECOMPILER "Enable PageCompiler" ON)
+option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" ON)
 
-option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" ON)
+option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
 
 option(ENABLE_TESTS
   "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
 
 option(POCO_STATIC
-  "Set to OFF|ON (default is ON) to control build of POCO as STATIC library" ON)
+  "Set to OFF|ON (default is OFF) to control build of POCO as STATIC library" OFF)
 
 option(POCO_UNBUNDLED
   "Set to OFF|ON (default is OFF) to control linking dependencies as external" OFF)
@@ -95,9 +107,6 @@ if(POCO_STATIC)
     add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
     set( LIB_MODE STATIC )
     message(STATUS "Building static libraries")
-    if( UNIX )
-        add_definitions( -fPIC )
-    endif()
 else(POCO_STATIC)
     set( LIB_MODE SHARED )
     message(STATUS "Building dynamic libraries")
@@ -270,3 +279,60 @@ list(APPEND Poco_COMPONENTS "File2Page")
 endif()
 
 #############################################################
+# Uninstall stuff see: http://www.vtk.org/Wiki/CMake_FAQ
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+  IMMEDIATE @ONLY)
+
+add_custom_target(uninstall
+  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+
+#############################################################
+# Enable packaging
+
+include(InstallRequiredSystemLibraries)
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Poco Libraries")
+set(CPACK_PACKAGE_VENDOR "Applied Informatics Software Engineering GmbH")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "/usr/local")
+
+include(CPack)
+
+#############################################################
+# cmake config files 
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+configure_file(cmake/${PROJECT_NAME}Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" @ONLY)
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}ConfigVersion.cmake
+    DESTINATION
+        "lib/cmake/${PROJECT_NAME}"
+    COMPONENT
+        Devel
+)
+
+# in tree build settings
+#configure_file(PocoBuildTreeSettings.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/PocoBuildTreeSettings.cmake @ONLY)
+
+
+message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
+message(STATUS "Installation target path: ${CMAKE_INSTALL_PREFIX}")
+
+message(STATUS "C_FLAGS:  =${CMAKE_C_FLAGS}")
+message(STATUS "CXX_FLAGS:=${CMAKE_CXX_FLAGS}")
+
+foreach(component ${Poco_COMPONENTS})
+message(STATUS "Building: ${component}")
+endforeach()
+
