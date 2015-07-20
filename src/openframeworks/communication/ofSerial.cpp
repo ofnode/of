@@ -406,12 +406,12 @@ bool ofSerial::setup(string portName, int baud){
 		// now try the settings:
 		COMMCONFIG cfg;
 		DWORD cfgSize;
-		char  buf[80];
+		TBYTE buf[80];
 
 		cfgSize=sizeof(cfg);
 		GetCommConfig(hComm,&cfg,&cfgSize);
 		int bps = baud;
-		sprintf(buf,"baud=%d parity=N data=8 stop=1",bps);
+		swprintf(buf,L"baud=%d parity=N data=8 stop=1",bps);
 
 		#if (_MSC_VER)       // microsoft visual studio
 			// msvc doesn't like BuildCommDCB,
