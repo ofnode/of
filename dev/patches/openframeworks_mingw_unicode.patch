@@ -1,8 +1,6 @@
-diff --git a/src/openframeworks/communication/ofSerial.cpp b/src/openframeworks/communication/ofSerial.cpp
-index 4304701..648b852 100644
---- a/src/openframeworks/communication/ofSerial.cpp
-+++ b/src/openframeworks/communication/ofSerial.cpp
-@@ -406,12 +406,12 @@ bool ofSerial::setup(string portName, int baud){
+--- a/communication/ofSerial.cpp
++++ b/communication/ofSerial.cpp
+@@ -406,12 +406,12 @@
  		// now try the settings:
  		COMMCONFIG cfg;
  		DWORD cfgSize;
@@ -17,11 +15,9 @@ index 4304701..648b852 100644
  
  		#if (_MSC_VER)       // microsoft visual studio
  			// msvc doesn't like BuildCommDCB,
-diff --git a/src/openframeworks/utils/ofSystemUtils.cpp b/src/openframeworks/utils/ofSystemUtils.cpp
-index 9a6200f..6fa0bd6 100644
---- a/src/openframeworks/utils/ofSystemUtils.cpp
-+++ b/src/openframeworks/utils/ofSystemUtils.cpp
-@@ -374,16 +374,7 @@ ofFileDialogResult ofSystemLoadDialog(string windowTitle, bool bFolderSelection,
+--- a/utils/ofSystemUtils.cpp
++++ b/utils/ofSystemUtils.cpp
+@@ -374,16 +374,7 @@
  		ofn.lStructSize = sizeof(ofn);
  		HWND hwnd = WindowFromDC(wglGetCurrentDC());
  		ofn.hwndOwner = hwnd;
@@ -38,7 +34,7 @@ index 9a6200f..6fa0bd6 100644
  		wchar_t szFileName[MAX_PATH];
  		wchar_t szTitle[MAX_PATH];
  		if(defaultPath!=""){
-@@ -402,24 +393,15 @@ ofFileDialogResult ofSystemLoadDialog(string windowTitle, bool bFolderSelection,
+@@ -402,24 +393,15 @@
  
  		ofn.lpstrFilter = L"All\0";
  		ofn.lpstrFile = szFileName;
@@ -65,7 +61,7 @@ index 9a6200f..6fa0bd6 100644
  		}
  
  	} else {
-@@ -630,9 +612,6 @@ string ofSystemTextBoxDialog(string question, string text){
+@@ -630,9 +612,6 @@
  	WNDCLASSEX wc;
  	MSG Msg;
  
@@ -75,7 +71,7 @@ index 9a6200f..6fa0bd6 100644
          #define TMP_STR_CONVERT LPCWSTR
  
  		const LPCWSTR g_szClassName = L"myWindowClass\0";
-@@ -753,131 +732,6 @@ string ofSystemTextBoxDialog(string question, string text){
+@@ -753,131 +732,6 @@
  		 DestroyWindow(dialog);
  		 EnableWindow(WindowFromDC(wglGetCurrentDC()), TRUE);
  
@@ -207,11 +203,9 @@ index 9a6200f..6fa0bd6 100644
  #endif
  
  #ifdef TARGET_ANDROID
-diff --git a/src/openframeworks/utils/ofUtils.cpp b/src/openframeworks/utils/ofUtils.cpp
-index 031b227..c807f37 100644
---- a/src/openframeworks/utils/ofUtils.cpp
-+++ b/src/openframeworks/utils/ofUtils.cpp
-@@ -823,14 +823,8 @@ void ofLaunchBrowser(const string& url, bool uriEncodeQuery){
+--- a/utils/ofUtils.cpp
++++ b/utils/ofUtils.cpp
+@@ -823,14 +823,8 @@
  	}
  
  	#ifdef TARGET_WIN32
