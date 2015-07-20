@@ -218,7 +218,7 @@ void Context::importCertificate(const char* pBuffer, std::size_t size)
 	blob.cbData = static_cast<DWORD>(size);
 	blob.pbData = reinterpret_cast<BYTE*>(const_cast<char*>(pBuffer));
 
-	HCERTSTORE hTempStore =  PFXImportCertStore(&blob, wpassword.data(), PKCS12_ALLOW_OVERWRITE_KEY | PKCS12_INCLUDE_EXTENDED_PROPERTIES);
+	HCERTSTORE hTempStore =  PFXImportCertStore(&blob, wpassword.data(), 0x00004000/*PKCS12_ALLOW_OVERWRITE_KEY*/ | 0x0010/*PKCS12_INCLUDE_EXTENDED_PROPERTIES*/);
 	
 	// clear UTF-16 password
 	std::fill(const_cast<wchar_t*>(wpassword.data()), const_cast<wchar_t*>(wpassword.data() + password.size()), L'X');
@@ -272,7 +272,7 @@ void Context::acquireSchannelCredentials(CredHandle& credHandle) const
 	if (_pCert)
 	{
 		schannelCred.cCreds = 1; // how many cred are stored in &pCertContext
-		schannelCred.paCred = &const_cast<PCCERT_CONTEXT>(_pCert);
+		schannelCred.paCred = const_cast<PCCERT_CONTEXT*>(&_pCert);
 	}
 
 	schannelCred.grbitEnabledProtocols = proto();

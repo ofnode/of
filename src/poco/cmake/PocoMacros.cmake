@@ -24,13 +24,6 @@ if (WIN32)
       set(kit_bindir "${kit_dir}/bin/x86")
     endif (X64)
   endif ()
-  find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" "${kit_bindir}"
-    DOC "path to message compiler")
-  if (NOT CMAKE_MC_COMPILER)
-    message(FATAL_ERROR "message compiler not found: required to build")
-  endif (NOT CMAKE_MC_COMPILER)
-  message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
-  mark_as_advanced(CMAKE_MC_COMPILER)
 endif(WIN32)
 
 #===============================================================================
@@ -193,38 +186,6 @@ endmacro()
 #           target_name             the name of the target. e.g. Foundation for PocoFoundation
 #    Example: POCO_GENERATE_PACKAGE(Foundation)
 macro(POCO_GENERATE_PACKAGE target_name)
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-  "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}ConfigVersion.cmake"
-  VERSION ${PROJECT_VERSION}
-  COMPATIBILITY AnyNewerVersion
-)
-export(EXPORT "${target_name}Targets"
-  FILE "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}Targets.cmake"
-  NAMESPACE "${PROJECT_NAME}::"
-)
-configure_file("cmake/Poco${target_name}Config.cmake"
-  "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}Config.cmake"
-  @ONLY
-)
-
-set(ConfigPackageLocation "lib/cmake/${PROJECT_NAME}")
-
-install(
-    EXPORT "${target_name}Targets"
-    FILE "${PROJECT_NAME}${target_name}Targets.cmake"
-    NAMESPACE "${PROJECT_NAME}::"
-    DESTINATION "lib/cmake/${PROJECT_NAME}"
-    )
-
-install(
-    FILES
-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}Config.cmake"
-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}${target_name}ConfigVersion.cmake"
-    DESTINATION "lib/cmake/${PROJECT_NAME}"
-    COMPONENT Devel
-    )
-
 endmacro()
 
 #===============================================================================
@@ -236,18 +197,4 @@ endmacro()
 #           target_name             the name of the target. e.g. Foundation for PocoFoundation
 #    Example: POCO_INSTALL(Foundation)
 macro(POCO_INSTALL target_name)
-install(
-    DIRECTORY include/Poco
-    DESTINATION include
-    COMPONENT Devel
-    PATTERN ".svn" EXCLUDE
-    )
-
-install(
-    TARGETS "${target_name}" EXPORT "${target_name}Targets"
-    LIBRARY DESTINATION lib${LIB_SUFFIX}
-    ARCHIVE DESTINATION lib${LIB_SUFFIX}
-    RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include
-    )
 endmacro()
