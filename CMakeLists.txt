@@ -289,8 +289,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
     if(MSVC)
-        set(CMAKE_RELEASE_POSTFIX "mt")
-        set(CMAKE_DEBUG_POSTFIX "mtd")
+      set(CMAKE_RELEASE_POSTFIX "mt")
+      set(CMAKE_DEBUG_POSTFIX "mtd")
+      list(APPEND CMAKE_LIBRARY_PATH
+        "${OF_ROOT_DIR}/dev/lib/msvc"
+      )
     endif()
 
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release")

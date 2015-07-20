@@ -11,7 +11,6 @@
 # C:\msys64\usr\include
 # C:\msys64\mingw64\bin
 # C:\msys64\mingw64\lib
-# C:\msys64\mingw64\msvc
 # C:\msys64\mingw64\include
 # C:\msys64\mingw64\include\AL
 # C:\msys64\mingw64\include\cairo

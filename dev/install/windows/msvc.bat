@@ -1,12 +1,8 @@
 :: Run this batch file from VS2013 x64 Native Tools Command Prompt
 
-if not exist C:\msys64\mingw64\msvc mkdir C:\msys64\mingw64\msvc
+set MSYS=C:\msys64\mingw64\bin
 
-pushd C:\msys64\mingw64\msvc
-
-for %%i in (*.exp) do call rm %%i
-for %%i in (*.def) do call rm %%i
-for %%i in (*.lib) do call rm %%i
+pushd ..\..\lib\msvc
 
 :: ------------------------------
 
@@ -45,16 +41,17 @@ call :genlib  libopencv_videostab2411   opencv_videostab
 call :genlib  libopencv_objdetect2411   opencv_objdetect
 call :genlib  libopencv_stitching2411   opencv_stitching
 call :genlib  libopencv_features2d2411  opencv_features2d
-call :genlib  libboost_system-mt        boost_system
-call :genlib  libboost_filesystem-mt    boost_filesystem
 
 :: ------------------------------
+
+for %%i in (*.exp) do call rm %%i
+for %%i in (*.def) do call rm %%i
 
 popd
 goto :eof
 
 :genlib
-    gendef ../bin/%1.dll
+    gendef %MSYS%/%1.dll
     lib /def:%1.def /machine:x64
     call ren %1.lib %2.lib
 goto :eof

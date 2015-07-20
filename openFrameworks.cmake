@@ -563,6 +563,17 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
+    set(Boost_USE_STATIC_LIBS ON)
+
+    if(MSVC)
+      list(APPEND CMAKE_LIBRARY_PATH
+        "${OF_ROOT_DIR}/dev/lib/msvc"
+      )
+      set(MSVC_PATHS
+        "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"
+      )
+    endif()
+
     find_package(ZLIB REQUIRED)
     find_package(BZip2 REQUIRED)
     find_package(Cairo REQUIRED)
@@ -577,12 +588,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Freetype REQUIRED)
     find_package(Fontconfig REQUIRED)
     find_package(Boost COMPONENTS filesystem system REQUIRED)
-
-    if(MSVC)
-      set(MSVC_PATHS
-        "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"
-      )
-    endif()
 
     find_library(WINMM_LIB winmm PATHS ${MSVC_PATHS})
     find_library(GDI32_LIB gdi32 PATHS ${MSVC_PATHS})
