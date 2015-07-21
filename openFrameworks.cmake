@@ -563,16 +563,19 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
-    set(Boost_USE_STATIC_LIBS ON)
-
     if(MSVC)
       list(APPEND CMAKE_LIBRARY_PATH
         "${OF_ROOT_DIR}/dev/lib/msvc"
+      )
+      list(APPEND CMAKE_INCLUDE_PATH
+        "${OF_ROOT_DIR}/dev/include/msvc"
       )
       set(MSVC_PATHS
         "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"
       )
     endif()
+
+    set(Boost_USE_STATIC_LIBS ON)
 
     find_package(ZLIB REQUIRED)
     find_package(BZip2 REQUIRED)

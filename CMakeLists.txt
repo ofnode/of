@@ -291,8 +291,12 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     if(MSVC)
       set(CMAKE_RELEASE_POSTFIX "mt")
       set(CMAKE_DEBUG_POSTFIX "mtd")
+
       list(APPEND CMAKE_LIBRARY_PATH
         "${OF_ROOT_DIR}/dev/lib/msvc"
+      )
+      list(APPEND CMAKE_INCLUDE_PATH
+        "${OF_ROOT_DIR}/dev/include/msvc"
       )
     endif()
 
