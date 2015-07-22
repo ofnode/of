@@ -575,8 +575,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
       )
     endif()
 
-    set(Boost_USE_STATIC_LIBS ON)
-
     find_package(ZLIB REQUIRED)
     find_package(BZip2 REQUIRED)
     find_package(Cairo REQUIRED)
