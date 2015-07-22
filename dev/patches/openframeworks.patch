@@ -21,6 +21,19 @@
  	#define __WINDOWS_DS__
  	#define __WINDOWS_MM__
  	#if (_MSC_VER)       // microsoft visual studio
+@@ -351,10 +351,10 @@
+ // xcode has a bug where it won't support tls on some versions even
+ // on c++11, this is a workaround that bug
+ #if !defined(TARGET_OSX) && !defined(TARGET_OF_IOS)
+-	#define HAS_TLS 1
++	#define HAS_TLS 0
+ #elif __clang__
+ 	#if __has_feature(cxx_thread_local)
+-		#define HAS_TLS 1
++		#define HAS_TLS 0
+ 	#endif
+ #endif
+ 
 --- a/sound/ofOpenALSoundPlayer.h
 +++ b/sound/ofOpenALSoundPlayer.h
 @@ -19,6 +19,7 @@
@@ -29,20 +42,5 @@
  #ifdef OF_USING_MPG123
 +	#include <unistd.h>
  	#include <mpg123.h>
- #endif
- 
---- a/utils/ofConstants.h
-+++ b/utils/ofConstants.h
-@@ -351,10 +351,10 @@
- // xcode has a bug where it won't support tls on some versions even
- // on c++11, this is a workaround that bug
- #if !defined(TARGET_OSX) && !defined(TARGET_OF_IOS)
-- #define HAS_TLS 1
-+ #define HAS_TLS 0
- #elif __clang__
-  #if __has_feature(cxx_thread_local)
--   #define HAS_TLS 1
-+   #define HAS_TLS 0
-  #endif
  #endif
  
