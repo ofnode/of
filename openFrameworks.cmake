@@ -1,70 +1,52 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
-#// MSVC flags /////////////////////////////////////////////////////////////////
-
-if(MSVC)
-
-    set(RELEASE_FLAGS "
-      ${RELEASE_FLAGS}
-    ")
-
-    set(DEBUG_FLAGS "
-      ${DEBUG_FLAGS}
-    ")
-
-else()
-
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
-    set(RELEASE_FLAGS "
-      ${RELEASE_FLAGS}
-        -g
-    ")
+set(RELEASE_FLAGS "
+  ${RELEASE_FLAGS}
+    -g
+")
 
-    set(DEBUG_FLAGS "
-      ${DEBUG_FLAGS}
-        -Winline
-        -fno-omit-frame-pointer
-        -fno-optimize-sibling-calls
-    ")
+set(DEBUG_FLAGS "
+  ${DEBUG_FLAGS}
+    -Winline
+    -fno-omit-frame-pointer
+    -fno-optimize-sibling-calls
+")
 
 #// Clang specific C flags /////////////////////////////////////////////////////
 
-  if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
-    set(RELEASE_C_FLAGS_CLANG "
-      ${RELEASE_C_FLAGS_CLANG}
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+  set(RELEASE_C_FLAGS_CLANG "
+    ${RELEASE_C_FLAGS_CLANG}
+      -Wno-switch
+      -Wno-deprecated-register
+  ")
 
-    set(DEBUG_C_FLAGS_CLANG "
-      ${DEBUG_C_FLAGS_CLANG}
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+  set(DEBUG_C_FLAGS_CLANG "
+    ${DEBUG_C_FLAGS_CLANG}
+      -Wno-switch
+      -Wno-deprecated-register
+  ")
 
-  endif()
+endif()
 
 #// Clang specific C++ flags ///////////////////////////////////////////////////
 
-  if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
-    set(RELEASE_CXX_FLAGS_CLANG "
-      ${RELEASE_CXX_FLAGS_CLANG}
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+  set(RELEASE_CXX_FLAGS_CLANG "
+    ${RELEASE_CXX_FLAGS_CLANG}
+      -Wno-switch
+      -Wno-deprecated-register
+  ")
 
-    set(DEBUG_CXX_FLAGS_CLANG "
-      ${DEBUG_CXX_FLAGS_CLANG}
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
-
-  endif()
-
-#///////////////////////////////////////////////////////////////////////////////
+  set(DEBUG_CXX_FLAGS_CLANG "
+    ${DEBUG_CXX_FLAGS_CLANG}
+      -Wno-switch
+      -Wno-deprecated-register
+  ")
 
 endif()
 
@@ -168,12 +150,6 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
 if(CMAKE_SYSTEM MATCHES Windows)
 list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/videoinput"
-)
-endif()
-
-if(MSVC)
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/dev/include/msvc"
 )
 endif()
 
@@ -521,13 +497,8 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug")
     endif()
 
-    if(MSVC)
-        link_directories(${OF_LIB_DIR})
-        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.lib")
-    else()
-        set(OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
-    endif()
+    set(OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
+    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
 
     if(NOT OPENFRAMEWORKS_LIBS)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
@@ -535,45 +506,20 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     # Hide console by default
     if(NOT OF_ENABLE_CONSOLE)
-      if(MSVC)
-        set(CMAKE_EXE_LINKER_FLAGS
-         "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:windows /ENTRY:mainCRTStartup")
-      else()
-        list(APPEND OPENFRAMEWORKS_LIBRARIES
-            -mwindows
-        )
-      endif()
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -mwindows
+      )
     endif()
 
-    # If we are on Windows using MSVC
-    # we don't need GCC's link groups
-    if(MSVC)
-      set(OPENFRAMEWORKS_LIBRARIES
-        ${OPENFRAMEWORKS_LIBS}
-      )
-    else()
-      list(APPEND OPENFRAMEWORKS_LIBRARIES
-        -Wl,-Bstatic
-        -Wl,--start-group
-        ${OPENFRAMEWORKS_LIBS}
-        -Wl,--end-group
-        -Wl,-Bdynamic
-      )
-    endif()
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+      -Wl,-Bstatic
+      -Wl,--start-group
+      ${OPENFRAMEWORKS_LIBS}
+      -Wl,--end-group
+      -Wl,-Bdynamic
+    )
 
     #// Global dependencies ////////////////////////////////////////////////////
-
-    if(MSVC)
-      list(APPEND CMAKE_LIBRARY_PATH
-        "${OF_ROOT_DIR}/dev/lib/msvc"
-      )
-      list(APPEND CMAKE_INCLUDE_PATH
-        "${OF_ROOT_DIR}/dev/include/msvc"
-      )
-      set(MSVC_PATHS
-        "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"
-      )
-    endif()
 
     find_package(ZLIB REQUIRED)
     find_package(BZip2 REQUIRED)
@@ -590,14 +536,14 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Fontconfig REQUIRED)
     find_package(Boost COMPONENTS filesystem system REQUIRED)
 
-    find_library(WINMM_LIB winmm PATHS ${MSVC_PATHS})
-    find_library(GDI32_LIB gdi32 PATHS ${MSVC_PATHS})
-    find_library(DSOUND_LIB dsound PATHS ${MSVC_PATHS})
-    find_library(WS2_32_LIB ws2_32 PATHS ${MSVC_PATHS})
-    find_library(CRYPT32_LIB crypt32 PATHS ${MSVC_PATHS})
-    find_library(WSOCK32_LIB wsock32 PATHS ${MSVC_PATHS})
-    find_library(IPHLPAPI_LIB iphlpapi PATHS ${MSVC_PATHS})
-    find_library(SETUPAPI_LIB setupapi PATHS ${MSVC_PATHS})
+    find_library(WINMM_LIB winmm)
+    find_library(GDI32_LIB gdi32)
+    find_library(DSOUND_LIB dsound)
+    find_library(WS2_32_LIB ws2_32)
+    find_library(CRYPT32_LIB crypt32)
+    find_library(WSOCK32_LIB wsock32)
+    find_library(IPHLPAPI_LIB iphlpapi)
+    find_library(SETUPAPI_LIB setupapi)
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
         ${FONTCONFIG_DEFINITIONS}
@@ -657,19 +603,10 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC
 )
 
-if(MSVC OR MINGW)
+if(CMAKE_SYSTEM MATCHES Windows)
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -D_UNICODE
     -DUNICODE
-)
-endif()
-
-if(MSVC)
-list(APPEND OPENFRAMEWORKS_DEFINITIONS
-    -D_SCL_SECURE_NO_WARNINGS
-    -D_CRT_SECURE_NO_WARNINGS
-    -D_WIN32_WINNT=0x0501
-    -D_HAS_EXCEPTIONS=0
 )
 endif()
 
@@ -700,9 +637,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
 endif()
 
-if(NOT MSVC)
-    set(CPP11_FLAG -std=gnu++11)
-endif()
+set(CPP11_FLAG -std=gnu++11)
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
@@ -737,13 +672,6 @@ string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C
 
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG}")
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_CXX_FLAG}")
-
-if(MSVC)
-string(REPLACE "/MD"  "/MT"  CMAKE_C_FLAGS_RELEASE   ${CMAKE_C_FLAGS_RELEASE})
-string(REPLACE "/MDd" "/MTd" CMAKE_C_FLAGS_DEBUG     ${CMAKE_C_FLAGS_DEBUG})
-string(REPLACE "/MD"  "/MT"  CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
-string(REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG})
-endif()
 
 #// ofxAddons //////////////////////////////////////////////////////////////////
 
@@ -781,10 +709,6 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
         pkg_check_modules(ASSIMP REQUIRED assimp)
         include_directories(${ASSIMP_INCLUDE_DIRS})
-        if(MSVC)
-          # pkg-config point to a lib folder, but our lib is in bin folder
-          list(APPEND ASSIMP_LIBRARY_DIRS "${ASSIMP_LIBRARY_DIRS}/../bin")
-        endif()
         link_directories(${ASSIMP_LIBRARY_DIRS})
         set(OPENFRAMEWORKS_LIBRARIES
           ${OPENFRAMEWORKS_LIBRARIES} ${ASSIMP_LIBRARIES} PARENT_SCOPE)

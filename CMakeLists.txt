@@ -3,63 +3,47 @@ cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
-#// MSVC flags /////////////////////////////////////////////////////////////////
-
-if(MSVC)
-
-    set(RELEASE_FLAGS "
-    ")
-
-    set(DEBUG_FLAGS "
-    ")
-
-else()
-
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
-    set(RELEASE_FLAGS "
-        -Wno-deprecated-declarations
-    ")
+set(RELEASE_FLAGS "
+    -Wno-deprecated-declarations
+")
 
-    set(DEBUG_FLAGS "
-        -fno-omit-frame-pointer
-        -fno-optimize-sibling-calls
-        -Wno-deprecated-declarations
-    ")
+set(DEBUG_FLAGS "
+    -fno-omit-frame-pointer
+    -fno-optimize-sibling-calls
+    -Wno-deprecated-declarations
+")
 
 #// Clang specific C flags /////////////////////////////////////////////////////
 
-  if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
-    set(RELEASE_C_FLAGS_CLANG "
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+set(RELEASE_C_FLAGS_CLANG "
+    -Wno-switch
+    -Wno-deprecated-register
+")
 
-    set(DEBUG_C_FLAGS_CLANG "
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+set(DEBUG_C_FLAGS_CLANG "
+    -Wno-switch
+    -Wno-deprecated-register
+")
 
-  endif()
+endif()
 
 #// Clang specific C++ flags ///////////////////////////////////////////////////
 
-  if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
-    set(RELEASE_CXX_FLAGS_CLANG "
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+set(RELEASE_CXX_FLAGS_CLANG "
+    -Wno-switch
+    -Wno-deprecated-register
+")
 
-    set(DEBUG_CXX_FLAGS_CLANG "
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
-
-  endif()
-
-#///////////////////////////////////////////////////////////////////////////////
+set(DEBUG_CXX_FLAGS_CLANG "
+    -Wno-switch
+    -Wno-deprecated-register
+")
 
 endif()
 
@@ -154,12 +138,6 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
 if(CMAKE_SYSTEM MATCHES Windows)
 list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/videoinput"
-)
-endif()
-
-if(MSVC)
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/dev/include/msvc"
 )
 endif()
 
@@ -287,18 +265,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     endif()
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
-
-    if(MSVC)
-      set(CMAKE_RELEASE_POSTFIX "mt")
-      set(CMAKE_DEBUG_POSTFIX "mtd")
-
-      list(APPEND CMAKE_LIBRARY_PATH
-        "${OF_ROOT_DIR}/dev/lib/msvc"
-      )
-      list(APPEND CMAKE_INCLUDE_PATH
-        "${OF_ROOT_DIR}/dev/include/msvc"
-      )
-    endif()
 
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug")
@@ -456,19 +422,10 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC
 )
 
-if(MSVC OR MINGW)
+if(CMAKE_SYSTEM MATCHES Windows)
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -D_UNICODE
     -DUNICODE
-)
-endif()
-
-if(MSVC)
-list(APPEND OPENFRAMEWORKS_DEFINITIONS
-    -D_SCL_SECURE_NO_WARNINGS
-    -D_CRT_SECURE_NO_WARNINGS
-    -D_WIN32_WINNT=0x0501
-    -D_HAS_EXCEPTIONS=0
 )
 endif()
 
@@ -496,9 +453,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
 endif()
 
-if(NOT MSVC)
-    set(CPP11_FLAG -std=gnu++11)
-endif()
+set(CPP11_FLAG -std=gnu++11)
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
@@ -533,13 +488,6 @@ string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE
 
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG}")
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_CXX_FLAG}")
-
-if(MSVC)
-string(REPLACE "/MD"  "/MT"  CMAKE_C_FLAGS_RELEASE   ${CMAKE_C_FLAGS_RELEASE})
-string(REPLACE "/MDd" "/MTd" CMAKE_C_FLAGS_DEBUG     ${CMAKE_C_FLAGS_DEBUG})
-string(REPLACE "/MD"  "/MT"  CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
-string(REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG})
-endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
@@ -577,9 +525,7 @@ target_compile_definitions(
     ${OPENFRAMEWORKS_DEFINITIONS}
 )
 
-if(NOT MSVC)
 set_target_properties(
     openFrameworks PROPERTIES
     COMPILE_FLAGS -g
 )
-endif()
