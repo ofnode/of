@@ -455,7 +455,7 @@ add_definitions(-D__ANSI__)
 endif()
 
 if(WIN32)
-add_definitions(-DWINVER=0x0500)
+add_definitions(-DWIN32 -DWINVER=0x0500)
 endif()
 
 if(MSVC)
