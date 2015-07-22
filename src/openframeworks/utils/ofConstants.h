@@ -351,10 +351,10 @@ typedef TESSindex ofIndexType;
 // xcode has a bug where it won't support tls on some versions even
 // on c++11, this is a workaround that bug
 #if !defined(TARGET_OSX) && !defined(TARGET_OF_IOS)
-	#define HAS_TLS 1
+	#define HAS_TLS 0
 #elif __clang__
 	#if __has_feature(cxx_thread_local)
-		#define HAS_TLS 1
+		#define HAS_TLS 0
 	#endif
 #endif
 
