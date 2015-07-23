@@ -516,10 +516,20 @@ target_compile_definitions(
     -DGLEW_NO_GLU
 )
 
+target_include_directories(
+    glew PRIVATE
+    ${OPENFRAMEWORKS_INCLUDE_DIRS}
+)
+
 add_library(
     kissfft STATIC
     "${OF_ROOT_DIR}/src/kissfft/tools/kiss_fftr.c"
     "${OF_ROOT_DIR}/src/kissfft/kiss_fft.c"
+)
+
+target_include_directories(
+    kissfft PRIVATE
+    ${OPENFRAMEWORKS_INCLUDE_DIRS}
 )
 
 add_library(
@@ -531,6 +541,11 @@ add_library(
     "${OF_ROOT_DIR}/src/libtess2/Source/geom.c"
     "${OF_ROOT_DIR}/src/libtess2/Source/mesh.c"
     "${OF_ROOT_DIR}/src/libtess2/Source/tess.c"
+)
+
+target_include_directories(
+    tess2 PRIVATE
+    ${OPENFRAMEWORKS_INCLUDE_DIRS}
 )
 
 add_library(
@@ -555,6 +570,11 @@ target_compile_definitions(
     -D__WINDOWS_DS__
 )
 endif()
+
+target_include_directories(
+    rtaudio PRIVATE
+    ${OPENFRAMEWORKS_INCLUDE_DIRS}
+)
 
 add_library(
     openFrameworks STATIC
