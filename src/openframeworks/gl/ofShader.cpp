@@ -97,7 +97,7 @@ bLoaded(mom.bLoaded),
 shaders(mom.shaders){
 	if(mom.bLoaded){
 		retainProgram(program);
-			for(auto it = shaders.begin(); it != shaders.end(); ++it){
+		for(auto it = shaders.begin(); it != shaders.end(); ++it){
 			GLuint shader = it->second;
 			retainShader(shader);
 		}
@@ -117,7 +117,7 @@ ofShader & ofShader::operator=(const ofShader & mom){
 	shaders = mom.shaders;
 	if(mom.bLoaded){
 		retainProgram(program);
-			for(auto it = shaders.begin(); it != shaders.end(); ++it){
+		for(auto it = shaders.begin(); it != shaders.end(); ++it){
 			GLuint shader = it->second;
 			retainShader(shader);
 		}
@@ -436,7 +436,7 @@ bool ofShader::linkProgram() {
 	} else {
 		checkAndCreateProgram();
 
-			for(auto it = shaders.begin(); it != shaders.end(); ++it){
+		for(auto it = shaders.begin(); it != shaders.end(); ++it){
 			GLuint shader = it->second;
 			if(shader) {
 				ofLogVerbose("ofShader") << "linkProgram(): attaching " << nameForType(it->first) << " shader to program " << program;
@@ -477,7 +477,7 @@ bool ofShader::bindDefaults() const{
 //--------------------------------------------------------------
 void ofShader::unload() {
 	if(bLoaded) {
-			for(auto it = shaders.begin(); it != shaders.end(); ++it) {
+		for(auto it = shaders.begin(); it != shaders.end(); ++it) {
 			GLuint shader = it->second;
 			if(shader) {
 				ofLogVerbose("ofShader") << "unload(): detaching and deleting " << nameForType(it->first) << " shader from program " << program;
