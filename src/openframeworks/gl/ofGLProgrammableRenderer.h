@@ -30,8 +30,6 @@ public:
     void startRender();
     void finishRender();
 
-	void setCurrentFBO(const ofFbo * fbo);
-    
 	using ofBaseRenderer::draw;
 	using ofBaseGLRenderer::draw;
 	void draw(const ofMesh & vertexData, ofPolyRenderMode renderType, bool useColors, bool useTextures, bool useNormals) const;
@@ -192,9 +190,10 @@ public:
 	void unbind(const ofCamera & camera);
 
 	void bind(const ofFbo & fbo);
+#ifndef TARGET_OPENGLES
+	void bindForBlitting(const ofFbo & fboSrc, ofFbo & fboDst, int attachmentPoint);
+#endif
 	void unbind(const ofFbo & fbo);
-
-	const GLuint& getCurrentFramebufferId() const { return currentFramebufferId; };
 
 	void begin(const ofFbo & fbo, bool setupPerspective);
 	void end(const ofFbo & fbo);

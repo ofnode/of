@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sudo yum -y update
+sudo dnf -y update
 
-sudo yum -y install \
+sudo dnf -y install \
     autoconf automake bash bison bzip2 cmake flex \
     gcc-c++ gettext git intltool make sed wget xz \
     libffi-devel libtool openssl-devel patch perl \
@@ -17,6 +17,7 @@ cd /opt/mxe
 sudo make MXE_TARGETS=x86_64-w64-mingw32.shared \
 mingw-w64   \
 winpthreads \
+boost       \
 cairo       \
 openssl     \
 freetype    \

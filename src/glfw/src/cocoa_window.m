@@ -64,19 +64,29 @@ static void centerCursor(_GLFWwindow *window)
     _glfwPlatformSetCursorPos(window, width / 2.0, height / 2.0);
 }
 
-// Update the cursor to match the specified cursor mode
-//
-static void updateModeCursor(_GLFWwindow* window)
+static NSCursor* getModeCursor(_GLFWwindow* window)
 {
     if (window->cursorMode == GLFW_CURSOR_NORMAL)
     {
         if (window->cursor)
-            [(NSCursor*) window->cursor->ns.object set];
-        else
-            [[NSCursor arrowCursor] set];
-    }
-    else
-        [(NSCursor*) _glfw.ns.cursor set];
+            return (NSCursor*) window->cursor->ns.object;
+         else
+            return [NSCursor arrowCursor];
+     }
+     else
+        return (NSCursor*) _glfw.ns.cursor;
+}
+
+// Update the cursor to match the specified cursor mode
+//
+static void updateModeCursor(_GLFWwindow* window)
+{
+    // This is required for the cursor to update if cursor is inside the window
+    NSCursor* cursor = getModeCursor(window);
+    [cursor set];
+
+    // This is required for the cursor to update if cursor is outside the window
+    [window->ns.object invalidateCursorRectsForView:window->ns.view];
 }
 
 // Enter full screen mode
@@ -352,6 +362,14 @@ static int translateKey(unsigned int key)
 - (void)cursorUpdate:(NSEvent *)event
 {
     updateModeCursor(window);
+}
+
+
+- (void)resetCursorRects
+{
+    NSCursor* cursor = getModeCursor(window);
+    [self addCursorRect:[self bounds] cursor:cursor];
+    //end of changes
 }
 
 - (void)mouseDown:(NSEvent *)event

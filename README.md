@@ -8,7 +8,7 @@ CMake-based [openFrameworks](https://github.com/openframeworks/openFrameworks)
 Features
 --------
 
- - 64-bit, C++11, CMake, Ninja, Cotire, Clang and Sanitize ready.
+ - 64-bit, CMake, Ninja, Cotire, Clang and Sanitize ready.
 
  - Generate project file for your favorite IDE with [CMake Generators](http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators).
  
@@ -53,30 +53,28 @@ Step 3: Compile
 #### Linux:
 
 ```bash
-mkdir -p build/linux
-cd build/linux
-cmake ../.. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release
+mkdir build-linux
+cd build-linux
+CC=clang CXX=clang++ cmake .. -G Ninja
 ninja
 ```
 
 #### OS X:
 
 ```bash
-mkdir -p build/osx
-cd build/osx
-cmake ../.. -G Xcode -DCMAKE_BUILD_TYPE=Release
+mkdir build-osx
+cd build-osx
+cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release
 xcodebuild -configuration Release
 ```
 
 #### Windows:
 
-Open the Start menu and run `VS2013 x64 Native Tools Command Prompt`, then `cd /d` into `of` directory and enter:
-
 ```batch
-mkdir build\windows
-cd build\windows
-cmake ..\.. -G "Visual Studio 12 2013 Win64" -DCMAKE_BUILD_TYPE=Release
-msbuild openFrameworks.sln /m /p:Configuration=Release
+mkdir build-windows
+cd build-windows
+cmake .. -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+ninja
 ```
 
 
@@ -99,4 +97,4 @@ Issues
 Licenses
 --------
 
-See `licenses` folder. OF **can** be used for commercial applications without disclosing their source code. OF statically links to all libraries which allow that for commercial use. OF **does not** use GPL libraries. FreeImage, FreeType and Cairo are dual licensed, and thus OF uses FIPL, FTL and MPL respectively. OpenAL Soft, libsndfile and libusb are licensed under LGPL which allow dynamic linking to closed source applications, and OF dynamically links to them.
+See `licenses` folder. OF **can** be used for commercial applications **without** disclosing their source code. OF statically links to libraries which allow that for commercial use. OF **does not** use GPL-licensed libraries. FreeImage, FreeType and Cairo are dual licensed, thus OF uses FIPL, FTL and MPL respectively. GTK+ 3, GLib, ALSA, OpenAL Soft, mpg123, libsndfile, Gstreamer, udev and libusb are licensed under LGPL v2.1 or higher which allow dynamic linking to closed source applications and OF dynamically links to them.

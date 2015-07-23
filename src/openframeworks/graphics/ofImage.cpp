@@ -5,9 +5,8 @@
 #include "FreeImage.h"
 
 #ifndef TARGET_EMSCRIPTEN
-#include "ofURLFileLoader.h"
-#include "Poco/URI.h"
-#include "Poco/Exception.h"
+	#include "ofURLFileLoader.h"
+	#include "Poco/URI.h"
 #endif
 #if defined(TARGET_ANDROID)
 #include "ofxAndroidUtils.h"
@@ -173,15 +172,13 @@ static bool loadImage(ofPixels_<PixelType> & pix, string fileName){
 	ofInitFreeImage();
 
 #ifndef TARGET_EMSCRIPTEN
-	// Attempt to parse the fileName as a url - specifically it must be a full address starting with http/https
-	// Poco::URI normalizes to lowercase
 	Poco::URI uri;
-    try {
-        uri = Poco::URI(fileName);
-    } catch(const Poco::SyntaxException& exc){
-        ofLogError("ofImage") << "loadImage(): malformed url when loading image from url \"" << fileName << "\": " << exc.displayText();
+	try {
+		uri = Poco::URI(fileName);
+	} catch(const std::exception & exc){
+		ofLogError("ofImage") << "loadImage(): malformed uri when loading image from uri \"" << fileName << "\": " << exc.what();
 		return false;
-    }
+	}
 	if(uri.getScheme() == "http" || uri.getScheme() == "https"){
 		return ofLoadImage(pix, ofLoadURL(fileName).data);
 	}
@@ -623,7 +620,7 @@ bool ofImage_<PixelType>::loadImage(const ofFile & file){
 
 //----------------------------------------------------------
 template<typename PixelType>
-bool ofImage_<PixelType>::load(string fileName){
+bool ofImage_<PixelType>::load(const string& fileName){
 	#if defined(TARGET_ANDROID)
 	ofAddListener(ofxAndroidEvents().unloadGL,this,&ofImage_<PixelType>::unloadTexture);
 	ofAddListener(ofxAndroidEvents().reloadGL,this,&ofImage_<PixelType>::update);
@@ -802,6 +799,12 @@ void ofImage_<PixelType>::allocate(int w, int h, ofImageType newType){
 
 //------------------------------------
 template<typename PixelType>
+bool ofImage_<PixelType>::bAllocated(){
+    return pixels.isAllocated();
+}
+
+//------------------------------------
+template<typename PixelType>
 void ofImage_<PixelType>::clear(){
 #if defined(TARGET_ANDROID)
 	ofRemoveListener(ofxAndroidEvents().unloadGL,this,&ofImage_<PixelType>::unloadTexture);
@@ -951,8 +954,8 @@ void ofImage_<PixelType>::update(){
 	bpp = pixels.getBitsPerPixel();
 	type = pixels.getImageType();
 	if (pixels.isAllocated() && bUseTexture){
-		int glTypeInternal = ofGetGlInternalFormat(pixels);
-		if(!tex.isAllocated() || tex.getWidth() != width || tex.getHeight() != height || tex.getTextureData().glTypeInternal != glTypeInternal){
+		int glInternalFormat = ofGetGlInternalFormat(pixels);
+		if(!tex.isAllocated() || tex.getWidth() != width || tex.getHeight() != height || tex.getTextureData().glInternalFormat != glInternalFormat){
 			tex.allocate(pixels);
 			if(ofIsGLProgrammableRenderer() && (pixels.getPixelFormat()==OF_PIXELS_GRAY || pixels.getPixelFormat()==OF_PIXELS_GRAY_ALPHA)){
 				tex.setRGToRGBASwizzles(true);
@@ -987,14 +990,29 @@ void ofImage_<unsigned char>::grabScreen(int x, int y, int w, int h){
 
 //------------------------------------
 template<typename PixelType>
-void ofImage_<PixelType>::grabScreen(int x, int y, int w, int h){
+void ofGrabScreen(ofPixels_<PixelType> & pixels, int x, int y, int w, int h){
 	ofPixels p;
 	shared_ptr<ofBaseGLRenderer> renderer = ofGetGLRenderer();
 	if(renderer){
 		renderer->saveScreen(x,y,w,h,p);
 		pixels = p;
-		update();
 	}
+}
+
+//------------------------------------
+template<>
+void ofGrabScreen(ofPixels & p, int x, int y, int w, int h){
+	shared_ptr<ofBaseGLRenderer> renderer = ofGetGLRenderer();
+	if(renderer){
+		renderer->saveScreen(x,y,w,h,p);
+	}
+}
+
+//------------------------------------
+template<typename PixelType>
+void ofImage_<PixelType>::grabScreen(int x, int y, int w, int h){
+	ofGrabScreen(pixels,x,y,w,h);
+	update();
 }
 
 //------------------------------------
@@ -1002,6 +1020,12 @@ template<typename PixelType>
 void ofImage_<PixelType>::setImageType(ofImageType newType){
 	changeTypeOfPixels(pixels, newType);
 	update();
+}
+
+//------------------------------------
+template<typename PixelType>
+ofImageType ofImage_<PixelType>::getImageType() const{
+	return type;
 }
 
 //------------------------------------

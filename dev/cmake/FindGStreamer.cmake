@@ -114,18 +114,8 @@ FIND_GSTREAMER_COMPONENT(GSTREAMER_VIDEO gstreamer-video-1.0 gst/video/video.h g
 # ------------------------------------------------
 # 3. Process the COMPONENTS passed to FIND_PACKAGE
 # ------------------------------------------------
-set(_GSTREAMER_REQUIRED_VARS GSTREAMER_INCLUDE_DIRS GSTREAMER_LIBRARIES GSTREAMER_VERSION GSTREAMER_BASE_INCLUDE_DIRS GSTREAMER_BASE_LIBRARIES)
-
-foreach (_component ${GStreamer_FIND_COMPONENTS})
-    set(_gst_component "GSTREAMER_${_component}")
-    string(TOUPPER ${_gst_component} _UPPER_NAME)
-
-    list(APPEND _GSTREAMER_REQUIRED_VARS ${_UPPER_NAME}_INCLUDE_DIRS ${_UPPER_NAME}_LIBRARIES)
-endforeach ()
-
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(GStreamer REQUIRED_VARS _GSTREAMER_REQUIRED_VARS
-                                            VERSION_VAR   GSTREAMER_VERSION)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(GStreamer DEFAULT_MSG GSTREAMER_LIBRARIES GSTREAMER_BASE_LIBRARIES GSTREAMER_INCLUDE_DIRS GSTREAMER_BASE_INCLUDE_DIRS)
 
 mark_as_advanced(
     GSTREAMER_APP_INCLUDE_DIRS

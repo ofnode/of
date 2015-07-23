@@ -1,13 +1,13 @@
---- a/poco/CMakeLists.txt
-+++ b/poco/CMakeLists.txt
-@@ -8,7 +8,7 @@
- 
- project(Poco)
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,7 @@
+ # ENABLE_{COMPONENT}
+ # ENABLE_TESTS
  
 -cmake_minimum_required(VERSION 3.0.0)
 +cmake_minimum_required(VERSION 2.8)
  
- file(STRINGS "${PROJECT_SOURCE_DIR}/libversion" SHARED_LIBRARY_VERSION)
+ project(Poco)
  
 @@ -23,15 +23,6 @@
  set(RELEASE_NAME "Unstable-trunk")
@@ -25,17 +25,7 @@
  # Append our module directory to CMake
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
  
-@@ -63,9 +54,6 @@
- #    * RelWithDebInfo (CMAKE_C_FLAGS_RELWITHDEBINFO or CMAKE_CXX_FLAGS_RELWITHDEBINFO
- #    * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL)
- 
--# For Debug build types, append a "d" to the library names.
--set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Set debug library postfix" FORCE)
--
- # Include some common macros to simpilfy the Poco CMake files
- include(PocoMacros)
- 
-@@ -81,23 +69,23 @@
+@@ -68,23 +68,23 @@
  option(ENABLE_CRYPTO "Enable Crypto" ON)
  option(ENABLE_DATA "Enable Data" ON)
  option(ENABLE_DATA_SQLITE "Enable Data SQlite" ON)
@@ -65,7 +55,7 @@
  
  option(POCO_UNBUNDLED
    "Set to OFF|ON (default is OFF) to control linking dependencies as external" OFF)
-@@ -107,6 +95,9 @@
+@@ -102,6 +102,9 @@
      add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
      set( LIB_MODE STATIC )
      message(STATUS "Building static libraries")
@@ -75,7 +65,7 @@
  else(POCO_STATIC)
      set( LIB_MODE SHARED )
      message(STATUS "Building dynamic libraries")
-@@ -279,16 +279,6 @@
+@@ -223,70 +223,3 @@
  endif()
  
  #############################################################
@@ -89,11 +79,65 @@
 -  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 -
 -#############################################################
- # Enable packaging
- 
- include(InstallRequiredSystemLibraries)
---- a/poco/cmake/PocoMacros.cmake
-+++ b/poco/cmake/PocoMacros.cmake
+-# Enable packaging
+-
+-include(InstallRequiredSystemLibraries)
+-
+-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Poco Libraries")
+-set(CPACK_PACKAGE_VENDOR "Applied Informatics Software Engineering GmbH")
+-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
+-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+-set(CPACK_PACKAGE_INSTALL_DIRECTORY "/usr/local")
+-
+-include(CPack)
+-
+-#############################################################
+-# cmake config files 
+-
+-include(CMakePackageConfigHelpers)
+-write_basic_package_version_file(
+-  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}ConfigVersion.cmake"
+-  VERSION ${PROJECT_VERSION}
+-  COMPATIBILITY AnyNewerVersion
+-)
+-
+-configure_file(cmake/${PROJECT_NAME}Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake" @ONLY)
+-install(
+-    FILES
+-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}Config.cmake
+-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}ConfigVersion.cmake
+-    DESTINATION
+-        "lib/cmake/${PROJECT_NAME}"
+-    COMPONENT
+-        Devel
+-)
+-
+-# in tree build settings
+-#configure_file(PocoBuildTreeSettings.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/PocoBuildTreeSettings.cmake @ONLY)
+-
+-
+-message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
+-message(STATUS "Installation target path: ${CMAKE_INSTALL_PREFIX}")
+-
+-message(STATUS "C_FLAGS:  =${CMAKE_C_FLAGS}")
+-message(STATUS "CMAKE_C_FLAGS_DEBUG:=${CMAKE_C_FLAGS_DEBUG}")
+-message(STATUS "CMAKE_C_FLAGS_RELEASE:=${CMAKE_C_FLAGS_RELEASE}")
+-message(STATUS "CMAKE_C_FLAGS_MINSIZEREL:=${CMAKE_C_FLAGS_MINSIZEREL}")
+-message(STATUS "CMAKE_C_FLAGS_RELWITHDEBINFO:=${CMAKE_C_FLAGS_RELWITHDEBINFO}")
+-message(STATUS "")
+-message(STATUS "")
+-message(STATUS "CXX_FLAGS:=${CMAKE_CXX_FLAGS}")
+-message(STATUS "CMAKE_CXX_FLAGS_DEBUG:=${CMAKE_CXX_FLAGS_DEBUG}")
+-message(STATUS "CMAKE_CXX_FLAGS_RELEASE:=${CMAKE_CXX_FLAGS_RELEASE}")
+-message(STATUS "CMAKE_CXX_FLAGS_MINSIZEREL:=${CMAKE_CXX_FLAGS_MINSIZEREL}")
+-message(STATUS "CMAKE_CXX_FLAGS_RELWITHDEBINFO:=${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+-
+-foreach(component ${Poco_COMPONENTS})
+-message(STATUS "Building: ${component}")
+-endforeach()
+-
+--- a/cmake/PocoMacros.cmake
++++ b/cmake/PocoMacros.cmake
 @@ -24,13 +24,6 @@
        set(kit_bindir "${kit_dir}/bin/x86")
      endif (X64)
@@ -147,8 +191,50 @@
  endmacro()
  
  #===============================================================================
---- a/poco/Foundation/CMakeLists.txt
-+++ b/poco/Foundation/CMakeLists.txt
+@@ -236,26 +236,6 @@
+ #           target_name             the name of the target. e.g. Foundation for PocoFoundation
+ #    Example: POCO_INSTALL(Foundation)
+ macro(POCO_INSTALL target_name)
+-install(
+-    DIRECTORY include/Poco
+-    DESTINATION include
+-    COMPONENT Devel
+-    PATTERN ".svn" EXCLUDE
+-    )
+-
+-install(
+-    TARGETS "${target_name}" EXPORT "${target_name}Targets"
+-    LIBRARY DESTINATION lib${LIB_SUFFIX}
+-    ARCHIVE DESTINATION lib${LIB_SUFFIX}
+-    RUNTIME DESTINATION bin
+-    INCLUDES DESTINATION include
+-    )
+-
+-if (MSVC)
+-# install the targets pdb
+-  POCO_INSTALL_PDB(${target_name})
+-endif()
+-  
+ endmacro()
+ 
+ #  POCO_INSTALL_PDB - Install the given target's companion pdb file (if present)
+@@ -266,14 +266,4 @@
+ #
+ #    This is an internal macro meant only to be used by POCO_INSTALL.
+ macro(POCO_INSTALL_PDB target_name)
+-
+-    get_property(type TARGET ${target_name} PROPERTY TYPE)
+-    if ("${type}" STREQUAL "SHARED_LIBRARY" OR "${type}" STREQUAL "EXECUTABLE")
+-        install(
+-            FILES $<TARGET_PDB_FILE:${target_name}>
+-            DESTINATION bin
+-            COMPONENT Devel
+-            OPTIONAL
+-            )
+-    endif()
+ endmacro()
+--- a/Foundation/CMakeLists.txt
++++ b/Foundation/CMakeLists.txt
 @@ -32,9 +32,6 @@
  	)
  endif()

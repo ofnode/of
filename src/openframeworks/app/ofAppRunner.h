@@ -18,6 +18,7 @@ void ofInit();
 void ofSetupOpenGL(int w, int h, ofWindowMode screenMode);	// sets up the opengl context!
 shared_ptr<ofAppBaseWindow> ofCreateWindow(const ofWindowSettings & settings);	// sets up the opengl context!
 shared_ptr<ofMainLoop> ofGetMainLoop();
+void ofSetMainLoop(shared_ptr<ofMainLoop> mainLoop);
 
 template<typename Window>
 void ofSetupOpenGL(shared_ptr<Window> windowPtr, int w, int h, ofWindowMode screenMode){
@@ -55,7 +56,7 @@ void		ofExit(int status=0);
 //-------------------------- time
 float 		ofGetFrameRate();
 float 		ofGetTargetFrameRate();
-int			ofGetFrameNum();
+uint64_t	ofGetFrameNum();
 void 		ofSetFrameRate(int targetRate);
 double		ofGetLastFrameTime();
 

@@ -159,10 +159,10 @@ public:
 	ofTextureData() {
 		textureID = 0;
 #ifndef TARGET_OPENGLES
-		glTypeInternal = GL_RGB8;
+		glInternalFormat = GL_RGB8;
 		textureTarget = GL_TEXTURE_RECTANGLE_ARB;
 #else
-		glTypeInternal = GL_RGB;
+		glInternalFormat = GL_RGB;
 		textureTarget = GL_TEXTURE_2D;
 #endif
 
@@ -191,7 +191,7 @@ public:
 	unsigned int textureID; ///< GL internal texture ID.
 	int textureTarget; ///< GL texture type, either GL_TEXTURE_2D or
 	                   ///< GL_TEXTURE_RECTANGLE_ARB.
-	int glTypeInternal; ///< GL internal format, e.g. GL_RGB8.
+	int glInternalFormat; ///< GL internal format, e.g. GL_RGB8.
                         ///< \sa http://www.opengl.org/wiki/Image_Format
 	
 	float tex_t; ///< Texture horizontal coordinate, ratio of width to display width.
@@ -385,18 +385,21 @@ class ofTexture : public ofBaseDraws {
 	virtual void allocate(const ofFloatPixels& pix, bool bUseARBExtension);
 
 #ifndef TARGET_OPENGLES
-	/// \brief Allocate texture using an ofBufferObject instead of RAM memory.
+	/// \brief Allocate texture as a Buffer Texture.
 	///
-	/// Uses a gpu buffer as data for the texture instead of pixels in RAM
+	/// Uses a GPU buffer as data for the texture instead of pixels in RAM
 	/// Allows to use texture buffer objects (TBO) which make it easier to send big
 	/// amounts of data to a shader as a uniform.
+	/// 
+	/// Buffer textures are 1D textures, and may only be sampled using texelFetch 
+	/// in GLSL.
 	///
 	/// See textureBufferInstanceExample and https://www.opengl.org/wiki/Buffer_Texture
 	///
 	/// \sa allocate(const ofBufferObject & buffer, int glInternalFormat)
 	/// \param buffer Reference to ofBufferObject instance.
 	/// \param glInternalFormat Internal pixel format of the data.
-	void allocate(const ofBufferObject & buffer, int glInternalFormat);
+	void allocateAsBufferTexture(const ofBufferObject & buffer, int glInternalFormat);
 #endif
 
 
@@ -678,7 +681,7 @@ class ofTexture : public ofBaseDraws {
 	///
 	void unbind(int textureLocation=0) const;
 
-#ifndef TARGET_OPENGLES
+#if !defined(TARGET_OPENGLES) && defined(glBindImageTexture)
 	/// Calls glBindImageTexture on the texture
 	///
 	/// Binds the texture as an read or write image, only available since OpenGL 4.2

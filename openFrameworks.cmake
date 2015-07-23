@@ -1,80 +1,86 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
-#// MSVC flags /////////////////////////////////////////////////////////////////
-
-if(MSVC)
-
-    set(RELEASE_FLAGS "
-      ${RELEASE_FLAGS}
-    ")
-
-    set(DEBUG_FLAGS "
-      ${DEBUG_FLAGS}
-    ")
-
-else()
-
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
-    set(RELEASE_FLAGS "
-      ${RELEASE_FLAGS}
-        -g
-    ")
+set(RELEASE_FLAGS "
+  ${RELEASE_FLAGS}
+    -g
+")
 
-    set(DEBUG_FLAGS "
-      ${DEBUG_FLAGS}
-        -Winline
-        -fno-omit-frame-pointer
-        -fno-optimize-sibling-calls
-    ")
+set(DEBUG_FLAGS "
+  ${DEBUG_FLAGS}
+    -Winline
+    -fno-omit-frame-pointer
+    -fno-optimize-sibling-calls
+")
 
 #// Clang specific C flags /////////////////////////////////////////////////////
 
-  if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
-    set(RELEASE_C_FLAGS_CLANG "
-      ${RELEASE_C_FLAGS_CLANG}
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+  set(RELEASE_C_FLAGS_CLANG "
+    ${RELEASE_C_FLAGS_CLANG}
+      -Wno-switch
+      -Wno-ignored-attributes
+      -Wno-deprecated-register
+  ")
 
-    set(DEBUG_C_FLAGS_CLANG "
-      ${DEBUG_C_FLAGS_CLANG}
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+  set(DEBUG_C_FLAGS_CLANG "
+    ${DEBUG_C_FLAGS_CLANG}
+      -Wno-switch
+      -Wno-ignored-attributes
+      -Wno-deprecated-register
+  ")
 
-  endif()
+endif()
 
 #// Clang specific C++ flags ///////////////////////////////////////////////////
 
-  if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
-    set(RELEASE_CXX_FLAGS_CLANG "
-      ${RELEASE_CXX_FLAGS_CLANG}
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+  set(RELEASE_CXX_FLAGS_CLANG "
+    ${RELEASE_CXX_FLAGS_CLANG}
+      -Wno-switch
+      -Wno-ignored-attributes
+      -Wno-deprecated-register
+  ")
 
-    set(DEBUG_CXX_FLAGS_CLANG "
-      ${DEBUG_CXX_FLAGS_CLANG}
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
-
-  endif()
-
-#///////////////////////////////////////////////////////////////////////////////
+  set(DEBUG_CXX_FLAGS_CLANG "
+    ${DEBUG_CXX_FLAGS_CLANG}
+      -Wno-switch
+      -Wno-ignored-attributes
+      -Wno-deprecated-register
+  ")
 
 endif()
 
 #// Options ////////////////////////////////////////////////////////////////////
 
-set(OF_ENABLE_COTIRE ON CACHE BOOL
-  "Enable Cotire header precompiler")
+set(OF_ENABLE_COTIRE OFF CACHE BOOL
+   "Enable Cotire header precompiler")
 
-set(OF_ENABLE_CONSOLE OFF CACHE BOOL
-  "Enable console window on Windows")
+if(CMAKE_SYSTEM MATCHES Linux)
+
+  set(OF_ENABLE_AUDIO ON CACHE BOOL
+     "Enable audio features of openFrameworks on Linux")
+
+  set(OF_ENABLE_VIDEO ON CACHE BOOL
+     "Enable video features of openFrameworks on Linux")
+
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+
+  set(OF_ENABLE_AUDIO ON)
+  set(OF_ENABLE_VIDEO ON)
+
+elseif(CMAKE_SYSTEM MATCHES Windows)
+
+  set(OF_ENABLE_CONSOLE OFF CACHE BOOL
+     "Enable console window on Windows")
+
+  set(OF_ENABLE_AUDIO ON)
+  set(OF_ENABLE_VIDEO ON)
+
+endif()
 
 #// Setup //////////////////////////////////////////////////////////////////////
 
@@ -93,6 +99,19 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 set(OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/openframeworks"
+    "${OF_ROOT_DIR}/src/openframeworks/3d"
+    "${OF_ROOT_DIR}/src/openframeworks/app"
+    "${OF_ROOT_DIR}/src/openframeworks/communication"
+    "${OF_ROOT_DIR}/src/openframeworks/events"
+    "${OF_ROOT_DIR}/src/openframeworks/gl"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics"
+    "${OF_ROOT_DIR}/src/openframeworks/math"
+    "${OF_ROOT_DIR}/src/openframeworks/sound"
+    "${OF_ROOT_DIR}/src/openframeworks/types"
+    "${OF_ROOT_DIR}/src/openframeworks/utils"
+    "${OF_ROOT_DIR}/src/openframeworks/video"
+
     "${OF_ROOT_DIR}/src/freeimage"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
@@ -108,9 +127,13 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/glfw/include"
     "${OF_ROOT_DIR}/src/glfw/include/GLFW"
 
-    "${OF_ROOT_DIR}/src/kiss"
-    "${OF_ROOT_DIR}/src/kiss/src"
-    "${OF_ROOT_DIR}/src/kiss/tools"
+    "${OF_ROOT_DIR}/src/kissfft"
+    "${OF_ROOT_DIR}/src/kissfft/src"
+    "${OF_ROOT_DIR}/src/kissfft/tools"
+
+    "${OF_ROOT_DIR}/src/libtess2"
+    "${OF_ROOT_DIR}/src/libtess2/Include"
+    "${OF_ROOT_DIR}/src/libtess2/Source"
 
     "${OF_ROOT_DIR}/src/poco"
     "${OF_ROOT_DIR}/src/poco/Crypto/include"
@@ -124,22 +147,8 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/rtaudio"
     "${OF_ROOT_DIR}/src/rtaudio/include"
 
-    "${OF_ROOT_DIR}/src/libtess2"
-    "${OF_ROOT_DIR}/src/libtess2/Include"
-    "${OF_ROOT_DIR}/src/libtess2/Source"
-
-    "${OF_ROOT_DIR}/src/openframeworks"
-    "${OF_ROOT_DIR}/src/openframeworks/3d"
-    "${OF_ROOT_DIR}/src/openframeworks/app"
-    "${OF_ROOT_DIR}/src/openframeworks/communication"
-    "${OF_ROOT_DIR}/src/openframeworks/events"
-    "${OF_ROOT_DIR}/src/openframeworks/gl"
-    "${OF_ROOT_DIR}/src/openframeworks/graphics"
-    "${OF_ROOT_DIR}/src/openframeworks/math"
-    "${OF_ROOT_DIR}/src/openframeworks/sound"
-    "${OF_ROOT_DIR}/src/openframeworks/types"
-    "${OF_ROOT_DIR}/src/openframeworks/utils"
-    "${OF_ROOT_DIR}/src/openframeworks/video"
+    "${OF_ROOT_DIR}/src/utf8cpp"
+    "${OF_ROOT_DIR}/src/utf8cpp/include"
 )
 
 if(CMAKE_SYSTEM MATCHES Windows)
@@ -148,18 +157,11 @@ list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
 )
 endif()
 
-if(MSVC)
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/dev/include/msvc"
-)
-endif()
-
 #// Platform-specific commands /////////////////////////////////////////////////
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
     set(OPENFRAMEWORKS_DEFINITIONS
-        -DOF_USING_GTK
         -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
@@ -167,19 +169,13 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    # Static C and C++
-    set(OPENFRAMEWORKS_LIBRARIES
-        -static-libgcc
-        -static-libstdc++
-    )
+    #// Local dependencies /////////////////////////////////////////////////////
 
-    # The folder with executable will be
-    # a search path for shared libraries
-    list(APPEND OPENFRAMEWORKS_LIBRARIES
+    # The folder of executable will be
+    # search path for shared libraries
+    set(OPENFRAMEWORKS_LIBRARIES
         -Wl,-rpath,'$$ORIGIN'
     )
-
-    #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release")
@@ -204,25 +200,108 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
-    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+    set(Boost_USE_STATIC_LIBS ON)
 
-    find_library(RT_LIB rt)
-    find_library(DL_LIB dl)
     find_package(X11 REQUIRED)
-    find_package(UDev REQUIRED)
-    find_package(Glib REQUIRED)
     find_package(ZLIB REQUIRED)
-    find_package(ALSA REQUIRED)
     find_package(Cairo REQUIRED)
-    find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(OpenSSL REQUIRED)
-    find_package(Sndfile REQUIRED)
     find_package(Threads REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(GStreamer REQUIRED)
     find_package(Fontconfig REQUIRED)
+    find_package(Boost COMPONENTS filesystem system REQUIRED)
+
+    set(STATIC_LIB_PATHS
+        "/usr/lib/x86_64-linux-gnu"
+    )
+
+    find_library(
+      ZLIB_LIB NAMES
+      libz.a
+      PATHS ${STATIC_LIB_PATHS}
+    )
+    find_library(
+      PIXMAN_LIB NAMES
+      libpixman-1.a
+      PATHS ${STATIC_LIB_PATHS}
+    )
+    find_library(
+      CAIRO_LIB NAMES
+      libcairo.a
+      PATHS ${STATIC_LIB_PATHS}
+    )
+    find_library(
+      CRYPTO_LIB NAMES
+      libcrypto.a
+      PATHS ${STATIC_LIB_PATHS}
+    )
+    find_library(
+      SSL_LIB NAMES
+      libssl.a
+      PATHS ${STATIC_LIB_PATHS}
+    )
+    find_library(
+      FREETYPE_LIB NAMES
+      libfreetype.a
+      PATHS ${STATIC_LIB_PATHS}
+    )
+    find_library(
+      FONTCONFIG_LIB NAMES
+      libfontconfig.a
+      PATHS ${STATIC_LIB_PATHS}
+    )
+
+    if(ZLIB_LIB MATCHES ZLIB_LIB-NOTFOUND)
+      message(STATUS "Using dynamic Zlib")
+    else()
+      message(STATUS "Using static Zlib")
+      set(ZLIB_LIBRARIES
+        ${ZLIB_LIB}
+      )
+    endif()
+
+    if(PIXMAN_LIB MATCHES PIXMAN_LIB-NOTFOUND OR
+        CAIRO_LIB MATCHES  CAIRO_LIB-NOTFOUND)
+      message(STATUS "Using dynamic Cairo")
+    else()
+      message(STATUS "Using static Cairo")
+      set(CAIRO_LIBRARIES
+        ${PIXMAN_LIB}
+        ${CAIRO_LIB}
+      )
+    endif()
+
+    if(CRYPTO_LIB MATCHES CRYPTO_LIB-NOTFOUND OR
+          SSL_LIB MATCHES    SSL_LIB-NOTFOUND)
+      message(STATUS "Using dynamic OpenSSL")
+    else()
+      message(STATUS "Using static OpenSSL")
+      find_library(DL_LIB dl)
+      set(OPENSSL_LIBRARIES
+        ${CRYPTO_LIB}
+        ${SSL_LIB}
+        ${DL_LIB}
+      )
+    endif()
+
+    if(FREETYPE_LIB MATCHES FREETYPE_LIB-NOTFOUND)
+      message(STATUS "Using dynamic FreeType")
+    else()
+      message(STATUS "Using static FreeType")
+      set(FREETYPE_LIBRARIES
+        ${FREETYPE_LIB}
+      )
+    endif()
+
+    if(FONTCONFIG_LIB MATCHES FONTCONFIG_LIB-NOTFOUND)
+      message(STATUS "Using dynamic Fontconfig")
+    else()
+      message(STATUS "Using static Fontconfig")
+      set(FONTCONFIG_LIBRARIES
+        ${FONTCONFIG_LIB}
+      )
+    endif()
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
         ${FONTCONFIG_DEFINITIONS}
@@ -230,50 +309,89 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
-        ${UDEV_INCLUDE_DIR}
-        ${GTK3_INCLUDE_DIRS}
-        ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
-        ${ALSA_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
-        ${OPENAL_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${OPENSSL_INCLUDE_DIR}
-        ${SNDFILE_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
-        ${GSTREAMER_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIR}
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
-        ${RT_LIB}
-        ${DL_LIB}
         ${X11_Xi_LIB}
         ${X11_LIBRARIES}
         ${X11_Xrandr_LIB}
         ${X11_Xcursor_LIB}
         ${X11_Xxf86vm_LIB}
         ${X11_Xinerama_LIB}
-        ${UDEV_LIBRARIES}
-        ${GTK3_LIBRARIES}
-        ${GLIB_LIBRARIES}
         ${ZLIB_LIBRARIES}
-        ${ALSA_LIBRARIES}
-        ${OPENAL_LIBRARY}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
-        ${MPG123_LIBRARIES}
         ${OPENSSL_LIBRARIES}
-        ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
-        ${GSTREAMER_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
         ${CMAKE_THREAD_LIBS_INIT}
+    )
+
+    if(NOT OF_ENABLE_AUDIO)
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_SOUND
+      )
+    else()
+      find_package(ALSA REQUIRED)
+      find_package(OpenAL REQUIRED)
+      find_package(MPG123 REQUIRED)
+      find_package(Sndfile REQUIRED)
+
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${ALSA_INCLUDE_DIRS}
+        ${OPENAL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
+        ${SNDFILE_INCLUDE_DIR}
+      )
+
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${ALSA_LIBRARIES}
+        ${OPENAL_LIBRARY}
+        ${MPG123_LIBRARIES}
+        ${SNDFILE_LIBRARIES}
+      )
+    endif()
+
+    if(NOT OF_ENABLE_VIDEO)
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_VIDEO
+      )
+    else()
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DOF_USING_GTK
+      )
+
+      find_package(UDev REQUIRED)
+      find_package(Glib REQUIRED)
+      find_package(GStreamer REQUIRED)
+      pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${UDEV_INCLUDE_DIR}
+        ${GLIB_INCLUDE_DIRS}
+        ${GTK3_INCLUDE_DIRS}
+        ${GSTREAMER_INCLUDE_DIRS}
+      )
+
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${UDEV_LIBRARIES}
+        ${GLIB_LIBRARIES}
+        ${GTK3_LIBRARIES}
+        ${GSTREAMER_LIBRARIES}
         ${GSTREAMER_APP_LIBRARIES}
         ${GSTREAMER_BASE_LIBRARIES}
         ${GSTREAMER_VIDEO_LIBRARIES}
-    )
+      )
+    endif()
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
@@ -281,6 +399,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -D__MACOSX_CORE__
+        -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
     )
@@ -309,8 +428,10 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(ZLIB REQUIRED)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED) # Should be provided by CoreAudio
+    find_package(MPG123 REQUIRED)
     find_package(Sndfile REQUIRED)
     find_package(Freetype REQUIRED)
+    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     # Homebrew version
     set(OPENSSL_INCLUDE_DIR
@@ -325,9 +446,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${GLIB_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
     )
 
@@ -342,10 +465,13 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${OPENAL_LIBRARY}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        ${MPG123_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
     )
 
     # Frameworks
@@ -371,26 +497,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         -DOF_VIDEO_PLAYER_DIRECTSHOW
     )
 
-    if(NOT MSVC)
-        # Static C and C++
-        set(OPENFRAMEWORKS_LIBRARIES
-            -static-libgcc
-            -static-libstdc++
-        )
-    endif()
-
-    # Hide console by default
-    if(NOT OF_ENABLE_CONSOLE)
-      if(MSVC)
-          set(CMAKE_EXE_LINKER_FLAGS
-           "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:windows /ENTRY:mainCRTStartup")
-      else()
-          list(APPEND OPENFRAMEWORKS_LIBRARIES
-              -mwindows
-          )
-      endif()
-    endif()
-
     #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
@@ -399,33 +505,27 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug")
     endif()
 
-    if(MSVC)
-        link_directories(${OF_LIB_DIR})
-        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.lib")
-    else()
-        list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-        file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
-    endif()
+    set(OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
+    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
 
     if(NOT OPENFRAMEWORKS_LIBS)
         message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
     endif()
 
-    # If we are on Windows using MSVC
-    # we don't need GCC's link groups
-    if(MSVC)
-        list(APPEND OPENFRAMEWORKS_LIBRARIES
-            ${OPENFRAMEWORKS_LIBS}
-        )
-    else()
-        list(APPEND OPENFRAMEWORKS_LIBRARIES
-            -Wl,-Bstatic
-            -Wl,--start-group
-            ${OPENFRAMEWORKS_LIBS}
-            -Wl,--end-group
-            -Wl,-Bdynamic
-        )
+    # Hide console by default
+    if(NOT OF_ENABLE_CONSOLE)
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -mwindows
+      )
     endif()
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+      -Wl,-Bstatic
+      -Wl,--start-group
+      ${OPENFRAMEWORKS_LIBS}
+      -Wl,--end-group
+      -Wl,-Bdynamic
+    )
 
     #// Global dependencies ////////////////////////////////////////////////////
 
@@ -442,22 +542,16 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(LibIntl REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(Fontconfig REQUIRED)
+    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
-    if(MSVC)
-    set(MSVC_PATHS
-        "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"
-    )
-    endif()
-
-    find_library(WINMM_LIB winmm PATHS ${MSVC_PATHS})
-    find_library(GDI32_LIB gdi32 PATHS ${MSVC_PATHS})
-    find_library(DSOUND_LIB dsound PATHS ${MSVC_PATHS})
-    find_library(WS2_32_LIB ws2_32 PATHS ${MSVC_PATHS})
-    find_library(CRYPT32_LIB crypt32 PATHS ${MSVC_PATHS})
-    find_library(WSOCK32_LIB wsock32 PATHS ${MSVC_PATHS})
-    find_library(IPHLPAPI_LIB iphlpapi PATHS ${MSVC_PATHS})
-    find_library(STRMIIDS_LIB strmiids PATHS ${MSVC_PATHS})
-    find_library(SETUPAPI_LIB setupapi PATHS ${MSVC_PATHS})
+    find_library(WINMM_LIB winmm)
+    find_library(GDI32_LIB gdi32)
+    find_library(DSOUND_LIB dsound)
+    find_library(WS2_32_LIB ws2_32)
+    find_library(CRYPT32_LIB crypt32)
+    find_library(WSOCK32_LIB wsock32)
+    find_library(IPHLPAPI_LIB iphlpapi)
+    find_library(SETUPAPI_LIB setupapi)
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
         ${FONTCONFIG_DEFINITIONS}
@@ -467,6 +561,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${ZLIB_INCLUDE_DIRS}
         ${BZIP2_INCLUDE_DIR}
         ${CAIRO_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
@@ -491,6 +586,8 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${LIBINTL_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
@@ -502,7 +599,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${CRYPT32_LIB}
         ${WSOCK32_LIB}
         ${IPHLPAPI_LIB}
-        ${STRMIIDS_LIB}
         ${SETUPAPI_LIB}
     )
 
@@ -515,12 +611,10 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC
 )
 
-if(MSVC)
+if(CMAKE_SYSTEM MATCHES Windows)
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
-    -D_SCL_SECURE_NO_WARNINGS
-    -D_CRT_SECURE_NO_WARNINGS
-    -D_WIN32_WINNT=0x0501
-    -D_UNICODE -DUNICODE
+    -D_UNICODE
+    -DUNICODE
 )
 endif()
 
@@ -532,11 +626,6 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
   if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_C_FLAG -Og)
-  elseif(CMAKE_SYSTEM MATCHES Windows)
-    # If GNU compiler's version below 4.8.0 and we are on Windows,
-    # then we're using old MinGW compiler. To avoid "File too big"
-    # error we have to crank O level up to make object files small
-    set(O_C_FLAG -O2)
   else()
     set(O_C_FLAG -O0)
   endif()
@@ -547,11 +636,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_CXX_FLAG -Og)
-  elseif(CMAKE_SYSTEM MATCHES Windows)
-    # If GNU compiler's version below 4.8.0 and we are on Windows,
-    # then we're using old MinGW compiler. To avoid "File too big"
-    # error we have to crank O level up to make object files small
-    set(O_CXX_FLAG -O2)
   else()
     set(O_CXX_FLAG -O0)
   endif()
@@ -561,24 +645,22 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
 endif()
 
-if(NOT MSVC)
-    set(CPP11_FLAG -std=gnu++11)
-endif()
+set(CPP11_FLAG -std=gnu++11)
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
-    if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.9.0)
+  if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.9.0)
     set(C_COLORIZATION "-fdiagnostics-color")
-    endif()
+  endif()
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     set(CXX_COLORIZATION "-fcolor-diagnostics")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.9.0)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.9.0)
     set(CXX_COLORIZATION "-fdiagnostics-color")
-    endif()
+  endif()
 endif()
 
 string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
@@ -598,13 +680,6 @@ string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C
 
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG}")
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_CXX_FLAG}")
-
-if(MSVC)
-string(REPLACE "/MD"  "/MT"  CMAKE_C_FLAGS_RELEASE   ${CMAKE_C_FLAGS_RELEASE})
-string(REPLACE "/MDd" "/MTd" CMAKE_C_FLAGS_DEBUG     ${CMAKE_C_FLAGS_DEBUG})
-string(REPLACE "/MD"  "/MT"  CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
-string(REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG})
-endif()
 
 #// ofxAddons //////////////////////////////////////////////////////////////////
 
@@ -642,10 +717,6 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
         pkg_check_modules(ASSIMP REQUIRED assimp)
         include_directories(${ASSIMP_INCLUDE_DIRS})
-        if(MSVC)
-          # pkg-config point to a lib folder, but our lib is in bin folder
-          list(APPEND ASSIMP_LIBRARY_DIRS "${ASSIMP_LIBRARY_DIRS}/../bin")
-        endif()
         link_directories(${ASSIMP_LIBRARY_DIRS})
         set(OPENFRAMEWORKS_LIBRARIES
           ${OPENFRAMEWORKS_LIBRARIES} ${ASSIMP_LIBRARIES} PARENT_SCOPE)
@@ -783,6 +854,10 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/libs/oscpack/src/osc")
 
 
+    elseif(OFXADDON STREQUAL ofxProjectGenerator)
+        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
+
+
     elseif(OFXADDON STREQUAL ofxSvg)
         set(OFXADDON_DIR "${OF_ROOT_DIR}/addons/ofxSvg")
         set(OFXSOURCES
@@ -877,19 +952,17 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
-
-message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
-message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
-
-message("++ OF_ENABLE_COTIRE: "  ${OF_ENABLE_COTIRE})
-message("++ OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})
-
-if(CMAKE_BUILD_TYPE MATCHES Release)
-    message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
-    message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
-elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-    message("++ CMAKE_C_FLAGS_DEBUG: "     ${CMAKE_C_FLAGS_DEBUG})
-    message("++ CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
+if(CMAKE_SYSTEM MATCHES Linux)
+message(STATUS "OF_ENABLE_AUDIO: "   ${OF_ENABLE_AUDIO})
+message(STATUS "OF_ENABLE_VIDEO: "   ${OF_ENABLE_VIDEO})
 endif()
+
+if(CMAKE_SYSTEM MATCHES Windows)
+message(STATUS "OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})
+endif()
+
+message(STATUS "OF_ENABLE_COTIRE: "      ${OF_ENABLE_COTIRE})
+message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
+message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
+message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 

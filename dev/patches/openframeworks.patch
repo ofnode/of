@@ -1,6 +1,6 @@
---- a/openframeworks/ofMain.h
-+++ b/openframeworks/ofMain.h
-@@ -75,9 +75,6 @@
+--- a/ofMain.h
++++ b/ofMain.h
+@@ -78,9 +78,6 @@
  #include "ofMainLoop.h"
  #if !defined( TARGET_OF_IOS ) & !defined(TARGET_ANDROID) & !defined(TARGET_EMSCRIPTEN)
  	#include "ofAppGLFWWindow.h"
@@ -10,40 +10,8 @@
  #endif
  
  //--------------------------
---- a/openframeworks/video/ofDirectShowPlayer.cpp
-+++ b/openframeworks/video/ofDirectShowPlayer.cpp
-@@ -14,15 +14,14 @@
- //-------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
- 
--#include <DShow.h>
-+#include <dshow.h>
- #pragma include_alias( "dxtrans.h", "qedit.h" )
- #define __IDxtCompositor_INTERFACE_DEFINED__
- #define __IDxtAlphaSetter_INTERFACE_DEFINED__
- #define __IDxtJpeg_INTERFACE_DEFINED__
- #define __IDxtKey_INTERFACE_DEFINED__
--#include <uuids.h>
--#include <Aviriff.h>
--#include <Windows.h>
-+#include <aviriff.h>
-+#include <windows.h>
- 
- //for threading
- #include <process.h>
---- a/openframeworks/app/ofAppGlutWindow.cpp
-+++ b/openframeworks/app/ofAppGlutWindow.cpp
-@@ -6,7 +6,7 @@
- 
- #ifdef TARGET_WIN32
- 	#define GLUT_BUILDING_LIB
--	#include "glut.h"
-+	#include "GL/glut.h"
- #endif
- #ifdef TARGET_OSX
-     #include <OpenGL/OpenGL.h>
---- a/openframeworks/utils/ofConstants.h
-+++ b/openframeworks/utils/ofConstants.h
+--- a/utils/ofConstants.h
++++ b/utils/ofConstants.h
 @@ -98,7 +98,7 @@
  	#define GLEW_STATIC
  	#include "GL/glew.h"
@@ -53,29 +21,26 @@
  	#define __WINDOWS_DS__
  	#define __WINDOWS_MM__
  	#if (_MSC_VER)       // microsoft visual studio
---- a/openframeworks/app/ofAppRunner.cpp
-+++ b/openframeworks/app/ofAppRunner.cpp
-@@ -160,7 +160,6 @@
- void ofExitCallback(){
- 	// controlled destruction of the mainLoop before
- 	// any other deinitialization
--	mainLoop().reset();
+@@ -351,10 +351,10 @@
+ // xcode has a bug where it won't support tls on some versions even
+ // on c++11, this is a workaround that bug
+ #if !defined(TARGET_OSX) && !defined(TARGET_OF_IOS)
+-	#define HAS_TLS 1
++	#define HAS_TLS 0
+ #elif __clang__
+ 	#if __has_feature(cxx_thread_local)
+-		#define HAS_TLS 1
++		#define HAS_TLS 0
+ 	#endif
+ #endif
  
- 	// everything should be destroyed here, except for
- 	// static objects
---- a/openframeworks/app/ofAppGLFWWindow.cpp
-+++ b/openframeworks/app/ofAppGLFWWindow.cpp
-@@ -296,10 +296,10 @@
- 	buffer[0]=iconPixels.getWidth();
- 	buffer[1]=iconPixels.getHeight();
- 	for(int i=0;i<iconPixels.getWidth()*iconPixels.getHeight();i++){
--		buffer[i+2] = iconPixels[i*4+3]<<24;
--		buffer[i+2] += iconPixels[i*4]<<16;
-+		buffer[i+2]  = iconPixels[i*4+3]<<24;
-+		buffer[i+2] += iconPixels[i*4+0]<<16;
- 		buffer[i+2] += iconPixels[i*4+1]<<8;
--		buffer[i+2] += iconPixels[i*4];
-+		buffer[i+2] += iconPixels[i*4+2];
- 	}
+--- a/sound/ofOpenALSoundPlayer.h
++++ b/sound/ofOpenALSoundPlayer.h
+@@ -19,6 +19,7 @@
+ #include "kiss_fftr.h"
+ #include <sndfile.h>
+ #ifdef OF_USING_MPG123
++	#include <unistd.h>
+ 	#include <mpg123.h>
+ #endif
  
- 	XChangeProperty(getX11Display(), getX11Window(), XInternAtom(getX11Display(), "_NET_WM_ICON", False), XA_CARDINAL, 32,

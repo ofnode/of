@@ -68,14 +68,13 @@ class ofSerialDeviceInfo{
 		/// \endcond
 };
 
-
 //----------------------------------------------------------
 // ofMutex
 //----------------------------------------------------------
 
-#include "Poco/Mutex.h"
-
+#include <mutex>
 /// \brief A typedef for a cross-platform mutex.
+/// \deprecated Please use std::mutex instead of ofMutex. See also the note below.
 ///
 /// A mutex is used to lock data when it is accessible from multiple threads.
 /// Locking data with a mutex prevents data-races, deadlocks and other problems
@@ -100,15 +99,16 @@ class ofSerialDeviceInfo{
 ///
 /// ~~~~
 ///
-/// \warning Currently ofMutex is a typedef for Poco::FastMutex a fast cross-
-/// platform mutex. In a future version of OF, Poco::FastMutex will be replaced
-/// by std::mutex.
+/// \note Currently ofMutex is a typedef for std::mutex. This is done
+/// to preserve backwards compatibility. Please use std::mutex for new
+/// code.
 ///
 /// \sa http://www.cplusplus.com/reference/mutex/mutex/
-/// \sa http://www.appinf.com/docs/poco/Poco.FastMutex.html
-typedef Poco::FastMutex ofMutex;
+/// \sa ofScopedLock
+typedef std::mutex ofMutex;
 
 /// \brief A typedef for a cross-platform scoped mutex.
+/// \deprecated Please use std::unique_lock<std::mutex> instead of ofScopedLock. See also the note below.
 ///
 /// Normally ofMutex requres explicit calls to ofMutex::lock() and
 /// ofMutex::unlock() to lock and release the mutex. Sometimes, despite best
@@ -137,14 +137,13 @@ typedef Poco::FastMutex ofMutex;
 ///
 /// ~~~~
 ///
-/// \warning Currently ofScopedLock is a typedef for Poco::FastMutex::ScopedLock
-/// a convenient wrapper fo Poco::FastMutex.  In a future version of OF,
-/// Poco::FastMutex::ScopedLock by std::lock_guard.
+/// \warning Currently ofScopedLock is a typedef for std::unique_lock<std::mutex>.
+/// This is done to preserve backwards compatibility. Please use
+/// std::unique_lock<std::mutex> for new code.
 ///
-/// \sa http://en.cppreference.com/w/cpp/thread/lock_guard
-/// \sa http://www.appinf.com/docs/poco/Poco.ScopedLock.html
+/// \sa http://en.cppreference.com/w/cpp/thread/unique_lock
 /// \sa ofMutex
-typedef Poco::FastMutex::ScopedLock ofScopedLock;
+typedef std::unique_lock<std::mutex> ofScopedLock;
 
 /// \brief Contains general information about the style of ofGraphics
 /// elements such as color, line width and others.
@@ -283,7 +282,38 @@ public:
 //----------------------------------------------------------
 // ofPtr
 //----------------------------------------------------------
-#if HAS_CPP11
 template <typename T>
 using ofPtr = std::shared_ptr<T>;
+
+
+// This is a helper method for make unique on platforms that support C++11, but not C++14.
+#if !defined(NO_OF_MAKE_UNIQUE) && (defined(_MSC_VER) && _MSC_VER < 1800) || (!defined(_MSC_VER) && __cplusplus <= 201103L)
+
+// Implementation for C++11 platforms that do not yet have std::make_unique.
+// Implementation from http://stackoverflow.com/a/13512344/1518329
+namespace std {
+
+
+template <typename T, typename... Args>
+std::unique_ptr<T> make_unique_helper(std::false_type, Args&&... args) {
+	return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
+template <typename T, typename... Args>
+std::unique_ptr<T> make_unique_helper(std::true_type, Args&&... args) {
+	static_assert(std::extent<T>::value == 0,
+				  "make_unique<T[N]>() is forbidden, please use make_unique<T[]>().");
+
+	typedef typename std::remove_extent<T>::type U;
+	return std::unique_ptr<T>(new U[sizeof...(Args)]{std::forward<Args>(args)...});
+}
+
+template <typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args) {
+	return make_unique_helper<T>(std::is_array<T>(), std::forward<Args>(args)...);
+}
+
+
+} // namespace std
+
 #endif

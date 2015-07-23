@@ -37,7 +37,7 @@ Thanks to:
 */
 /////////////////////////////////////////////////////////
 
-
+#pragma comment(lib,"Strmiids.lib") 
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -49,7 +49,7 @@ Thanks to:
 
 //this is for TryEnterCriticalSection
 #ifndef _WIN32_WINNT
-	#   define _WIN32_WINNT 0x400
+	#   define _WIN32_WINNT 0x501
 #endif
 #include <windows.h>
 
@@ -321,12 +321,12 @@ class videoInput{
 
 		//Manual control over settings thanks.....
 		//These are experimental for now.
-		bool setVideoSettingFilter(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
-		bool setVideoSettingFilterPct(int deviceID, long Property, float pctValue, long Flags = NULL);
+		bool setVideoSettingFilter(int deviceID, long Property, long lValue, long Flags = 0, bool useDefaultValue = false);
+		bool setVideoSettingFilterPct(int deviceID, long Property, float pctValue, long Flags = 0);
 		bool getVideoSettingFilter(int deviceID, long Property, long &min, long &max, long &SteppingDelta, long &currentValue, long &flags, long &defaultValue);
 
-		bool setVideoSettingCamera(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);
-		bool setVideoSettingCameraPct(int deviceID, long Property, float pctValue, long Flags = NULL);
+		bool setVideoSettingCamera(int deviceID, long Property, long lValue, long Flags = 0, bool useDefaultValue = false);
+		bool setVideoSettingCameraPct(int deviceID, long Property, float pctValue, long Flags = 0);
 		bool getVideoSettingCamera(int deviceID, long Property, long &min, long &max, long &SteppingDelta, long &currentValue, long &flags, long &defaultValue);
 
 		//bool setVideoSettingCam(int deviceID, long Property, long lValue, long Flags = NULL, bool useDefaultValue = false);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofConstants.h"
+#include "utf8.h"
 #include <bitset> // For ofToBinary.
 
 #include "ofLog.h"
@@ -8,8 +9,6 @@
 #ifdef TARGET_WIN32	 // For ofLaunchBrowser.
 	#include <shellapi.h>
 #endif
-
-#include "Poco/Path.h"
 
 /// \name Elapsed Time
 /// \{
@@ -52,7 +51,7 @@ uint64_t ofGetElapsedTimeMicros();
 
 /// \brief Get the number of frames rendered since the program started.
 /// \returns the number of frames rendered since the program started.
-int ofGetFrameNum();
+uint64_t ofGetFrameNum();
 
 /// \}
 
@@ -132,6 +131,7 @@ string ofGetTimestampString();
 ///
 /// \param timestampFormat The formatting pattern.
 /// \returns the formatted timestamp as a string.
+/// \warning an invalid timestampFormat may crash windows apps.
 string ofGetTimestampString(const string& timestampFormat);
 
 /// \brief Get the current year.
@@ -415,7 +415,7 @@ int ofStringTimesInString(const string& haystack, const string& needle);
 ///
 /// \param src The UTF-8 encoded string to convert to lowercase.
 /// \returns the UTF-8 encoded string as all lowercase characters.
-string ofToLower(const string& src);
+string ofToLower(const string& src, const string & locale="");
 
 /// \brief Converts all characters in the string to uppercase.
 ///
@@ -430,7 +430,13 @@ string ofToLower(const string& src);
 ///
 /// \param src The UTF-8 encoded string to convert to uppercase.
 /// \returns the UTF-8 encoded string as all uppercase characters.
-string ofToUpper(const string& src);
+string ofToUpper(const string& src, const string & locale="");
+
+string ofTrimFront(const string & src, const string & locale = "");
+string ofTrimBack(const string & src, const string & locale = "");
+string ofTrim(const string & src, const string & locale = "");
+
+void ofAppendUTF8(string & str, int utf8);
 
 /// \brief Convert a variable length argument to a string.
 /// \param format a printf-style format string.
@@ -587,6 +593,19 @@ const char * ofFromString(const string & value);
 /// \param The string representation of the integer.
 /// \returns the integer represented by the string or 0 on failure.
 int ofToInt(const string& intString);
+
+// --------------------------------------------
+/// \name Number conversion
+/// \{
+
+/// \brief Convert a string to a int64_t.
+///
+/// Converts a `std::string` representation of a long integer
+/// (e.g., `"9223372036854775807"`) to an actual `int64_t`.
+///
+/// \param The string representation of the long integer.
+/// \returns the long integer represented by the string or 0 on failure.
+int64_t ofToInt64(const string& intString);
 
 /// \brief Convert a string to a float.
 ///
@@ -878,7 +897,9 @@ void ofSaveViewport(const string& filename);
 /// \param url the URL to open.
 /// \param uriEncodeQuery true if the query parameters in the given URL have
 /// already been URL encoded.
+#ifndef TARGET_EMSCRIPTEN
 void ofLaunchBrowser(const string& url, bool uriEncodeQuery=false);
+#endif
 
 /// \brief Executes a system command. Similar to run a command in terminal.
 /// \note Will block until the executed program/command has finished.
@@ -888,5 +909,28 @@ string ofSystem(const string& command);
 /// \brief Get the target platform of the current system.
 /// \returns the current ofTargetPlatform.
 ofTargetPlatform ofGetTargetPlatform();
+
+
+/// Allows to iterate over a string's utf8 codepoints.
+/// The easiest way to use it is with a c++11 range style
+/// for loop like:
+///
+/// for(auto c: ofUTF8Iterator(str)){
+/// ...
+/// }
+///
+/// which will iterate through all the utf8 codepoints in the
+/// string.
+class ofUTF8Iterator{
+public:
+	ofUTF8Iterator(const string & str);
+	utf8::iterator<std::string::const_iterator> begin() const;
+	utf8::iterator<std::string::const_iterator> end() const;
+	utf8::iterator<std::string::const_reverse_iterator> rbegin() const;
+	utf8::iterator<std::string::const_reverse_iterator> rend() const;
+
+private:
+	std::string src_valid;
+};
 
 /// \}

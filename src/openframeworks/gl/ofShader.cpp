@@ -3,7 +3,6 @@
 #include "ofFileUtils.h"
 #include "ofGraphics.h"
 #include "ofGLProgrammableRenderer.h"
-#include "Poco/RegularExpression.h"
 #include "ofTexture.h"
 #include "ofMatrix4x4.h"
 #include "ofMatrix3x3.h"
@@ -12,6 +11,7 @@
 #include "ofVec4f.h"
 #include "ofParameterGroup.h"
 #include "ofParameter.h"
+#include <regex>
 
 static const string COLOR_ATTRIBUTE="color";
 static const string POSITION_ATTRIBUTE="position";
@@ -97,7 +97,7 @@ bLoaded(mom.bLoaded),
 shaders(mom.shaders){
 	if(mom.bLoaded){
 		retainProgram(program);
-		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it){
+		for(auto it = shaders.begin(); it != shaders.end(); ++it){
 			GLuint shader = it->second;
 			retainShader(shader);
 		}
@@ -117,7 +117,7 @@ ofShader & ofShader::operator=(const ofShader & mom){
 	shaders = mom.shaders;
 	if(mom.bLoaded){
 		retainProgram(program);
-		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it){
+		for(auto it = shaders.begin(); it != shaders.end(); ++it){
 			GLuint shader = it->second;
 			retainShader(shader);
 		}
@@ -237,18 +237,17 @@ string ofShader::parseForIncludes( const string& source, vector<string>& include
 	stringstream input;
 	input << source;
 	
-	Poco::RegularExpression re("^\\s*#\\s*pragma\\s+include\\s+[\"<](.*)[\">].*");
-	Poco::RegularExpression::MatchVec matches;
-	
+	std::regex re("^\\s*#\\s*pragma\\s+include\\s+[\"<](.*)[\">].*");
+	std::smatch matches;
 	string line;
 	while( std::getline( input, line ) ) {
-		
-		if ( re.match( line, 0, matches ) < 2 ) {
+		std::regex_match( line, matches, re );
+		if ( matches.size() < 2 ) {
 			output << line << endl;
 			continue;
 		}
 		
-		string include = line.substr(matches[1].offset, matches[1].length);
+		string include = matches[1];
 		
 		if ( std::find( included.begin(), included.end(), include ) != included.end() ) {
 			ofLogVerbose("ofShader") << include << " already included";
@@ -257,7 +256,7 @@ string ofShader::parseForIncludes( const string& source, vector<string>& include
 		
 		// we store the absolute paths so as have (more) unique file identifiers.
 		
-		include = ofFile(sourceDirectoryPath + include).getAbsolutePath();
+		include = ofFile(ofFilePath::join(sourceDirectoryPath, include)).getAbsolutePath();
 		included.push_back( include );
 		
 		
@@ -276,7 +275,7 @@ string ofShader::parseForIncludes( const string& source, vector<string>& include
 
 //--------------------------------------------------------------
 string ofShader::getShaderSource(GLenum type)  const{
-	unordered_map<GLenum,string>::const_iterator source = shaderSource.find(type);
+	auto source = shaderSource.find(type);
 	if ( source != shaderSource.end()) {
 		return source->second;
 	} else {
@@ -350,14 +349,14 @@ void ofShader::checkShaderInfoLog(GLuint shader, GLenum type, ofLogLevel logLeve
 		if (shaderSource.find(type) != shaderSource.end()) {
 			// The following regexp should match shader compiler error messages by Nvidia and ATI.
 			// Unfortunately, each vendor's driver formats error messages slightly different.
-			Poco::RegularExpression re("^.*[(:]{1}(\\d+)[:)]{1}.*");
-			Poco::RegularExpression::MatchVec matches;
-			string infoString = (infoBuffer != NULL) ? string(infoBuffer): "";
-			re.match(infoString, 0, matches);
-			ofBuffer buf = shaderSource[type];
-			ofBuffer::Line line = buf.getLines().begin();
-			if (!matches.empty()){
-				int  offendingLineNumber = ofToInt(infoString.substr(matches[1].offset, matches[1].length));
+			std::regex nvidia_ati("^.*[(:]{1}(\\d+)[:)]{1}.*");
+			std::regex intel("^[0-9]+:([0-9]+)\\([0-9]+\\):.*$");
+			std::smatch matches;
+			string infoString = (infoBuffer != NULL) ? ofTrim(infoBuffer): "";
+			if (std::regex_search(infoString, matches, intel) || std::regex_search(infoString, matches, nvidia_ati)){
+				ofBuffer buf = shaderSource[type];
+				ofBuffer::Line line = buf.getLines().begin();
+				int  offendingLineNumber = ofToInt(matches[1]);
 				ostringstream msg;
 				msg << "ofShader: " + nameForType(type) + ", offending line " << offendingLineNumber << " :"<< endl;
 				for(int i=0; line != buf.getLines().end(); line++, i++ ){
@@ -368,7 +367,7 @@ void ofShader::checkShaderInfoLog(GLuint shader, GLenum type, ofLogLevel logLeve
 				}
 				ofLog(logLevel) << msg.str();
 			}else{
-				ofLogError() << shaderSource[type];
+				ofLog(logLevel) << shaderSource[type];
 			}
 		}
 		delete [] infoBuffer;
@@ -385,10 +384,10 @@ void ofShader::checkProgramInfoLog(GLuint program) {
 		string msg = "ofShader: program reports:\n";
 #ifdef TARGET_RASPBERRYPI
 		if (shaderSource.find(GL_FRAGMENT_SHADER) != shaderSource.end()) {
-			Poco::RegularExpression re(",.line.([^\\)]*)");
-			Poco::RegularExpression::MatchVec matches;
+			std::regex re(",.line.([^\\)]*)");
+			std::smatch matches;
 			string infoString = (infoBuffer != NULL) ? string(infoBuffer): "";
-			re.match(infoString, 0, matches);
+			std::regex_match(infoString, matches, re);
 			ofBuffer buf = shaderSource[GL_FRAGMENT_SHADER];
 			ofBuffer::Line line = buf.getLines().begin();
 			if (!matches.empty()){
@@ -437,7 +436,7 @@ bool ofShader::linkProgram() {
 	} else {
 		checkAndCreateProgram();
 
-		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it){
+		for(auto it = shaders.begin(); it != shaders.end(); ++it){
 			GLuint shader = it->second;
 			if(shader) {
 				ofLogVerbose("ofShader") << "linkProgram(): attaching " << nameForType(it->first) << " shader to program " << program;
@@ -478,7 +477,7 @@ bool ofShader::bindDefaults() const{
 //--------------------------------------------------------------
 void ofShader::unload() {
 	if(bLoaded) {
-		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it) {
+		for(auto it = shaders.begin(); it != shaders.end(); ++it) {
 			GLuint shader = it->second;
 			if(shader) {
 				ofLogVerbose("ofShader") << "unload(): detaching and deleting " << nameForType(it->first) << " shader from program " << program;
@@ -864,7 +863,7 @@ GLint ofShader::getUniformLocation(const string & name)  const{
 	GLint loc = -1;
 
 	// tig: caching uniform locations gives the RPi a 17% boost on average
-	unordered_map<string, GLint>::iterator it = uniformLocations.find(name);
+	auto it = uniformLocations.find(name);
 	if (it == uniformLocations.end()){
 		loc = glGetUniformLocation(program, name.c_str());
 		uniformLocations[name] = loc;
@@ -935,7 +934,7 @@ GLuint ofShader::getProgram() const{
 
 //--------------------------------------------------------------
 GLuint ofShader::getShader(GLenum type) const{
-	unordered_map<GLenum,GLuint>::const_iterator shader = shaders.find(type);
+	auto shader = shaders.find(type);
 	if(shader!=shaders.end()){
 		return shader->second;
 	}else{

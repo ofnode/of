@@ -197,18 +197,14 @@ endmacro()
 #           target_name             the name of the target. e.g. Foundation for PocoFoundation
 #    Example: POCO_INSTALL(Foundation)
 macro(POCO_INSTALL target_name)
-install(
-    DIRECTORY include/Poco
-    DESTINATION include
-    COMPONENT Devel
-    PATTERN ".svn" EXCLUDE
-    )
+endmacro()
 
-install(
-    TARGETS "${target_name}" EXPORT "${target_name}Targets"
-    LIBRARY DESTINATION lib${LIB_SUFFIX}
-    ARCHIVE DESTINATION lib${LIB_SUFFIX}
-    RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include
-    )
+#  POCO_INSTALL_PDB - Install the given target's companion pdb file (if present)
+#    Usage: POCO_INSTALL_PDB(target_name)
+#      INPUT:
+#           target_name             the name of the target. e.g. Foundation for PocoFoundation
+#    Example: POCO_INSTALL_PDB(Foundation)
+#
+#    This is an internal macro meant only to be used by POCO_INSTALL.
+macro(POCO_INSTALL_PDB target_name)
 endmacro()

@@ -142,13 +142,13 @@ public:
     /// \brief Whether the image has been allocated either by a call to
     /// allocate or by loading pixel data into the image.
     /// \returns true if the image has been allocated.
-    bool isAllocated() {return pixels.isAllocated();};
+    bool isAllocated() const {return pixels.isAllocated();};
     
     /// \brief Whether the image has been allocated either by a call to
     /// allocate or by loading pixel data into the image.
     /// \deprecated Use isAllocated() instead
     /// \returns true if the image has been allocated.
-    bool bAllocated() {return pixels.isAllocated();};   // legacy function
+    OF_DEPRECATED_MSG("Use isAllocated()", bool bAllocated());
     
     /// \brief This clears the texture and pixels contained within the ofImage.
     void clear();
@@ -164,7 +164,7 @@ public:
     /// \param fileName Program looks for image given by fileName, relative to
     /// the data folder.
     /// \returns true if image loaded correctly.
-    bool load(string fileName);
+    bool load(const string& fileName);
     
     /// \brief Loads an image from an ofBuffer instance created by, for
     /// instance, ofFile::readToBuffer().
@@ -453,6 +453,7 @@ public:
     /// \param type The type of image, one of the following:
     /// `OF_IMAGE_GRAYSCALE`, `OF_IMAGE_COLOR`, `OF_IMAGE_COLOR_ALPHA`
     void setImageType(ofImageType type);
+    ofImageType getImageType() const;
     
     /// \}
     /// \name Modifiers
@@ -576,11 +577,6 @@ public:
     ofImage_<PixelType>& operator= (const ofImage_<SrcType>& mom);
     
     /// \}
-    
-    int width;  ///< \brief Image width in pixels.
-    int height; ///< \brief Image Height in pixels.
-    int bpp;    ///< \brief Bits per image pixel.
-    int type;   ///< \brief Image type.
     ///< \sa ofImageType
 protected:
     /// \cond INTERNAL
@@ -591,6 +587,11 @@ protected:
     ofPixels_<PixelType> pixels;
     bool bUseTexture;
     ofTexture tex;
+
+    int width;  ///< \brief Image width in pixels.
+    int height; ///< \brief Image Height in pixels.
+    int bpp;    ///< \brief Bits per image pixel.
+    ofImageType type;   ///< \brief Image type.
     /// \endcond
 };
 

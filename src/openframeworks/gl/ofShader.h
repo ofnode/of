@@ -161,9 +161,9 @@ private:
 	GLuint program;
 	bool bLoaded;
 
-	unordered_map<GLenum, GLuint> shaders;
-	unordered_map<GLenum, string> shaderSource;
-	mutable unordered_map<string, GLint> uniformLocations;
+	map<GLenum, GLuint> shaders;
+	map<GLenum, string> shaderSource;
+	mutable map<string, GLint> uniformLocations;
 
 	void checkProgramInfoLog(GLuint program);
 	bool checkProgramLinkStatus(GLuint program);

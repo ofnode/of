@@ -1,5 +1,5 @@
---- a/poco/NetSSL_Win/src/Context.cpp
-+++ b/poco/NetSSL_Win/src/Context.cpp
+--- a/NetSSL_Win/src/Context.cpp
++++ b/NetSSL_Win/src/Context.cpp
 @@ -218,7 +218,7 @@
  	blob.cbData = static_cast<DWORD>(size);
  	blob.pbData = reinterpret_cast<BYTE*>(const_cast<char*>(pBuffer));
@@ -18,8 +18,8 @@
  	}
  
  	schannelCred.grbitEnabledProtocols = proto();
---- a/poco/Foundation/src/EventLogChannel.cpp
-+++ b/poco/Foundation/src/EventLogChannel.cpp
+--- a/Foundation/src/EventLogChannel.cpp
++++ b/Foundation/src/EventLogChannel.cpp
 @@ -17,7 +17,6 @@
  #include "Poco/EventLogChannel.h"
  #include "Poco/Message.h"
@@ -28,8 +28,8 @@
  #if defined(POCO_WIN32_UTF8)
  #include "Poco/UnicodeConverter.h"
  #endif
---- a/poco/Foundation/include/Poco/Config.h
-+++ b/poco/Foundation/include/Poco/Config.h
+--- a/Foundation/include/Poco/Config.h
++++ b/Foundation/include/Poco/Config.h
 @@ -23,11 +23,15 @@
  // Define to enable Windows Unicode (UTF-8) support
  // NOTE: As of POCO C++ Libraries release 1.6.0, compiling POCO

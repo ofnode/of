@@ -3,61 +3,76 @@ cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
-#// MSVC flags /////////////////////////////////////////////////////////////////
-
-if(MSVC)
-
-    set(RELEASE_FLAGS "
-    ")
-
-    set(DEBUG_FLAGS "
-    ")
-
-else()
-
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
-    set(RELEASE_FLAGS "
-    ")
+set(RELEASE_FLAGS "
+    -Wno-deprecated-declarations
+")
 
-    set(DEBUG_FLAGS "
-        -fno-omit-frame-pointer
-        -fno-optimize-sibling-calls
-    ")
+set(DEBUG_FLAGS "
+    -fno-omit-frame-pointer
+    -fno-optimize-sibling-calls
+    -Wno-deprecated-declarations
+")
 
 #// Clang specific C flags /////////////////////////////////////////////////////
 
-  if(CMAKE_C_COMPILER_ID STREQUAL Clang)
+if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
-    set(RELEASE_C_FLAGS_CLANG "
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+set(RELEASE_C_FLAGS_CLANG "
+    -Wno-switch
+    -Wno-ignored-attributes
+    -Wno-deprecated-register
+")
 
-    set(DEBUG_C_FLAGS_CLANG "
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+set(DEBUG_C_FLAGS_CLANG "
+    -Wno-switch
+    -Wno-ignored-attributes
+    -Wno-deprecated-register
+")
 
-  endif()
+endif()
 
 #// Clang specific C++ flags ///////////////////////////////////////////////////
 
-  if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
-    set(RELEASE_CXX_FLAGS_CLANG "
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+set(RELEASE_CXX_FLAGS_CLANG "
+    -Wno-switch
+    -Wno-ignored-attributes
+    -Wno-deprecated-register
+")
 
-    set(DEBUG_CXX_FLAGS_CLANG "
-        -Wno-switch
-        -Wno-deprecated-register
-    ")
+set(DEBUG_CXX_FLAGS_CLANG "
+    -Wno-switch
+    -Wno-ignored-attributes
+    -Wno-deprecated-register
+")
 
-  endif()
+endif()
 
-#///////////////////////////////////////////////////////////////////////////////
+#// Options ////////////////////////////////////////////////////////////////////
+
+if(CMAKE_SYSTEM MATCHES Linux)
+
+  set(OF_ENABLE_AUDIO ON CACHE BOOL
+     "Compile audio features of openFrameworks on Linux")
+
+  set(OF_ENABLE_VIDEO ON CACHE BOOL
+     "Compile video features of openFrameworks on Linux")
+
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+
+  set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL
+     "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
+
+  set(OF_ENABLE_AUDIO ON)
+  set(OF_ENABLE_VIDEO ON)
+
+elseif(CMAKE_SYSTEM MATCHES Windows)
+
+  set(OF_ENABLE_AUDIO ON)
+  set(OF_ENABLE_VIDEO ON)
 
 endif()
 
@@ -72,6 +87,19 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/openframeworks"
+    "${OF_ROOT_DIR}/src/openframeworks/3d"
+    "${OF_ROOT_DIR}/src/openframeworks/app"
+    "${OF_ROOT_DIR}/src/openframeworks/communication"
+    "${OF_ROOT_DIR}/src/openframeworks/events"
+    "${OF_ROOT_DIR}/src/openframeworks/gl"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics"
+    "${OF_ROOT_DIR}/src/openframeworks/math"
+    "${OF_ROOT_DIR}/src/openframeworks/sound"
+    "${OF_ROOT_DIR}/src/openframeworks/types"
+    "${OF_ROOT_DIR}/src/openframeworks/utils"
+    "${OF_ROOT_DIR}/src/openframeworks/video"
+
     "${OF_ROOT_DIR}/src/freeimage"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
     "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
@@ -87,9 +115,13 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/glfw/include"
     "${OF_ROOT_DIR}/src/glfw/include/GLFW"
 
-    "${OF_ROOT_DIR}/src/kiss"
-    "${OF_ROOT_DIR}/src/kiss/src"
-    "${OF_ROOT_DIR}/src/kiss/tools"
+    "${OF_ROOT_DIR}/src/kissfft"
+    "${OF_ROOT_DIR}/src/kissfft/src"
+    "${OF_ROOT_DIR}/src/kissfft/tools"
+
+    "${OF_ROOT_DIR}/src/libtess2"
+    "${OF_ROOT_DIR}/src/libtess2/Include"
+    "${OF_ROOT_DIR}/src/libtess2/Source"
 
     "${OF_ROOT_DIR}/src/poco"
     "${OF_ROOT_DIR}/src/poco/Crypto/include"
@@ -103,33 +135,13 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/rtaudio"
     "${OF_ROOT_DIR}/src/rtaudio/include"
 
-    "${OF_ROOT_DIR}/src/libtess2"
-    "${OF_ROOT_DIR}/src/libtess2/Include"
-    "${OF_ROOT_DIR}/src/libtess2/Source"
-
-    "${OF_ROOT_DIR}/src/openframeworks"
-    "${OF_ROOT_DIR}/src/openframeworks/3d"
-    "${OF_ROOT_DIR}/src/openframeworks/app"
-    "${OF_ROOT_DIR}/src/openframeworks/communication"
-    "${OF_ROOT_DIR}/src/openframeworks/events"
-    "${OF_ROOT_DIR}/src/openframeworks/gl"
-    "${OF_ROOT_DIR}/src/openframeworks/graphics"
-    "${OF_ROOT_DIR}/src/openframeworks/math"
-    "${OF_ROOT_DIR}/src/openframeworks/sound"
-    "${OF_ROOT_DIR}/src/openframeworks/types"
-    "${OF_ROOT_DIR}/src/openframeworks/utils"
-    "${OF_ROOT_DIR}/src/openframeworks/video"
+    "${OF_ROOT_DIR}/src/utf8cpp"
+    "${OF_ROOT_DIR}/src/utf8cpp/include"
 )
 
 if(CMAKE_SYSTEM MATCHES Windows)
 list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/videoinput"
-)
-endif()
-
-if(MSVC)
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/dev/include/msvc"
 )
 endif()
 
@@ -141,7 +153,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug")
 
     set(OPENFRAMEWORKS_DEFINITIONS
-        -DOF_USING_GTK
         -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
@@ -149,16 +160,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-
-    find_package(Glib REQUIRED)
-    find_package(ALSA REQUIRED)
     find_package(Cairo REQUIRED)
-    find_package(OpenAL REQUIRED)
+    find_package(Boost REQUIRED)
     find_package(OpenGL REQUIRED)
-    find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(GStreamer REQUIRED)
     find_package(Fontconfig REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
@@ -166,33 +171,61 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${GTK3_INCLUDE_DIRS}
-        ${GLIB_INCLUDE_DIRS}
-        ${ALSA_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIR}
-        ${OPENAL_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
-        ${GSTREAMER_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIR}
     )
+
+    if(NOT OF_ENABLE_AUDIO)
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_SOUND
+      )
+    else()
+      find_package(ALSA REQUIRED)
+      find_package(OpenAL REQUIRED)
+      find_package(MPG123 REQUIRED)
+      find_package(Sndfile REQUIRED)
+
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${ALSA_INCLUDE_DIRS}
+        ${OPENAL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
+        ${SNDFILE_INCLUDE_DIR}
+      )
+    endif()
+
+    if(NOT OF_ENABLE_VIDEO)
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_NO_VIDEO
+      )
+    else()
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DOF_USING_GTK
+      )
+
+      find_package(Glib REQUIRED)
+      find_package(GStreamer REQUIRED)
+      pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GLIB_INCLUDE_DIRS}
+        ${GTK3_INCLUDE_DIRS}
+        ${GSTREAMER_INCLUDE_DIRS}
+      )
+    endif()
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     message("OS X support is experimental. Please report issues if you run into something.")
-
-    set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL "Enable GStreamer on OSX")
-
-    if(OF_ENABLE_GSTREAMER_OSX)
-    message("Enabling GStreamer on OSX - make sure you installed it with ${OF_ROOT_DIR}/dev/install/osx/gstreamer.sh")
-    endif()
 
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug")
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -D__MACOSX_CORE__
+        -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
     )
@@ -208,9 +241,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     set(  DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG} "-x objective-c++")
 
     find_package(Cairo REQUIRED)
+    find_package(Boost REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
-    
+
     if(OF_ENABLE_GSTREAMER_OSX)
     find_package(Glib REQUIRED)
     find_package(GStreamer REQUIRED gstreamer-video)
@@ -218,6 +253,8 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
+        ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
     )
 
@@ -236,11 +273,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
-    if(MSVC)
-        set(CMAKE_RELEASE_POSTFIX "mt")
-        set(CMAKE_DEBUG_POSTFIX "mtd")
-    endif()
-
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug")
 
@@ -253,6 +285,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     )
 
     find_package(Cairo REQUIRED)
+    find_package(Boost REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
@@ -265,6 +298,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
@@ -325,13 +359,6 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/math/ofVec2f.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/math/ofVec4f.cpp"
 
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBuffer.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundPlayer.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundStream.cpp"
-
     "${OF_ROOT_DIR}/src/openframeworks/types/ofBaseTypes.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/types/ofColor.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/types/ofParameter.cpp"
@@ -348,37 +375,51 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofURLFileLoader.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofXml.cpp"
-
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
 )
 
+if(OF_ENABLE_AUDIO)
+  list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBuffer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundPlayer.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundStream.cpp"
+  )
+endif()
+
+if(OF_ENABLE_VIDEO)
+  list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
+  )
 if(CMAKE_SYSTEM MATCHES Linux)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
-    )
+  )
 elseif(CMAKE_SYSTEM MATCHES Darwin)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
-    )
-    if(OF_ENABLE_GSTREAMER_OSX)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+  )
+  if(OF_ENABLE_GSTREAMER_OSX)
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
-    )
-    endif()
+  )
+  endif()
 elseif(CMAKE_SYSTEM MATCHES Windows)
-    list(APPEND OPENFRAMEWORKS_SOURCES
+  list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/videoinput/videoInput.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
-    )
+  )
 endif()
+endif(OF_ENABLE_VIDEO)
 
 #// Compiler flags /////////////////////////////////////////////////////////////
 
@@ -387,12 +428,10 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC
 )
 
-if(MSVC)
+if(CMAKE_SYSTEM MATCHES Windows)
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
-    -D_SCL_SECURE_NO_WARNINGS
-    -D_CRT_SECURE_NO_WARNINGS
-    -D_WIN32_WINNT=0x0501
-    -D_UNICODE -DUNICODE
+    -D_UNICODE
+    -DUNICODE
 )
 endif()
 
@@ -401,11 +440,6 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
   if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_C_FLAG -Og)
-  elseif(CMAKE_SYSTEM MATCHES Windows)
-    # If GNU compiler's version below 4.8.0 and we are on Windows,
-    # then we're using old MinGW compiler. To avoid "File too big"
-    # error we have to crank O level up to make object files small
-    set(O_C_FLAG -O2)
   else()
     set(O_C_FLAG -O0)
   endif()
@@ -416,11 +450,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8.0)
     set(O_CXX_FLAG -Og)
-  elseif(CMAKE_SYSTEM MATCHES Windows)
-    # If GNU compiler's version below 4.8.0 and we are on Windows,
-    # then we're using old MinGW compiler. To avoid "File too big"
-    # error we have to crank O level up to make object files small
-    set(O_CXX_FLAG -O2)
   else()
     set(O_CXX_FLAG -O0)
   endif()
@@ -430,24 +459,22 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
 endif()
 
-if(NOT MSVC)
-    set(CPP11_FLAG -std=gnu++11)
-endif()
+set(CPP11_FLAG -std=gnu++11)
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
-    if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.9.0)
+  if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.9.0)
     set(C_COLORIZATION "-fdiagnostics-color")
-    endif()
+  endif()
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     set(CXX_COLORIZATION "-fcolor-diagnostics")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.9.0)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.9.0)
     set(CXX_COLORIZATION "-fdiagnostics-color")
-    endif()
+  endif()
 endif()
 
 string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
@@ -468,37 +495,93 @@ string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG}")
 string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_CXX_FLAG}")
 
-if(MSVC)
-string(REPLACE "/MD"  "/MT"  CMAKE_C_FLAGS_RELEASE   ${CMAKE_C_FLAGS_RELEASE})
-string(REPLACE "/MDd" "/MTd" CMAKE_C_FLAGS_DEBUG     ${CMAKE_C_FLAGS_DEBUG})
-string(REPLACE "/MD"  "/MT"  CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
-string(REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG})
-endif()
-
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message("++ CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
-
-message("++ CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
-message("++ CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
-
-if(CMAKE_BUILD_TYPE MATCHES Release)
-    message("++ CMAKE_C_FLAGS_RELEASE: "   ${CMAKE_C_FLAGS_RELEASE})
-    message("++ CMAKE_CXX_FLAGS_RELEASE: " ${CMAKE_CXX_FLAGS_RELEASE})
-elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-    message("++ CMAKE_C_FLAGS_DEBUG: "     ${CMAKE_C_FLAGS_DEBUG})
-    message("++ CMAKE_CXX_FLAGS_DEBUG: "   ${CMAKE_CXX_FLAGS_DEBUG})
+if(CMAKE_SYSTEM MATCHES Linux)
+message(STATUS "OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
+message(STATUS "OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
 endif()
+
+message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
+message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
+message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
 #// Build commands /////////////////////////////////////////////////////////////
 
-add_subdirectory(src/rtaudio)
 add_subdirectory(src/freeimage)
-add_subdirectory(src/glew)
 add_subdirectory(src/glfw)
-add_subdirectory(src/kiss)
 add_subdirectory(src/poco)
-add_subdirectory(src/libtess2)
+
+add_library(
+    glew STATIC
+    "${OF_ROOT_DIR}/src/glew/src/glew.c"
+)
+
+target_compile_definitions(
+    glew PRIVATE
+    -DGLEW_BUILD
+    -DGLEW_NO_GLU
+)
+
+target_include_directories(
+    glew PRIVATE
+    ${OPENFRAMEWORKS_INCLUDE_DIRS}
+)
+
+add_library(
+    kissfft STATIC
+    "${OF_ROOT_DIR}/src/kissfft/tools/kiss_fftr.c"
+    "${OF_ROOT_DIR}/src/kissfft/kiss_fft.c"
+)
+
+target_include_directories(
+    kissfft PRIVATE
+    ${OPENFRAMEWORKS_INCLUDE_DIRS}
+)
+
+add_library(
+    tess2 STATIC
+    "${OF_ROOT_DIR}/src/libtess2/Source/bucketalloc.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/priorityq.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/sweep.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/dict.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/geom.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/mesh.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/tess.c"
+)
+
+target_include_directories(
+    tess2 PRIVATE
+    ${OPENFRAMEWORKS_INCLUDE_DIRS}
+)
+
+add_library(
+    rtaudio STATIC
+    "${OF_ROOT_DIR}/src/rtaudio/RtAudio.cpp"
+)
+
+if(CMAKE_SYSTEM MATCHES Linux)
+target_compile_definitions(
+    rtaudio PRIVATE
+    -D__LINUX_ALSA__
+)
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+target_compile_definitions(
+    rtaudio PRIVATE
+    -D__MACOSX_CORE__
+    -DHAVE_GETTIMEOFDAY
+)
+elseif(CMAKE_SYSTEM MATCHES Windows)
+target_compile_definitions(
+    rtaudio PRIVATE
+    -D__WINDOWS_DS__
+)
+endif()
+
+target_include_directories(
+    rtaudio PRIVATE
+    ${OPENFRAMEWORKS_INCLUDE_DIRS}
+)
 
 add_library(
     openFrameworks STATIC
@@ -515,9 +598,7 @@ target_compile_definitions(
     ${OPENFRAMEWORKS_DEFINITIONS}
 )
 
-if(NOT MSVC)
 set_target_properties(
     openFrameworks PROPERTIES
     COMPILE_FLAGS -g
 )
-endif()

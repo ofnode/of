@@ -14,7 +14,7 @@ GIT_URL=
 # GIT_URL=https://github.com/assimp/assimp.git
 GIT_TAG=
 
-FORMULA_TYPES=( "osx" "osx-clang-libc++" "ios" )
+FORMULA_TYPES=( "osx" "osx-clang-libc++" "ios" "android" "emscripten" "vs" )
 
 # download the source code and unpack it into LIB_NAME
 function download() {
@@ -31,8 +31,11 @@ function download() {
     if [ "$TYPE" == "ios" ] ; then
 
     	echo "iOS"
-
+    elif [ "$TYPE" == "vs" ] ; then
+		#ADDED EXCEPTION, FIX DOESN'T WORK IN VS
+    	echo "VS"
 	else 
+		echo "$TYPE"
 
     	sed -i -e 's/SET ( ASSIMP_BUILD_STATIC_LIB OFF/SET ( ASSIMP_BUILD_STATIC_LIB ON/g' assimp/CMakeLists.txt
     	sed -i -e 's/option ( BUILD_SHARED_LIBS "Build a shared version of the library" ON )/option ( BUILD_SHARED_LIBS "Build a shared version of the library" OFF )/g' assimp/CMakeLists.txt
@@ -248,55 +251,75 @@ function build() {
 		local buildOpts="--build build/$TYPE -DASSIMP_BUILD_STATIC_LIB=1 -DASSIMP_BUILD_SHARED_LIB=0 -DASSIMP_ENABLE_BOOST_WORKAROUND=1"
 
 		# 32 bit
-		cmake -G 'Unix Makefiles' $buildOpts -DCMAKE_C_FLAGS="-arch i386 -O3 -DNDEBUG -funroll-loops" -DCMAKE_CXX_FLAGS="-arch i386 -stdlib=libstdc++ -O3 -DNDEBUG -funroll-loops" .
-		make assimp
-		mv lib/libassimp.a lib/libassimp-osx-i386.a
-		make clean
-
-		# 64 bit
-		cmake -G 'Unix Makefiles' $buildOpts -DCMAKE_C_FLAGS="-arch x86_64 -O3 -DNDEBUG -funroll-loops" -DCMAKE_CXX_FLAGS="-arch x86_64 -stdlib=libc++ -O3 -DNDEBUG -funroll-loops" .
-		make assimp 
-		mv lib/libassimp.a lib/libassimp-osx-x86_64.a
-		make clean
-
-		# link into universal lib
-		lipo -c lib/libassimp-osx-i386.a lib/libassimp-osx-x86_64.a -o lib/libassimp-osx.a
-
-	elif [ "$TYPE" == "osx-clang-libc++" ] ; then
-		echoWarning "WARNING: this needs to be updated - do we even need it anymore?"
-
-		# warning, assimp on github uses the ASSIMP_ prefix for CMake options ...
-		# these may need to be updated for a new release
-		local buildOpts="--build build/$TYPE"
-
-		export CPP=`xcrun -find clang++`
-		export CXX=`xcrun -find clang++`
-		export CXXCPP=`xcrun -find clang++`
-		export CC=`xcrun -find clang`
-		
-		# 32 bit
-		cmake -G 'Unix Makefiles' $buildOpts -DCMAKE_C_FLAGS="-arch i386 $assimp_flags" -DCMAKE_CXX_FLAGS="-arch i386 -std=c++11 -stdlib=libc++ $assimp_flags" .
-		make assimp -j 
-		mv lib/libassimp.a lib/libassimp-i386.a
-		make clean
-
-		# rename lib
-		libtool -c lib/libassimp-i386.a -o lib/libassimp-osx.a
-
-	elif [ "$TYPE" == "linux" ] ; then
-		echoWarning "TODO: linux build"
-
-	elif [ "$TYPE" == "linux64" ] ; then
-		echoWarning "TODO: linux64 build"
+		cmake -G 'Unix Makefiles' $buildOpts -DCMAKE_C_FLAGS="-arch i386 -arch x86_64 -O3 -DNDEBUG -funroll-loops" -DCMAKE_CXX_FLAGS="-arch i386 -arch x86_64 -stdlib=libc++ -O3 -DNDEBUG -funroll-loops" .
+		make assimp -j${PARALLEL_MAKE}
 
 	elif [ "$TYPE" == "vs" ] ; then
-		echoWarning "TODO: vs build"
+		
+		#architecture selection inspired int he tess formula, shouldn't build both architectures in the same run?
+		echo "building $TYPE | $ARCH | $VS_VER"
+		echo "--------------------"
+		local buildOpts=" -DASSIMP_BUILD_STATIC_LIB=0 -DASSIMP_ENABLE_BOOST_WORKAROUND=1 -DASSIMP_BUILD_ASSIMP_TOOLS=0"
+		local generatorName="Visual Studio "
+		generatorName+=$VS_VER
+		if [ $ARCH == 32 ] ; then
+			mkdir -p build_vs_32
+			cd build_vs_32
+			cmake .. -G "$generatorName" $buildOpts  
+			vs-build "Assimp.sln" build "Release|Win32"
+		elif [ $ARCH == 64 ] ; then
+			mkdir -p build_vs_64
+			cd build_vs_64
+			generatorName+=' Win64'
+			cmake .. -G "$generatorName" $buildOpts  
+			vs-build "Assimp.sln" build "Release|x64"
+		fi
+		cd ..		
+		#cleanup to not fail if the other platform is called
+		rm -f CMakeCache.txt
+		echo "--------------------"
+		echo "Completed Assimp for $TYPE | $ARCH | $VS_VER"
+
 
 	elif [ "$TYPE" == "win_cb" ] ; then
 		echoWarning "TODO: win_cb build"
 
 	elif [ "$TYPE" == "android" ] ; then
-		echoWarning "TODO: android build"
+        
+		# warning, assimp on github uses the ASSIMP_ prefix for CMake options ...
+		# these may need to be updated for a new release
+		local buildOpts="--build build/$TYPE -DASSIMP_BUILD_STATIC_LIB=1 -DASSIMP_BUILD_SHARED_LIB=0 -DASSIMP_ENABLE_BOOST_WORKAROUND=1 -DASSIMP_ENABLE_BOOST_WORKAROUND=1"
+		
+
+		# arm
+        ABI=armeabi-v7a
+        source ../../android_configure.sh $ABI
+		mkdir -p build_arm
+		cd build_arm
+		cmake -G 'Unix Makefiles' $buildOpts -DCMAKE_C_FLAGS="-O3 -DNDEBUG $CFLAGS" -DCMAKE_CXX_FLAGS="-O3 -DNDEBUG $CFLAGS" -DCMAKE_LD_FLAGS="$LDFLAGS" ..
+		make assimp -j${PARALLEL_MAKE}
+		cd ..
+		
+
+		# x86
+        ABI=x86
+        source ../../android_configure.sh $ABI
+		mkdir -p build_x86
+		cd build_x86
+		cmake -G 'Unix Makefiles' $buildOpts -DCMAKE_C_FLAGS="-O3 -DNDEBUG $CFLAGS" -DCMAKE_CXX_FLAGS="-O3 -DNDEBUG $CFLAGS" -DCMAKE_LD_FLAGS="$LDFLAGS" ..
+		make assimp -j${PARALLEL_MAKE}
+		cd ..
+
+	elif [ "$TYPE" == "emscripten" ] ; then
+        
+		# warning, assimp on github uses the ASSIMP_ prefix for CMake options ...
+		# these may need to be updated for a new release
+		local buildOpts="--build build/$TYPE -DASSIMP_BUILD_STATIC_LIB=1 -DASSIMP_BUILD_SHARED_LIB=0 -DASSIMP_ENABLE_BOOST_WORKAROUND=1"
+		mkdir -p build_emscripten
+		cd build_emscripten
+		emcmake cmake -G 'Unix Makefiles' $buildOpts -DCMAKE_C_FLAGS="-O3 -DNDEBUG" -DCMAKE_CXX_FLAGS="-O3 -DNDEBUG" ..
+		emmake make assimp -j${PARALLEL_MAKE}
+		cd ..
 	fi
 }
 
@@ -312,13 +335,26 @@ function copy() {
 	# libs
 	mkdir -p $1/lib/$TYPE
 	if [ "$TYPE" == "vs" ] ; then
-		cp -Rv lib/libassimp.lib $1/lib/$TYPE/assimp.lib
+		if [ $ARCH == 32 ] ; then
+			mkdir -p $1/lib/$TYPE/Win32
+			cp -v build_vs_32/code/Release/assimp.lib $1/lib/$TYPE/Win32/assimp.lib
+			cp -v build_vs_32/code/Release/assimp.dll ../../../../export/vs/Win32/assimp.dll
+		elif [ $ARCH == 64 ] ; then
+			mkdir -p $1/lib/$TYPE/x64
+			cp -v build_vs_64/code/Release/assimp.lib $1/lib/$TYPE/x64/assimp.lib
+			cp -v build_vs_64/code/Release/assimp.dll ../../../../export/vs/x64/assimp.dll
+		fi
 	elif [ "$TYPE" == "osx" ] ; then
-		cp -Rv lib/libassimp-osx.a $1/lib/$TYPE/assimp.a
+		cp -Rv lib/libassimp.a $1/lib/$TYPE/assimp.a
 	elif [ "$TYPE" == "ios" ] ; then
 		cp -Rv lib/$TYPE/assimp.a $1/lib/$TYPE/assimp.a
-	else
-		cp -Rv lib/libassimp.a $1/lib/$TYPE/assimp.a
+	elif [ "$TYPE" == "android" ]; then
+    	mkdir -p $1/lib/$TYPE/armeabi-v7a/
+    	mkdir -p $1/lib/$TYPE/x86/
+		cp -Rv build_arm/code/libassimp.a $1/lib/$TYPE/armeabi-v7a/libassimp.a
+		cp -Rv build_x86/code/libassimp.a $1/lib/$TYPE/x86/libassimp.a
+	elif [ "$TYPE" == "emscripten" ]; then
+    	cp -Rv build_emscripten/code/libassimp.a $1/lib/$TYPE/libassimp.a
 	fi
 
     # copy license files
@@ -331,9 +367,15 @@ function copy() {
 function clean() {
 
 	if [ "$TYPE" == "vs" ] ; then
-		echoWarning "TODO: clean vs"
+		if [ $ARCH == 32 ] ; then
+			vs-clean "build_vs_32/Assimp.sln";
+		elif [ $ARCH == 64 ] ; then
+			vs-clean "build_vs_64/Assimp.sln";
+		fi
+		rm -f CMakeCache.txt
+		echo "Assimp VS | $TYPE | $ARCH cleaned"
 
-	elif [ "$TYPE" == "vs" ] ; then
+	elif [ "$TYPE" == "android" ] ; then
 		echoWarning "TODO: clean android"
 
 	else
