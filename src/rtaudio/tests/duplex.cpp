@@ -48,8 +48,8 @@ void usage( void ) {
   exit( 0 );
 }
 
-int inout( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-           double streamTime, RtAudioStreamStatus status, void *data )
+int inout( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/,
+           double /*streamTime*/, RtAudioStreamStatus status, void *data )
 {
   // Since the number of input and output channels is equal, we can do
   // a simple buffer copy operation here.
@@ -97,13 +97,18 @@ int main( int argc, char *argv[] )
   oParams.nChannels = channels;
   oParams.firstChannel = oOffset;
 
+  if ( iDevice == 0 )
+    iParams.deviceId = adac.getDefaultInputDevice();
+  if ( oDevice == 0 )
+    oParams.deviceId = adac.getDefaultOutputDevice();
+
   RtAudio::StreamOptions options;
   //options.flags |= RTAUDIO_NONINTERLEAVED;
 
   try {
     adac.openStream( &oParams, &iParams, FORMAT, fs, &bufferFrames, &inout, (void *)&bufferBytes, &options );
   }
-  catch ( RtError& e ) {
+  catch ( RtAudioError& e ) {
     std::cout << '\n' << e.getMessage() << '\n' << std::endl;
     exit( 1 );
   }
@@ -123,7 +128,7 @@ int main( int argc, char *argv[] )
     // Stop the stream.
     adac.stopStream();
   }
-  catch ( RtError& e ) {
+  catch ( RtAudioError& e ) {
     std::cout << '\n' << e.getMessage() << '\n' << std::endl;
     goto cleanup;
   }

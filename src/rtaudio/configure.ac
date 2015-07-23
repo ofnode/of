@@ -1,5 +1,5 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT(RtAudio, 4.0, gary@music.mcgill.ca, rtaudio)
+AC_INIT(RtAudio, 4.1, gary@music.mcgill.ca, rtaudio)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(RtAudio.cpp)
 AC_CONFIG_FILES([rtaudio-config librtaudio.pc Makefile tests/Makefile])
@@ -44,6 +44,12 @@ AC_ARG_ENABLE(debug,
 # Checks for functions
 AC_CHECK_FUNC(gettimeofday, [cppflag="$cppflag -DHAVE_GETTIMEOFDAY"], )
 
+# Set paths if prefix is defined
+if test "x$prefix" != "x" && test "x$prefix" != "xNONE"; then
+  LIBS="$LIBS -L$prefix/lib"
+  CPPFLAGS="$CPPFLAGS -I$prefix/include"
+fi
+
 # For -I and -D flags
 CPPFLAGS="$CPPFLAGS $cppflag"
 
@@ -53,7 +59,7 @@ CXXFLAGS="$cxxflag"
 
 # Check compiler and use -Wall if gnu.
 if [test $GXX = "yes" ;] then
-  AC_SUBST( cxxflag, [-Wall] )
+  AC_SUBST( cxxflag, ["-Wall -Wextra"] )
 fi
 
 CXXFLAGS="$CXXFLAGS $cxxflag"
@@ -162,7 +168,13 @@ case $host in
     AC_MSG_RESULT(using DirectSound)
     LIBS="-ldsound -lwinmm $LIBS" ], )
 
-  # If no audio api flags specified, use DirectSound
+  # Look for WASAPI flag
+  AC_ARG_WITH(wasapi, [  --with-wasapi = choose Windows Audio Session API support (windoze only)], [
+    api="$api -D__WINDOWS_WASAPI__"
+    AC_MSG_RESULT(using WASAPI)
+    LIBS="-lwinmm -luuid -lksuser $LIBS" ], )
+
+  # If no audio api flags specified, use DS
   if [test "$api" == "";] then
     AC_SUBST( api, [-D__WINDOWS_DS__] )
     AC_MSG_RESULT(using DirectSound)

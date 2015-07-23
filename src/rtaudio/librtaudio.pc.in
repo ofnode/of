@@ -1,11 +1,11 @@
-prefix=/usr/local
+prefix=@prefix@
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include        
 
 Name: librtaudio
 Description: RtAudio - a set of C++ classes that provide a common API for realtime audio input/output
-Version: 4.0.12
+Version: 4.1.1
 Requires: @req@ 
 Libs: -L${libdir} -lrtaudio
 Libs.private: -lpthread

@@ -41,7 +41,7 @@ typedef double MY_TYPE;
 */
 
 // Platform-dependent sleep routines.
-#if defined( __WINDOWS_ASIO__ ) || defined( __WINDOWS_DS__ )
+#if defined( __WINDOWS_ASIO__ ) || defined( __WINDOWS_DS__ ) || defined( __WINDOWS_WASAPI__ )
   #include <windows.h>
   #define SLEEP( milliseconds ) Sleep( (DWORD) milliseconds ) 
 #else // Unix variants
@@ -62,6 +62,17 @@ void usage( void ) {
   std::cout << "    channelOffset = an optional channel offset on the device (default = 0),\n";
   std::cout << "    and time = an optional time duration in seconds (default = no limit).\n\n";
   exit( 0 );
+}
+
+void errorCallback( RtAudioError::Type type, const std::string &errorText )
+{
+  // This example error handling function does exactly the same thing
+  // as the embedded RtAudio::error() function.
+  std::cout << "in errorCallback" << std::endl;
+  if ( type == RtAudioError::WARNING )
+    std::cerr << '\n' << errorText << "\n\n";
+  else if ( type != RtAudioError::WARNING )
+    throw( RtAudioError( errorText, type ) );
 }
 
 unsigned int channels;
@@ -101,8 +112,8 @@ int saw( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 
 #else // Use non-interleaved buffers
 
-int saw( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-         double streamTime, RtAudioStreamStatus status, void *data )
+int saw( void *outputBuffer, void * /*inputBuffer*/, unsigned int nBufferFrames,
+         double /*streamTime*/, RtAudioStreamStatus status, void *data )
 {
   unsigned int i, j;
   extern unsigned int channels;
@@ -163,16 +174,19 @@ int main( int argc, char *argv[] )
   oParams.nChannels = channels;
   oParams.firstChannel = offset;
 
+  if ( device == 0 )
+    oParams.deviceId = dac.getDefaultOutputDevice();
+
   options.flags = RTAUDIO_HOG_DEVICE;
   options.flags |= RTAUDIO_SCHEDULE_REALTIME;
 #if !defined( USE_INTERLEAVED )
   options.flags |= RTAUDIO_NONINTERLEAVED;
 #endif
   try {
-    dac.openStream( &oParams, NULL, FORMAT, fs, &bufferFrames, &saw, (void *)data, &options );
+    dac.openStream( &oParams, NULL, FORMAT, fs, &bufferFrames, &saw, (void *)data, &options, &errorCallback );
     dac.startStream();
   }
-  catch ( RtError& e ) {
+  catch ( RtAudioError& e ) {
     e.printMessage();
     goto cleanup;
   }
@@ -190,7 +204,7 @@ int main( int argc, char *argv[] )
       // Stop the stream
       dac.stopStream();
     }
-    catch ( RtError& e ) {
+    catch ( RtAudioError& e ) {
       e.printMessage();
     }
   }

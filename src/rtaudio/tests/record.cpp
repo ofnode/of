@@ -38,7 +38,7 @@ typedef double MY_TYPE;
 */
 
 // Platform-dependent sleep routines.
-#if defined( __WINDOWS_ASIO__ ) || defined( __WINDOWS_DS__ )
+#if defined( __WINDOWS_ASIO__ ) || defined( __WINDOWS_DS__ ) || defined( __WINDOWS_WASAPI__ )
   #include <windows.h>
   #define SLEEP( milliseconds ) Sleep( (DWORD) milliseconds ) 
 #else // Unix variants
@@ -67,8 +67,8 @@ struct InputData {
 };
 
 // Interleaved buffers
-int input( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-           double streamTime, RtAudioStreamStatus status, void *data )
+int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrames,
+           double /*streamTime*/, RtAudioStreamStatus /*status*/, void *data )
 {
   InputData *iData = (InputData *) data;
 
@@ -117,7 +117,10 @@ int main( int argc, char *argv[] )
   // Set our stream parameters for input only.
   bufferFrames = 512;
   RtAudio::StreamParameters iParams;
-  iParams.deviceId = device;
+  if ( device == 0 )
+    iParams.deviceId = adc.getDefaultInputDevice();
+  else
+    iParams.deviceId = device;
   iParams.nChannels = channels;
   iParams.firstChannel = offset;
 
@@ -126,7 +129,7 @@ int main( int argc, char *argv[] )
   try {
     adc.openStream( NULL, &iParams, FORMAT, fs, &bufferFrames, &input, (void *)&data );
   }
-  catch ( RtError& e ) {
+  catch ( RtAudioError& e ) {
     std::cout << '\n' << e.getMessage() << '\n' << std::endl;
     goto cleanup;
   }
@@ -148,7 +151,7 @@ int main( int argc, char *argv[] )
   try {
     adc.startStream();
   }
-  catch ( RtError& e ) {
+  catch ( RtAudioError& e ) {
     std::cout << '\n' << e.getMessage() << '\n' << std::endl;
     goto cleanup;
   }
