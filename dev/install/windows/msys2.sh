@@ -17,14 +17,14 @@
 # 
 # Windows Dev Tips:
 # 
-# 1) PATH environment variable should have paths sorted in this particular order: MSYS2 -> TDM-GCC -> %SystemRoot% paths -> Your paths
-# 2) For easy environment variable editing you can use a free program called Windows Environment Variables Editor: http://eveditor.com
-# 3) Don't generate project files from Git console: its folder is included by default which causes linker to link against its libz.dll
+#  * For easy environment variable editing you can use a free program called Windows Environment Variables Editor: http://eveditor.com
+#  * Don't generate project files from Git console: its folder is included by default which causes linker to link against its libz.dll
 # 
-# Run the commands below from MSYS2 Shell:
+# Run this command from MSYS2 Shell:
 
 yes | pacman -Sy --needed   \
-mingw-w64-x86_64-gcc        \
+mingw-w64-x86_64-clang-svn  \
+mingw-w64-x86_64-gdb        \
 mingw-w64-x86_64-zlib       \
 mingw-w64-x86_64-tools      \
 mingw-w64-x86_64-bzip2      \

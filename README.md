@@ -73,7 +73,7 @@ xcodebuild -configuration Release
 ```batch
 mkdir build-windows
 cd build-windows
-CC=clang CXX=clang++ cmake .. -G Ninja
+cmake .. -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
