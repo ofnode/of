@@ -502,12 +502,22 @@ message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 #// Build commands /////////////////////////////////////////////////////////////
 
 add_subdirectory(src/freeimage)
-add_subdirectory(src/glew)
 add_subdirectory(src/glfw)
 add_subdirectory(src/kissfft)
 add_subdirectory(src/libtess2)
 add_subdirectory(src/poco)
 add_subdirectory(src/rtaudio)
+
+add_library(
+    glew STATIC
+    "${OF_ROOT_DIR}/src/glew/src/glew.c"
+)
+
+target_compile_definitions(
+    glew PRIVATE
+    -DGLEW_BUILD
+    -DGLEW_NO_GLU
+)
 
 add_library(
     openFrameworks STATIC

@@ -20,8 +20,8 @@ cd src
 # v 3.17.0 release
 setup freeimage 5870bda https://github.com/ofnode/freeimage
 
-# v 1.11.0 release
-setup glew 4c7a8db https://github.com/ofnode/glew
+# v 1.12.0 master
+setup glew 4c40805 https://github.com/nigels-com/glew
 
 # v 3.1.0 release
 setup glfw 2a50139 https://github.com/ofnode/glfw
@@ -44,6 +44,8 @@ setup videoInput 3815d73 https://github.com/ofTheo/videoInput
 # v 1.3.0 release
 setup kissfft 7d00183 https://github.com/itdaniher/kissfft
 
+rm      "$OF/src/poco/.gitignore"
+
 cp      "$OF/dev/add/libtess2/CMakeLists.txt" libtess2
 cp      "$OF/dev/add/kissfft/CMakeLists.txt"  kissfft
 
@@ -64,5 +66,6 @@ mv      openFrameworks/addons "$OF"
 
 rm  -rf openFrameworks
 
-rm      "$OF/src/poco/.gitignore"
+cd      "$OF/src/glew/auto" && make
+cd      "$OF"
 
