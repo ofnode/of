@@ -64,3 +64,5 @@ mv      openFrameworks/addons "$OF"
 
 rm  -rf openFrameworks
 
+rm      "$OF/src/poco/.gitignore"
+

@@ -3,6 +3,7 @@
 *.so
 *.lib
 *.dll
+*.pdb
 *.zip
 *.tar*
 *.rej

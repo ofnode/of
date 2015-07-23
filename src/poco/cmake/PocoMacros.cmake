@@ -24,6 +24,13 @@ if (WIN32)
       set(kit_bindir "${kit_dir}/bin/x86")
     endif (X64)
   endif ()
+  find_program(CMAKE_MC_COMPILER mc.exe HINTS "${sdk_bindir}" "${kit_bindir}"
+    DOC "path to message compiler")
+  if (NOT CMAKE_MC_COMPILER)
+    message(FATAL_ERROR "message compiler not found: required to build")
+  endif (NOT CMAKE_MC_COMPILER)
+  message(STATUS "Found message compiler: ${CMAKE_MC_COMPILER}")
+  mark_as_advanced(CMAKE_MC_COMPILER)
 endif(WIN32)
 
 #===============================================================================
@@ -197,4 +204,14 @@ endmacro()
 #           target_name             the name of the target. e.g. Foundation for PocoFoundation
 #    Example: POCO_INSTALL(Foundation)
 macro(POCO_INSTALL target_name)
+endmacro()
+
+#  POCO_INSTALL_PDB - Install the given target's companion pdb file (if present)
+#    Usage: POCO_INSTALL_PDB(target_name)
+#      INPUT:
+#           target_name             the name of the target. e.g. Foundation for PocoFoundation
+#    Example: POCO_INSTALL_PDB(Foundation)
+#
+#    This is an internal macro meant only to be used by POCO_INSTALL.
+macro(POCO_INSTALL_PDB target_name)
 endmacro()

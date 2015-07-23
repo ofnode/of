@@ -112,6 +112,10 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES "SunPro")
 	set_target_properties( "${LIBNAME}" PROPERTIES LINK_FLAGS "-library=stlport4")
 endif (${CMAKE_CXX_COMPILER_ID} MATCHES "SunPro")
 
+if(ANDROID)
+	set(SYSLIBS ${SYSLIBS} log)
+endif(ANDROID)
+
 # TODO: Why is this here?
 add_definitions( -DPCRE_STATIC)
 
