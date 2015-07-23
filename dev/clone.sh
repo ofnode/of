@@ -67,3 +67,5 @@ mv      openFrameworks/addons "$OF"
 
 rm  -rf openFrameworks
 
+cd      "$OF/src/glew/auto" && make
+
