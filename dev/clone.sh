@@ -27,7 +27,7 @@ setup glew 4c7a8db https://github.com/ofnode/glew
 setup glfw 2a50139 https://github.com/ofnode/glfw
 
 # v 1.7.0 master
-setup poco c6cf535 https://github.com/pocoproject/poco
+setup poco 04caf94 https://github.com/pocoproject/poco
 
 # v 4.0.12 release
 setup rtaudio d6956ae https://github.com/ofnode/rtaudio
