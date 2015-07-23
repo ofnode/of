@@ -503,10 +503,7 @@ message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
 add_subdirectory(src/freeimage)
 add_subdirectory(src/glfw)
-add_subdirectory(src/kissfft)
-add_subdirectory(src/libtess2)
 add_subdirectory(src/poco)
-add_subdirectory(src/rtaudio)
 
 add_library(
     glew STATIC
@@ -518,6 +515,46 @@ target_compile_definitions(
     -DGLEW_BUILD
     -DGLEW_NO_GLU
 )
+
+add_library(
+    kissfft STATIC
+    "${OF_ROOT_DIR}/src/kissfft/tools/kiss_fftr.c"
+    "${OF_ROOT_DIR}/src/kissfft/kiss_fft.c"
+)
+
+add_library(
+    tess2 STATIC
+    "${OF_ROOT_DIR}/src/libtess2/Source/bucketalloc.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/priorityq.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/sweep.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/dict.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/geom.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/mesh.c"
+    "${OF_ROOT_DIR}/src/libtess2/Source/tess.c"
+)
+
+add_library(
+    rtaudio STATIC
+    "${OF_ROOT_DIR}/src/rtaudio/RtAudio.cpp"
+)
+
+if(CMAKE_SYSTEM MATCHES Linux)
+target_compile_definitions(
+    rtaudio PRIVATE
+    -D__LINUX_ALSA__
+)
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+target_compile_definitions(
+    rtaudio PRIVATE
+    -D__MACOSX_CORE__
+    -DHAVE_GETTIMEOFDAY
+)
+elseif(CMAKE_SYSTEM MATCHES Windows)
+target_compile_definitions(
+    rtaudio PRIVATE
+    -D__WINDOWS_DS__
+)
+endif()
 
 add_library(
     openFrameworks STATIC

@@ -24,13 +24,13 @@ setup freeimage 5870bda https://github.com/ofnode/freeimage
 setup glew 4c40805 https://github.com/nigels-com/glew
 
 # v 3.1.0 release
-setup glfw 2a50139 https://github.com/ofnode/glfw
+setup glfw 7f7307b https://github.com/arturoc/glfw
 
 # v 1.7.0 master
 setup poco 04caf94 https://github.com/pocoproject/poco
 
-# v 4.0.12 release
-setup rtaudio d6956ae https://github.com/ofnode/rtaudio
+# v 4.1.1 release
+setup rtaudio 22c00ec https://github.com/thestk/rtaudio
 
 # v 0.9.0 master
 setup openFrameworks 03cbdb2 https://github.com/openframeworks/openFrameworks
@@ -46,9 +46,6 @@ setup kissfft 7d00183 https://github.com/itdaniher/kissfft
 
 echo    "auto/" > "$OF/src/glew/.gitignore"
 rm      "$OF/src/poco/.gitignore"
-
-cp      "$OF/dev/add/libtess2/CMakeLists.txt" libtess2
-cp      "$OF/dev/add/kissfft/CMakeLists.txt"  kissfft
 
 rm  -rf videoinput
 mkdir   videoinput
