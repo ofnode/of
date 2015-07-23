@@ -44,6 +44,7 @@ setup videoInput 3815d73 https://github.com/ofTheo/videoInput
 # v 1.3.0 release
 setup kissfft 7d00183 https://github.com/itdaniher/kissfft
 
+sed -i  's/\r//'  "$OF/src/rtaudio/RtAudio.cpp"
 echo    "auto/" > "$OF/src/glew/.gitignore"
 rm      "$OF/src/poco/.gitignore"
 
