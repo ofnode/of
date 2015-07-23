@@ -44,6 +44,7 @@ setup videoInput 3815d73 https://github.com/ofTheo/videoInput
 # v 1.3.0 release
 setup kissfft 7d00183 https://github.com/itdaniher/kissfft
 
+echo    "auto/" > "$OF/src/glew/.gitignore"
 rm      "$OF/src/poco/.gitignore"
 
 cp      "$OF/dev/add/libtess2/CMakeLists.txt" libtess2
@@ -65,7 +66,4 @@ rm  -rf "$OF/addons"
 mv      openFrameworks/addons "$OF"
 
 rm  -rf openFrameworks
-
-cd      "$OF/src/glew/auto" && make
-cd      "$OF"
 
