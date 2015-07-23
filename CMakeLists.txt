@@ -386,15 +386,13 @@ if(OF_ENABLE_VIDEO)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
   )
-endif()
-
-if(CMAKE_SYSTEM MATCHES Linux AND OF_ENABLE_VIDEO)
+if(CMAKE_SYSTEM MATCHES Linux)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
   )
-elseif(CMAKE_SYSTEM MATCHES Darwin AND OF_ENABLE_VIDEO)
+elseif(CMAKE_SYSTEM MATCHES Darwin)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
@@ -414,6 +412,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
   )
 endif()
+endif(OF_ENABLE_VIDEO)
 
 #// Compiler flags /////////////////////////////////////////////////////////////
 
