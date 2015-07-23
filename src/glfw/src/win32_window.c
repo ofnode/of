@@ -362,6 +362,8 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
             const int mods = getKeyMods();
             const int scancode = (lParam >> 16) & 0x1ff;
             const int key = translateKey(wParam, lParam);
+            const int unicode = translateToUnicode(wParam, scancode);
+
             if (key == _GLFW_KEY_INVALID)
                 break;
 
@@ -369,17 +371,17 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
             {
                 // Release both Shift keys on Shift up event, as only one event
                 // is sent even if both keys are released
-                _glfwInputKey(window, GLFW_KEY_LEFT_SHIFT, scancode, -1,GLFW_RELEASE, mods);
-                _glfwInputKey(window, GLFW_KEY_RIGHT_SHIFT, scancode, -1,GLFW_RELEASE, mods);
+                _glfwInputKey(window, GLFW_KEY_LEFT_SHIFT, scancode, unicode,GLFW_RELEASE, mods);
+                _glfwInputKey(window, GLFW_KEY_RIGHT_SHIFT, scancode, unicode,GLFW_RELEASE, mods);
             }
             else if (wParam == VK_SNAPSHOT)
             {
                 // Key down is not reported for the print screen key
-                _glfwInputKey(window, key, scancode, -1,GLFW_PRESS, mods);
-                _glfwInputKey(window, key, scancode, -1,GLFW_RELEASE, mods);
+                _glfwInputKey(window, key, scancode, unicode, GLFW_PRESS, mods);
+                _glfwInputKey(window, key, scancode, unicode, GLFW_RELEASE, mods);
             }
             else
-                _glfwInputKey(window, key, scancode, -1,GLFW_RELEASE, mods);
+                _glfwInputKey(window, key, scancode, unicode, GLFW_RELEASE, mods);
 
             break;
         }
