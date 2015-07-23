@@ -221,6 +221,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -D__MACOSX_CORE__
+        -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
     )
@@ -237,6 +238,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     find_package(Cairo REQUIRED)
     find_package(Boost REQUIRED)
+    find_package(MPG123 REQUIRED)
     find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
 
@@ -248,6 +250,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
+        ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
     )
 

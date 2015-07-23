@@ -395,6 +395,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     set(OPENFRAMEWORKS_DEFINITIONS
         -D__MACOSX_CORE__
+        -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
     )
@@ -423,6 +424,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(ZLIB REQUIRED)
     find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED) # Should be provided by CoreAudio
+    find_package(MPG123 REQUIRED)
     find_package(Sndfile REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(Boost COMPONENTS filesystem system REQUIRED)
@@ -444,6 +446,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
     )
 
@@ -458,6 +461,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${OPENAL_LIBRARY}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        ${MPG123_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
