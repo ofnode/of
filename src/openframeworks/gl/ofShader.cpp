@@ -97,7 +97,7 @@ bLoaded(mom.bLoaded),
 shaders(mom.shaders){
 	if(mom.bLoaded){
 		retainProgram(program);
-		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it){
+			for(auto it = shaders.begin(); it != shaders.end(); ++it){
 			GLuint shader = it->second;
 			retainShader(shader);
 		}
@@ -117,7 +117,7 @@ ofShader & ofShader::operator=(const ofShader & mom){
 	shaders = mom.shaders;
 	if(mom.bLoaded){
 		retainProgram(program);
-		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it){
+			for(auto it = shaders.begin(); it != shaders.end(); ++it){
 			GLuint shader = it->second;
 			retainShader(shader);
 		}
@@ -275,7 +275,7 @@ string ofShader::parseForIncludes( const string& source, vector<string>& include
 
 //--------------------------------------------------------------
 string ofShader::getShaderSource(GLenum type)  const{
-	unordered_map<GLenum,string>::const_iterator source = shaderSource.find(type);
+	auto source = shaderSource.find(type);
 	if ( source != shaderSource.end()) {
 		return source->second;
 	} else {
@@ -436,7 +436,7 @@ bool ofShader::linkProgram() {
 	} else {
 		checkAndCreateProgram();
 
-		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it){
+			for(auto it = shaders.begin(); it != shaders.end(); ++it){
 			GLuint shader = it->second;
 			if(shader) {
 				ofLogVerbose("ofShader") << "linkProgram(): attaching " << nameForType(it->first) << " shader to program " << program;
@@ -477,7 +477,7 @@ bool ofShader::bindDefaults() const{
 //--------------------------------------------------------------
 void ofShader::unload() {
 	if(bLoaded) {
-		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it) {
+			for(auto it = shaders.begin(); it != shaders.end(); ++it) {
 			GLuint shader = it->second;
 			if(shader) {
 				ofLogVerbose("ofShader") << "unload(): detaching and deleting " << nameForType(it->first) << " shader from program " << program;
@@ -863,7 +863,7 @@ GLint ofShader::getUniformLocation(const string & name)  const{
 	GLint loc = -1;
 
 	// tig: caching uniform locations gives the RPi a 17% boost on average
-	unordered_map<string, GLint>::iterator it = uniformLocations.find(name);
+	auto it = uniformLocations.find(name);
 	if (it == uniformLocations.end()){
 		loc = glGetUniformLocation(program, name.c_str());
 		uniformLocations[name] = loc;
@@ -934,7 +934,7 @@ GLuint ofShader::getProgram() const{
 
 //--------------------------------------------------------------
 GLuint ofShader::getShader(GLenum type) const{
-	unordered_map<GLenum,GLuint>::const_iterator shader = shaders.find(type);
+	auto shader = shaders.find(type);
 	if(shader!=shaders.end()){
 		return shader->second;
 	}else{

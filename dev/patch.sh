@@ -33,6 +33,7 @@ cd "$OF/src/openframeworks"
 apply openframeworks.patch
 apply openframeworks_modules.patch
 apply openframeworks_mingw_unicode.patch
+apply openframeworks_clang_windows.patch
 
 cd "$OF/src/rtaudio"
 
