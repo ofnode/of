@@ -8,7 +8,7 @@ CMake-based [openFrameworks](https://github.com/openframeworks/openFrameworks)
 Features
 --------
 
- - 64-bit, C++11, CMake, Ninja, Cotire, Clang and Sanitize ready.
+ - 64-bit, CMake, Ninja, Cotire, Clang and Sanitize ready.
 
  - Generate project file for your favorite IDE with [CMake Generators](http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators).
  
@@ -53,30 +53,28 @@ Step 3: Compile
 #### Linux:
 
 ```bash
-mkdir -p build/linux
-cd build/linux
-cmake ../.. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release
+mkdir build-linux
+cd build-linux
+CC=clang CXX=clang++ cmake .. -G Ninja
 ninja
 ```
 
 #### OS X:
 
 ```bash
-mkdir -p build/osx
-cd build/osx
-cmake ../.. -G Xcode -DCMAKE_BUILD_TYPE=Release
+mkdir build-osx
+cd build-osx
+cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release
 xcodebuild -configuration Release
 ```
 
 #### Windows:
 
-Open the Start menu and run `VS2013 x64 Native Tools Command Prompt`, then `cd /d` into `of` directory and enter:
-
 ```batch
-mkdir build\windows
-cd build\windows
-cmake ..\.. -G "Visual Studio 12 2013 Win64" -DCMAKE_BUILD_TYPE=Release
-msbuild openFrameworks.sln /m /p:Configuration=Release
+mkdir build-windows
+cd build-windows
+CC=clang CXX=clang++ cmake .. -G Ninja
+ninja
 ```
 
 
