@@ -160,22 +160,20 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    find_package(Cairo REQUIRED)
+    pkg_check_modules(CAIRO REQUIRED cairo)
+    pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+
     find_package(Boost REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(Freetype REQUIRED)
     find_package(Fontconfig REQUIRED)
 
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        ${FONTCONFIG_DEFINITIONS}
-    )
-
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${CAIRO_INCLUDE_DIR}
+        ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
-        ${FONTCONFIG_INCLUDE_DIR}
+        ${FONTCONFIG_INCLUDE_DIRS}
     )
 
     if(NOT OF_ENABLE_AUDIO)
@@ -218,8 +216,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
-    message("OS X support is experimental. Please report issues if you run into something.")
-
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug")
 
@@ -240,7 +236,9 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     set(RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG} "-x objective-c++")
     set(  DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG} "-x objective-c++")
 
-    find_package(Cairo REQUIRED)
+    pkg_check_modules(CAIRO REQUIRED cairo)
+    pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+
     find_package(Boost REQUIRED)
     find_package(MPG123 REQUIRED)
     find_package(SndFile REQUIRED)
@@ -251,16 +249,17 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(GStreamer REQUIRED gstreamer-video)
     endif()
 
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${CAIRO_INCLUDE_DIR}
-        ${Boost_INCLUDE_DIRS}
-        ${MPG123_INCLUDE_DIRS}
-        ${SNDFILE_INCLUDE_DIR}
-    )
-
     # Hardcode FreeType path, see issue #15
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         "/usr/local/include/freetype2"
+    )
+
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${CAIRO_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        ${MPG123_INCLUDE_DIRS}
+        ${SNDFILE_INCLUDE_DIR}
+        ${FONTCONFIG_INCLUDE_DIRS}
     )
 
     if(OF_ENABLE_GSTREAMER_OSX)
@@ -284,26 +283,23 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         -DOF_VIDEO_PLAYER_DIRECTSHOW
     )
 
-    find_package(Cairo REQUIRED)
+    pkg_check_modules(CAIRO REQUIRED cairo)
+    pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+
     find_package(Boost REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(Fontconfig REQUIRED)
-
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        ${FONTCONFIG_DEFINITIONS}
-    )
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${CAIRO_INCLUDE_DIR}
+        ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
         ${FREETYPE_INCLUDE_DIRS}
-        ${FONTCONFIG_INCLUDE_DIR}
+        ${FONTCONFIG_INCLUDE_DIRS}
     )
 
 endif()

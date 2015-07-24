@@ -202,15 +202,18 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     set(Boost_USE_STATIC_LIBS ON)
 
+    pkg_check_modules(CAIRO REQUIRED cairo)
+    pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+
     find_package(X11 REQUIRED)
     find_package(ZLIB REQUIRED)
-    find_package(Cairo REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(Threads REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(Fontconfig REQUIRED)
     find_package(Boost COMPONENTS filesystem system REQUIRED)
+
+    #// Link static libs if available //////////////////////////////////////////
 
     set(STATIC_LIB_PATHS
         "/usr/lib/x86_64-linux-gnu"
@@ -303,19 +306,17 @@ if(CMAKE_SYSTEM MATCHES Linux)
       )
     endif()
 
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        ${FONTCONFIG_DEFINITIONS}
-    )
+    #// Global dependencies ////////////////////////////////////////////////////
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${X11_INCLUDE_DIR}
         ${ZLIB_INCLUDE_DIRS}
-        ${CAIRO_INCLUDE_DIR}
+        ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
-        ${FONTCONFIG_INCLUDE_DIR}
+        ${FONTCONFIG_INCLUDE_DIRS}
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -425,9 +426,10 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
+    pkg_check_modules(CAIRO REQUIRED cairo)
+    pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+
     find_package(ZLIB REQUIRED)
-    find_package(Cairo REQUIRED)
-    find_package(OpenAL REQUIRED) # Should be provided by CoreAudio
     find_package(MPG123 REQUIRED)
     find_package(Sndfile REQUIRED)
     find_package(Freetype REQUIRED)
@@ -442,27 +444,24 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         "/usr/local/opt/openssl/lib/libssl.a"
     )
 
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${GLIB_INCLUDE_DIRS}
-        ${ZLIB_INCLUDE_DIRS}
-        ${CAIRO_INCLUDE_DIR}
-        ${Boost_INCLUDE_DIRS}
-        ${OPENAL_INCLUDE_DIR}
-        ${OPENGL_INCLUDE_DIR}
-        ${OPENSSL_INCLUDE_DIR}
-        ${MPG123_INCLUDE_DIRS}
-        ${SNDFILE_INCLUDE_DIR}
-    )
-
     # Hardcode FreeType path, see issue #15
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         "/usr/local/include/freetype2"
     )
 
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${ZLIB_INCLUDE_DIRS}
+        ${CAIRO_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIR}
+        ${OPENSSL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
+        ${SNDFILE_INCLUDE_DIR}
+        ${FONTCONFIG_INCLUDE_DIRS}
+    )
+
     list(APPEND OPENFRAMEWORKS_LIBRARIES
-        ${GLIB_LIBRARIES}
         ${ZLIB_LIBRARIES}
-        ${OPENAL_LIBRARY}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
         ${MPG123_LIBRARIES}
@@ -529,9 +528,11 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
+    pkg_check_modules(CAIRO REQUIRED cairo)
+    pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+
     find_package(ZLIB REQUIRED)
     find_package(BZip2 REQUIRED)
-    find_package(Cairo REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
@@ -541,7 +542,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Threads REQUIRED)
     find_package(LibIntl REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(Fontconfig REQUIRED)
     find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     find_library(WINMM_LIB winmm)
@@ -553,14 +553,10 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_library(IPHLPAPI_LIB iphlpapi)
     find_library(SETUPAPI_LIB setupapi)
 
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        ${FONTCONFIG_DEFINITIONS}
-    )
-
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${ZLIB_INCLUDE_DIRS}
         ${BZIP2_INCLUDE_DIR}
-        ${CAIRO_INCLUDE_DIR}
+        ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
@@ -570,7 +566,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${SNDFILE_INCLUDE_DIR}
         ${LIBINTL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
-        ${FONTCONFIG_INCLUDE_DIR}
+        ${FONTCONFIG_INCLUDE_DIRS}
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
