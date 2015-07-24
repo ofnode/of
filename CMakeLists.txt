@@ -166,7 +166,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(Boost REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(Fontconfig REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIRS}
