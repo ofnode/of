@@ -396,8 +396,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
-    message("OS X support is experimental. Please report issues if you run into something.")
-
     set(OPENFRAMEWORKS_DEFINITIONS
         -D__MACOSX_CORE__
         -DOF_USING_MPG123
