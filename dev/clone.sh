@@ -18,7 +18,7 @@ mkdir -p src
 cd src
 
 # v 3.17.0 release
-setup freeimage 55c7e68 https://github.com/ofnode/freeimage
+setup freeimage 93d402e https://github.com/ofnode/freeimage
 
 # v 1.12.0 master
 setup glew 4c40805 https://github.com/nigels-com/glew
