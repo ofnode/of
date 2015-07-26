@@ -3,6 +3,31 @@ cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
+#// Options ////////////////////////////////////////////////////////////////////
+
+if(CMAKE_SYSTEM MATCHES Linux)
+
+  set(OF_ENABLE_AUDIO ON CACHE BOOL
+     "Compile audio features of openFrameworks")
+
+  set(OF_ENABLE_VIDEO ON CACHE BOOL
+     "Compile video features of openFrameworks")
+
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+
+  set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL
+     "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
+
+  set(OF_ENABLE_AUDIO ON) # Do not turn off
+  set(OF_ENABLE_VIDEO ON) # Do not turn off
+
+elseif(CMAKE_SYSTEM MATCHES Windows)
+
+  set(OF_ENABLE_AUDIO ON) # Do not turn off
+  set(OF_ENABLE_VIDEO ON) # Do not turn off
+
+endif()
+
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
 set(RELEASE_FLAGS "
@@ -48,31 +73,6 @@ set(DEBUG_CXX_FLAGS_CLANG "
     -Wno-ignored-attributes
     -Wno-deprecated-register
 ")
-
-endif()
-
-#// Options ////////////////////////////////////////////////////////////////////
-
-if(CMAKE_SYSTEM MATCHES Linux)
-
-  set(OF_ENABLE_AUDIO ON CACHE BOOL
-     "Compile audio features of openFrameworks on Linux")
-
-  set(OF_ENABLE_VIDEO ON CACHE BOOL
-     "Compile video features of openFrameworks on Linux")
-
-elseif(CMAKE_SYSTEM MATCHES Darwin)
-
-  set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL
-     "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
-
-  set(OF_ENABLE_AUDIO ON)
-  set(OF_ENABLE_VIDEO ON)
-
-elseif(CMAKE_SYSTEM MATCHES Windows)
-
-  set(OF_ENABLE_AUDIO ON)
-  set(OF_ENABLE_VIDEO ON)
 
 endif()
 
@@ -497,6 +497,10 @@ message(STATUS "OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
 message(STATUS "OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
 endif()
 
+if(CMAKE_SYSTEM MATCHES Darwin)
+message(STATUS "OF_ENABLE_GSTREAMER_OSX: " ${OF_ENABLE_GSTREAMER_OSX})
+endif()
+
 message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
 message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
 message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
@@ -593,7 +597,9 @@ target_compile_definitions(
     ${OPENFRAMEWORKS_DEFINITIONS}
 )
 
+if(CMAKE_BUILD_TYPE MATCHES Release)
 set_target_properties(
     openFrameworks PROPERTIES
-    COMPILE_FLAGS -g
+    COMPILE_FLAGS -g1
 )
+endif()

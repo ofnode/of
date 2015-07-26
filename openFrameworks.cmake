@@ -1,5 +1,36 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
+#// Options ////////////////////////////////////////////////////////////////////
+
+set(OF_ENABLE_COTIRE ON CACHE BOOL
+   "Enable Cotire header precompiler")
+
+if(CMAKE_SYSTEM MATCHES Linux)
+
+  set(OF_ENABLE_AUDIO ON CACHE BOOL
+     "Enable audio features of openFrameworks")
+
+  set(OF_ENABLE_VIDEO ON CACHE BOOL
+     "Enable video features of openFrameworks")
+
+  set(OF_ENABLE_STATIC_LINKING OFF CACHE BOOL
+     "Enable static linking for some libraries")
+
+elseif(CMAKE_SYSTEM MATCHES Darwin)
+
+  set(OF_ENABLE_AUDIO ON) # Do not turn off
+  set(OF_ENABLE_VIDEO ON) # Do not turn off
+
+elseif(CMAKE_SYSTEM MATCHES Windows)
+
+  set(OF_ENABLE_CONSOLE OFF CACHE BOOL
+     "Enable console window")
+
+  set(OF_ENABLE_AUDIO ON) # Do not turn off
+  set(OF_ENABLE_VIDEO ON) # Do not turn off
+
+endif()
+
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
 set(RELEASE_FLAGS "
@@ -51,34 +82,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
       -Wno-ignored-attributes
       -Wno-deprecated-register
   ")
-
-endif()
-
-#// Options ////////////////////////////////////////////////////////////////////
-
-set(OF_ENABLE_COTIRE OFF CACHE BOOL
-   "Enable Cotire header precompiler")
-
-if(CMAKE_SYSTEM MATCHES Linux)
-
-  set(OF_ENABLE_AUDIO ON CACHE BOOL
-     "Enable audio features of openFrameworks on Linux")
-
-  set(OF_ENABLE_VIDEO ON CACHE BOOL
-     "Enable video features of openFrameworks on Linux")
-
-elseif(CMAKE_SYSTEM MATCHES Darwin)
-
-  set(OF_ENABLE_AUDIO ON)
-  set(OF_ENABLE_VIDEO ON)
-
-elseif(CMAKE_SYSTEM MATCHES Windows)
-
-  set(OF_ENABLE_CONSOLE OFF CACHE BOOL
-     "Enable console window on Windows")
-
-  set(OF_ENABLE_AUDIO ON)
-  set(OF_ENABLE_VIDEO ON)
 
 endif()
 
@@ -200,7 +203,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
-    set(Boost_USE_STATIC_LIBS ON)
+    if(OF_ENABLE_STATIC_LINKING)
+      set(Boost_USE_STATIC_LIBS ON)
+    endif()
 
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
@@ -214,6 +219,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     #// Link static libs if available //////////////////////////////////////////
+
+    if(OF_ENABLE_STATIC_LINKING)
 
     set(STATIC_LIB_PATHS
         "/usr/lib/x86_64-linux-gnu"
@@ -305,6 +312,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_LIB}
       )
     endif()
+
+    endif(OF_ENABLE_STATIC_LINKING)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
@@ -946,16 +955,18 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
+message(STATUS "OF_ENABLE_COTIRE: " ${OF_ENABLE_COTIRE})
+
 if(CMAKE_SYSTEM MATCHES Linux)
-message(STATUS "OF_ENABLE_AUDIO: "   ${OF_ENABLE_AUDIO})
-message(STATUS "OF_ENABLE_VIDEO: "   ${OF_ENABLE_VIDEO})
+message(STATUS "OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
+message(STATUS "OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
+message(STATUS "OF_ENABLE_STATIC_LINKING: " ${OF_ENABLE_STATIC_LINKING})
 endif()
 
 if(CMAKE_SYSTEM MATCHES Windows)
 message(STATUS "OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})
 endif()
 
-message(STATUS "OF_ENABLE_COTIRE: "      ${OF_ENABLE_COTIRE})
 message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
 message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
 message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
