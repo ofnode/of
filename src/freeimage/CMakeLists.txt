@@ -3,35 +3,17 @@ cmake_minimum_required(VERSION 2.8)
 project(freeimage)
 
 set(FREEIMAGE_SOURCES
+  DeprecationManager/Deprecated.cpp
+  DeprecationManager/DeprecationMgr.cpp
   FreeImage/BitmapAccess.cpp
-  FreeImage/CacheFile.cpp
   FreeImage/ColorLookup.cpp
-  FreeImage/Conversion.cpp
-  FreeImage/Conversion16_555.cpp
-  FreeImage/Conversion16_565.cpp
-  FreeImage/Conversion24.cpp
-  FreeImage/Conversion32.cpp
-  FreeImage/Conversion4.cpp
-  FreeImage/Conversion8.cpp
-  FreeImage/ConversionFloat.cpp
-  FreeImage/ConversionRGB16.cpp
-  FreeImage/ConversionRGBA16.cpp
-  FreeImage/ConversionRGBAF.cpp
-  FreeImage/ConversionRGBF.cpp
-  FreeImage/ConversionType.cpp
-  FreeImage/ConversionUINT16.cpp
   FreeImage/FreeImage.cpp
   FreeImage/FreeImageIO.cpp
   FreeImage/GetType.cpp
-  FreeImage/Halftoning.cpp
-  FreeImage/J2KHelper.cpp
-  FreeImage/LFPQuantizer.cpp
   FreeImage/MemoryIO.cpp
-  FreeImage/MNGHelper.cpp
-  FreeImage/MultiPage.cpp
-  FreeImage/NNQuantizer.cpp
-  FreeImage/PSDParser.cpp
   FreeImage/PixelAccess.cpp
+  FreeImage/J2KHelper.cpp
+  FreeImage/MNGHelper.cpp
   FreeImage/Plugin.cpp
   FreeImage/PluginBMP.cpp
   FreeImage/PluginCUT.cpp
@@ -64,16 +46,36 @@ set(FREEIMAGE_SOURCES
   FreeImage/PluginWebP.cpp
   FreeImage/PluginXBM.cpp
   FreeImage/PluginXPM.cpp
+  FreeImage/PSDParser.cpp
   FreeImage/TIFFLogLuv.cpp
-  FreeImage/ToneMapping.cpp
-  FreeImage/WuQuantizer.cpp
-  FreeImage/ZLibInterface.cpp
+  FreeImage/Conversion.cpp
+  FreeImage/Conversion16_555.cpp
+  FreeImage/Conversion16_565.cpp
+  FreeImage/Conversion24.cpp
+  FreeImage/Conversion32.cpp
+  FreeImage/Conversion4.cpp
+  FreeImage/Conversion8.cpp
+  FreeImage/ConversionFloat.cpp
+  FreeImage/ConversionRGB16.cpp
+  FreeImage/ConversionRGBA16.cpp
+  FreeImage/ConversionRGBAF.cpp
+  FreeImage/ConversionRGBF.cpp
+  FreeImage/ConversionType.cpp
+  FreeImage/ConversionUINT16.cpp
+  FreeImage/Halftoning.cpp
   FreeImage/tmoColorConvert.cpp
   FreeImage/tmoDrago03.cpp
   FreeImage/tmoFattal02.cpp
   FreeImage/tmoReinhard05.cpp
-  FreeImageToolkit/BSplineRotate.cpp
+  FreeImage/ToneMapping.cpp
+  FreeImage/LFPQuantizer.cpp
+  FreeImage/NNQuantizer.cpp
+  FreeImage/WuQuantizer.cpp
+  FreeImage/CacheFile.cpp
+  FreeImage/MultiPage.cpp
+  FreeImage/ZLibInterface.cpp
   FreeImageToolkit/Background.cpp
+  FreeImageToolkit/BSplineRotate.cpp
   FreeImageToolkit/Channels.cpp
   FreeImageToolkit/ClassicRotate.cpp
   FreeImageToolkit/Colors.cpp
@@ -160,7 +162,6 @@ set(LIBOPENJPEG_SOURCES
   LibOpenJPEG/pi.c
   LibOpenJPEG/raw.c
   LibOpenJPEG/t1.c
-  LibOpenJPEG/t1_generate_luts.c
   LibOpenJPEG/t2.c
   LibOpenJPEG/tcd.c
   LibOpenJPEG/tgt.c
@@ -194,11 +195,6 @@ set(LIBRAWLITE_SOURCES
 )
 
 set(LIBTIFF_SOURCES
-  LibTIFF4/mkg3states.c
-  LibTIFF4/mkspans.c
-  LibTIFF4/tif_jbig.c
-  LibTIFF4/tif_jpeg_12.c
-  LibTIFF4/tif_lzma.c
   LibTIFF4/tif_aux.c
   LibTIFF4/tif_close.c
   LibTIFF4/tif_codec.c
@@ -217,6 +213,7 @@ set(LIBTIFF_SOURCES
   LibTIFF4/tif_getimage.c
   LibTIFF4/tif_jpeg.c
   LibTIFF4/tif_luv.c
+  LibTIFF4/tif_lzma.c
   LibTIFF4/tif_lzw.c
   LibTIFF4/tif_next.c
   LibTIFF4/tif_ojpeg.c
@@ -247,28 +244,47 @@ set(LIBWEBP_SOURCES
   LibWebP/src/dec/dec.vp8.c
   LibWebP/src/dec/dec.vp8l.c
   LibWebP/src/dec/dec.webp.c
-  LibWebP/src/demux/demux.demux.c
   LibWebP/src/dsp/dsp.alpha_processing.c
+  LibWebP/src/dsp/dsp.alpha_processing_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.alpha_processing_sse2.c
   LibWebP/src/dsp/dsp.argb.c
+  LibWebP/src/dsp/dsp.argb_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.argb_sse2.c
   LibWebP/src/dsp/dsp.cost.c
+  LibWebP/src/dsp/dsp.cost_mips32.c
+  LibWebP/src/dsp/dsp.cost_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.cost_sse2.c
   LibWebP/src/dsp/dsp.cpu.c
   LibWebP/src/dsp/dsp.dec.c
   LibWebP/src/dsp/dsp.dec_clip_tables.c
+  LibWebP/src/dsp/dsp.dec_mips32.c
+  LibWebP/src/dsp/dsp.dec_mips_dsp_r2.c
+  LibWebP/src/dsp/dsp.dec_neon.c
   LibWebP/src/dsp/dsp.dec_sse2.c
-  LibWebP/src/dsp/dsp.enc_avx2.c
   LibWebP/src/dsp/dsp.enc.c
+  LibWebP/src/dsp/dsp.enc_avx2.c
+  LibWebP/src/dsp/dsp.enc_mips32.c
+  LibWebP/src/dsp/dsp.enc_mips_dsp_r2.c
+  LibWebP/src/dsp/dsp.enc_neon.c
   LibWebP/src/dsp/dsp.enc_sse2.c
   LibWebP/src/dsp/dsp.filters.c
+  LibWebP/src/dsp/dsp.filters_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.filters_sse2.c
   LibWebP/src/dsp/dsp.lossless.c
+  LibWebP/src/dsp/dsp.lossless_mips32.c
+  LibWebP/src/dsp/dsp.lossless_mips_dsp_r2.c
+  LibWebP/src/dsp/dsp.lossless_neon.c
   LibWebP/src/dsp/dsp.lossless_sse2.c
   LibWebP/src/dsp/dsp.rescaler.c
+  LibWebP/src/dsp/dsp.rescaler_mips32.c
+  LibWebP/src/dsp/dsp.rescaler_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.upsampling.c
+  LibWebP/src/dsp/dsp.upsampling_mips_dsp_r2.c
+  LibWebP/src/dsp/dsp.upsampling_neon.c
   LibWebP/src/dsp/dsp.upsampling_sse2.c
   LibWebP/src/dsp/dsp.yuv.c
+  LibWebP/src/dsp/dsp.yuv_mips32.c
+  LibWebP/src/dsp/dsp.yuv_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.yuv_sse2.c
   LibWebP/src/enc/enc.alpha.c
   LibWebP/src/enc/enc.analysis.c
@@ -291,10 +307,6 @@ set(LIBWEBP_SOURCES
   LibWebP/src/enc/enc.tree.c
   LibWebP/src/enc/enc.vp8l.c
   LibWebP/src/enc/enc.webpenc.c
-  LibWebP/src/mux/mux.anim_encode.c
-  LibWebP/src/mux/mux.muxedit.c
-  LibWebP/src/mux/mux.muxinternal.c
-  LibWebP/src/mux/mux.muxread.c
   LibWebP/src/utils/utils.bit_reader.c
   LibWebP/src/utils/utils.bit_writer.c
   LibWebP/src/utils/utils.color_cache.c
@@ -307,16 +319,16 @@ set(LIBWEBP_SOURCES
   LibWebP/src/utils/utils.rescaler.c
   LibWebP/src/utils/utils.thread.c
   LibWebP/src/utils/utils.utils.c
+  LibWebP/src/mux/mux.anim_encode.c
+  LibWebP/src/mux/mux.muxedit.c
+  LibWebP/src/mux/mux.muxinternal.c
+  LibWebP/src/mux/mux.muxread.c
+  LibWebP/src/demux/demux.demux.c
 )
 
 set(OPENEXR_SOURCES
-  OpenEXR/Half/eLut.cpp
-  OpenEXR/Half/toFloat.cpp
-  OpenEXR/Half/half.cpp
-  OpenEXR/Iex/IexBaseExc.cpp
-  OpenEXR/Iex/IexThrowErrnoExc.cpp
-  OpenEXR/IexMath/IexMathFloatExc.cpp
-  OpenEXR/IexMath/IexMathFpu.cpp
+  OpenEXR/IlmImf/b44ExpLogTable.cpp
+  OpenEXR/IlmImf/ImfAcesFile.cpp
   OpenEXR/IlmImf/ImfAttribute.cpp
   OpenEXR/IlmImf/ImfB44Compressor.cpp
   OpenEXR/IlmImf/ImfBoxAttribute.cpp
@@ -328,6 +340,7 @@ set(OPENEXR_SOURCES
   OpenEXR/IlmImf/ImfCompressionAttribute.cpp
   OpenEXR/IlmImf/ImfCompressor.cpp
   OpenEXR/IlmImf/ImfConvert.cpp
+  OpenEXR/IlmImf/ImfCRgbaFile.cpp
   OpenEXR/IlmImf/ImfDeepCompositing.cpp
   OpenEXR/IlmImf/ImfDeepFrameBuffer.cpp
   OpenEXR/IlmImf/ImfDeepImageStateAttribute.cpp
@@ -339,7 +352,6 @@ set(OPENEXR_SOURCES
   OpenEXR/IlmImf/ImfDeepTiledInputPart.cpp
   OpenEXR/IlmImf/ImfDeepTiledOutputFile.cpp
   OpenEXR/IlmImf/ImfDeepTiledOutputPart.cpp
-  OpenEXR/IlmImf/ImfCRgbaFile.cpp
   OpenEXR/IlmImf/ImfDoubleAttribute.cpp
   OpenEXR/IlmImf/ImfDwaCompressor.cpp
   OpenEXR/IlmImf/ImfEnvmap.cpp
@@ -366,6 +378,7 @@ set(OPENEXR_SOURCES
   OpenEXR/IlmImf/ImfMisc.cpp
   OpenEXR/IlmImf/ImfMultiPartInputFile.cpp
   OpenEXR/IlmImf/ImfMultiPartOutputFile.cpp
+  OpenEXR/IlmImf/ImfMultiView.cpp
   OpenEXR/IlmImf/ImfOpaqueAttribute.cpp
   OpenEXR/IlmImf/ImfOutputFile.cpp
   OpenEXR/IlmImf/ImfOutputPart.cpp
@@ -404,10 +417,6 @@ set(OPENEXR_SOURCES
   OpenEXR/IlmImf/ImfWav.cpp
   OpenEXR/IlmImf/ImfZip.cpp
   OpenEXR/IlmImf/ImfZipCompressor.cpp
-  OpenEXR/IlmThread/IlmThread.cpp
-  OpenEXR/IlmThread/IlmThreadMutex.cpp
-  OpenEXR/IlmThread/IlmThreadPool.cpp
-  OpenEXR/IlmThread/IlmThreadSemaphore.cpp
   OpenEXR/Imath/ImathBox.cpp
   OpenEXR/Imath/ImathColorAlgo.cpp
   OpenEXR/Imath/ImathFun.cpp
@@ -415,6 +424,15 @@ set(OPENEXR_SOURCES
   OpenEXR/Imath/ImathRandom.cpp
   OpenEXR/Imath/ImathShear.cpp
   OpenEXR/Imath/ImathVec.cpp
+  OpenEXR/Iex/IexBaseExc.cpp
+  OpenEXR/Iex/IexThrowErrnoExc.cpp
+  OpenEXR/Half/half.cpp
+  OpenEXR/IlmThread/IlmThread.cpp
+  OpenEXR/IlmThread/IlmThreadMutex.cpp
+  OpenEXR/IlmThread/IlmThreadPool.cpp
+  OpenEXR/IlmThread/IlmThreadSemaphore.cpp
+  OpenEXR/IexMath/IexMathFloatExc.cpp
+  OpenEXR/IexMath/IexMathFpu.cpp
 )
 
 find_package(ZLIB REQUIRED)
