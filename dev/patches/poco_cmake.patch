@@ -25,7 +25,7 @@
  # Append our module directory to CMake
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
  
-@@ -59,32 +59,32 @@
+@@ -59,26 +59,26 @@
  # Allow enabling and disabling components
  option(ENABLE_XML "Enable the XML" ON)
  option(ENABLE_JSON "Enable the JSON" ON)
@@ -61,13 +61,6 @@
  
  option(ENABLE_TESTS
    "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
- 
- option(POCO_STATIC
--  "Set to OFF|ON (default is OFF) to control build of POCO as STATIC library" OFF)
-+  "Set to OFF|ON (default is ON) to control build of POCO as STATIC library" ON)
- 
- option(POCO_UNBUNDLED
-   "Set to OFF|ON (default is OFF) to control linking dependencies as external" OFF)
 @@ -102,6 +102,9 @@
      add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
      set( LIB_MODE STATIC )

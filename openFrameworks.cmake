@@ -2,19 +2,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
 #// Options ////////////////////////////////////////////////////////////////////
 
-set(OF_ENABLE_COTIRE ON CACHE BOOL
-   "Enable Cotire header precompiler")
+set(OF_ENABLE_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
+set(OF_LINK_STATICALLY OFF CACHE BOOL "Link openFrameworks libraries statically")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
-  set(OF_ENABLE_AUDIO ON CACHE BOOL
-     "Enable audio features of openFrameworks")
-
-  set(OF_ENABLE_VIDEO ON CACHE BOOL
-     "Enable video features of openFrameworks")
-
-  set(OF_ENABLE_STATIC_LINKING OFF CACHE BOOL
-     "Enable static linking for some libraries")
+  set(OF_ENABLE_AUDIO ON CACHE BOOL "Enable audio features of openFrameworks")
+  set(OF_ENABLE_VIDEO ON CACHE BOOL "Enable video features of openFrameworks")
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
@@ -23,8 +17,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
-  set(OF_ENABLE_CONSOLE OFF CACHE BOOL
-     "Enable console window")
+  set(OF_ENABLE_CONSOLE OFF CACHE BOOL "Enable console window")
 
   set(OF_ENABLE_AUDIO ON) # Do not turn off
   set(OF_ENABLE_VIDEO ON) # Do not turn off
@@ -35,7 +28,7 @@ endif()
 
 set(RELEASE_FLAGS "
   ${RELEASE_FLAGS}
-    -g
+    -g1
 ")
 
 set(DEBUG_FLAGS "
@@ -45,13 +38,14 @@ set(DEBUG_FLAGS "
     -fno-optimize-sibling-calls
 ")
 
-#// Clang specific C flags /////////////////////////////////////////////////////
+#// Clang specific flags ///////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
   set(RELEASE_C_FLAGS_CLANG "
     ${RELEASE_C_FLAGS_CLANG}
       -Wno-switch
+      -Wno-c++11-narrowing
       -Wno-ignored-attributes
       -Wno-deprecated-register
   ")
@@ -59,19 +53,19 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
   set(DEBUG_C_FLAGS_CLANG "
     ${DEBUG_C_FLAGS_CLANG}
       -Wno-switch
+      -Wno-c++11-narrowing
       -Wno-ignored-attributes
       -Wno-deprecated-register
   ")
 
 endif()
 
-#// Clang specific C++ flags ///////////////////////////////////////////////////
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
   set(RELEASE_CXX_FLAGS_CLANG "
     ${RELEASE_CXX_FLAGS_CLANG}
       -Wno-switch
+      -Wno-c++11-narrowing
       -Wno-ignored-attributes
       -Wno-deprecated-register
   ")
@@ -79,6 +73,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
   set(DEBUG_CXX_FLAGS_CLANG "
     ${DEBUG_CXX_FLAGS_CLANG}
       -Wno-switch
+      -Wno-c++11-narrowing
       -Wno-ignored-attributes
       -Wno-deprecated-register
   ")
@@ -186,25 +181,36 @@ if(CMAKE_SYSTEM MATCHES Linux)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/debug")
     endif()
 
-    list(APPEND OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS  "${OF_LIB_DIR}/*.a")
-
-    if(NOT OPENFRAMEWORKS_LIBS)
-        message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+    if(OF_LINK_STATICALLY)
+      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
+      if(NOT OPENFRAMEWORKS_LIBS)
+      message(FATAL_ERROR "No static openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+      endif()
+    else()
+      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.so")
+      if(NOT OPENFRAMEWORKS_LIBS)
+      message(FATAL_ERROR "No shared openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+      endif()
     endif()
 
-    list(APPEND OPENFRAMEWORKS_LIBRARIES
+    if(OF_LINK_STATICALLY)
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
         -Wl,-Bstatic
         -Wl,--start-group
         ${OPENFRAMEWORKS_LIBS}
         -Wl,--end-group
         -Wl,-Bdynamic
-    )
+      )
+    else()
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${OPENFRAMEWORKS_LIBS}
+      )
+    endif()
 
     #// Global dependencies ////////////////////////////////////////////////////
 
-    if(OF_ENABLE_STATIC_LINKING)
-      set(Boost_USE_STATIC_LIBS ON)
+    if(OF_LINK_STATICALLY)
+    set(Boost_USE_STATIC_LIBS ON)
     endif()
 
     pkg_check_modules(CAIRO REQUIRED cairo)
@@ -220,7 +226,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     #// Link static libs if available //////////////////////////////////////////
 
-    if(OF_ENABLE_STATIC_LINKING)
+    if(OF_LINK_STATICALLY)
 
     set(STATIC_LIB_PATHS
         "/usr/lib/x86_64-linux-gnu"
@@ -313,7 +319,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
       )
     endif()
 
-    endif(OF_ENABLE_STATIC_LINKING)
+    endif(OF_LINK_STATICALLY)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
@@ -347,9 +353,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     if(NOT OF_ENABLE_AUDIO)
-      list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -DTARGET_NO_SOUND
-      )
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_SOUND)
     else()
       find_package(ALSA REQUIRED)
       find_package(OpenAL REQUIRED)
@@ -372,13 +376,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
     endif()
 
     if(NOT OF_ENABLE_VIDEO)
-      list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -DTARGET_NO_VIDEO
-      )
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_VIDEO)
     else()
-      list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -DOF_USING_GTK
-      )
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
 
       find_package(UDev REQUIRED)
       find_package(Glib REQUIRED)
@@ -420,11 +420,16 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug")
     endif()
 
-    set(OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
-
-    if(NOT OPENFRAMEWORKS_LIBS)
-        message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+    if(OF_LINK_STATICALLY)
+      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
+      if(NOT OPENFRAMEWORKS_LIBS)
+      message(FATAL_ERROR "No static openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+      endif()
+    else()
+      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.so")
+      if(NOT OPENFRAMEWORKS_LIBS)
+      message(FATAL_ERROR "No shared openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+      endif()
     endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -432,6 +437,8 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     )
 
     #// Global dependencies ////////////////////////////////////////////////////
+
+    set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig")
 
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
@@ -511,27 +518,36 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug")
     endif()
 
-    set(OPENFRAMEWORKS_LIBRARIES -L"${OF_LIB_DIR}")
-    file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
-
-    if(NOT OPENFRAMEWORKS_LIBS)
-        message(FATAL_ERROR "No openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+    if(OF_LINK_STATICALLY)
+      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
+      if(NOT OPENFRAMEWORKS_LIBS)
+      message(FATAL_ERROR "No static openFrameworks libraries found in ${OF_LIB_DIR} folder.")
+      endif()
+    else()
+      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.dll")
+      if(NOT OPENFRAMEWORKS_LIBS)
+      message(FATAL_ERROR "No openFrameworks DLLs found in ${OF_LIB_DIR} folder.")
+      endif()
     endif()
 
     # Hide console by default
     if(NOT OF_ENABLE_CONSOLE)
-      list(APPEND OPENFRAMEWORKS_LIBRARIES
-        -mwindows
-      )
+      list(APPEND OPENFRAMEWORKS_LIBRARIES -mwindows)
     endif()
 
-    list(APPEND OPENFRAMEWORKS_LIBRARIES
-      -Wl,-Bstatic
-      -Wl,--start-group
-      ${OPENFRAMEWORKS_LIBS}
-      -Wl,--end-group
-      -Wl,-Bdynamic
-    )
+    if(OF_LINK_STATICALLY)
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -Wl,-Bstatic
+        -Wl,--start-group
+        ${OPENFRAMEWORKS_LIBS}
+        -Wl,--end-group
+        -Wl,-Bdynamic
+      )
+    else()
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${OPENFRAMEWORKS_LIBS}
+      )
+    endif()
 
     #// Global dependencies ////////////////////////////////////////////////////
 
@@ -559,6 +575,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_library(WSOCK32_LIB wsock32)
     find_library(IPHLPAPI_LIB iphlpapi)
     find_library(SETUPAPI_LIB setupapi)
+    find_library(STRMIIDS_LIB strmiids)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${ZLIB_INCLUDE_DIRS}
@@ -603,8 +620,18 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${WSOCK32_LIB}
         ${IPHLPAPI_LIB}
         ${SETUPAPI_LIB}
+        ${STRMIIDS_LIB}
     )
 
+    if(NOT OF_LINK_STATICALLY)
+      string(REPLACE "/" "\\" DLLS "${OF_LIB_DIR}/*.dll")
+      string(REPLACE "/" "\\" DEST "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+      file(GLOB_RECURSE DDLS_EXIST "${CMAKE_CURRENT_SOURCE_DIR}/bin/*.dll")
+      file(MAKE_DIRECTORY ${DEST})
+      if(NOT DDLS_EXIST)
+        execute_process(COMMAND xcopy /s ${DLLS} ${DEST})
+      endif()
+    endif()
 endif()
 
 #// Compiler flags /////////////////////////////////////////////////////////////
@@ -948,6 +975,7 @@ if(OF_ENABLE_COTIRE)
     include(cotire)
     set(COTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES 1)
     set_directory_properties(PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
+    set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1 CACHE INTERNAL "")
 else()
     function(cotire NO)
     endfunction(cotire)
@@ -955,12 +983,12 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "OF_ENABLE_COTIRE: " ${OF_ENABLE_COTIRE})
+message(STATUS "OF_ENABLE_COTIRE: "   ${OF_ENABLE_COTIRE})
+message(STATUS "OF_LINK_STATICALLY: " ${OF_LINK_STATICALLY})
 
 if(CMAKE_SYSTEM MATCHES Linux)
 message(STATUS "OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
 message(STATUS "OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
-message(STATUS "OF_ENABLE_STATIC_LINKING: " ${OF_ENABLE_STATIC_LINKING})
 endif()
 
 if(CMAKE_SYSTEM MATCHES Windows)

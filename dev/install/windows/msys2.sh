@@ -14,6 +14,7 @@
 # C:\msys64\mingw64\include
 # C:\msys64\mingw64\include\AL
 # C:\msys64\mingw64\include\cairo
+# C:\msys64\mingw64\x86_64-w64-mingw32\lib
 # 
 # Windows Dev Tips:
 # 

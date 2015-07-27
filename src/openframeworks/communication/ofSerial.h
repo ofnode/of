@@ -16,10 +16,6 @@
 	#define MAX_SERIAL_PORTS 256
 	/// \endcond
 	#include <winioctl.h>
-	#ifdef __MINGW32__
-		#define INITGUID
-		#include <initguid.h> // needed for dev-c++ & DEFINE_GUID
-	#endif
 #endif
 
 

@@ -367,7 +367,7 @@ class SocketReceiveMultiplexer::Implementation{
 public:
     Implementation()
 	{
-		breakEvent_ = CreateEvent( NULL, FALSE, FALSE, NULL );
+		breakEvent_ = CreateEventA( NULL, FALSE, FALSE, NULL );
 	}
 
     ~Implementation()
@@ -428,7 +428,7 @@ public:
 		for( std::vector< std::pair< PacketListener*, UdpSocket* > >::iterator i = socketListeners_.begin();
 				i != socketListeners_.end(); ++i, ++j ){
 
-			HANDLE event = CreateEvent( NULL, FALSE, FALSE, NULL );
+			HANDLE event = CreateEventA( NULL, FALSE, FALSE, NULL );
 			WSAEventSelect( i->second->impl_->Socket(), event, FD_READ ); // note that this makes the socket non-blocking which is why we can safely call RecieveFrom() on all sockets below
 			events[j] = event;
 		}

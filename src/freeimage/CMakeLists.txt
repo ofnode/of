@@ -481,7 +481,7 @@ include_directories("${PROJECT_SOURCE_DIR}/msvc")
 endif()
 
 add_library(
-  freeimage STATIC
+  freeimage ${LIB_MODE}
   ${FREEIMAGE_SOURCES}
   ${LIBJPEG_SOURCES}
   ${LIBOPENJPEG_SOURCES}
@@ -496,5 +496,14 @@ if(NOT MSVC)
 set_target_properties(
   freeimage PROPERTIES
   COMPILE_FLAGS "-w -Wno-c++11-narrowing"
+)
+endif()
+
+if(WIN32 AND LIB_MODE MATCHES SHARED)
+find_library(WS2_32_LIB ws2_32)
+target_link_libraries(
+  freeimage
+  ${WS2_32_LIB}
+  ${ZLIB_LIBRARIES}
 )
 endif()
