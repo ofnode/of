@@ -2,25 +2,25 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
 #// Options ////////////////////////////////////////////////////////////////////
 
-set(OF_ENABLE_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
-set(OF_LINK_STATICALLY OFF CACHE BOOL "Link openFrameworks libraries statically")
+set(OF_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
+set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
-  set(OF_ENABLE_AUDIO ON CACHE BOOL "Enable audio features of openFrameworks")
-  set(OF_ENABLE_VIDEO ON CACHE BOOL "Enable video features of openFrameworks")
+  set(OF_AUDIO ON CACHE BOOL "Enable audio features of openFrameworks")
+  set(OF_VIDEO ON CACHE BOOL "Enable video features of openFrameworks")
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
-  set(OF_ENABLE_AUDIO ON) # Do not turn off
-  set(OF_ENABLE_VIDEO ON) # Do not turn off
+  set(OF_AUDIO ON) # Do not turn off
+  set(OF_VIDEO ON) # Do not turn off
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
-  set(OF_ENABLE_CONSOLE OFF CACHE BOOL "Enable console window")
+  set(OF_CONSOLE OFF CACHE BOOL "Enable console window")
 
-  set(OF_ENABLE_AUDIO ON) # Do not turn off
-  set(OF_ENABLE_VIDEO ON) # Do not turn off
+  set(OF_AUDIO ON) # Do not turn off
+  set(OF_VIDEO ON) # Do not turn off
 
 endif()
 
@@ -181,7 +181,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/debug")
     endif()
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
       file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
       if(NOT OPENFRAMEWORKS_LIBS)
       message(FATAL_ERROR "No static openFrameworks libraries found in ${OF_LIB_DIR} folder.")
@@ -193,7 +193,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
       endif()
     endif()
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
       list(APPEND OPENFRAMEWORKS_LIBRARIES
         -Wl,-Bstatic
         -Wl,--start-group
@@ -209,7 +209,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
     set(Boost_USE_STATIC_LIBS ON)
     endif()
 
@@ -226,7 +226,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     #// Link static libs if available //////////////////////////////////////////
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
 
     set(STATIC_LIB_PATHS
         "/usr/lib/x86_64-linux-gnu"
@@ -319,7 +319,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
       )
     endif()
 
-    endif(OF_LINK_STATICALLY)
+    endif(OF_STATIC)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
@@ -352,7 +352,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
-    if(NOT OF_ENABLE_AUDIO)
+    if(NOT OF_AUDIO)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_SOUND)
     else()
       find_package(ALSA REQUIRED)
@@ -375,7 +375,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
       )
     endif()
 
-    if(NOT OF_ENABLE_VIDEO)
+    if(NOT OF_VIDEO)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_VIDEO)
     else()
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
@@ -420,7 +420,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug")
     endif()
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
       file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
       if(NOT OPENFRAMEWORKS_LIBS)
       message(FATAL_ERROR "No static openFrameworks libraries found in ${OF_LIB_DIR} folder.")
@@ -518,7 +518,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug")
     endif()
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
       file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.a")
       if(NOT OPENFRAMEWORKS_LIBS)
       message(FATAL_ERROR "No static openFrameworks libraries found in ${OF_LIB_DIR} folder.")
@@ -531,11 +531,11 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     endif()
 
     # Hide console by default
-    if(NOT OF_ENABLE_CONSOLE)
+    if(NOT OF_CONSOLE)
       list(APPEND OPENFRAMEWORKS_LIBRARIES -mwindows)
     endif()
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
       list(APPEND OPENFRAMEWORKS_LIBRARIES
         -Wl,-Bstatic
         -Wl,--start-group
@@ -623,7 +623,7 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${STRMIIDS_LIB}
     )
 
-    if(NOT OF_LINK_STATICALLY)
+    if(NOT OF_STATIC)
       string(REPLACE "/" "\\" DLLS "${OF_LIB_DIR}/*.dll")
       string(REPLACE "/" "\\" DEST "${CMAKE_CURRENT_SOURCE_DIR}/bin")
       file(GLOB_RECURSE DDLS_EXIST "${CMAKE_CURRENT_SOURCE_DIR}/bin/*.dll")
@@ -971,7 +971,7 @@ endfunction(ofxaddon)
 
 #// Misc ///////////////////////////////////////////////////////////////////////
 
-if(OF_ENABLE_COTIRE)
+if(OF_COTIRE)
     include(cotire)
     set(COTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES 1)
     set_directory_properties(PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
@@ -983,16 +983,16 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "OF_ENABLE_COTIRE: "   ${OF_ENABLE_COTIRE})
-message(STATUS "OF_LINK_STATICALLY: " ${OF_LINK_STATICALLY})
+message(STATUS "OF_COTIRE: "   ${OF_COTIRE})
+message(STATUS "OF_STATIC: " ${OF_STATIC})
 
 if(CMAKE_SYSTEM MATCHES Linux)
-message(STATUS "OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
-message(STATUS "OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
+message(STATUS "OF_AUDIO: " ${OF_AUDIO})
+message(STATUS "OF_VIDEO: " ${OF_VIDEO})
 endif()
 
 if(CMAKE_SYSTEM MATCHES Windows)
-message(STATUS "OF_ENABLE_CONSOLE: " ${OF_ENABLE_CONSOLE})
+message(STATUS "OF_CONSOLE: " ${OF_CONSOLE})
 endif()
 
 message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})

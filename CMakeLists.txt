@@ -5,24 +5,24 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
 #// Options ////////////////////////////////////////////////////////////////////
 
-set(OF_LINK_STATICALLY OFF CACHE BOOL "Link openFrameworks libraries statically")
+set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
-  set(OF_ENABLE_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
-  set(OF_ENABLE_VIDEO ON CACHE BOOL "Compile video features of openFrameworks")
+  set(OF_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
+  set(OF_VIDEO ON CACHE BOOL "Compile video features of openFrameworks")
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
-  set(OF_ENABLE_GSTREAMER_OSX OFF CACHE BOOL "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
+  set(OF_OSX_GSTREAMER OFF CACHE BOOL "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
 
-  set(OF_ENABLE_AUDIO ON) # Do not turn off
-  set(OF_ENABLE_VIDEO ON) # Do not turn off
+  set(OF_AUDIO ON) # Do not turn off
+  set(OF_VIDEO ON) # Do not turn off
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
-  set(OF_ENABLE_AUDIO ON) # Do not turn off
-  set(OF_ENABLE_VIDEO ON) # Do not turn off
+  set(OF_AUDIO ON) # Do not turn off
+  set(OF_VIDEO ON) # Do not turn off
 
 endif()
 
@@ -212,7 +212,7 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofXml.cpp"
 )
 
-if(OF_ENABLE_AUDIO)
+if(OF_AUDIO)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
@@ -223,7 +223,7 @@ if(OF_ENABLE_AUDIO)
   )
 endif()
 
-if(OF_ENABLE_VIDEO)
+if(OF_VIDEO)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoGrabber.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
@@ -240,7 +240,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
   )
-  if(OF_ENABLE_GSTREAMER_OSX)
+  if(OF_OSX_GSTREAMER)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
@@ -253,13 +253,13 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
   )
 endif()
-endif(OF_ENABLE_VIDEO)
+endif(OF_VIDEO)
 
 #// Platform-specific commands /////////////////////////////////////////////////
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release")
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug")
     else()
@@ -290,7 +290,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_INCLUDE_DIRS}
     )
 
-    if(NOT OF_ENABLE_AUDIO)
+    if(NOT OF_AUDIO)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_SOUND)
     else()
       find_package(ALSA REQUIRED)
@@ -306,7 +306,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
       )
     endif()
 
-    if(NOT OF_ENABLE_VIDEO)
+    if(NOT OF_VIDEO)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_VIDEO)
     else()
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
@@ -324,7 +324,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release")
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug")
     else()
@@ -365,7 +365,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${FONTCONFIG_INCLUDE_DIRS}
     )
 
-    if(OF_ENABLE_GSTREAMER_OSX)
+    if(OF_OSX_GSTREAMER)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS
         -DOF_VIDEO_PLAYER_GSTREAMER
         -DOF_VIDEO_CAPTURE_GSTREAMER
@@ -383,7 +383,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
-    if(OF_LINK_STATICALLY)
+    if(OF_STATIC)
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release")
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug")
     else()
@@ -498,7 +498,7 @@ string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP
 
 #// Build commands /////////////////////////////////////////////////////////////
 
-if(${OF_LINK_STATICALLY})
+if(${OF_STATIC})
   set(LIB_MODE STATIC)
 else()
   set(LIB_MODE SHARED)
@@ -686,15 +686,15 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "OF_LINK_STATICALLY: " ${OF_LINK_STATICALLY})
+message(STATUS "OF_STATIC: " ${OF_STATIC})
 
 if(CMAKE_SYSTEM MATCHES Linux)
-message(STATUS "OF_ENABLE_AUDIO: " ${OF_ENABLE_AUDIO})
-message(STATUS "OF_ENABLE_VIDEO: " ${OF_ENABLE_VIDEO})
+message(STATUS "OF_AUDIO: " ${OF_AUDIO})
+message(STATUS "OF_VIDEO: " ${OF_VIDEO})
 endif()
 
 if(CMAKE_SYSTEM MATCHES Darwin)
-message(STATUS "OF_ENABLE_GSTREAMER_OSX: " ${OF_ENABLE_GSTREAMER_OSX})
+message(STATUS "OF_OSX_GSTREAMER: " ${OF_OSX_GSTREAMER})
 endif()
 
 message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
