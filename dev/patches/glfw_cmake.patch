@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -19,11 +19,11 @@
+@@ -19,10 +19,10 @@
  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
  
  option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
