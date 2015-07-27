@@ -583,7 +583,7 @@ add_library(
 
 #// DLL library linking ////////////////////////////////////////////////////////
 
-if(CMAKE_SYSTEM MATCHES Windows AND LIB_MODE MATCHES SHARED)
+if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
 
   pkg_check_modules(CAIRO REQUIRED cairo)
   pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
