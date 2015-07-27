@@ -983,7 +983,7 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "OF_COTIRE: "   ${OF_COTIRE})
+message(STATUS "OF_COTIRE: " ${OF_COTIRE})
 message(STATUS "OF_STATIC: " ${OF_STATIC})
 
 if(CMAKE_SYSTEM MATCHES Linux)

@@ -498,7 +498,7 @@ string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP
 
 #// Build commands /////////////////////////////////////////////////////////////
 
-if(${OF_STATIC})
+if(OF_STATIC)
   set(LIB_MODE STATIC)
 else()
   set(LIB_MODE SHARED)
