@@ -581,7 +581,10 @@ add_library(
   "${OF_ROOT_DIR}/src/videoinput/videoInput.cpp"
 )
 
-if(LIB_MODE MATCHES SHARED AND CMAKE_SYSTEM MATCHES Windows)
+#// DLL library linking ////////////////////////////////////////////////////////
+
+if(CMAKE_SYSTEM MATCHES Windows AND LIB_MODE MATCHES SHARED)
+
   pkg_check_modules(CAIRO REQUIRED cairo)
   pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
@@ -609,79 +612,91 @@ if(LIB_MODE MATCHES SHARED AND CMAKE_SYSTEM MATCHES Windows)
   find_library(STRMIIDS_LIB strmiids)
 
   target_link_libraries(
-    glew
-    ${OPENGL_LIBRARIES}
+      glew
+      ${OPENGL_LIBRARIES}
   )
 
   target_link_libraries(
-    rtaudio
-    ${WINMM_LIB}
-    ${DSOUND_LIB}
+      rtaudio
+      ${WINMM_LIB}
+      ${DSOUND_LIB}
   )
 
   target_link_libraries(
-    videoinput
-    ${STRMIIDS_LIB}
+      videoinput
+      ${STRMIIDS_LIB}
   )
 
   add_dependencies(
-    openFrameworks
-    freeimage
-    glew
-    glfw
-    kissfft
-    tess2
-    PocoCrypto
-    PocoFoundation
-    PocoJSON
-    PocoNet
-    PocoNetSSL
-    PocoUtil
-    PocoXML
-    rtaudio
-    videoinput
+      openFrameworks
+      freeimage
+      glew
+      glfw
+      kissfft
+      tess2
+      PocoCrypto
+      PocoFoundation
+      PocoJSON
+      PocoNet
+      PocoNetSSL
+      PocoUtil
+      PocoXML
+      rtaudio
+      videoinput
+  )
+
+  set(OPENFRAMEWORKS_LIBRARIES
+      freeimage
+      glew
+      glfw
+      kissfft
+      tess2
+      PocoCrypto
+      PocoFoundation
+      PocoJSON
+      PocoNet
+      PocoNetSSL
+      PocoUtil
+      PocoXML
+      rtaudio
+      videoinput
+  )
+
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
+      ${OPENAL_LIBRARY}
+      ${ZLIB_LIBRARIES}
+      ${BZIP2_LIBRARIES}
+      ${CAIRO_LIBRARIES}
+      ${OPENGL_LIBRARIES}
+      ${MPG123_LIBRARIES}
+      ${PIXMAN_LIBRARIES}
+      ${OPENSSL_LIBRARIES}
+      ${SNDFILE_LIBRARIES}
+      ${LIBINTL_LIBRARIES}
+      ${FREETYPE_LIBRARIES}
+      ${FONTCONFIG_LIBRARIES}
+      ${Boost_SYSTEM_LIBRARY}
+      ${Boost_FILESYSTEM_LIBRARY}
+      ${CMAKE_THREAD_LIBS_INIT}
+  )
+
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
+      ${WINMM_LIB}
+      ${GDI32_LIB}
+      ${DSOUND_LIB}
+      ${WS2_32_LIB}
+      ${CRYPT32_LIB}
+      ${WSOCK32_LIB}
+      ${IPHLPAPI_LIB}
+      ${SETUPAPI_LIB}
+      ${STRMIIDS_LIB}
   )
 
   target_link_libraries(
-    openFrameworks
-    freeimage
-    glew
-    glfw
-    kissfft
-    tess2
-    PocoCrypto
-    PocoFoundation
-    PocoJSON
-    PocoNet
-    PocoNetSSL
-    PocoUtil
-    PocoXML
-    rtaudio
-    videoinput
-    ${WINMM_LIB}
-    ${GDI32_LIB}
-    ${DSOUND_LIB}
-    ${WS2_32_LIB}
-    ${CRYPT32_LIB}
-    ${WSOCK32_LIB}
-    ${IPHLPAPI_LIB}
-    ${SETUPAPI_LIB}
-    ${OPENAL_LIBRARY}
-    ${ZLIB_LIBRARIES}
-    ${BZIP2_LIBRARIES}
-    ${CAIRO_LIBRARIES}
-    ${OPENGL_LIBRARIES}
-    ${MPG123_LIBRARIES}
-    ${PIXMAN_LIBRARIES}
-    ${OPENSSL_LIBRARIES}
-    ${SNDFILE_LIBRARIES}
-    ${LIBINTL_LIBRARIES}
-    ${FREETYPE_LIBRARIES}
-    ${FONTCONFIG_LIBRARIES}
-    ${Boost_SYSTEM_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
+      openFrameworks
+      ${OPENFRAMEWORKS_LIBRARIES}
   )
+
 endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
