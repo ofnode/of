@@ -626,12 +626,13 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     if(NOT OF_STATIC)
       string(REPLACE "/" "\\" DLLS "${OF_LIB_DIR}/*.dll")
       string(REPLACE "/" "\\" DEST "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-      file(GLOB_RECURSE DDLS_EXIST "${CMAKE_CURRENT_SOURCE_DIR}/bin/*.dll")
+      file(GLOB_RECURSE DLLS_EXIST "${CMAKE_CURRENT_SOURCE_DIR}/bin/*.dll")
       file(MAKE_DIRECTORY ${DEST})
-      if(NOT DDLS_EXIST)
+      if(NOT DLLS_EXIST)
         execute_process(COMMAND xcopy /s ${DLLS} ${DEST})
       endif()
     endif()
+
 endif()
 
 #// Compiler flags /////////////////////////////////////////////////////////////
