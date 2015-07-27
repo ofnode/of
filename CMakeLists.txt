@@ -589,7 +589,6 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
   pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
   find_package(ZLIB REQUIRED)
-  find_package(BZip2 REQUIRED)
   find_package(OpenAL REQUIRED)
   find_package(OpenGL REQUIRED)
   find_package(MPG123 REQUIRED)
@@ -665,7 +664,6 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${OPENAL_LIBRARY}
       ${ZLIB_LIBRARIES}
-      ${BZIP2_LIBRARIES}
       ${CAIRO_LIBRARIES}
       ${OPENGL_LIBRARIES}
       ${MPG123_LIBRARIES}

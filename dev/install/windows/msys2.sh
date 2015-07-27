@@ -28,7 +28,6 @@ mingw-w64-x86_64-clang-svn  \
 mingw-w64-x86_64-gdb        \
 mingw-w64-x86_64-zlib       \
 mingw-w64-x86_64-tools      \
-mingw-w64-x86_64-bzip2      \
 mingw-w64-x86_64-ninja      \
 mingw-w64-x86_64-boost      \
 mingw-w64-x86_64-cairo      \
