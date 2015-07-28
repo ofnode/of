@@ -249,7 +249,7 @@ example( windowExample                           ofExamples/utils/windowExample 
 example( xmlExample                              ofExamples/utils/xmlExample )
 
 example( asciiVideo                              ofExamples/video/asciiVideo )
-if(CMAKE_SYSTEM MATCHES Darwin)
+if(CMAKE_SYSTEM MATCHES Darwin AND NOT OF_ENABLE_GSTREAMER_OSX)
 example( osxVideoRecorderExample                 ofExamples/video/osxVideoRecorderExample )
 endif()
 example( videoGrabberExample                     ofExamples/video/videoGrabberExample )
