@@ -7,8 +7,8 @@ set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
-  set(OF_AUDIO ON CACHE BOOL "Enable audio features of openFrameworks")
-  set(OF_VIDEO ON CACHE BOOL "Enable video features of openFrameworks")
+  set(OF_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
+  set(OF_VIDEO ON CACHE BOOL "Compile video features of openFrameworks")
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
