@@ -14,8 +14,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
-  set(OF_OSX_GSTREAMER OFF CACHE BOOL "Enable GStreamer on OSX. Make sure that you have installed required files with dev/install/osx/gstreamer.sh")
-
   set(OF_AUDIO ON) # Do not turn off
   set(OF_VIDEO ON) # Do not turn off
 
@@ -239,13 +237,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
   )
-  if(OF_OSX_GSTREAMER)
-  list(APPEND OPENFRAMEWORKS_SOURCES
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
-  )
-  endif()
 elseif(CMAKE_SYSTEM MATCHES Windows)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
@@ -363,22 +354,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${SNDFILE_INCLUDE_DIR}
         ${FONTCONFIG_INCLUDE_DIRS}
     )
-
-    if(OF_OSX_GSTREAMER)
-      list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -DOF_VIDEO_PLAYER_GSTREAMER
-        -DOF_VIDEO_CAPTURE_GSTREAMER
-      )
-
-      find_package(Glib REQUIRED)
-      find_package(GStreamer REQUIRED gstreamer-video)
-
-      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${GLIB_INCLUDE_DIRS}
-        ${GSTREAMER_INCLUDE_DIRS}
-        ${GSTREAMER_VIDEO_INCLUDE_DIRS}
-      )
-    endif()
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
@@ -705,10 +680,6 @@ message(STATUS "OF_STATIC: " ${OF_STATIC})
 if(CMAKE_SYSTEM MATCHES Linux)
 message(STATUS "OF_AUDIO: " ${OF_AUDIO})
 message(STATUS "OF_VIDEO: " ${OF_VIDEO})
-endif()
-
-if(CMAKE_SYSTEM MATCHES Darwin)
-message(STATUS "OF_OSX_GSTREAMER: " ${OF_OSX_GSTREAMER})
 endif()
 
 message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
