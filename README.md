@@ -27,6 +27,7 @@ Step 1: Clone
 -------------
 
 Run `git clone https://github.com/ofnode/of --depth 1 --no-single-branch` in a terminal.
+
 Run `git submodule update --init --recursive` from `of` folder to clone the examples.
 
 Step 2: Prepare
