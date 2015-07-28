@@ -576,10 +576,12 @@ set_target_properties(
 )
 endif()
 
+if(CMAKE_SYSTEM MATCHES Windows)
 add_library(
   videoinput ${LIB_MODE}
   "${OF_ROOT_DIR}/src/videoinput/videoInput.cpp"
 )
+endif()
 
 #// DLL library linking ////////////////////////////////////////////////////////
 
