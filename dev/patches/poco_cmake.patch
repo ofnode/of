@@ -61,16 +61,26 @@
  
  option(ENABLE_TESTS
    "Set to OFF|ON (default is OFF) to control build of POCO tests & samples" OFF)
-@@ -102,6 +102,9 @@
-     add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
-     set( LIB_MODE STATIC )
-     message(STATUS "Building static libraries")
-+    if( UNIX )
-+        add_definitions( -fPIC )
-+    endif()
- else(POCO_STATIC)
-     set( LIB_MODE SHARED )
-     message(STATUS "Building dynamic libraries")
+@@ -97,16 +97,10 @@
+       "Set to OFF|ON (default is OFF) to control parallel build of POCO with MSVC" OFF)
+ endif()
+ 
+-# Uncomment from next two lines to force static or dynamic library, default is autodetection
+-if(POCO_STATIC)
+-    add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS)
+-    set( LIB_MODE STATIC )
+-    message(STATUS "Building static libraries")
+-else(POCO_STATIC)
+-    set( LIB_MODE SHARED )
+-    message(STATUS "Building dynamic libraries")
+-endif(POCO_STATIC)
++if( UNIX )
++    add_definitions( -fPIC )
++endif()
+
+ if (ENABLE_TESTS)
+   include(CTest)
+   enable_testing()
 @@ -223,70 +223,3 @@
  endif()
  

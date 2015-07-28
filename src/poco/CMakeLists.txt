@@ -88,6 +88,10 @@ if(MSVC)
       "Set to OFF|ON (default is OFF) to control parallel build of POCO with MSVC" OFF)
 endif()
 
+if( UNIX )
+    add_definitions( -fPIC )
+endif()
+
 if (ENABLE_TESTS)
   include(CTest)
   enable_testing()

@@ -39,3 +39,7 @@ cd "$OF/src/rtaudio"
 
 apply rtaudio.patch
 
+cd "$OF/addons"
+
+apply addons.patch
+
