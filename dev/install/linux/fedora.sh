@@ -11,6 +11,7 @@ sudo dnf -y groups install "C Development Tools and Libraries"
 
 sudo dnf -y install     \
 git                     \
+gdb                     \
 wget                    \
 patch                   \
 pkgconfig               \

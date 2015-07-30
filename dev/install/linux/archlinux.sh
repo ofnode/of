@@ -5,6 +5,7 @@ yes | sudo pacman -Syu
 
 sudo pacman -S --needed \
 git                \
+gdb                \
 make               \
 pkg-config         \
 xorg-server        \

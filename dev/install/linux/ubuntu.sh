@@ -6,6 +6,7 @@ sudo apt-get -y upgrade
 
 sudo apt-get -y install     \
 git                         \
+gdb                         \
 pkg-config                  \
 xorg-dev                    \
 libgtk-3-dev                \
