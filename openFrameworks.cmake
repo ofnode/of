@@ -931,6 +931,10 @@ function(ofxaddon OFXADDON)
             message(FATAL_ERROR "ofxaddon(${OFXADDON_DIR}): the folder doesn't exist.")
         endif()
 
+        if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/src/")
+            message(FATAL_ERROR "ofxaddon(${OFXADDON_DIR}): the addon doesn't have src subfolder.")
+        endif()
+
         file(GLOB_RECURSE OFXHEADERS
             "${OFXADDON_DIR}/src/*.h"
             "${OFXADDON_DIR}/src/*.hh"
