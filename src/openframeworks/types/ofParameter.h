@@ -351,7 +351,7 @@ public:
 	ofParameter<ParameterType> & set(const string& name, const ParameterType & v);
 	ofParameter<ParameterType> & set(const string& name, const ParameterType & v, const ParameterType & min, const ParameterType & max);
 
-    ofParameter<ParameterType> & setWithoutEventNotifcations(const ParameterType & v);
+    ofParameter<ParameterType> & setWithoutEventNotifications(const ParameterType & v);
 
 	void setMin(const ParameterType & min);
 	void setMax(const ParameterType & max);
@@ -475,7 +475,7 @@ ofParameter<ParameterType> & ofParameter<ParameterType>::set(const string& name,
 }
 
 template<typename ParameterType>
-inline ofParameter<ParameterType> & ofParameter<ParameterType>::setWithoutEventNotifcations(const ParameterType & v){
+inline ofParameter<ParameterType> & ofParameter<ParameterType>::setWithoutEventNotifications(const ParameterType & v){
     noEventsSetValue(v);
     return *this;
 }
@@ -624,7 +624,7 @@ void ofParameter<ParameterType>::disableEvents(){
 }
 
 template<typename ParameterType>
-inline ParameterType ofParameter<ParameterType>::operator++(int v){
+inline ParameterType ofParameter<ParameterType>::operator++(int){
 	ParameterType r = obj->value;
 	obj->value++;
 	set(obj->value);
@@ -639,7 +639,7 @@ inline ofParameter<ParameterType> & ofParameter<ParameterType>::operator++(){
 }
 
 template<typename ParameterType>
-inline ParameterType ofParameter<ParameterType>::operator--(int v){
+inline ParameterType ofParameter<ParameterType>::operator--(int){
 	ParameterType r = obj->value;
 	obj->value--;
 	set(obj->value);
@@ -759,12 +759,13 @@ void ofParameter<ParameterType>::setParent(ofParameterGroup & parent){
 ///
 /// \sa ofParameter
 /// \tparam ParameterType The data wrapped by the ofParameter.
-/// \tparam ParameterType The type of the "friend" class with write access.
+/// \tparam Friend The type of the "friend" class with write access.
 template<typename ParameterType,typename Friend>
 class ofReadOnlyParameter: public ofAbstractParameter{
 public:
 	ofReadOnlyParameter();
 	ofReadOnlyParameter(ofParameter<ParameterType> & p);
+	ofReadOnlyParameter(ofReadOnlyParameter<ParameterType,Friend> & p);
 	ofReadOnlyParameter(const ParameterType & v);
 	ofReadOnlyParameter(const string& name, const ParameterType & v);
 	ofReadOnlyParameter(const string& name, const ParameterType & v, const ParameterType & min, const ParameterType & max);
@@ -861,6 +862,10 @@ inline ofReadOnlyParameter<ParameterType,Friend>::ofReadOnlyParameter(){}
 
 template<typename ParameterType,typename Friend>
 inline ofReadOnlyParameter<ParameterType,Friend>::ofReadOnlyParameter(ofParameter<ParameterType> & p)
+:parameter(p){}
+
+template<typename ParameterType,typename Friend>
+inline ofReadOnlyParameter<ParameterType,Friend>::ofReadOnlyParameter(ofReadOnlyParameter<ParameterType,Friend> & p)
 :parameter(p){}
 
 template<typename ParameterType,typename Friend>
@@ -990,7 +995,7 @@ inline const ParameterType & ofReadOnlyParameter<ParameterType,Friend>::operator
 
 
 template<typename ParameterType,typename Friend>
-inline ParameterType ofReadOnlyParameter<ParameterType,Friend>::operator++(int v){
+inline ParameterType ofReadOnlyParameter<ParameterType,Friend>::operator++(int){
 	return parameter++;
 }
 
@@ -1001,7 +1006,7 @@ inline ofReadOnlyParameter<ParameterType,Friend> & ofReadOnlyParameter<Parameter
 
 
 template<typename ParameterType,typename Friend>
-inline ParameterType ofReadOnlyParameter<ParameterType,Friend>::operator--(int v){
+inline ParameterType ofReadOnlyParameter<ParameterType,Friend>::operator--(int){
 	return parameter--;
 }
 
@@ -1120,7 +1125,7 @@ inline void ofReadOnlyParameter<ParameterType,Friend>::fromString(const string &
 
 template<typename ParameterType,typename Friend>
 shared_ptr<ofAbstractParameter> ofReadOnlyParameter<ParameterType,Friend>::newReference() const{
-	return shared_ptr<ofReadOnlyParameter<ParameterType,Friend>>(*this);
+	return std::make_shared<ofReadOnlyParameter<ParameterType,Friend>>(*this);
 }
 
 template<typename ParameterType,typename Friend>

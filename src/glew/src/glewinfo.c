@@ -5763,6 +5763,17 @@ static void _glewInfo_GL_NV_conservative_raster (void)
 
 #endif /* GL_NV_conservative_raster */
 
+#ifdef GL_NV_conservative_raster_dilate
+
+static void _glewInfo_GL_NV_conservative_raster_dilate (void)
+{
+  glewPrintExt("GL_NV_conservative_raster_dilate", GLEW_NV_conservative_raster_dilate, glewIsSupported("GL_NV_conservative_raster_dilate"), glewGetExtension("GL_NV_conservative_raster_dilate"));
+
+  glewInfoFunc("glConservativeRasterParameterfNV", glConservativeRasterParameterfNV == NULL);
+}
+
+#endif /* GL_NV_conservative_raster_dilate */
+
 #ifdef GL_NV_copy_depth_to_color
 
 static void _glewInfo_GL_NV_copy_depth_to_color (void)
@@ -10486,6 +10497,9 @@ static void glewInfo (void)
 #ifdef GL_NV_conservative_raster
   _glewInfo_GL_NV_conservative_raster();
 #endif /* GL_NV_conservative_raster */
+#ifdef GL_NV_conservative_raster_dilate
+  _glewInfo_GL_NV_conservative_raster_dilate();
+#endif /* GL_NV_conservative_raster_dilate */
 #ifdef GL_NV_copy_depth_to_color
   _glewInfo_GL_NV_copy_depth_to_color();
 #endif /* GL_NV_copy_depth_to_color */
