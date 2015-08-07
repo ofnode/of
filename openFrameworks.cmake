@@ -17,10 +17,12 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
-  set(OF_CONSOLE OFF CACHE BOOL "Enable console window")
-
   set(OF_AUDIO ON) # Do not turn off
   set(OF_VIDEO ON) # Do not turn off
+
+  set(OF_CONSOLE OFF CACHE BOOL "Enable console window")
+
+  set(OF_32BIT OFF CACHE BOOL "Enable compiling for 32-bit architectures")
 
 endif()
 
@@ -88,6 +90,12 @@ find_package(PkgConfig REQUIRED)
 
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT OF_32BIT)
+   set(ARCH_BIT 64)
+else()
+   set(ARCH_BIT 32)
 endif()
 
 # Output shared libraries and executables to bin folder of your project tree
@@ -175,9 +183,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release-${ARCH_BIT}")
     elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/debug")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/debug-${ARCH_BIT}")
     endif()
 
     if(OF_STATIC)
@@ -414,9 +422,9 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/release")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/release-${ARCH_BIT}")
     elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug-${ARCH_BIT}")
     endif()
 
     if(OF_STATIC)
@@ -502,6 +510,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
     set(OPENFRAMEWORKS_DEFINITIONS
+        -D_WIN32_WINNT=0x0501
         -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
@@ -512,9 +521,9 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/release")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/release-${ARCH_BIT}")
     elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug-${ARCH_BIT}")
     endif()
 
     if(OF_STATIC)
@@ -668,6 +677,10 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   endif()
 endif()
 
+if(ARCH_BIT MATCHES 32)
+    set(ARCH_FLAG -m32)
+endif()
+
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
 endif()
@@ -702,11 +715,11 @@ string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
 endif()
 
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${PIC_FLAG}")
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${PIC_FLAG} ${O_C_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${O_C_FLAG}")
 
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${PIC_FLAG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${PIC_FLAG} ${O_CXX_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${O_CXX_FLAG}")
 
 #// ofxAddons //////////////////////////////////////////////////////////////////
 

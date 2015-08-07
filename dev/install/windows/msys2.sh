@@ -42,3 +42,23 @@ mingw-w64-x86_64-freetype   \
 mingw-w64-x86_64-libsndfile \
 mingw-w64-x86_64-fontconfig \
 mingw-w64-x86_64-pkg-config
+
+yes | pacman -Sy --needed \
+mingw-w64-i686-gcc        \
+mingw-w64-i686-gdb        \
+mingw-w64-i686-zlib       \
+mingw-w64-i686-tools      \
+mingw-w64-i686-ninja      \
+mingw-w64-i686-boost      \
+mingw-w64-i686-cairo      \
+mingw-w64-i686-mpg123     \
+mingw-w64-i686-openal     \
+mingw-w64-i686-assimp     \
+mingw-w64-i686-opencv     \
+mingw-w64-i686-libusb     \
+mingw-w64-i686-openssl    \
+mingw-w64-i686-libiconv   \
+mingw-w64-i686-freetype   \
+mingw-w64-i686-libsndfile \
+mingw-w64-i686-fontconfig \
+mingw-w64-i686-pkg-config
