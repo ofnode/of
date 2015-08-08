@@ -245,46 +245,30 @@ set(LIBWEBP_SOURCES
   LibWebP/src/dec/dec.vp8l.c
   LibWebP/src/dec/dec.webp.c
   LibWebP/src/dsp/dsp.alpha_processing.c
-  LibWebP/src/dsp/dsp.alpha_processing_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.alpha_processing_sse2.c
   LibWebP/src/dsp/dsp.argb.c
-  LibWebP/src/dsp/dsp.argb_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.argb_sse2.c
   LibWebP/src/dsp/dsp.cost.c
-  LibWebP/src/dsp/dsp.cost_mips32.c
-  LibWebP/src/dsp/dsp.cost_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.cost_sse2.c
   LibWebP/src/dsp/dsp.cpu.c
   LibWebP/src/dsp/dsp.dec.c
   LibWebP/src/dsp/dsp.dec_clip_tables.c
-  LibWebP/src/dsp/dsp.dec_mips32.c
-  LibWebP/src/dsp/dsp.dec_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.dec_neon.c
   LibWebP/src/dsp/dsp.dec_sse2.c
   LibWebP/src/dsp/dsp.enc.c
   LibWebP/src/dsp/dsp.enc_avx2.c
-  LibWebP/src/dsp/dsp.enc_mips32.c
-  LibWebP/src/dsp/dsp.enc_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.enc_neon.c
   LibWebP/src/dsp/dsp.enc_sse2.c
   LibWebP/src/dsp/dsp.filters.c
-  LibWebP/src/dsp/dsp.filters_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.filters_sse2.c
   LibWebP/src/dsp/dsp.lossless.c
-  LibWebP/src/dsp/dsp.lossless_mips32.c
-  LibWebP/src/dsp/dsp.lossless_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.lossless_neon.c
   LibWebP/src/dsp/dsp.lossless_sse2.c
   LibWebP/src/dsp/dsp.rescaler.c
-  LibWebP/src/dsp/dsp.rescaler_mips32.c
-  LibWebP/src/dsp/dsp.rescaler_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.upsampling.c
-  LibWebP/src/dsp/dsp.upsampling_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.upsampling_neon.c
   LibWebP/src/dsp/dsp.upsampling_sse2.c
   LibWebP/src/dsp/dsp.yuv.c
-  LibWebP/src/dsp/dsp.yuv_mips32.c
-  LibWebP/src/dsp/dsp.yuv_mips_dsp_r2.c
   LibWebP/src/dsp/dsp.yuv_sse2.c
   LibWebP/src/enc/enc.alpha.c
   LibWebP/src/enc/enc.analysis.c
