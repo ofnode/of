@@ -20,6 +20,15 @@
  option(GLFW_DOCUMENT_INTERNALS "Include internals in documentation" OFF)
  
  if (WIN32)
+@@ -505,7 +505,7 @@
+     # On Unix-like systems, shared libraries can use the soname system.
+     set(GLFW_LIB_NAME glfw)
+ else()
+-    set(GLFW_LIB_NAME glfw3)
++    set(GLFW_LIB_NAME glfw)
+ endif()
+ 
+ #--------------------------------------------------------------------
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -57,7 +57,7 @@
