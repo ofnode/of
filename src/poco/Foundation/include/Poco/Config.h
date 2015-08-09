@@ -43,7 +43,7 @@
 // initialization framework-wide (e.g. Net
 // on Windows, all Data back-ends, etc).
 // 
-#define POCO_NO_AUTOMATIC_LIB_INIT
+// #define POCO_NO_AUTOMATIC_LIB_INIT
 
 
 // Define to disable FPEnvironment support
@@ -94,7 +94,7 @@
 // !!! for std::aligned_storage.                           !!!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // 
-// #define POCO_NO_SOO
+#define POCO_NO_SOO
 
 
 // Small object size in bytes. When assigned to Any or Var,

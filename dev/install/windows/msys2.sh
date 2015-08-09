@@ -4,7 +4,7 @@
 # CMake: http://www.cmake.org/download
 # MSYS2: http://msys2.github.io
 # 
-# PATH environment:
+# PATH environment for 64-bit binaries:
 # 
 # C:\msys64\usr\bin
 # C:\msys64\usr\lib
@@ -16,15 +16,30 @@
 # C:\msys64\mingw64\include\cairo
 # C:\msys64\mingw64\x86_64-w64-mingw32\lib
 # 
+# PATH environment for 32-bit binaries:
+# 
+# C:\msys64\usr\bin
+# C:\msys64\usr\lib
+# C:\msys64\usr\include
+# C:\msys64\mingw32\bin
+# C:\msys64\mingw32\lib
+# C:\msys64\mingw32\include
+# C:\msys64\mingw32\include\AL
+# C:\msys64\mingw32\include\cairo
+# C:\msys64\mingw32\i686-w64-mingw32\lib
+# 
 # Windows Dev Tips:
 # 
 #  * For easy environment variable editing you can use a free program called Windows Environment Variables Editor: http://eveditor.com
 #  * Don't generate project files from Git console: its folder is included by default which causes linker to link against its libz.dll
 # 
-# Run this command from MSYS2 Shell:
+# Run these commands from MSYS2 Shell for:
+# 
+# 64-bit binaries:
 
 yes | pacman -Sy --needed   \
 mingw-w64-x86_64-clang-svn  \
+mingw-w64-x86_64-gcc        \
 mingw-w64-x86_64-gdb        \
 mingw-w64-x86_64-zlib       \
 mingw-w64-x86_64-tools      \
@@ -42,6 +57,8 @@ mingw-w64-x86_64-freetype   \
 mingw-w64-x86_64-libsndfile \
 mingw-w64-x86_64-fontconfig \
 mingw-w64-x86_64-pkg-config
+
+# 32-bit binaries:
 
 yes | pacman -Sy --needed \
 mingw-w64-i686-gcc        \
