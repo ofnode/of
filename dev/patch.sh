@@ -3,10 +3,12 @@ cd "`dirname "$(readlink -f $0)"`"
 cd ..
 OF="`pwd`"
 
+R=$1
+
 function apply() {
   echo
   echo "$1"
-  patch -Np1 < "$OF/dev/patches/$1"
+  patch -Np1 $R < "$OF/dev/patches/$1"
 }
 
 #-------------------------------------------------------------------------------
