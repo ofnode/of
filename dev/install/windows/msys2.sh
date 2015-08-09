@@ -38,7 +38,7 @@
 # 64-bit binaries:
 
 yes | pacman -Sy --needed   \
-mingw-w64-x86_64-clang-svn  \
+mingw-w64-x86_64-clang      \
 mingw-w64-x86_64-gcc        \
 mingw-w64-x86_64-gdb        \
 mingw-w64-x86_64-zlib       \
@@ -61,6 +61,7 @@ mingw-w64-x86_64-pkg-config
 # 32-bit binaries:
 
 yes | pacman -Sy --needed \
+mingw-w64-i686-clang      \
 mingw-w64-i686-gcc        \
 mingw-w64-i686-gdb        \
 mingw-w64-i686-zlib       \
