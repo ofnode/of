@@ -25,7 +25,6 @@
 #pragma once
 
 #include <list>
-#include <climits>
 #include "ofConstants.h"
 
 #include "ofEvents.h"

@@ -1249,6 +1249,17 @@ static void _glewInfo_GL_ARB_ES3_1_compatibility (void)
 
 #endif /* GL_ARB_ES3_1_compatibility */
 
+#ifdef GL_ARB_ES3_2_compatibility
+
+static void _glewInfo_GL_ARB_ES3_2_compatibility (void)
+{
+  glewPrintExt("GL_ARB_ES3_2_compatibility", GLEW_ARB_ES3_2_compatibility, glewIsSupported("GL_ARB_ES3_2_compatibility"), glewGetExtension("GL_ARB_ES3_2_compatibility"));
+
+  glewInfoFunc("glPrimitiveBoundingBoxARB", glPrimitiveBoundingBoxARB == NULL);
+}
+
+#endif /* GL_ARB_ES3_2_compatibility */
+
 #ifdef GL_ARB_ES3_compatibility
 
 static void _glewInfo_GL_ARB_ES3_compatibility (void)
@@ -1768,6 +1779,15 @@ static void _glewInfo_GL_ARB_fragment_shader (void)
 
 #endif /* GL_ARB_fragment_shader */
 
+#ifdef GL_ARB_fragment_shader_interlock
+
+static void _glewInfo_GL_ARB_fragment_shader_interlock (void)
+{
+  glewPrintExt("GL_ARB_fragment_shader_interlock", GLEW_ARB_fragment_shader_interlock, glewIsSupported("GL_ARB_fragment_shader_interlock"), glewGetExtension("GL_ARB_fragment_shader_interlock"));
+}
+
+#endif /* GL_ARB_fragment_shader_interlock */
+
 #ifdef GL_ARB_framebuffer_no_attachments
 
 static void _glewInfo_GL_ARB_framebuffer_no_attachments (void)
@@ -1896,6 +1916,52 @@ static void _glewInfo_GL_ARB_gpu_shader_fp64 (void)
 }
 
 #endif /* GL_ARB_gpu_shader_fp64 */
+
+#ifdef GL_ARB_gpu_shader_int64
+
+static void _glewInfo_GL_ARB_gpu_shader_int64 (void)
+{
+  glewPrintExt("GL_ARB_gpu_shader_int64", GLEW_ARB_gpu_shader_int64, glewIsSupported("GL_ARB_gpu_shader_int64"), glewGetExtension("GL_ARB_gpu_shader_int64"));
+
+  glewInfoFunc("glGetUniformi64vARB", glGetUniformi64vARB == NULL);
+  glewInfoFunc("glGetUniformui64vARB", glGetUniformui64vARB == NULL);
+  glewInfoFunc("glGetnUniformi64vARB", glGetnUniformi64vARB == NULL);
+  glewInfoFunc("glGetnUniformui64vARB", glGetnUniformui64vARB == NULL);
+  glewInfoFunc("glProgramUniform1i64ARB", glProgramUniform1i64ARB == NULL);
+  glewInfoFunc("glProgramUniform1i64vARB", glProgramUniform1i64vARB == NULL);
+  glewInfoFunc("glProgramUniform1ui64ARB", glProgramUniform1ui64ARB == NULL);
+  glewInfoFunc("glProgramUniform1ui64vARB", glProgramUniform1ui64vARB == NULL);
+  glewInfoFunc("glProgramUniform2i64ARB", glProgramUniform2i64ARB == NULL);
+  glewInfoFunc("glProgramUniform2i64vARB", glProgramUniform2i64vARB == NULL);
+  glewInfoFunc("glProgramUniform2ui64ARB", glProgramUniform2ui64ARB == NULL);
+  glewInfoFunc("glProgramUniform2ui64vARB", glProgramUniform2ui64vARB == NULL);
+  glewInfoFunc("glProgramUniform3i64ARB", glProgramUniform3i64ARB == NULL);
+  glewInfoFunc("glProgramUniform3i64vARB", glProgramUniform3i64vARB == NULL);
+  glewInfoFunc("glProgramUniform3ui64ARB", glProgramUniform3ui64ARB == NULL);
+  glewInfoFunc("glProgramUniform3ui64vARB", glProgramUniform3ui64vARB == NULL);
+  glewInfoFunc("glProgramUniform4i64ARB", glProgramUniform4i64ARB == NULL);
+  glewInfoFunc("glProgramUniform4i64vARB", glProgramUniform4i64vARB == NULL);
+  glewInfoFunc("glProgramUniform4ui64ARB", glProgramUniform4ui64ARB == NULL);
+  glewInfoFunc("glProgramUniform4ui64vARB", glProgramUniform4ui64vARB == NULL);
+  glewInfoFunc("glUniform1i64ARB", glUniform1i64ARB == NULL);
+  glewInfoFunc("glUniform1i64vARB", glUniform1i64vARB == NULL);
+  glewInfoFunc("glUniform1ui64ARB", glUniform1ui64ARB == NULL);
+  glewInfoFunc("glUniform1ui64vARB", glUniform1ui64vARB == NULL);
+  glewInfoFunc("glUniform2i64ARB", glUniform2i64ARB == NULL);
+  glewInfoFunc("glUniform2i64vARB", glUniform2i64vARB == NULL);
+  glewInfoFunc("glUniform2ui64ARB", glUniform2ui64ARB == NULL);
+  glewInfoFunc("glUniform2ui64vARB", glUniform2ui64vARB == NULL);
+  glewInfoFunc("glUniform3i64ARB", glUniform3i64ARB == NULL);
+  glewInfoFunc("glUniform3i64vARB", glUniform3i64vARB == NULL);
+  glewInfoFunc("glUniform3ui64ARB", glUniform3ui64ARB == NULL);
+  glewInfoFunc("glUniform3ui64vARB", glUniform3ui64vARB == NULL);
+  glewInfoFunc("glUniform4i64ARB", glUniform4i64ARB == NULL);
+  glewInfoFunc("glUniform4i64vARB", glUniform4i64vARB == NULL);
+  glewInfoFunc("glUniform4ui64ARB", glUniform4ui64ARB == NULL);
+  glewInfoFunc("glUniform4ui64vARB", glUniform4ui64vARB == NULL);
+}
+
+#endif /* GL_ARB_gpu_shader_int64 */
 
 #ifdef GL_ARB_half_float_pixel
 
@@ -2167,6 +2233,17 @@ static void _glewInfo_GL_ARB_occlusion_query2 (void)
 
 #endif /* GL_ARB_occlusion_query2 */
 
+#ifdef GL_ARB_parallel_shader_compile
+
+static void _glewInfo_GL_ARB_parallel_shader_compile (void)
+{
+  glewPrintExt("GL_ARB_parallel_shader_compile", GLEW_ARB_parallel_shader_compile, glewIsSupported("GL_ARB_parallel_shader_compile"), glewGetExtension("GL_ARB_parallel_shader_compile"));
+
+  glewInfoFunc("glMaxShaderCompilerThreadsARB", glMaxShaderCompilerThreadsARB == NULL);
+}
+
+#endif /* GL_ARB_parallel_shader_compile */
+
 #ifdef GL_ARB_pipeline_statistics_query
 
 static void _glewInfo_GL_ARB_pipeline_statistics_query (void)
@@ -2205,6 +2282,15 @@ static void _glewInfo_GL_ARB_point_sprite (void)
 }
 
 #endif /* GL_ARB_point_sprite */
+
+#ifdef GL_ARB_post_depth_coverage
+
+static void _glewInfo_GL_ARB_post_depth_coverage (void)
+{
+  glewPrintExt("GL_ARB_post_depth_coverage", GLEW_ARB_post_depth_coverage, glewIsSupported("GL_ARB_post_depth_coverage"), glewGetExtension("GL_ARB_post_depth_coverage"));
+}
+
+#endif /* GL_ARB_post_depth_coverage */
 
 #ifdef GL_ARB_program_interface_query
 
@@ -2298,6 +2384,18 @@ static void _glewInfo_GL_ARB_robustness_share_group_isolation (void)
 }
 
 #endif /* GL_ARB_robustness_share_group_isolation */
+
+#ifdef GL_ARB_sample_locations
+
+static void _glewInfo_GL_ARB_sample_locations (void)
+{
+  glewPrintExt("GL_ARB_sample_locations", GLEW_ARB_sample_locations, glewIsSupported("GL_ARB_sample_locations"), glewGetExtension("GL_ARB_sample_locations"));
+
+  glewInfoFunc("glFramebufferSampleLocationsfvARB", glFramebufferSampleLocationsfvARB == NULL);
+  glewInfoFunc("glNamedFramebufferSampleLocationsfvARB", glNamedFramebufferSampleLocationsfvARB == NULL);
+}
+
+#endif /* GL_ARB_sample_locations */
 
 #ifdef GL_ARB_sample_shading
 
@@ -2422,6 +2520,15 @@ static void _glewInfo_GL_ARB_separate_shader_objects (void)
 
 #endif /* GL_ARB_separate_shader_objects */
 
+#ifdef GL_ARB_shader_atomic_counter_ops
+
+static void _glewInfo_GL_ARB_shader_atomic_counter_ops (void)
+{
+  glewPrintExt("GL_ARB_shader_atomic_counter_ops", GLEW_ARB_shader_atomic_counter_ops, glewIsSupported("GL_ARB_shader_atomic_counter_ops"), glewGetExtension("GL_ARB_shader_atomic_counter_ops"));
+}
+
+#endif /* GL_ARB_shader_atomic_counter_ops */
+
 #ifdef GL_ARB_shader_atomic_counters
 
 static void _glewInfo_GL_ARB_shader_atomic_counters (void)
@@ -2433,6 +2540,15 @@ static void _glewInfo_GL_ARB_shader_atomic_counters (void)
 
 #endif /* GL_ARB_shader_atomic_counters */
 
+#ifdef GL_ARB_shader_ballot
+
+static void _glewInfo_GL_ARB_shader_ballot (void)
+{
+  glewPrintExt("GL_ARB_shader_ballot", GLEW_ARB_shader_ballot, glewIsSupported("GL_ARB_shader_ballot"), glewGetExtension("GL_ARB_shader_ballot"));
+}
+
+#endif /* GL_ARB_shader_ballot */
+
 #ifdef GL_ARB_shader_bit_encoding
 
 static void _glewInfo_GL_ARB_shader_bit_encoding (void)
@@ -2441,6 +2557,15 @@ static void _glewInfo_GL_ARB_shader_bit_encoding (void)
 }
 
 #endif /* GL_ARB_shader_bit_encoding */
+
+#ifdef GL_ARB_shader_clock
+
+static void _glewInfo_GL_ARB_shader_clock (void)
+{
+  glewPrintExt("GL_ARB_shader_clock", GLEW_ARB_shader_clock, glewIsSupported("GL_ARB_shader_clock"), glewGetExtension("GL_ARB_shader_clock"));
+}
+
+#endif /* GL_ARB_shader_clock */
 
 #ifdef GL_ARB_shader_draw_parameters
 
@@ -2595,6 +2720,15 @@ static void _glewInfo_GL_ARB_shader_texture_lod (void)
 
 #endif /* GL_ARB_shader_texture_lod */
 
+#ifdef GL_ARB_shader_viewport_layer_array
+
+static void _glewInfo_GL_ARB_shader_viewport_layer_array (void)
+{
+  glewPrintExt("GL_ARB_shader_viewport_layer_array", GLEW_ARB_shader_viewport_layer_array, glewIsSupported("GL_ARB_shader_viewport_layer_array"), glewGetExtension("GL_ARB_shader_viewport_layer_array"));
+}
+
+#endif /* GL_ARB_shader_viewport_layer_array */
+
 #ifdef GL_ARB_shading_language_100
 
 static void _glewInfo_GL_ARB_shading_language_100 (void)
@@ -2678,6 +2812,24 @@ static void _glewInfo_GL_ARB_sparse_texture (void)
 }
 
 #endif /* GL_ARB_sparse_texture */
+
+#ifdef GL_ARB_sparse_texture2
+
+static void _glewInfo_GL_ARB_sparse_texture2 (void)
+{
+  glewPrintExt("GL_ARB_sparse_texture2", GLEW_ARB_sparse_texture2, glewIsSupported("GL_ARB_sparse_texture2"), glewGetExtension("GL_ARB_sparse_texture2"));
+}
+
+#endif /* GL_ARB_sparse_texture2 */
+
+#ifdef GL_ARB_sparse_texture_clamp
+
+static void _glewInfo_GL_ARB_sparse_texture_clamp (void)
+{
+  glewPrintExt("GL_ARB_sparse_texture_clamp", GLEW_ARB_sparse_texture_clamp, glewIsSupported("GL_ARB_sparse_texture_clamp"), glewGetExtension("GL_ARB_sparse_texture_clamp"));
+}
+
+#endif /* GL_ARB_sparse_texture_clamp */
 
 #ifdef GL_ARB_stencil_texturing
 
@@ -2857,6 +3009,15 @@ static void _glewInfo_GL_ARB_texture_env_dot3 (void)
 }
 
 #endif /* GL_ARB_texture_env_dot3 */
+
+#ifdef GL_ARB_texture_filter_minmax
+
+static void _glewInfo_GL_ARB_texture_filter_minmax (void)
+{
+  glewPrintExt("GL_ARB_texture_filter_minmax", GLEW_ARB_texture_filter_minmax, glewIsSupported("GL_ARB_texture_filter_minmax"), glewGetExtension("GL_ARB_texture_filter_minmax"));
+}
+
+#endif /* GL_ARB_texture_filter_minmax */
 
 #ifdef GL_ARB_texture_float
 
@@ -5387,6 +5548,15 @@ static void _glewInfo_GL_INTEL_fragment_shader_ordering (void)
 }
 
 #endif /* GL_INTEL_fragment_shader_ordering */
+
+#ifdef GL_INTEL_framebuffer_CMAA
+
+static void _glewInfo_GL_INTEL_framebuffer_CMAA (void)
+{
+  glewPrintExt("GL_INTEL_framebuffer_CMAA", GLEW_INTEL_framebuffer_CMAA, glewIsSupported("GL_INTEL_framebuffer_CMAA"), glewGetExtension("GL_INTEL_framebuffer_CMAA"));
+}
+
+#endif /* GL_INTEL_framebuffer_CMAA */
 
 #ifdef GL_INTEL_map_texture
 
@@ -9516,6 +9686,9 @@ static void glewInfo (void)
 #ifdef GL_ARB_ES3_1_compatibility
   _glewInfo_GL_ARB_ES3_1_compatibility();
 #endif /* GL_ARB_ES3_1_compatibility */
+#ifdef GL_ARB_ES3_2_compatibility
+  _glewInfo_GL_ARB_ES3_2_compatibility();
+#endif /* GL_ARB_ES3_2_compatibility */
 #ifdef GL_ARB_ES3_compatibility
   _glewInfo_GL_ARB_ES3_compatibility();
 #endif /* GL_ARB_ES3_compatibility */
@@ -9633,6 +9806,9 @@ static void glewInfo (void)
 #ifdef GL_ARB_fragment_shader
   _glewInfo_GL_ARB_fragment_shader();
 #endif /* GL_ARB_fragment_shader */
+#ifdef GL_ARB_fragment_shader_interlock
+  _glewInfo_GL_ARB_fragment_shader_interlock();
+#endif /* GL_ARB_fragment_shader_interlock */
 #ifdef GL_ARB_framebuffer_no_attachments
   _glewInfo_GL_ARB_framebuffer_no_attachments();
 #endif /* GL_ARB_framebuffer_no_attachments */
@@ -9657,6 +9833,9 @@ static void glewInfo (void)
 #ifdef GL_ARB_gpu_shader_fp64
   _glewInfo_GL_ARB_gpu_shader_fp64();
 #endif /* GL_ARB_gpu_shader_fp64 */
+#ifdef GL_ARB_gpu_shader_int64
+  _glewInfo_GL_ARB_gpu_shader_int64();
+#endif /* GL_ARB_gpu_shader_int64 */
 #ifdef GL_ARB_half_float_pixel
   _glewInfo_GL_ARB_half_float_pixel();
 #endif /* GL_ARB_half_float_pixel */
@@ -9708,6 +9887,9 @@ static void glewInfo (void)
 #ifdef GL_ARB_occlusion_query2
   _glewInfo_GL_ARB_occlusion_query2();
 #endif /* GL_ARB_occlusion_query2 */
+#ifdef GL_ARB_parallel_shader_compile
+  _glewInfo_GL_ARB_parallel_shader_compile();
+#endif /* GL_ARB_parallel_shader_compile */
 #ifdef GL_ARB_pipeline_statistics_query
   _glewInfo_GL_ARB_pipeline_statistics_query();
 #endif /* GL_ARB_pipeline_statistics_query */
@@ -9720,6 +9902,9 @@ static void glewInfo (void)
 #ifdef GL_ARB_point_sprite
   _glewInfo_GL_ARB_point_sprite();
 #endif /* GL_ARB_point_sprite */
+#ifdef GL_ARB_post_depth_coverage
+  _glewInfo_GL_ARB_post_depth_coverage();
+#endif /* GL_ARB_post_depth_coverage */
 #ifdef GL_ARB_program_interface_query
   _glewInfo_GL_ARB_program_interface_query();
 #endif /* GL_ARB_program_interface_query */
@@ -9741,6 +9926,9 @@ static void glewInfo (void)
 #ifdef GL_ARB_robustness_share_group_isolation
   _glewInfo_GL_ARB_robustness_share_group_isolation();
 #endif /* GL_ARB_robustness_share_group_isolation */
+#ifdef GL_ARB_sample_locations
+  _glewInfo_GL_ARB_sample_locations();
+#endif /* GL_ARB_sample_locations */
 #ifdef GL_ARB_sample_shading
   _glewInfo_GL_ARB_sample_shading();
 #endif /* GL_ARB_sample_shading */
@@ -9756,12 +9944,21 @@ static void glewInfo (void)
 #ifdef GL_ARB_separate_shader_objects
   _glewInfo_GL_ARB_separate_shader_objects();
 #endif /* GL_ARB_separate_shader_objects */
+#ifdef GL_ARB_shader_atomic_counter_ops
+  _glewInfo_GL_ARB_shader_atomic_counter_ops();
+#endif /* GL_ARB_shader_atomic_counter_ops */
 #ifdef GL_ARB_shader_atomic_counters
   _glewInfo_GL_ARB_shader_atomic_counters();
 #endif /* GL_ARB_shader_atomic_counters */
+#ifdef GL_ARB_shader_ballot
+  _glewInfo_GL_ARB_shader_ballot();
+#endif /* GL_ARB_shader_ballot */
 #ifdef GL_ARB_shader_bit_encoding
   _glewInfo_GL_ARB_shader_bit_encoding();
 #endif /* GL_ARB_shader_bit_encoding */
+#ifdef GL_ARB_shader_clock
+  _glewInfo_GL_ARB_shader_clock();
+#endif /* GL_ARB_shader_clock */
 #ifdef GL_ARB_shader_draw_parameters
   _glewInfo_GL_ARB_shader_draw_parameters();
 #endif /* GL_ARB_shader_draw_parameters */
@@ -9795,6 +9992,9 @@ static void glewInfo (void)
 #ifdef GL_ARB_shader_texture_lod
   _glewInfo_GL_ARB_shader_texture_lod();
 #endif /* GL_ARB_shader_texture_lod */
+#ifdef GL_ARB_shader_viewport_layer_array
+  _glewInfo_GL_ARB_shader_viewport_layer_array();
+#endif /* GL_ARB_shader_viewport_layer_array */
 #ifdef GL_ARB_shading_language_100
   _glewInfo_GL_ARB_shading_language_100();
 #endif /* GL_ARB_shading_language_100 */
@@ -9819,6 +10019,12 @@ static void glewInfo (void)
 #ifdef GL_ARB_sparse_texture
   _glewInfo_GL_ARB_sparse_texture();
 #endif /* GL_ARB_sparse_texture */
+#ifdef GL_ARB_sparse_texture2
+  _glewInfo_GL_ARB_sparse_texture2();
+#endif /* GL_ARB_sparse_texture2 */
+#ifdef GL_ARB_sparse_texture_clamp
+  _glewInfo_GL_ARB_sparse_texture_clamp();
+#endif /* GL_ARB_sparse_texture_clamp */
 #ifdef GL_ARB_stencil_texturing
   _glewInfo_GL_ARB_stencil_texturing();
 #endif /* GL_ARB_stencil_texturing */
@@ -9870,6 +10076,9 @@ static void glewInfo (void)
 #ifdef GL_ARB_texture_env_dot3
   _glewInfo_GL_ARB_texture_env_dot3();
 #endif /* GL_ARB_texture_env_dot3 */
+#ifdef GL_ARB_texture_filter_minmax
+  _glewInfo_GL_ARB_texture_filter_minmax();
+#endif /* GL_ARB_texture_filter_minmax */
 #ifdef GL_ARB_texture_float
   _glewInfo_GL_ARB_texture_float();
 #endif /* GL_ARB_texture_float */
@@ -10407,6 +10616,9 @@ static void glewInfo (void)
 #ifdef GL_INTEL_fragment_shader_ordering
   _glewInfo_GL_INTEL_fragment_shader_ordering();
 #endif /* GL_INTEL_fragment_shader_ordering */
+#ifdef GL_INTEL_framebuffer_CMAA
+  _glewInfo_GL_INTEL_framebuffer_CMAA();
+#endif /* GL_INTEL_framebuffer_CMAA */
 #ifdef GL_INTEL_map_texture
   _glewInfo_GL_INTEL_map_texture();
 #endif /* GL_INTEL_map_texture */
