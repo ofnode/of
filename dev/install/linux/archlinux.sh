@@ -7,6 +7,7 @@ sudo pacman -S --needed \
 git                \
 gdb                \
 make               \
+patch              \
 pkg-config         \
 xorg-server        \
 xorg-server-devel  \

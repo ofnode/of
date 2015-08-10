@@ -236,7 +236,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
     if(OF_STATIC)
 
     set(STATIC_LIB_PATHS
-        "/usr/lib/x86_64-linux-gnu"
+      "/usr/lib/x86_64-linux-gnu"
+      "/usr/local/lib"
     )
 
     find_library(
