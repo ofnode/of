@@ -502,7 +502,7 @@ add_library(
 
 target_compile_definitions(
     glew PRIVATE
-    -DGLEW_BUILD
+    -DGLEW_STATIC
     -DGLEW_NO_GLU
 )
 
