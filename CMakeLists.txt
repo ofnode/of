@@ -447,7 +447,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
 endif()
 
-set(CPP11_FLAG -std=gnu++11)
+set(CPP11_FLAG -std=gnu++14)
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
