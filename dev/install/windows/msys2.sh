@@ -33,8 +33,8 @@
 #  * For easy environment variable editing you can use a free program called Windows Environment Variables Editor: http://eveditor.com
 #  * Don't generate project files from Git console: its folder is included by default which causes linker to link against its libz.dll
 # 
-# Run these commands from MSYS2 Shell for:
-# 
+# Run these commands from MSYS2 Shell:
+
 # 64-bit binaries:
 
 yes | pacman -Sy --needed   \
