@@ -30,6 +30,8 @@ ofGLRenderer::ofGLRenderer(const ofAppBaseWindow * _window)
 	window = _window;
 	currentFramebufferId = 0;
 	defaultFramebufferId = 0;
+	path.setMode(ofPath::POLYLINES);
+	path.setUseShapeColor(false);
 }
 
 void ofGLRenderer::setup(){
@@ -1865,6 +1867,7 @@ void ofGLRenderer::saveScreen(int x, int y, int w, int h, ofPixels & pixels){
 	pixels.allocate(w, h, OF_PIXELS_RGBA);
 
 	switch(matrixStack.getOrientation()){
+	case OF_ORIENTATION_UNKNOWN:
 	case OF_ORIENTATION_DEFAULT:
 
 		if(isVFlipped()){
