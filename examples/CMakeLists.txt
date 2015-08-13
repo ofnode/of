@@ -71,32 +71,32 @@ ofxaddon(ofxXmlSettings)
 
 if(NoiseWorkshop)
 
-ofxaddon(addons/ofxAutoReloadedShader)
-ofxaddon(addons/ofxCv)
+  ofxaddon(addons/ofxAutoReloadedShader)
+  ofxaddon(addons/ofxCv)
 
-include_directories(addons/ofxCv/libs/ofxCv/include)
+  include_directories(addons/ofxCv/libs/ofxCv/include)
 
 endif(NoiseWorkshop)
 
 
 if(OF_GenerativeTypography)
 
-ofxaddon(addons/ofxPointInMesh)
-ofxaddon(addons/ofxVoronoi)
+  ofxaddon(addons/ofxPointInMesh)
+  ofxaddon(addons/ofxVoronoi)
 
-# Special case for resolving GNU linker redefinition conflicts
-file(GLOB_RECURSE VORO_SOURCES
-  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/*.cc")
-list(APPEND VORO_SOURCES
-  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/src/ofxVoro.cpp")
-include_directories(
-  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++"
-  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs"
-  "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/src")
-add_library(Voro STATIC ${VORO_SOURCES})
-set_target_properties(Voro PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
+  # Special case for resolving GNU linker redefinition conflicts
+  file(GLOB_RECURSE VORO_SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++/*.cc")
+  list(APPEND VORO_SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/src/ofxVoro.cpp")
+  include_directories(
+    "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs/voro++"
+    "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/libs"
+    "${CMAKE_CURRENT_LIST_DIR}/addons/ofxVoro/src")
+  add_library(Voro STATIC ${VORO_SOURCES})
+  set_target_properties(Voro PROPERTIES COMPILE_FLAGS ${NO_WARNINGS})
 
-set(OPENFRAMEWORKS_LIBRARIES Voro ${OPENFRAMEWORKS_LIBRARIES})
+  set(OPENFRAMEWORKS_LIBRARIES Voro ${OPENFRAMEWORKS_LIBRARIES})
 
 endif(OF_GenerativeTypography)
 

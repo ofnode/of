@@ -1,6 +1,6 @@
 --- b/ofxOsc/libs/oscpack/src/ip/win32/UdpSocket.cpp
 +++ a/ofxOsc/libs/oscpack/src/ip/win32/UdpSocket.cpp
-@@ -367,7 +367,7 @@
+@@ -368,7 +368,7 @@
  public:
      Implementation()
  	{
@@ -9,7 +9,7 @@
  	}
  
      ~Implementation()
-@@ -428,7 +428,7 @@
+@@ -429,7 +429,7 @@
  		for( std::vector< std::pair< PacketListener*, UdpSocket* > >::iterator i = socketListeners_.begin();
  				i != socketListeners_.end(); ++i, ++j ){
  
