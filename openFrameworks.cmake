@@ -918,6 +918,10 @@ function(ofxaddon OFXADDON)
         include_directories("${OFXADDON_DIR}/src")
 
 
+    elseif(OFXADDON STREQUAL ofxUnitTests)
+        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
+
+
     elseif(OFXADDON STREQUAL ofxVectorGraphics)
         set(OFXADDON_DIR "${OF_ROOT_DIR}/addons/ofxVectorGraphics")
         set(OFXSOURCES
