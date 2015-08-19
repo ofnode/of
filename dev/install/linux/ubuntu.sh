@@ -50,5 +50,6 @@ sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
 # Use default linker
 #sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld
 
-# Reinstall Mesa if CMake can't find OpenGL
-#sudo apt-get -y install --reinstall libgl1-mesa-glx libgl1-mesa-dev
+# Reinstall Mesa if CMake can't find OpenGL headers and libraries
+#sudo apt-get -y install --reinstall libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev
+
