@@ -18,7 +18,7 @@
  			GLuint shader = it->second;
  			retainShader(shader);
  		}
-@@ -275,7 +275,7 @@
+@@ -311,7 +311,7 @@
  
  //--------------------------------------------------------------
  string ofShader::getShaderSource(GLenum type)  const{
@@ -27,7 +27,7 @@
  	if ( source != shaderSource.end()) {
  		return source->second;
  	} else {
-@@ -436,7 +436,7 @@
+@@ -466,7 +466,7 @@
  	} else {
  		checkAndCreateProgram();
  
@@ -36,7 +36,7 @@
  			GLuint shader = it->second;
  			if(shader) {
  				ofLogVerbose("ofShader") << "linkProgram(): attaching " << nameForType(it->first) << " shader to program " << program;
-@@ -477,7 +477,7 @@
+@@ -507,7 +507,7 @@
  //--------------------------------------------------------------
  void ofShader::unload() {
  	if(bLoaded) {
@@ -45,7 +45,7 @@
  			GLuint shader = it->second;
  			if(shader) {
  				ofLogVerbose("ofShader") << "unload(): detaching and deleting " << nameForType(it->first) << " shader from program " << program;
-@@ -863,7 +863,7 @@
+@@ -893,7 +893,7 @@
  	GLint loc = -1;
  
  	// tig: caching uniform locations gives the RPi a 17% boost on average
@@ -54,7 +54,7 @@
  	if (it == uniformLocations.end()){
  		loc = glGetUniformLocation(program, name.c_str());
  		uniformLocations[name] = loc;
-@@ -934,7 +934,7 @@
+@@ -964,7 +964,7 @@
  
  //--------------------------------------------------------------
  GLuint ofShader::getShader(GLenum type) const{
