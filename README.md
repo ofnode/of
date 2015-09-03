@@ -1,4 +1,4 @@
-CMake-based [openFrameworks](https://github.com/openframeworks/openFrameworks)
+CMake [openFrameworks](https://github.com/openframeworks/openFrameworks) 0.9.0
 ==============================================================================
 
 
@@ -56,7 +56,7 @@ Step 3: Compile
 ```bash
 mkdir build-linux
 cd build-linux
-CC=clang CXX=clang++ cmake .. -G Ninja
+CXX=clang++ cmake .. -G Ninja
 ninja
 ```
 
@@ -74,7 +74,7 @@ xcodebuild -configuration Release
 ```batch
 mkdir build-windows
 cd build-windows
-cmake .. -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
