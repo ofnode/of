@@ -56,7 +56,7 @@ Step 3: Compile
 ```bash
 mkdir build-linux
 cd build-linux
-CXX=clang++ cmake .. -G Ninja
+cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
