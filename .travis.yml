@@ -23,7 +23,8 @@ matrix:
 install:
   - if [ "$TARGET" == "linux" ]; then
       dev/install/linux/ubuntu.sh;
-    elif [ "$TARGET" == "osx" ]; then
+    fi
+  - if [ "$TARGET" == "osx" ]; then
       dev/install/osx/homebrew.sh;
     fi
 script:
@@ -32,7 +33,8 @@ script:
       cd build-linux;
       cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++;
       ninja;
-    elif [ "$TARGET" == "osx" ]; then
+    fi
+  - if [ "$TARGET" == "osx" ]; then
       mkdir build-osx;
       cd build-osx;
       cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release;
