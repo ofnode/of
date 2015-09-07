@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Workaround for issue #15
+sudo cp /usr/include/assert.h /usr/local/include/
+
 brew update
 
 brew install boost --c++11
