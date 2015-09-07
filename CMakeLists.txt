@@ -447,7 +447,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
 endif()
 
-set(CPP11_FLAG -std=gnu++14)
+if(CMAKE_SYSTEM MATCHES Darwin)
+    set(CPP11_FLAG -std=c++14)
+else()
+    set(CPP11_FLAG -std=gnu++14)
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
@@ -570,9 +574,9 @@ add_library(
 )
 endif()
 
-#// DLL library linking ////////////////////////////////////////////////////////
+#// Shared library linking /////////////////////////////////////////////////////
 
-if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
+if(NOT OF_STATIC)
 
   pkg_check_modules(CAIRO REQUIRED cairo)
   pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
@@ -589,6 +593,7 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
   find_package(Freetype REQUIRED)
   find_package(Boost COMPONENTS filesystem system REQUIRED)
 
+  if(CMAKE_SYSTEM MATCHES Windows)
   find_library(WINMM_LIB winmm)
   find_library(GDI32_LIB gdi32)
   find_library(DSOUND_LIB dsound)
@@ -598,22 +603,42 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
   find_library(IPHLPAPI_LIB iphlpapi)
   find_library(SETUPAPI_LIB setupapi)
   find_library(STRMIIDS_LIB strmiids)
+  endif()
 
   target_link_libraries(
       glew
       ${OPENGL_LIBRARIES}
   )
 
+  if(CMAKE_SYSTEM MATCHES Linux)
+  find_package(ALSA)
+  target_link_libraries(
+      rtaudio
+      ${ALSA_LIBRARY}
+      ${CMAKE_THREAD_LIBS_INIT}
+  )
+  elseif(CMAKE_SYSTEM MATCHES Darwin)
+  find_library(COREAUDIO_LIB CoreAudio)
+  find_library(COREFOUNDATION_LIB CoreFoundation)
+  target_link_libraries(
+      rtaudio
+      ${COREAUDIO_LIB}
+      ${COREFOUNDATION_LIB}
+  )
+  elseif(CMAKE_SYSTEM MATCHES Windows)
   target_link_libraries(
       rtaudio
       ${WINMM_LIB}
       ${DSOUND_LIB}
   )
+  endif()
 
+  if(CMAKE_SYSTEM MATCHES Windows)
   target_link_libraries(
       videoinput
       ${STRMIIDS_LIB}
   )
+  endif()
 
   add_dependencies(
       openFrameworks
@@ -630,8 +655,14 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       PocoUtil
       PocoXML
       rtaudio
+  )
+
+  if(CMAKE_SYSTEM MATCHES Windows)
+  add_dependencies(
+      openFrameworks
       videoinput
   )
+  endif()
 
   set(OPENFRAMEWORKS_LIBRARIES
       freeimage
@@ -647,8 +678,13 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       PocoUtil
       PocoXML
       rtaudio
+  )
+
+  if(CMAKE_SYSTEM MATCHES Windows)
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
       videoinput
   )
+  endif()
 
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${OPENAL_LIBRARY}
@@ -667,6 +703,7 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       ${CMAKE_THREAD_LIBS_INIT}
   )
 
+  if(CMAKE_SYSTEM MATCHES Windows)
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${WINMM_LIB}
       ${GDI32_LIB}
@@ -678,6 +715,7 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       ${SETUPAPI_LIB}
       ${STRMIIDS_LIB}
   )
+  endif()
 
   target_link_libraries(
       openFrameworks
