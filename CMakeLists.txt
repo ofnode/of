@@ -728,6 +728,20 @@ if(NOT OF_STATIC)
   )
   endif()
 
+  if(CMAKE_SYSTEM MATCHES Darwin)
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
+      "-framework OpenGL"
+      "-framework Cocoa"
+      "-framework IOKit"
+      "-framework CoreVideo"
+      "-framework QTKit"
+      "-framework Accelerate"
+      "-framework CoreAudio"
+      "-framework AVFoundation"
+      "-framework CoreMedia"
+  )
+  endif()
+
   target_link_libraries(
       openFrameworks
       ${OPENFRAMEWORKS_LIBRARIES}

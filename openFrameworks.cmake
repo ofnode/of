@@ -504,7 +504,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${Boost_FILESYSTEM_LIBRARY}
     )
 
-    # Frameworks
     list(APPEND OPENFRAMEWORKS_LIBRARIES
         "-framework OpenGL"
         "-framework Cocoa"
