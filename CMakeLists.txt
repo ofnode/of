@@ -448,7 +448,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 endif()
 
 if(CMAKE_SYSTEM MATCHES Darwin)
-    set(CPP11_FLAG -std=c++14)
+    set(CPP11_FLAG -std=c++1y)
 else()
     set(CPP11_FLAG -std=gnu++14)
 endif()
