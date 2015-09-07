@@ -20,27 +20,27 @@ matrix:
       env: TARGET="osx"
   exclude:
     - compiler: gcc
-  install:
-    - if [ "$TARGET" == "linux" ]
-      then
-        dev/install/linux/ubuntu.sh
-      elif [ "$TARGET" == "osx" ]
-      then
-        dev/install/osx/homebrew.sh
-      fi
-  script:
-    - if [ "$TARGET" == "linux" ]
-      then
-        mkdir build-linux
-        cd build-linux
-        cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
-        ninja
-      elif [ "$TARGET" == "osx" ]
-      then
-        mkdir build-osx
-        cd build-osx
-        cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release
-        xcodebuild -configuration Release
-      fi
-  git:
-    depth: 1
+install:
+  - if [ "$TARGET" == "linux" ]
+    then
+      dev/install/linux/ubuntu.sh
+    elif [ "$TARGET" == "osx" ]
+    then
+      dev/install/osx/homebrew.sh
+    fi
+script:
+  - if [ "$TARGET" == "linux" ]
+    then
+      mkdir build-linux
+      cd build-linux
+      cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
+      ninja
+    elif [ "$TARGET" == "osx" ]
+    then
+      mkdir build-osx
+      cd build-osx
+      cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release
+      xcodebuild -configuration Release
+    fi
+git:
+  depth: 1
