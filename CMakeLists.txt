@@ -691,6 +691,12 @@ if(NOT OF_STATIC)
   )
   endif()
 
+  if(CMAKE_SYSTEM MATCHES Darwin)
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
+      -L/usr/local/lib
+  )
+  endif()
+
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${OPENAL_LIBRARY}
       ${ZLIB_LIBRARIES}

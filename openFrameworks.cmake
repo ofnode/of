@@ -488,6 +488,10 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -L/usr/local/lib
+    )
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
         ${ZLIB_LIBRARIES}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
