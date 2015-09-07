@@ -78,6 +78,8 @@ cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
+**NOTE**: Visual Studio is not supported anymore, [see here why](https://github.com/ofnode/of/wiki/On-removing-support-for-MSVC).
+
 
 Templates
 ---------
