@@ -1,8 +1,9 @@
 CMake [openFrameworks](https://github.com/openframeworks/openFrameworks) 0.9.0
 ==============================================================================
 
-
 ![](http://i.imgur.com/wKDVkN6.png)
+
+[![Build Status](https://travis-ci.org/ofnode/of.svg?branch=master)](https://travis-ci.org/ofnode/of)
 
 
 Features
