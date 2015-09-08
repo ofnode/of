@@ -41,4 +41,4 @@ script:
       xcodebuild -configuration Release;
     fi
 git:
-  depth: 1
+  depth: 2
