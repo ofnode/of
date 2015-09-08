@@ -38,7 +38,7 @@ script:
       mkdir build-osx;
       cd build-osx;
       cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release;
-      xcodebuild -configuration Release;
+      xcodebuild -configuration Release | grep -A 5 "error:";
     fi
 git:
   depth: 2
