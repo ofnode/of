@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
+include(TargetArch)
+target_architecture(TARGET_ARCH)
+message(STATUS "Architecture detected ${TARGET_ARCH}")
+
 #// Options ////////////////////////////////////////////////////////////////////
 
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
@@ -158,7 +162,6 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/3d/ofMesh.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/3d/ofNode.cpp"
 
-    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGLFWWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppNoWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppRunner.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofMainLoop.cpp"
@@ -217,6 +220,16 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofXml.cpp"
 )
 
+if(TARGET_ARCH MATCHES "^arm*")
+    list(APPEND OPENFRAMEWORKS_SOURCES
+        "${OF_ROOT_DIR}/src/openframeworks/app/ofAppEGLWindow.cpp"
+    )
+else()
+    list(APPEND OPENFRAMEWORKS_SOURCES
+        "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGLFWWindow.cpp"
+    )
+endif()
+
 if(OF_AUDIO)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
@@ -258,11 +271,11 @@ endif(OF_VIDEO)
 if(CMAKE_SYSTEM MATCHES Linux)
 
     if(OF_STATIC)
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${ARCH_BIT}")
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}")
     else()
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${ARCH_BIT}")
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${ARCH_BIT}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}")
     endif()
 
     set(OPENFRAMEWORKS_DEFINITIONS
@@ -273,20 +286,62 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
+    if(TARGET_ARCH MATCHES "^arm*")
+        set(OPENFRAMEWORKS_DEFINITIONS ${OPENFRAMEWORKS_DEFINITIONS}
+            # defines used inside openFrameworks libs.
+            -DTARGET_RASPBERRY_PI
+            -DUSE_DISPMANX_TRANSFORM_T
+
+# TODO many of these are not relevant to openFrameworks (were just pasted from hello_pi examples)
+# from raspberry pi examples
+            -DSTANDALONE
+            -DPIC
+            -D_REENTRANT
+            -D_LARGEFILE64_SOURCE
+            -D_FILE_OFFSET_BITS=64
+            -D_FORTIFY_SOURCE
+            -D__STDC_CONSTANT_MACROS
+            -D__STDC_LIMIT_MACROS
+            -DTARGET_POSIX
+            -DHAVE_LIBOPENMAX=2
+            -DOMX
+            -DOMX_SKIP64BIT
+            -DUSE_EXTERNAL_OMX
+            -DHAVE_LIBBCM_HOST
+            -DUSE_EXTERNAL_LIBBCM_HOST
+            -DUSE_VCHIQ_ARM
+        )
+    endif()
+
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
     find_package(Boost REQUIRED)
-    find_package(OpenGL REQUIRED)
+    if (TARGET_ARCH MATCHES "^arm*")
+        find_package(OpenGLES REQUIRED PATH /opt/vc/lib/)
+    else()
+        find_package(OpenGL REQUIRED)
+    endif()
     find_package(Freetype REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
+        ${OPENGLES2_INCLUDE_DIR}
+        ${EGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIRS}
     )
+
+    if(TARGET_ARCH MATCHES "^arm*")
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        /opt/vc/include
+        /opt/vc/include/IL
+        /opt/vc/include/interface/vcos/pthreads
+        /opt/vc/include/interface/vmcs_host/linux
+      )
+    endif()
 
     if(NOT OF_AUDIO)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_SOUND)
@@ -323,11 +378,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     if(OF_STATIC)
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${ARCH_BIT}")
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}")
     else()
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${ARCH_BIT}")
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${ARCH_BIT}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}")
     endif()
 
     set(OPENFRAMEWORKS_DEFINITIONS
@@ -366,11 +421,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
     if(OF_STATIC)
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${ARCH_BIT}")
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${TARGET_ARCH}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${TARGET_ARCH}")
     else()
-      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${ARCH_BIT}")
-      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${ARCH_BIT}")
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${TARGET_ARCH}")
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${TARGET_ARCH}")
     endif()
 
     set(OPENFRAMEWORKS_DEFINITIONS
@@ -439,12 +494,17 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   endif()
 endif()
 
-if(ARCH_BIT MATCHES 32)
+if("${TARGET_ARCH}" MATCHES "^arm*")
+    set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
+elseif(ARCH_BIT MATCHES 32)
     set(ARCH_FLAG -m32)
 endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
+    if("${TARGET_ARCH}" MATCHES "^arm*")
+        SET(PIC_FLAG "${PIC_FLAG} -ftree-vectorize -Wno-psabi -pipe")
+    endif()
 endif()
 
 set(CPP11_FLAG -std=gnu++14)
@@ -492,19 +552,21 @@ else()
 endif()
 
 add_subdirectory(src/freeimage)
-add_subdirectory(src/glfw)
 add_subdirectory(src/poco)
 
-add_library(
-    glew ${LIB_MODE}
-    "${OF_ROOT_DIR}/src/glew/src/glew.c"
-)
+if(NOT TARGET_ARCH MATCHES "^arm*")
+    add_subdirectory(src/glfw)
 
-target_compile_definitions(
-    glew PRIVATE
-    -DGLEW_STATIC
-    -DGLEW_NO_GLU
-)
+    add_library(
+        glew ${LIB_MODE}
+        "${OF_ROOT_DIR}/src/glew/src/glew.c"
+    )
+    target_compile_definitions(
+        glew PRIVATE
+        -DGLEW_STATIC
+        -DGLEW_NO_GLU
+    )
+endif()
 
 add_library(
     kissfft ${LIB_MODE}
