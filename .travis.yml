@@ -22,10 +22,10 @@ matrix:
     - compiler: clang
 install:
   - if [ "$TARGET" == "linux" ]; then
-      dev/install/linux/ubuntu.sh;
+      dev/install/linux/ubuntu.sh > /dev/null;
     fi
   - if [ "$TARGET" == "osx" ]; then
-      dev/install/osx/homebrew.sh;
+      dev/install/osx/homebrew.sh > /dev/null;
     fi
 script:
   - mkdir build;
