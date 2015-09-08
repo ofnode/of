@@ -1,7 +1,5 @@
 language: c++
 compiler: clang
-git:
-  submodules: false
 sudo: true
 matrix:
   include:
@@ -36,3 +34,4 @@ script:
     ninja
 git:
   depth: 1
+  submodules: false
