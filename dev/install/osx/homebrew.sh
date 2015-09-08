@@ -3,7 +3,7 @@
 # Workaround for issue #15
 sudo cp /usr/include/assert.h /usr/local/include/
 
-brew update --quiet
+brew update > /dev/null
 
 brew install --quiet boost --c++11
 brew install --quiet Caskroom/cask/xquartz # Needed for Cairo

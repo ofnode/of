@@ -1,5 +1,5 @@
 language: c++
-compiler: gcc
+compiler: clang
 sudo: true
 matrix:
   include:
@@ -33,4 +33,4 @@ script:
     cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++;
     ninja
 git:
-  depth: 2
+  depth: 1
