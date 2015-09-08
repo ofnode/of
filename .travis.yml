@@ -28,17 +28,9 @@ install:
       dev/install/osx/homebrew.sh;
     fi
 script:
-  - if [ "$TARGET" == "linux" ]; then
-      mkdir build-linux;
-      cd build-linux;
-      cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++;
-      ninja;
-    fi
-  - if [ "$TARGET" == "osx" ]; then
-      mkdir build-osx;
-      cd build-osx;
-      cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release;
-      xcodebuild -configuration Release | grep -A 5 "error:";
-    fi
+  - mkdir build;
+    cd build;
+    cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++;
+    ninja
 git:
   depth: 2

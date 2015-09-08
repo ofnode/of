@@ -1,5 +1,9 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
+if(NOT DEFINED CMAKE_MACOSX_RPATH)
+  set(CMAKE_MACOSX_RPATH 0)
+endif()
+
 #// Options ////////////////////////////////////////////////////////////////////
 
 set(OF_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
