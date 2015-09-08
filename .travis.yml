@@ -18,6 +18,8 @@ matrix:
       sudo: required
       compiler: clang
       env: TARGET="osx"
+  exclude:
+    - compiler: clang
 install:
   - if [ "$TARGET" == "linux" ]; then
       dev/install/linux/ubuntu.sh;
