@@ -2,7 +2,7 @@
 # Tested on Ubuntu 14.04
 
 sudo apt-get update
-sudo apt-get -y upgrade
+#sudo apt-get -y upgrade
 
 sudo apt-get -y install   \
 git                       \
