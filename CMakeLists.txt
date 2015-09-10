@@ -15,6 +15,8 @@ message(STATUS "Architecture detected ${TARGET_ARCH}")
 
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
+set(PLATFORM_VARIANT Default CACHE BOOL "Platform variant (could rpi, rpi2...)")
+
 if(CMAKE_SYSTEM MATCHES Linux)
 
   set(OF_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
@@ -321,7 +323,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     find_package(Boost REQUIRED)
     if (TARGET_ARCH MATCHES "^arm*")
-        find_package(OpenGLES REQUIRED PATH /opt/vc/lib/)
+        find_package(OpenGLES REQUIRED)
     else()
         find_package(OpenGL REQUIRED)
     endif()
@@ -337,7 +339,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_INCLUDE_DIRS}
     )
 
-    if(TARGET_ARCH MATCHES "^arm*")
+    if(PLATFORM_VARIANT MATCHES "^rpi*")
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         /opt/vc/include
         /opt/vc/include/IL

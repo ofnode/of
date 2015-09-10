@@ -12,6 +12,8 @@ message(STATUS "Architecture detected ${TARGET_ARCH}")
 set(OF_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
+set(PLATFORM_VARIANT Default CACHE BOOL "Platform variant (could rpi, rpi2...)")
+
 if(CMAKE_SYSTEM MATCHES Linux)
 
   set(OF_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
@@ -375,8 +377,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
-        ${OPENGL_INCLUDE_DIR}
-        ${OPENGLES2_INCLUDE_DIR}
         ${EGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
@@ -385,11 +385,16 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     if(TARGET_ARCH MATCHES "^arm*")
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${OPENGL_INCLUDE_DIR}
+        ${OPENGLES2_INCLUDE_DIR}
+      )
+      if(PLATFORM_VARIANT MATCHES "^rpi*")
         /opt/vc/include
         /opt/vc/include/IL
         /opt/vc/include/interface/vcos/pthreads
         /opt/vc/include/interface/vmcs_host/linux
       )
+      endif()
     endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -402,8 +407,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${ZLIB_LIBRARIES}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
-        ${OPENGLES2_LIBRARIES}
-        ${EGL_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
@@ -413,20 +416,28 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     if(TARGET_ARCH MATCHES "^arm*")
-      list(APPEND OPENFRAMEWORKS_LIBRARIES
-            GLESv2
-            GLESv1_CM
-            EGL
-            openmaxil
-            bcm_host
-            vcos
-            vchiq_arm
-            pcre
-            rt
-            X11
-            dl
-      )
-      link_directories(/opt/vc/lib)
+      if(PLATFORM_VARIANT MATCHES "^rpi*")
+        list(APPEND OPENFRAMEWORKS_LIBRARIES
+              GLESv2
+              GLESv1_CM
+              EGL
+              openmaxil
+              bcm_host
+              vcos
+              vchiq_arm
+              pcre
+              rt
+              X11
+              dl
+        )
+        link_directories(/opt/vc/lib)
+      else()
+        list(APPEND OPENFRAMEWORKS_LIBRARIES
+              ${OPENGLES2_LIBRARIES}
+              ${EGL_LIBRARIES}
+        )
+      endif()
+    }
     endif()
 
     if(NOT OF_AUDIO)
