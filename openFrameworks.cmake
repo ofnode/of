@@ -1,5 +1,8 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
+if(NOT DEFINED CMAKE_MACOSX_RPATH)
+  set(CMAKE_MACOSX_RPATH 0)
+endif()
 include(TargetArch)
 target_architecture(TARGET_ARCH)
 message(STATUS "Architecture detected ${TARGET_ARCH}")
@@ -500,7 +503,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
       message(FATAL_ERROR "No static openFrameworks libraries found in ${OF_LIB_DIR} folder.")
       endif()
     else()
-      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.so")
+      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.dylib")
       if(NOT OPENFRAMEWORKS_LIBS)
       message(FATAL_ERROR "No shared openFrameworks libraries found in ${OF_LIB_DIR} folder.")
       endif()
@@ -532,6 +535,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         "/usr/local/opt/openssl/lib/libssl.a"
     )
 
+    # Add system include dir, see issue #15
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        "/usr/include"
+    )
+
     # Hardcode FreeType path, see issue #15
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         "/usr/local/include/freetype2"
@@ -546,6 +554,10 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
         ${FONTCONFIG_INCLUDE_DIRS}
+    )
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -L/usr/local/lib
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -757,7 +769,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
     endif()
 endif()
 
-set(CPP11_FLAG -std=gnu++14)
+if(CMAKE_SYSTEM MATCHES Darwin)
+    set(CPP11_FLAG -std=c++1y)
+else()
+    set(CPP11_FLAG -std=gnu++14)
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")

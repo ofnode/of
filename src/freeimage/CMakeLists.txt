@@ -483,11 +483,17 @@ set_target_properties(
 )
 endif()
 
-if(WIN32 AND LIB_MODE MATCHES SHARED)
+if(LIB_MODE MATCHES SHARED)
+target_link_libraries(
+  freeimage
+  ${ZLIB_LIBRARIES}
+)
+endif()
+
+if(LIB_MODE MATCHES SHARED AND WIN32)
 find_library(WS2_32_LIB ws2_32)
 target_link_libraries(
   freeimage
   ${WS2_32_LIB}
-  ${ZLIB_LIBRARIES}
 )
 endif()

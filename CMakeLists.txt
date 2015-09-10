@@ -1,6 +1,10 @@
 project(openFrameworks)
 cmake_minimum_required(VERSION 2.8)
 
+if(NOT DEFINED CMAKE_MACOSX_RPATH)
+  set(CMAKE_MACOSX_RPATH 0)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
 include(TargetArch)
@@ -377,6 +381,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
+    set_source_files_properties(${OPENFRAMEWORKS_SOURCES} PROPERTIES COMPILE_FLAGS "-x objective-c++")
+
     if(OF_STATIC)
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}")
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}")
@@ -392,9 +398,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         -DOF_SOUNDSTREAM_RTAUDIO
     )
 
-    set(RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG} "-x objective-c++")
-    set(  DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG} "-x objective-c++")
-
     set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig")
 
     pkg_check_modules(CAIRO REQUIRED cairo)
@@ -404,6 +407,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(MPG123 REQUIRED)
     find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
+
+    # Add system include dir, see issue #15
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        "/usr/include"
+    )
 
     # Hardcode FreeType path, see issue #15
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
@@ -507,7 +515,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
     endif()
 endif()
 
-set(CPP11_FLAG -std=gnu++14)
+if(CMAKE_SYSTEM MATCHES Darwin)
+    set(CPP11_FLAG -std=c++1y)
+else()
+    set(CPP11_FLAG -std=gnu++14)
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
@@ -632,9 +644,9 @@ add_library(
 )
 endif()
 
-#// DLL library linking ////////////////////////////////////////////////////////
+#// Shared library linking /////////////////////////////////////////////////////
 
-if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
+if(NOT OF_STATIC)
 
   pkg_check_modules(CAIRO REQUIRED cairo)
   pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
@@ -651,6 +663,7 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
   find_package(Freetype REQUIRED)
   find_package(Boost COMPONENTS filesystem system REQUIRED)
 
+  if(CMAKE_SYSTEM MATCHES Windows)
   find_library(WINMM_LIB winmm)
   find_library(GDI32_LIB gdi32)
   find_library(DSOUND_LIB dsound)
@@ -660,22 +673,42 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
   find_library(IPHLPAPI_LIB iphlpapi)
   find_library(SETUPAPI_LIB setupapi)
   find_library(STRMIIDS_LIB strmiids)
+  endif()
 
   target_link_libraries(
       glew
       ${OPENGL_LIBRARIES}
   )
 
+  if(CMAKE_SYSTEM MATCHES Linux)
+  find_package(ALSA)
+  target_link_libraries(
+      rtaudio
+      ${ALSA_LIBRARY}
+      ${CMAKE_THREAD_LIBS_INIT}
+  )
+  elseif(CMAKE_SYSTEM MATCHES Darwin)
+  find_library(COREAUDIO_LIB CoreAudio)
+  find_library(COREFOUNDATION_LIB CoreFoundation)
+  target_link_libraries(
+      rtaudio
+      ${COREAUDIO_LIB}
+      ${COREFOUNDATION_LIB}
+  )
+  elseif(CMAKE_SYSTEM MATCHES Windows)
   target_link_libraries(
       rtaudio
       ${WINMM_LIB}
       ${DSOUND_LIB}
   )
+  endif()
 
+  if(CMAKE_SYSTEM MATCHES Windows)
   target_link_libraries(
       videoinput
       ${STRMIIDS_LIB}
   )
+  endif()
 
   add_dependencies(
       openFrameworks
@@ -692,8 +725,14 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       PocoUtil
       PocoXML
       rtaudio
+  )
+
+  if(CMAKE_SYSTEM MATCHES Windows)
+  add_dependencies(
+      openFrameworks
       videoinput
   )
+  endif()
 
   set(OPENFRAMEWORKS_LIBRARIES
       freeimage
@@ -709,8 +748,19 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       PocoUtil
       PocoXML
       rtaudio
+  )
+
+  if(CMAKE_SYSTEM MATCHES Windows)
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
       videoinput
   )
+  endif()
+
+  if(CMAKE_SYSTEM MATCHES Darwin)
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
+      -L/usr/local/lib
+  )
+  endif()
 
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${OPENAL_LIBRARY}
@@ -729,6 +779,7 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       ${CMAKE_THREAD_LIBS_INIT}
   )
 
+  if(CMAKE_SYSTEM MATCHES Windows)
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${WINMM_LIB}
       ${GDI32_LIB}
@@ -740,6 +791,21 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       ${SETUPAPI_LIB}
       ${STRMIIDS_LIB}
   )
+  endif()
+
+  if(CMAKE_SYSTEM MATCHES Darwin)
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
+      "-framework OpenGL"
+      "-framework Cocoa"
+      "-framework IOKit"
+      "-framework CoreVideo"
+      "-framework QTKit"
+      "-framework Accelerate"
+      "-framework CoreAudio"
+      "-framework AVFoundation"
+      "-framework CoreMedia"
+  )
+  endif()
 
   target_link_libraries(
       openFrameworks

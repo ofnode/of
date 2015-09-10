@@ -1,8 +1,9 @@
 CMake [openFrameworks](https://github.com/openframeworks/openFrameworks) 0.9.0
 ==============================================================================
 
-
 ![](http://i.imgur.com/wKDVkN6.png)
+
+[![Build Status](https://travis-ci.org/ofnode/of.svg?branch=master)](https://travis-ci.org/ofnode/of)
 
 
 Features
@@ -77,6 +78,8 @@ cd build-windows
 cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
+
+**NOTE**: Visual Studio is not supported anymore, [see here why](https://github.com/ofnode/of/wiki/On-removing-support-for-MSVC).
 
 
 Templates
