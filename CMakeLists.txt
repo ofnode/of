@@ -1,6 +1,10 @@
 project(openFrameworks)
 cmake_minimum_required(VERSION 2.8)
 
+if(NOT DEFINED CMAKE_MACOSX_RPATH)
+  set(CMAKE_MACOSX_RPATH 0)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
 include(TargetArch)
@@ -10,6 +14,8 @@ message(STATUS "Architecture detected ${TARGET_ARCH}")
 #// Options ////////////////////////////////////////////////////////////////////
 
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
+
+set(PLATFORM_VARIANT Default CACHE BOOL "Platform variant (could rpi, rpi2...)")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -41,6 +47,32 @@ set(DEBUG_FLAGS "
     -fno-optimize-sibling-calls
     -Wno-deprecated-declarations
 ")
+
+#// GCC spedific flags
+
+if(CMAKE_C_COMPILER_ID STREQUAL GNU)
+
+  set(RELEASE_C_FLAGS_GCC "
+    ${RELEASE_C_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+  set(DEBUG_C_FLAGS_GCC "
+    ${DEBUG_C_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+  set(RELEASE_CXX_FLAGS_GCC "
+    ${RELEASE_CXX_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+  set(DEBUG_CXX_FLAGS_GCC "
+    ${DEBUG_CXX_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+endif()
 
 #// Clang specific flags ///////////////////////////////////////////////////////
 
@@ -287,8 +319,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     if(TARGET_ARCH MATCHES "^arm*")
-        set(OPENFRAMEWORKS_DEFINITIONS ${OPENFRAMEWORKS_DEFINITIONS}
-            # defines used inside openFrameworks libs.
+        list(APPEND OPENFRAMEWORKS_DEFINITIONS
             -DTARGET_RASPBERRY_PI
             -DUSE_DISPMANX_TRANSFORM_T
 
@@ -318,7 +349,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     find_package(Boost REQUIRED)
     if (TARGET_ARCH MATCHES "^arm*")
-        find_package(OpenGLES REQUIRED PATH /opt/vc/lib/)
+        find_package(OpenGLES REQUIRED)
     else()
         find_package(OpenGL REQUIRED)
     endif()
@@ -334,7 +365,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_INCLUDE_DIRS}
     )
 
-    if(TARGET_ARCH MATCHES "^arm*")
+    if(PLATFORM_VARIANT MATCHES "^rpi*")
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         /opt/vc/include
         /opt/vc/include/IL
@@ -377,6 +408,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
+    set_source_files_properties(${OPENFRAMEWORKS_SOURCES} PROPERTIES COMPILE_FLAGS "-x objective-c++")
+
     if(OF_STATIC)
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}")
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}")
@@ -392,9 +425,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         -DOF_SOUNDSTREAM_RTAUDIO
     )
 
-    set(RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG} "-x objective-c++")
-    set(  DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG} "-x objective-c++")
-
     set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig")
 
     pkg_check_modules(CAIRO REQUIRED cairo)
@@ -404,6 +434,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(MPG123 REQUIRED)
     find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
+
+    # Add system include dir, see issue #15
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        "/usr/include"
+    )
 
     # Hardcode FreeType path, see issue #15
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
@@ -494,7 +529,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   endif()
 endif()
 
-if("${TARGET_ARCH}" MATCHES "^arm*")
+if("${PLATFORM_VARIANT}" MATCHES "^rpi*")
     set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
 elseif(ARCH_BIT MATCHES 32)
     set(ARCH_FLAG -m32)
@@ -503,11 +538,15 @@ endif()
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
     if("${TARGET_ARCH}" MATCHES "^arm*")
-        SET(PIC_FLAG "${PIC_FLAG} -ftree-vectorize -Wno-psabi -pipe")
+        SET(ARM_FLAG "${ARM_FLAG}")
     endif()
 endif()
 
-set(CPP11_FLAG -std=gnu++14)
+if(CMAKE_SYSTEM MATCHES Darwin)
+    set(CPP11_FLAG -std=c++1y)
+else()
+    set(CPP11_FLAG -std=gnu++14)
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
@@ -531,17 +570,23 @@ string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 string(REPLACE "\n" " " RELEASE_C_FLAGS_CLANG ${RELEASE_C_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_C_FLAGS_CLANG   ${DEBUG_C_FLAGS_CLANG})
+elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
+string(REPLACE "\n" " " RELEASE_C_FLAGS_GCC ${RELEASE_C_FLAGS_GCC})
+string(REPLACE "\n" " "   DEBUG_C_FLAGS_GCC   ${DEBUG_C_FLAGS_GCC})
 endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
+elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
+string(REPLACE "\n" " " RELEASE_CXX_FLAGS_GCC ${RELEASE_CXX_FLAGS_GCC})
+string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_GCC   ${DEBUG_CXX_FLAGS_GCC})
 endif()
 
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG}")
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${O_C_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${ARM_FLAG}" )
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${ARM_FLAG} ${O_C_FLAG}")
 
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${O_CXX_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${ARM_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${ARM_FLAG} ${O_CXX_FLAG}")
 
 #// Build commands /////////////////////////////////////////////////////////////
 
@@ -632,9 +677,9 @@ add_library(
 )
 endif()
 
-#// DLL library linking ////////////////////////////////////////////////////////
+#// Shared library linking /////////////////////////////////////////////////////
 
-if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
+if(NOT OF_STATIC)
 
   pkg_check_modules(CAIRO REQUIRED cairo)
   pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
@@ -651,6 +696,7 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
   find_package(Freetype REQUIRED)
   find_package(Boost COMPONENTS filesystem system REQUIRED)
 
+  if(CMAKE_SYSTEM MATCHES Windows)
   find_library(WINMM_LIB winmm)
   find_library(GDI32_LIB gdi32)
   find_library(DSOUND_LIB dsound)
@@ -660,22 +706,42 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
   find_library(IPHLPAPI_LIB iphlpapi)
   find_library(SETUPAPI_LIB setupapi)
   find_library(STRMIIDS_LIB strmiids)
+  endif()
 
   target_link_libraries(
       glew
       ${OPENGL_LIBRARIES}
   )
 
+  if(CMAKE_SYSTEM MATCHES Linux)
+  find_package(ALSA)
+  target_link_libraries(
+      rtaudio
+      ${ALSA_LIBRARY}
+      ${CMAKE_THREAD_LIBS_INIT}
+  )
+  elseif(CMAKE_SYSTEM MATCHES Darwin)
+  find_library(COREAUDIO_LIB CoreAudio)
+  find_library(COREFOUNDATION_LIB CoreFoundation)
+  target_link_libraries(
+      rtaudio
+      ${COREAUDIO_LIB}
+      ${COREFOUNDATION_LIB}
+  )
+  elseif(CMAKE_SYSTEM MATCHES Windows)
   target_link_libraries(
       rtaudio
       ${WINMM_LIB}
       ${DSOUND_LIB}
   )
+  endif()
 
+  if(CMAKE_SYSTEM MATCHES Windows)
   target_link_libraries(
       videoinput
       ${STRMIIDS_LIB}
   )
+  endif()
 
   add_dependencies(
       openFrameworks
@@ -692,8 +758,14 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       PocoUtil
       PocoXML
       rtaudio
+  )
+
+  if(CMAKE_SYSTEM MATCHES Windows)
+  add_dependencies(
+      openFrameworks
       videoinput
   )
+  endif()
 
   set(OPENFRAMEWORKS_LIBRARIES
       freeimage
@@ -709,8 +781,19 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       PocoUtil
       PocoXML
       rtaudio
+  )
+
+  if(CMAKE_SYSTEM MATCHES Windows)
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
       videoinput
   )
+  endif()
+
+  if(CMAKE_SYSTEM MATCHES Darwin)
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
+      -L/usr/local/lib
+  )
+  endif()
 
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${OPENAL_LIBRARY}
@@ -729,6 +812,7 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       ${CMAKE_THREAD_LIBS_INIT}
   )
 
+  if(CMAKE_SYSTEM MATCHES Windows)
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${WINMM_LIB}
       ${GDI32_LIB}
@@ -740,6 +824,21 @@ if(CMAKE_SYSTEM MATCHES Windows AND NOT OF_STATIC)
       ${SETUPAPI_LIB}
       ${STRMIIDS_LIB}
   )
+  endif()
+
+  if(CMAKE_SYSTEM MATCHES Darwin)
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
+      "-framework OpenGL"
+      "-framework Cocoa"
+      "-framework IOKit"
+      "-framework CoreVideo"
+      "-framework QTKit"
+      "-framework Accelerate"
+      "-framework CoreAudio"
+      "-framework AVFoundation"
+      "-framework CoreMedia"
+  )
+  endif()
 
   target_link_libraries(
       openFrameworks

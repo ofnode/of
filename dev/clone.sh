@@ -18,7 +18,7 @@ mkdir -p src
 cd src
 
 # v 3.17.0 release
-setup freeimage 0c862fc https://github.com/ofnode/freeimage
+setup freeimage 398373e https://github.com/ofnode/freeimage
 
 # v 1.12.0 master
 setup glew 4c40805 https://github.com/nigels-com/glew
@@ -33,7 +33,7 @@ setup poco 04caf94 https://github.com/pocoproject/poco
 setup rtaudio 22c00ec https://github.com/thestk/rtaudio
 
 # v 0.9.0 master
-setup openFrameworks e89d852 https://github.com/openframeworks/openFrameworks
+setup openFrameworks 2c8749c https://github.com/openframeworks/openFrameworks
 
 # v 1.0.1 master
 setup libtess2 24e4bdd https://github.com/memononen/libtess2
@@ -44,7 +44,9 @@ setup videoInput 3815d73 https://github.com/ofTheo/videoInput
 # v 1.3.0 release
 setup kissfft 7d00183 https://github.com/itdaniher/kissfft
 
-sed -i  's/\r//'  "$OF/src/rtaudio/RtAudio.cpp"
+# Remove Windows style line endings
+sed -i  's/\r//' "$OF/src/rtaudio/RtAudio.cpp"
+
 echo    "auto/" > "$OF/src/glew/.gitignore"
 rm      "$OF/src/poco/.gitignore"
 

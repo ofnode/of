@@ -1,5 +1,8 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
+if(NOT DEFINED CMAKE_MACOSX_RPATH)
+  set(CMAKE_MACOSX_RPATH 0)
+endif()
 include(TargetArch)
 target_architecture(TARGET_ARCH)
 message(STATUS "Architecture detected ${TARGET_ARCH}")
@@ -8,6 +11,8 @@ message(STATUS "Architecture detected ${TARGET_ARCH}")
 
 set(OF_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
+
+set(PLATFORM_VARIANT Default CACHE BOOL "Platform variant (could rpi, rpi2...)")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -43,6 +48,32 @@ set(DEBUG_FLAGS "
     -fno-omit-frame-pointer
     -fno-optimize-sibling-calls
 ")
+
+#// GCC spedific flags
+
+if(CMAKE_C_COMPILER_ID STREQUAL GNU)
+
+  set(RELEASE_C_FLAGS_GCC "
+    ${RELEASE_C_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+  set(DEBUG_C_FLAGS_GCC "
+    ${DEBUG_C_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+  set(RELEASE_CXX_FLAGS_GCC "
+    ${RELEASE_CXX_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+  set(DEBUG_CXX_FLAGS_GCC "
+    ${DEBUG_CXX_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+endif()
 
 #// Clang specific flags ///////////////////////////////////////////////////////
 
@@ -372,8 +403,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
-        ${OPENGL_INCLUDE_DIR}
-        ${OPENGLES2_INCLUDE_DIR}
         ${EGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
@@ -382,11 +411,17 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     if(TARGET_ARCH MATCHES "^arm*")
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        /opt/vc/include
-        /opt/vc/include/IL
-        /opt/vc/include/interface/vcos/pthreads
-        /opt/vc/include/interface/vmcs_host/linux
+        ${OPENGL_INCLUDE_DIR}
+        ${OPENGLES2_INCLUDE_DIR}
       )
+      if(PLATFORM_VARIANT MATCHES "^rpi*")
+        list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+          /opt/vc/include
+          /opt/vc/include/IL
+          /opt/vc/include/interface/vcos/pthreads
+          /opt/vc/include/interface/vmcs_host/linux
+        )
+      endif()
     endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -399,8 +434,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${ZLIB_LIBRARIES}
         ${CAIRO_LIBRARIES}
         ${OPENGL_LIBRARIES}
-        ${OPENGLES2_LIBRARIES}
-        ${EGL_LIBRARIES}
         ${OPENSSL_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
@@ -410,20 +443,27 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     if(TARGET_ARCH MATCHES "^arm*")
-      list(APPEND OPENFRAMEWORKS_LIBRARIES
-            GLESv2
-            GLESv1_CM
-            EGL
-            openmaxil
-            bcm_host
-            vcos
-            vchiq_arm
-            pcre
-            rt
-            X11
-            dl
-      )
-      link_directories(/opt/vc/lib)
+      if(PLATFORM_VARIANT MATCHES "^rpi*")
+        list(APPEND OPENFRAMEWORKS_LIBRARIES
+              GLESv2
+              GLESv1_CM
+              EGL
+              openmaxil
+              bcm_host
+              vcos
+              vchiq_arm
+              pcre
+              rt
+              X11
+              dl
+        )
+        link_directories(/opt/vc/lib)
+      else()
+        list(APPEND OPENFRAMEWORKS_LIBRARIES
+              ${OPENGLES2_LIBRARIES}
+              ${EGL_LIBRARIES}
+        )
+      endif()
     endif()
 
     if(NOT OF_AUDIO)
@@ -500,7 +540,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
       message(FATAL_ERROR "No static openFrameworks libraries found in ${OF_LIB_DIR} folder.")
       endif()
     else()
-      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.so")
+      file(GLOB_RECURSE OPENFRAMEWORKS_LIBS "${OF_LIB_DIR}/*.dylib")
       if(NOT OPENFRAMEWORKS_LIBS)
       message(FATAL_ERROR "No shared openFrameworks libraries found in ${OF_LIB_DIR} folder.")
       endif()
@@ -532,6 +572,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         "/usr/local/opt/openssl/lib/libssl.a"
     )
 
+    # Add system include dir, see issue #15
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        "/usr/include"
+    )
+
     # Hardcode FreeType path, see issue #15
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         "/usr/local/include/freetype2"
@@ -546,6 +591,10 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
         ${FONTCONFIG_INCLUDE_DIRS}
+    )
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -L/usr/local/lib
     )
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -753,11 +802,15 @@ endif()
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
     if("${TARGET_ARCH}" MATCHES "^arm*")
-        SET(PIC_FLAG "${PIC_FLAG} -ftree-vectorize -Wno-psabi -pipe")
+        SET(ARM_FLAG "${ARM_FLAG}")
     endif()
 endif()
 
-set(CPP11_FLAG -std=gnu++14)
+if(CMAKE_SYSTEM MATCHES Darwin)
+    set(CPP11_FLAG -std=c++1y)
+else()
+    set(CPP11_FLAG -std=gnu++14)
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set(C_COLORIZATION "-fcolor-diagnostics")
@@ -781,17 +834,23 @@ string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 string(REPLACE "\n" " " RELEASE_C_FLAGS_CLANG ${RELEASE_C_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_C_FLAGS_CLANG   ${DEBUG_C_FLAGS_CLANG})
+elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
+string(REPLACE "\n" " " RELEASE_C_FLAGS_GCC ${RELEASE_C_FLAGS_GCC})
+string(REPLACE "\n" " "   DEBUG_C_FLAGS_GCC   ${DEBUG_C_FLAGS_GCC})
 endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
+elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
+string(REPLACE "\n" " " RELEASE_CXX_FLAGS_GCC ${RELEASE_CXX_FLAGS_GCC})
+string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_GCC   ${DEBUG_CXX_FLAGS_GCC})
 endif()
 
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG}")
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${O_C_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${RELEASE_C_FLAGS_GCC} ${ARCH_FLAG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG}   ${DEBUG_C_FLAGS_GCC} ${ARCH_FLAG} ${PIC_FLAG} ${O_C_FLAG}")
 
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${O_CXX_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${RELEASE_CXX_FLAGS_GCC} ${ARCH_FLAG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}   ${DEBUG_CXX_FLAGS_GCC} ${ARCH_FLAG} ${PIC_FLAG} ${O_CXX_FLAG}")
 
 #// ofxAddons //////////////////////////////////////////////////////////////////
 

@@ -1,0 +1,37 @@
+language: c++
+compiler: clang
+sudo: true
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: TARGET="linux"
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - gcc-4.9
+          - g++-4.9
+    - os: osx
+      sudo: required
+      compiler: clang
+      env: TARGET="osx"
+  exclude:
+    - compiler: clang
+install:
+  - if [ "$TARGET" == "linux" ]; then
+      dev/install/linux/ubuntu.sh > /dev/null;
+    fi
+  - if [ "$TARGET" == "osx" ]; then
+      dev/install/osx/homebrew.sh > /dev/null;
+    fi
+script:
+  - mkdir build;
+    cd build;
+    cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++;
+    ninja
+git:
+  depth: 1
+  submodules: false

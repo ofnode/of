@@ -1,9 +1,7 @@
 #!/bin/bash
 # Tested on Manjaro 0.8.11
 
-yes | sudo pacman -Syu
-
-sudo pacman -S --needed \
+sudo pacman -Sy --needed \
 git                \
 gdb                \
 make               \
