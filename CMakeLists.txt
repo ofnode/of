@@ -708,10 +708,12 @@ if(NOT OF_STATIC)
   find_library(STRMIIDS_LIB strmiids)
   endif()
 
+if(NOT "${PLATFORM_VARIANT}" MATCHES "^rpi*")
   target_link_libraries(
       glew
       ${OPENGL_LIBRARIES}
   )
+endif()
 
   if(CMAKE_SYSTEM MATCHES Linux)
   find_package(ALSA)
@@ -746,8 +748,6 @@ if(NOT OF_STATIC)
   add_dependencies(
       openFrameworks
       freeimage
-      glew
-      glfw
       kissfft
       tess2
       PocoCrypto
@@ -759,6 +759,11 @@ if(NOT OF_STATIC)
       PocoXML
       rtaudio
   )
+
+if(NOT "${PLATFORM_VARIANT}" MATCHES "^rpi*")
+  add_dependencies( glew glfw )
+endif()
+
 
   if(CMAKE_SYSTEM MATCHES Windows)
   add_dependencies(
