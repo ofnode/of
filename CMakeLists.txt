@@ -48,6 +48,32 @@ set(DEBUG_FLAGS "
     -Wno-deprecated-declarations
 ")
 
+#// GCC spedific flags
+
+if(CMAKE_C_COMPILER_ID STREQUAL GNU)
+
+  set(RELEASE_C_FLAGS_GCC "
+    ${RELEASE_C_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+  set(DEBUG_C_FLAGS_GCC "
+    ${DEBUG_C_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+  set(RELEASE_CXX_FLAGS_GCC "
+    ${RELEASE_CXX_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+  set(DEBUG_CXX_FLAGS_GCC "
+    ${DEBUG_CXX_FLAGS_GCC}
+    -Wno-psabi
+  ")
+
+endif()
+
 #// Clang specific flags ///////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
@@ -512,7 +538,7 @@ endif()
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
     if("${TARGET_ARCH}" MATCHES "^arm*")
-        SET(ARM_FLAG "-Wno-psabi")
+        SET(ARM_FLAG "${ARM_FLAG}")
     endif()
 endif()
 
@@ -544,10 +570,16 @@ string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 string(REPLACE "\n" " " RELEASE_C_FLAGS_CLANG ${RELEASE_C_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_C_FLAGS_CLANG   ${DEBUG_C_FLAGS_CLANG})
+elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
+string(REPLACE "\n" " " RELEASE_C_FLAGS_GCC ${RELEASE_C_FLAGS_GCC})
+string(REPLACE "\n" " "   DEBUG_C_FLAGS_GCC   ${DEBUG_C_FLAGS_GCC})
 endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
+elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
+string(REPLACE "\n" " " RELEASE_CXX_FLAGS_GCC ${RELEASE_CXX_FLAGS_GCC})
+string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_GCC   ${DEBUG_CXX_FLAGS_GCC})
 endif()
 
 string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${ARM_FLAG}" )
