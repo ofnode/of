@@ -13,7 +13,6 @@ libgtk-3-dev              \
 libboost-filesystem-dev   \
 libboost-system-dev       \
 libudev-dev               \
-clang-3.6                 \
 cmake                     \
 ninja-build               \
 libcairo2-dev             \
@@ -40,9 +39,8 @@ libgstreamer1.0-dev       \
 libgstreamer-plugins-base1.0-dev
 # libtbb-dev                \
 
-sudo rm -f /usr/bin/clang   && sudo ln -s /usr/bin/clang-3.6   /usr/bin/clang
-sudo rm -f /usr/bin/clang++ && sudo ln -s /usr/bin/clang++-3.6 /usr/bin/clang++
-sudo rm -f /usr/bin/llvm-symbolizer && sudo ln -s /usr/bin/llvm-symbolizer-3.6 /usr/bin/llvm-symbolizer
+wget http://llvm.org/releases/3.6.2/clang+llvm-3.6.2-armv7a-linux-gnueabihf.tar.xz
+sudo tar xzf clang+llvm-3.6.2-armv7a-linux-gnueabihf.tar.xz -C /usr/local
 
 # Use gold linker
 sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
