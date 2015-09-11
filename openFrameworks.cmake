@@ -415,11 +415,12 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${OPENGLES2_INCLUDE_DIR}
       )
       if(PLATFORM_VARIANT MATCHES "^rpi*")
-        /opt/vc/include
-        /opt/vc/include/IL
-        /opt/vc/include/interface/vcos/pthreads
-        /opt/vc/include/interface/vmcs_host/linux
-      )
+        list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+          /opt/vc/include
+          /opt/vc/include/IL
+          /opt/vc/include/interface/vcos/pthreads
+          /opt/vc/include/interface/vmcs_host/linux
+        )
       endif()
     endif()
 
@@ -463,7 +464,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
               ${EGL_LIBRARIES}
         )
       endif()
-    }
     endif()
 
     if(NOT OF_AUDIO)
