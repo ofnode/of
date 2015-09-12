@@ -793,7 +793,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   endif()
 endif()
 
-if("${TARGET_ARCH}" MATCHES "^arm*")
+if(PLATFORM_VARIANT MATCHES "^rpi2")
     set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
 elseif(ARCH_BIT MATCHES 32)
     set(ARCH_FLAG -m32)
