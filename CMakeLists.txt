@@ -704,7 +704,7 @@ if(NOT OF_STATIC)
     find_library(IPHLPAPI_LIB iphlpapi)
     find_library(SETUPAPI_LIB setupapi)
     find_library(STRMIIDS_LIB strmiids)
-   endif()
+  endif()
 
   if(NOT TARGET_ARCH MATCHES "^arm*")
     find_package(OpenGL REQUIRED) # TODO do we really need this ? it seems that OpenGL is already found for Linux and Windows above
