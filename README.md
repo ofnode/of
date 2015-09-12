@@ -52,31 +52,22 @@ Install required developer packages for your OS with:
 Step 3: Compile
 ---------------
 
-#### Linux:
+For Linux, OS X and Windows:
 
 ```bash
-mkdir build-linux
-cd build-linux
+mkdir build
+cd build
 cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
-#### OS X:
+Or you can generate project files for your IDE, like so for Xcode on OS X:
 
 ```bash
-mkdir build-osx
-cd build-osx
+mkdir build
+cd build
 cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release
 xcodebuild -configuration Release
-```
-
-#### Windows:
-
-```batch
-mkdir build-windows
-cd build-windows
-cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
-ninja
 ```
 
 **NOTE**: Visual Studio is not supported anymore, [see here why](https://github.com/ofnode/of/wiki/On-removing-support-for-MSVC).
