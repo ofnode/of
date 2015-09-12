@@ -470,11 +470,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         "/usr/local/opt/openssl/lib/libssl.a"
     )
 
-    # Add system include dir, see issue #15
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        "/usr/include"
-    )
-
     # Hardcode FreeType path, see issue #15
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         "/usr/local/include/freetype2"
@@ -659,12 +654,6 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DFREEIMAGE_LIB
     -DPOCO_STATIC
 )
-
-if(CMAKE_SYSTEM MATCHES Darwin)
-list(APPEND OPENFRAMEWORKS_DEFINITIONS
-    -DBOOST_DISABLE_ASSERTS
-)
-endif()
 
 if(CMAKE_SYSTEM MATCHES Windows)
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
