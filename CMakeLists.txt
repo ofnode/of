@@ -686,7 +686,6 @@ if(NOT OF_STATIC)
 
   find_package(ZLIB REQUIRED)
   find_package(OpenAL REQUIRED)
-  find_package(OpenGL REQUIRED)
   find_package(MPG123 REQUIRED)
   find_package(Pixman REQUIRED)
   find_package(OpenSSL REQUIRED)
@@ -706,12 +705,13 @@ if(NOT OF_STATIC)
   find_library(IPHLPAPI_LIB iphlpapi)
   find_library(SETUPAPI_LIB setupapi)
   find_library(STRMIIDS_LIB strmiids)
+  if(NOT TARGET_ARCH MATCHES "^arm*")
+    find_package(OpenGL REQUIRED) # TODO do we really need this ? it seems that OpenGL is already found for Linux and Windows above
+    target_link_libraries(
+        glew
+        ${OPENGL_LIBRARIES}
+    )
   endif()
-
-  target_link_libraries(
-      glew
-      ${OPENGL_LIBRARIES}
-  )
 
   if(CMAKE_SYSTEM MATCHES Linux)
   find_package(ALSA)
@@ -746,8 +746,6 @@ if(NOT OF_STATIC)
   add_dependencies(
       openFrameworks
       freeimage
-      glew
-      glfw
       kissfft
       tess2
       PocoCrypto
@@ -767,10 +765,15 @@ if(NOT OF_STATIC)
   )
   endif()
 
-  set(OPENFRAMEWORKS_LIBRARIES
-      freeimage
+  if(NOT TARGET_ARCH MATCHES "^arm*")
+    add_dependencies(
       glew
       glfw
+    )
+  endif()
+
+  set(OPENFRAMEWORKS_LIBRARIES
+      freeimage
       kissfft
       tess2
       PocoCrypto
@@ -838,6 +841,13 @@ if(NOT OF_STATIC)
       "-framework AVFoundation"
       "-framework CoreMedia"
   )
+  endif()
+
+  if(NOT TARGET_ARCH MATCHES "^arm*")
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+      glew
+      glfw
+    )
   endif()
 
   target_link_libraries(
