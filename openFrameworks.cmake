@@ -422,6 +422,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         -DOF_USING_MPG123
         -DOF_SOUND_PLAYER_OPENAL
         -DOF_SOUNDSTREAM_RTAUDIO
+        -DBOOST_DISABLE_ASSERTS
     )
 
     #// Local dependencies /////////////////////////////////////////////////////
