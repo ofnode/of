@@ -40,3 +40,5 @@ script:
 git:
   depth: 1
   submodules: true
+notifications:
+  email: false
