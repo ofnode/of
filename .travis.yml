@@ -31,7 +31,14 @@ script:
   - mkdir build;
     cd build;
     cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++;
+    ninja && 
+    cd ../examples;
+    mkdir build;
+    cd build;
+    cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++;
     ninja
 git:
   depth: 1
-  submodules: false
+  submodules: true
+notifications:
+  email: false

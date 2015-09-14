@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <assert.h>
 
 //-------------------------------
 #define OF_VERSION_MAJOR 0
