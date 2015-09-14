@@ -3,16 +3,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 if(NOT DEFINED CMAKE_MACOSX_RPATH)
   set(CMAKE_MACOSX_RPATH 0)
 endif()
-include(TargetArch)
-target_architecture(TARGET_ARCH)
-message(STATUS "Architecture detected ${TARGET_ARCH}")
 
 #// Options ////////////////////////////////////////////////////////////////////
 
 set(OF_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
-set(PLATFORM_VARIANT Default CACHE BOOL "Platform variant (could rpi, rpi2...)")
+set(PLATFORM_VARIANT Default CACHE BOOL "Platform variant (could be rpi, rpi2...)")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -33,6 +30,12 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
   set(OF_32BIT OFF CACHE BOOL "Enable compiling for 32-bit architectures")
 
+endif()
+
+include(TargetArch)
+target_architecture(TARGET_ARCH)
+if(PLATFORM_VARIANT STREQUAL "rpi2")
+  set(TARGET_ARCH "armv7")
 endif()
 
 #// GCC and Clang flags ////////////////////////////////////////////////////////
