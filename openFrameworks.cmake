@@ -212,9 +212,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    if(TARGET_ARCH MATCHES "^arm*")
+    if(PLATFORM_VARIANT MATCHES "^rpi*")
       set(OPENFRAMEWORKS_DEFINITIONS ${OPENFRAMEWORKS_DEFINITIONS}
-# defines used inside openFrameworks libs.
           -DTARGET_RASPBERRY_PI
           -DUSE_DISPMANX_TRANSFORM_T
 # TODO many of these are not relevant to openFrameworks (were just pasted from hello_pi examples)
