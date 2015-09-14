@@ -9,7 +9,7 @@ endif()
 set(OF_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
-set(PLATFORM_VARIANT Default CACHE BOOL "Platform variant (could be rpi, rpi2...)")
+set(PLATFORM_VARIANT Default CACHE STRING "Platform variant (could be rpi, rpi2...)")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
