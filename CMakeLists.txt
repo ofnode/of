@@ -7,14 +7,11 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
-include(TargetArch)
-target_architecture(TARGET_ARCH)
-
 #// Options ////////////////////////////////////////////////////////////////////
 
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
-set(PLATFORM_VARIANT Default CACHE BOOL "Platform variant (could rpi, rpi2...)")
+set(PLATFORM_VARIANT Default CACHE BOOL "Platform variant (could be rpi, rpi2...)")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -33,6 +30,12 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
   set(OF_32BIT OFF CACHE BOOL "Compile for 32-bit architectures")
 
+endif()
+
+include(TargetArch)
+target_architecture(TARGET_ARCH)
+if(PLATFORM_VARIANT STREQUAL "rpi2")
+  set(TARGET_ARCH "armv7")
 endif()
 
 #// GCC and Clang flags ////////////////////////////////////////////////////////
@@ -320,30 +323,30 @@ if(CMAKE_SYSTEM MATCHES Linux)
       -DOF_VIDEO_CAPTURE_GSTREAMER
   )
 
-  if(TARGET_ARCH MATCHES "^arm*")
-      list(APPEND OPENFRAMEWORKS_DEFINITIONS
-          -DTARGET_RASPBERRY_PI
-          -DUSE_DISPMANX_TRANSFORM_T
+  if(PLATFORM_VARIANT MATCHES "^rpi*")
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_RASPBERRY_PI
+        -DUSE_DISPMANX_TRANSFORM_T
 
 # TODO many of these are not relevant to openFrameworks (were just pasted from hello_pi examples)
 # from raspberry pi examples
-          -DSTANDALONE
-          -DPIC
-          -D_REENTRANT
-          -D_LARGEFILE64_SOURCE
-          -D_FILE_OFFSET_BITS=64
-          -D_FORTIFY_SOURCE
-          -D__STDC_CONSTANT_MACROS
-          -D__STDC_LIMIT_MACROS
-          -DTARGET_POSIX
-          -DHAVE_LIBOPENMAX=2
-          -DOMX
-          -DOMX_SKIP64BIT
-          -DUSE_EXTERNAL_OMX
-          -DHAVE_LIBBCM_HOST
-          -DUSE_EXTERNAL_LIBBCM_HOST
-          -DUSE_VCHIQ_ARM
-      )
+        -DSTANDALONE
+        -DPIC
+        -D_REENTRANT
+        -D_LARGEFILE64_SOURCE
+        -D_FILE_OFFSET_BITS=64
+        -D_FORTIFY_SOURCE
+        -D__STDC_CONSTANT_MACROS
+        -D__STDC_LIMIT_MACROS
+        -DTARGET_POSIX
+        -DHAVE_LIBOPENMAX=2
+        -DOMX
+        -DOMX_SKIP64BIT
+        -DUSE_EXTERNAL_OMX
+        -DHAVE_LIBBCM_HOST
+        -DUSE_EXTERNAL_LIBBCM_HOST
+        -DUSE_VCHIQ_ARM
+    )
   endif()
 
   pkg_check_modules(CAIRO REQUIRED cairo)
@@ -528,7 +531,7 @@ endif()
 
 if("${PLATFORM_VARIANT}" MATCHES "^rpi*")
     set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
-elseif(ARCH_BIT MATCHES 32)
+elseif(ARCH_BIT MATCHES 32 AND NOT "${TARGET_ARCH}" MATCHES "^arm*")
     set(ARCH_FLAG -m32)
 endif()
 
