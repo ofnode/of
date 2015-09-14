@@ -536,7 +536,7 @@ endif()
 
 if("${PLATFORM_VARIANT}" MATCHES "^rpi*")
     set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
-elseif(ARCH_BIT MATCHES 32)
+elseif(ARCH_BIT MATCHES 32 AND NOT "${TARGET_ARCH}" MATCHES "^arm*")
     set(ARCH_FLAG -m32)
 endif()
 
