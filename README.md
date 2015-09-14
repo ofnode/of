@@ -61,6 +61,16 @@ cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
+On Raspberry Pi, you should select the appropriate PLATFORM_VARIANT with : 
+
+	cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DPLATFORM_VARIANT=rpi
+
+or 
+
+	cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DPLATFORM_VARIANT=rpi2
+
+depending on the RPi version you are using.
+
 #### OS X:
 
 ```bash
