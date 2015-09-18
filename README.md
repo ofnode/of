@@ -67,11 +67,9 @@ For Raspberry Pi 2, pass `-DOF_PLATFORM=armv7` flag:
 cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DOF_PLATFORM=armv7
 ```
 
-Also, you can generate project files for IDEs, an example for Xcode:
+Also, you can generate project files for IDEs, Xcode example:
 
 ```bash
-mkdir build
-cd build
 cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release
 xcodebuild -configuration Release
 ```
