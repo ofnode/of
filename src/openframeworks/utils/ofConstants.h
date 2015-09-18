@@ -1,6 +1,5 @@
 #pragma once
 #include <stdint.h>
-#include <assert.h>
 
 //-------------------------------
 #define OF_VERSION_MAJOR 0
@@ -706,6 +705,8 @@ enum ofPixelFormat{
 	OF_PIXELS_V,
 	OF_PIXELS_UV,
 	OF_PIXELS_VU,
+
+	OF_PIXELS_NUM_FORMATS,
 
 	OF_PIXELS_UNKNOWN=-1,
 	OF_PIXELS_NATIVE=-2
