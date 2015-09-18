@@ -11,7 +11,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
-set(PLATFORM_VARIANT Default CACHE STRING "Platform variant (could be rpi, rpi2...)")
+set(OF_PLATFORM x86 CACHE STRING "Platform architecture. No need to be modified by default.")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -32,12 +32,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
 endif()
 
-include(TargetArch)
-target_architecture(TARGET_ARCH)
-if(PLATFORM_VARIANT STREQUAL "rpi2")
-  set(TARGET_ARCH "armv7")
-endif()
-
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
 set(RELEASE_FLAGS "
@@ -50,30 +44,27 @@ set(DEBUG_FLAGS "
     -Wno-deprecated-declarations
 ")
 
-#// GCC spedific flags
+#// GCC specific flags /////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL GNU)
 
   set(RELEASE_C_FLAGS_GCC "
-    ${RELEASE_C_FLAGS_GCC}
     -Wno-psabi
   ")
 
   set(DEBUG_C_FLAGS_GCC "
-    ${DEBUG_C_FLAGS_GCC}
     -Wno-psabi
   ")
+
 endif()
 
-if(CMAKE_C_COMPILER_ID STREQUAL GNU)
+if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 
   set(RELEASE_CXX_FLAGS_GCC "
-    ${RELEASE_CXX_FLAGS_GCC}
     -Wno-psabi
   ")
 
   set(DEBUG_CXX_FLAGS_GCC "
-    ${DEBUG_CXX_FLAGS_GCC}
     -Wno-psabi
   ")
 
@@ -257,14 +248,14 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofXml.cpp"
 )
 
-if(TARGET_ARCH MATCHES "^arm*")
-    list(APPEND OPENFRAMEWORKS_SOURCES
-        "${OF_ROOT_DIR}/src/openframeworks/app/ofAppEGLWindow.cpp"
-    )
+if(OF_PLATFORM MATCHES armv7)
+  list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppEGLWindow.cpp"
+  )
 else()
-    list(APPEND OPENFRAMEWORKS_SOURCES
-        "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGLFWWindow.cpp"
-    )
+  list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGLFWWindow.cpp"
+  )
 endif()
 
 if(OF_AUDIO)
@@ -284,22 +275,22 @@ if(OF_VIDEO)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofVideoPlayer.cpp"
   )
   if(CMAKE_SYSTEM MATCHES Linux)
-    list(APPEND OPENFRAMEWORKS_SOURCES
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
-    )
+  list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
+  )
   elseif(CMAKE_SYSTEM MATCHES Darwin)
-    list(APPEND OPENFRAMEWORKS_SOURCES
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
-    )
+  list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
+  )
   elseif(CMAKE_SYSTEM MATCHES Windows)
-    list(APPEND OPENFRAMEWORKS_SOURCES
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
-      "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
-    )
+  list(APPEND OPENFRAMEWORKS_SOURCES
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowPlayer.cpp"
+  )
   endif()
 endif(OF_VIDEO)
 
@@ -307,29 +298,27 @@ endif(OF_VIDEO)
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
-  if(OF_STATIC)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}")
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}")
-  else()
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}")
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}")
-  endif()
+    if(OF_STATIC)
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${OF_PLATFORM}-${ARCH_BIT}")
+    else()
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${OF_PLATFORM}-${ARCH_BIT}")
+    endif()
 
-  set(OPENFRAMEWORKS_DEFINITIONS
-      -DOF_USING_MPG123
-      -DOF_SOUND_PLAYER_OPENAL
-      -DOF_SOUNDSTREAM_RTAUDIO
-      -DOF_VIDEO_PLAYER_GSTREAMER
-      -DOF_VIDEO_CAPTURE_GSTREAMER
-  )
+    set(OPENFRAMEWORKS_DEFINITIONS
+        -DOF_USING_MPG123
+        -DOF_SOUND_PLAYER_OPENAL
+        -DOF_SOUNDSTREAM_RTAUDIO
+        -DOF_VIDEO_PLAYER_GSTREAMER
+        -DOF_VIDEO_CAPTURE_GSTREAMER
+    )
 
-  if(PLATFORM_VARIANT MATCHES "^rpi*")
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+    if(OF_PLATFORM MATCHES armv7)
+      # Assuming Raspberry Pi 2 and Raspbian
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
         -DTARGET_RASPBERRY_PI
         -DUSE_DISPMANX_TRANSFORM_T
-
-# TODO many of these are not relevant to openFrameworks (were just pasted from hello_pi examples)
-# from raspberry pi examples
         -DSTANDALONE
         -DPIC
         -D_REENTRANT
@@ -346,81 +335,85 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DHAVE_LIBBCM_HOST
         -DUSE_EXTERNAL_LIBBCM_HOST
         -DUSE_VCHIQ_ARM
-    )
-  endif()
+      )
+    endif()
 
-  pkg_check_modules(CAIRO REQUIRED cairo)
-  pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+    pkg_check_modules(CAIRO REQUIRED cairo)
+    pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
-  find_package(Boost REQUIRED)
-  if (TARGET_ARCH MATCHES "^arm*")
-      find_package(OpenGLES REQUIRED)
-  else()
-      find_package(OpenGL REQUIRED)
-  endif()
-  find_package(Freetype REQUIRED)
+    if(OF_PLATFORM MATCHES armv7)
+    find_package(OpenGLES REQUIRED)
+    else()
+    find_package(OpenGL REQUIRED)
+    endif()
 
-  list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-      ${CAIRO_INCLUDE_DIRS}
-      ${Boost_INCLUDE_DIRS}
-      ${OPENGL_INCLUDE_DIR}
-      ${OPENGLES2_INCLUDE_DIR}
-      ${EGL_INCLUDE_DIR}
-      ${FREETYPE_INCLUDE_DIRS}
-      ${FONTCONFIG_INCLUDE_DIRS}
-  )
-
-  if(PLATFORM_VARIANT MATCHES "^rpi*")
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-      /opt/vc/include
-      /opt/vc/include/IL
-      /opt/vc/include/interface/vcos/pthreads
-      /opt/vc/include/interface/vmcs_host/linux
-    )
-  endif()
-
-  if(NOT OF_AUDIO)
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_SOUND)
-  else()
-    find_package(ALSA REQUIRED)
-    find_package(OpenAL REQUIRED)
-    find_package(MPG123 REQUIRED)
-    find_package(Sndfile REQUIRED)
+    find_package(Boost REQUIRED)
+    find_package(Freetype REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-      ${ALSA_INCLUDE_DIRS}
-      ${OPENAL_INCLUDE_DIR}
-      ${MPG123_INCLUDE_DIRS}
-      ${SNDFILE_INCLUDE_DIR}
+        ${CAIRO_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIR}
+        ${FREETYPE_INCLUDE_DIRS}
+        ${FONTCONFIG_INCLUDE_DIRS}
     )
-  endif()
 
-  if(NOT OF_VIDEO)
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_VIDEO)
-  else()
-    list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
+    if(OF_PLATFORM MATCHES armv7)
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${EGL_INCLUDE_DIR}
+        ${OPENGLES2_INCLUDE_DIR}
+      )
+      # Assuming Raspberry Pi 2 and Raspbian
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        /opt/vc/include
+        /opt/vc/include/IL
+        /opt/vc/include/interface/vcos/pthreads
+        /opt/vc/include/interface/vmcs_host/linux
+      )
+    endif()
 
-    find_package(Glib REQUIRED)
-    find_package(GStreamer REQUIRED)
-    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+    if(NOT OF_AUDIO)
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_SOUND)
+    else()
+      find_package(ALSA REQUIRED)
+      find_package(OpenAL REQUIRED)
+      find_package(MPG123 REQUIRED)
+      find_package(Sndfile REQUIRED)
 
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-      ${GLIB_INCLUDE_DIRS}
-      ${GTK3_INCLUDE_DIRS}
-      ${GSTREAMER_INCLUDE_DIRS}
-    )
-  endif()
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${ALSA_INCLUDE_DIRS}
+        ${OPENAL_INCLUDE_DIR}
+        ${MPG123_INCLUDE_DIRS}
+        ${SNDFILE_INCLUDE_DIR}
+      )
+    endif()
+
+    if(NOT OF_VIDEO)
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_VIDEO)
+    else()
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
+
+      find_package(Glib REQUIRED)
+      find_package(GStreamer REQUIRED)
+      pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${GLIB_INCLUDE_DIRS}
+        ${GTK3_INCLUDE_DIRS}
+        ${GSTREAMER_INCLUDE_DIRS}
+      )
+    endif()
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     set_source_files_properties(${OPENFRAMEWORKS_SOURCES} PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
     if(OF_STATIC)
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}")
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${OF_PLATFORM}-${ARCH_BIT}")
     else()
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}")
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${OF_PLATFORM}-${ARCH_BIT}")
     endif()
 
     set(OPENFRAMEWORKS_DEFINITIONS
@@ -436,6 +429,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
     find_package(Boost REQUIRED)
+    find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
     find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
@@ -448,6 +442,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
         ${FONTCONFIG_INCLUDE_DIRS}
@@ -456,11 +451,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
     if(OF_STATIC)
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${TARGET_ARCH}")
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${TARGET_ARCH}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${OF_PLATFORM}-${ARCH_BIT}")
     else()
-      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${TARGET_ARCH}")
-      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${TARGET_ARCH}")
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${OF_PLATFORM}-${ARCH_BIT}")
     endif()
 
     set(OPENFRAMEWORKS_DEFINITIONS
@@ -529,17 +524,14 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   endif()
 endif()
 
-if("${PLATFORM_VARIANT}" MATCHES "^rpi*")
+if(OF_PLATFORM MATCHES armv7)
     set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
-elseif(ARCH_BIT MATCHES 32 AND NOT "${TARGET_ARCH}" MATCHES "^arm*")
-    set(ARCH_FLAG -m32)
+elseif(ARCH_BIT MATCHES 32)
+    set(ARCH_FLAG "-m32")
 endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
-    if("${TARGET_ARCH}" MATCHES "^arm*")
-        SET(ARM_FLAG "${ARM_FLAG}")
-    endif()
 endif()
 
 if(CMAKE_SYSTEM MATCHES Darwin)
@@ -577,16 +569,16 @@ endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
 string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
-elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 string(REPLACE "\n" " " RELEASE_CXX_FLAGS_GCC ${RELEASE_CXX_FLAGS_GCC})
 string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_GCC   ${DEBUG_CXX_FLAGS_GCC})
 endif()
 
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE   "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${ARM_FLAG}" )
-string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG     "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${ARM_FLAG} ${O_C_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${RELEASE_C_FLAGS_GCC} ${ARCH_FLAG} ${PIC_FLAG}" )
+string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_DEBUG   "${C_COLORIZATION} ${CMAKE_C_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_C_FLAGS_CLANG}   ${DEBUG_C_FLAGS_GCC} ${ARCH_FLAG} ${PIC_FLAG} ${O_C_FLAG}")
 
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${ARM_FLAG}")
-string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG} ${ARCH_FLAG} ${PIC_FLAG} ${ARM_FLAG} ${O_CXX_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_RELEASE "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_CXX_FLAGS_CLANG} ${RELEASE_CXX_FLAGS_GCC} ${ARCH_FLAG} ${PIC_FLAG}")
+string(REGEX REPLACE " +" " " CMAKE_CXX_FLAGS_DEBUG   "${CXX_COLORIZATION} ${CPP11_FLAG} ${CMAKE_CXX_FLAGS_DEBUG}     ${DEBUG_FLAGS}   ${DEBUG_CXX_FLAGS_CLANG}   ${DEBUG_CXX_FLAGS_GCC} ${ARCH_FLAG} ${PIC_FLAG} ${O_CXX_FLAG}")
 
 #// Build commands /////////////////////////////////////////////////////////////
 
@@ -599,18 +591,20 @@ endif()
 add_subdirectory(src/freeimage)
 add_subdirectory(src/poco)
 
-if(NOT TARGET_ARCH MATCHES "^arm*")
-    add_subdirectory(src/glfw)
+if(OF_PLATFORM MATCHES x86)
 
-    add_library(
-        glew ${LIB_MODE}
-        "${OF_ROOT_DIR}/src/glew/src/glew.c"
-    )
-    target_compile_definitions(
-        glew PRIVATE
-        -DGLEW_STATIC
-        -DGLEW_NO_GLU
-    )
+  add_subdirectory(src/glfw)
+
+  add_library(
+    glew ${LIB_MODE}
+    "${OF_ROOT_DIR}/src/glew/src/glew.c"
+  )
+  target_compile_definitions(
+    glew PRIVATE
+    -DGLEW_STATIC
+    -DGLEW_NO_GLU
+  )
+
 endif()
 
 add_library(
@@ -707,41 +701,40 @@ if(NOT OF_STATIC)
     find_library(STRMIIDS_LIB strmiids)
   endif()
 
-  if(NOT TARGET_ARCH MATCHES "^arm*")
-    find_package(OpenGL REQUIRED) # TODO do we really need this ? it seems that OpenGL is already found for Linux and Windows above
+  if(OF_PLATFORM MATCHES x86)
     target_link_libraries(
-        glew
-        ${OPENGL_LIBRARIES}
+      glew
+      ${OPENGL_LIBRARIES}
     )
   endif()
 
   if(CMAKE_SYSTEM MATCHES Linux)
     find_package(ALSA)
     target_link_libraries(
-        rtaudio
-        ${ALSA_LIBRARY}
-        ${CMAKE_THREAD_LIBS_INIT}
+      rtaudio
+      ${ALSA_LIBRARY}
+      ${CMAKE_THREAD_LIBS_INIT}
     )
   elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_library(COREAUDIO_LIB CoreAudio)
     find_library(COREFOUNDATION_LIB CoreFoundation)
     target_link_libraries(
-        rtaudio
-        ${COREAUDIO_LIB}
-        ${COREFOUNDATION_LIB}
+      rtaudio
+      ${COREAUDIO_LIB}
+      ${COREFOUNDATION_LIB}
     )
   elseif(CMAKE_SYSTEM MATCHES Windows)
     target_link_libraries(
-        rtaudio
-        ${WINMM_LIB}
-        ${DSOUND_LIB}
+      rtaudio
+      ${WINMM_LIB}
+      ${DSOUND_LIB}
     )
   endif()
 
   if(CMAKE_SYSTEM MATCHES Windows)
     target_link_libraries(
-        videoinput
-        ${STRMIIDS_LIB}
+      videoinput
+      ${STRMIIDS_LIB}
     )
   endif()
 
@@ -762,12 +755,12 @@ if(NOT OF_STATIC)
 
   if(CMAKE_SYSTEM MATCHES Windows)
     add_dependencies(
-        openFrameworks
-        videoinput
+      openFrameworks
+      videoinput
     )
   endif()
 
-  if(NOT TARGET_ARCH MATCHES "^arm*")
+  if(OF_PLATFORM MATCHES x86)
     add_dependencies(
       glew
       glfw
@@ -818,7 +811,7 @@ if(NOT OF_STATIC)
   )
 
   if(CMAKE_SYSTEM MATCHES Windows)
-  list(APPEND OPENFRAMEWORKS_LIBRARIES
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${WINMM_LIB}
       ${GDI32_LIB}
       ${DSOUND_LIB}
@@ -828,7 +821,7 @@ if(NOT OF_STATIC)
       ${IPHLPAPI_LIB}
       ${SETUPAPI_LIB}
       ${STRMIIDS_LIB}
-  )
+    )
   endif()
 
   if(CMAKE_SYSTEM MATCHES Darwin)
@@ -845,7 +838,7 @@ if(NOT OF_STATIC)
     )
   endif()
 
-  if(NOT TARGET_ARCH MATCHES "^arm*")
+  if(OF_PLATFORM MATCHES x86)
     list(APPEND OPENFRAMEWORKS_LIBRARIES
       glew
       glfw
@@ -861,7 +854,7 @@ endif(NOT OF_STATIC)
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "TARGET_ARCH: " ${TARGET_ARCH})
+message(STATUS "OF_PLATFORM: " ${OF_PLATFORM})
 message(STATUS "OF_STATIC: " ${OF_STATIC})
 
 if(CMAKE_SYSTEM MATCHES Linux)

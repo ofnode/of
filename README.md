@@ -61,7 +61,13 @@ cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
 ninja
 ```
 
-Or you can generate project files for your IDE, like so for Xcode on OS X:
+For Raspberry Pi 2, pass `-DOF_PLATFORM=armv7` flag:
+
+```
+cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DOF_PLATFORM=armv7
+```
+
+Also, you can generate project files for IDEs, an example for Xcode:
 
 ```bash
 mkdir build
@@ -69,15 +75,6 @@ cd build
 cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release
 xcodebuild -configuration Release
 ```
-On Raspberry Pi, you should select the appropriate PLATFORM_VARIANT with : 
-
-	cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DPLATFORM_VARIANT=rpi
-
-or 
-
-	cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DPLATFORM_VARIANT=rpi2
-
-depending on the RPi version you are using.
 
 **NOTE**: Visual Studio is not supported anymore, [see here why](https://github.com/ofnode/of/wiki/On-removing-support-for-MSVC).
 

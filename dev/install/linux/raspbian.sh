@@ -1,8 +1,7 @@
 #!/bin/bash
-# Tested on Ubuntu 14.04
+# Tested on Raspbian Jessie
 
 sudo apt-get update
-#sudo apt-get -y upgrade
 
 sudo apt-get -y install   \
 git                       \
@@ -39,14 +38,10 @@ gstreamer1.0-plugins-bad  \
 gstreamer1.0-plugins-ugly \
 libgstreamer1.0-dev       \
 libgstreamer-plugins-base1.0-dev
-# libtbb-dev                \
 
 # Use gold linker
 sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
 
 # Use default linker
 #sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.bfd /usr/bin/ld
-
-# Reinstall Mesa if CMake can't find OpenGL headers and libraries
-#sudo apt-get -y install --reinstall libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev
 

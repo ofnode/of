@@ -36,6 +36,7 @@ apply openframeworks.patch
 apply openframeworks_modules.patch
 apply openframeworks_clang_windows.patch
 apply openframeworks_osx.patch
+apply openframeworks_gles.patch
 
 cd "$OF/src/rtaudio"
 

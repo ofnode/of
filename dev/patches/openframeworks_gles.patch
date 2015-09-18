@@ -1,0 +1,25 @@
+--- a/app/ofAppEGLWindow.cpp
++++ b/app/ofAppEGLWindow.cpp
+@@ -707,7 +707,7 @@
+ 			eglSurface, // read surface
+ 			eglContext);
+ 
+-	if(eglContext == EGL_FALSE) {
++	if((unsigned int)eglContext == EGL_FALSE) {
+ 		EGLint error = eglGetError();
+ 		ofLogError("ofAppEGLWindow") << "createSurface(): couldn't making current surface: " << eglErrorString(error);
+ 		return false;
+--- a/app/ofAppGLFWWindow.cpp
++++ b/app/ofAppGLFWWindow.cpp
+@@ -154,9 +154,9 @@
+ 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+ 		glfwWindowHint(GLFW_CLIENT_API,GLFW_OPENGL_ES_API);
+ 		if(settings.glesVersion>=1){
+-			currentRenderer = shared_ptr<ofBaseRenderer>(new ofGLProgrammableRenderer);
++			currentRenderer = shared_ptr<ofBaseRenderer>(new ofGLProgrammableRenderer(this));
+ 		}else{
+-			currentRenderer = shared_ptr<ofBaseRenderer>(new ofGLRenderer);
++			currentRenderer = shared_ptr<ofBaseRenderer>(new ofGLRenderer(this));
+ 		}
+ 	#else
+ 		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);

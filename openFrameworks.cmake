@@ -9,7 +9,7 @@ endif()
 set(OF_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
-set(PLATFORM_VARIANT Default CACHE STRING "Platform variant (could be rpi, rpi2...)")
+set(OF_PLATFORM x86 CACHE STRING "Platform architecture. No need to be modified by default.")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
@@ -32,12 +32,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
 
 endif()
 
-include(TargetArch)
-target_architecture(TARGET_ARCH)
-if(PLATFORM_VARIANT STREQUAL "rpi2")
-  set(TARGET_ARCH "armv7")
-endif()
-
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
 set(RELEASE_FLAGS "
@@ -52,7 +46,7 @@ set(DEBUG_FLAGS "
     -fno-optimize-sibling-calls
 ")
 
-#// GCC spedific flags
+#// GCC specific flags /////////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL GNU)
 
@@ -65,6 +59,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL GNU)
     ${DEBUG_C_FLAGS_GCC}
     -Wno-psabi
   ")
+
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
@@ -215,28 +210,27 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    if(PLATFORM_VARIANT MATCHES "^rpi*")
-      set(OPENFRAMEWORKS_DEFINITIONS ${OPENFRAMEWORKS_DEFINITIONS}
-          -DTARGET_RASPBERRY_PI
-          -DUSE_DISPMANX_TRANSFORM_T
-# TODO many of these are not relevant to openFrameworks (were just pasted from hello_pi examples)
-# from raspberry pi examples
-          -DSTANDALONE
-          -DPIC
-          -D_REENTRANT
-          -D_LARGEFILE64_SOURCE
-          -D_FILE_OFFSET_BITS=64
-          -D_FORTIFY_SOURCE
-          -D__STDC_CONSTANT_MACROS
-          -D__STDC_LIMIT_MACROS
-          -DTARGET_POSIX
-          -DHAVE_LIBOPENMAX=2
-          -DOMX
-          -DOMX_SKIP64BIT
-          -DUSE_EXTERNAL_OMX
-          -DHAVE_LIBBCM_HOST
-          -DUSE_EXTERNAL_LIBBCM_HOST
-          -DUSE_VCHIQ_ARM
+    if(OF_PLATFORM MATCHES armv7)
+      # Assuming Raspberry Pi 2 and Raspbian
+      list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DTARGET_RASPBERRY_PI
+        -DUSE_DISPMANX_TRANSFORM_T
+        -DSTANDALONE
+        -DPIC
+        -D_REENTRANT
+        -D_LARGEFILE64_SOURCE
+        -D_FILE_OFFSET_BITS=64
+        -D_FORTIFY_SOURCE
+        -D__STDC_CONSTANT_MACROS
+        -D__STDC_LIMIT_MACROS
+        -DTARGET_POSIX
+        -DHAVE_LIBOPENMAX=2
+        -DOMX
+        -DOMX_SKIP64BIT
+        -DUSE_EXTERNAL_OMX
+        -DHAVE_LIBBCM_HOST
+        -DUSE_EXTERNAL_LIBBCM_HOST
+        -DUSE_VCHIQ_ARM
       )
     endif()
 
@@ -249,9 +243,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release-${OF_PLATFORM}-${ARCH_BIT}")
     elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/debug-${OF_PLATFORM}-${ARCH_BIT}")
     endif()
 
     if(OF_STATIC)
@@ -289,15 +283,14 @@ if(CMAKE_SYSTEM MATCHES Linux)
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
-    find_package(X11 REQUIRED)
-    find_package(ZLIB REQUIRED)
-
-    if (TARGET_ARCH MATCHES "^arm*")
-        find_package(OpenGLES REQUIRED)
+    if(OF_PLATFORM MATCHES armv7)
+    find_package(OpenGLES REQUIRED)
     else()
-        find_package(OpenGL REQUIRED)
+    find_package(OpenGL REQUIRED)
     endif()
 
+    find_package(X11 REQUIRED)
+    find_package(ZLIB REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(Threads REQUIRED)
     find_package(Freetype REQUIRED)
@@ -408,25 +401,24 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
-        ${EGL_INCLUDE_DIR}
+        ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIRS}
     )
 
-    if(TARGET_ARCH MATCHES "^arm*")
+    if(OF_PLATFORM MATCHES armv7)
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${OPENGL_INCLUDE_DIR}
+        ${EGL_INCLUDE_DIR}
         ${OPENGLES2_INCLUDE_DIR}
       )
-      if(PLATFORM_VARIANT MATCHES "^rpi*")
-        list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-          /opt/vc/include
-          /opt/vc/include/IL
-          /opt/vc/include/interface/vcos/pthreads
-          /opt/vc/include/interface/vmcs_host/linux
-        )
-      endif()
+      # Assuming Raspberry Pi 2 and Raspbian
+      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        /opt/vc/include
+        /opt/vc/include/IL
+        /opt/vc/include/interface/vcos/pthreads
+        /opt/vc/include/interface/vmcs_host/linux
+      )
     endif()
 
     list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -447,28 +439,26 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
-    if(TARGET_ARCH MATCHES "^arm*")
-      if(PLATFORM_VARIANT MATCHES "^rpi*")
-        list(APPEND OPENFRAMEWORKS_LIBRARIES
-              GLESv2
-              GLESv1_CM
-              EGL
-              openmaxil
-              bcm_host
-              vcos
-              vchiq_arm
-              pcre
-              rt
-              X11
-              dl
-        )
-        link_directories(/opt/vc/lib)
-      else()
-        list(APPEND OPENFRAMEWORKS_LIBRARIES
-              ${OPENGLES2_LIBRARIES}
-              ${EGL_LIBRARIES}
-        )
-      endif()
+    if(OF_PLATFORM MATCHES armv7)
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        ${EGL_LIBRARIES}
+        ${OPENGLES2_LIBRARIES}
+      )
+      # Assuming Raspberry Pi 2 and Raspbian
+      list(APPEND OPENFRAMEWORKS_LIBRARIES
+        -L/opt/vc/lib
+        GLESv2
+        GLESv1_CM
+        EGL
+        openmaxil
+        bcm_host
+        vcos
+        vchiq_arm
+        pcre
+        rt
+        X11
+        dl
+      )
     endif()
 
     if(NOT OF_AUDIO)
@@ -534,9 +524,9 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/release-${OF_PLATFORM}-${ARCH_BIT}")
     elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug-${OF_PLATFORM}-${ARCH_BIT}")
     endif()
 
     if(OF_STATIC)
@@ -637,9 +627,9 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/release-${TARGET_ARCH}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/release-${OF_PLATFORM}-${ARCH_BIT}")
     elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug-${TARGET_ARCH}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug-${OF_PLATFORM}-${ARCH_BIT}")
     endif()
 
     if(OF_STATIC)
@@ -793,17 +783,14 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   endif()
 endif()
 
-if(PLATFORM_VARIANT MATCHES "^rpi2")
+if(OF_PLATFORM MATCHES armv7)
     set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
 elseif(ARCH_BIT MATCHES 32)
-    set(ARCH_FLAG -m32)
+    set(ARCH_FLAG "-m32")
 endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)
     set(PIC_FLAG -fPIC)
-    if("${TARGET_ARCH}" MATCHES "^arm*")
-        SET(ARM_FLAG "${ARM_FLAG}")
-    endif()
 endif()
 
 if(CMAKE_SYSTEM MATCHES Darwin)
@@ -832,20 +819,18 @@ string(REPLACE "\n" " " RELEASE_FLAGS ${RELEASE_FLAGS})
 string(REPLACE "\n" " "   DEBUG_FLAGS   ${DEBUG_FLAGS})
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
-  string(REPLACE "\n" " " RELEASE_C_FLAGS_CLANG ${RELEASE_C_FLAGS_CLANG})
-  string(REPLACE "\n" " "   DEBUG_C_FLAGS_CLANG   ${DEBUG_C_FLAGS_CLANG})
+string(REPLACE "\n" " " RELEASE_C_FLAGS_CLANG ${RELEASE_C_FLAGS_CLANG})
+string(REPLACE "\n" " "   DEBUG_C_FLAGS_CLANG   ${DEBUG_C_FLAGS_CLANG})
 elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
-  message("replace CR with space")
-  string(REPLACE "\n" " " RELEASE_C_FLAGS_GCC ${RELEASE_C_FLAGS_GCC})
-  string(REPLACE "\n" " "   DEBUG_C_FLAGS_GCC   ${DEBUG_C_FLAGS_GCC})
+string(REPLACE "\n" " " RELEASE_C_FLAGS_GCC ${RELEASE_C_FLAGS_GCC})
+string(REPLACE "\n" " "   DEBUG_C_FLAGS_GCC   ${DEBUG_C_FLAGS_GCC})
 endif()
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
-  string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
-  string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
-elseif(CMAKE_C_COMPILER_ID STREQUAL GNU)
-  string(REPLACE "\n" " " RELEASE_CXX_FLAGS_GCC ${RELEASE_CXX_FLAGS_GCC})
-  string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_GCC   ${DEBUG_CXX_FLAGS_GCC})
+string(REPLACE "\n" " " RELEASE_CXX_FLAGS_CLANG ${RELEASE_CXX_FLAGS_CLANG})
+string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_CLANG   ${DEBUG_CXX_FLAGS_CLANG})
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+string(REPLACE "\n" " " RELEASE_CXX_FLAGS_GCC ${RELEASE_CXX_FLAGS_GCC})
+string(REPLACE "\n" " "   DEBUG_CXX_FLAGS_GCC   ${DEBUG_CXX_FLAGS_GCC})
 endif()
 
 string(REGEX REPLACE " +" " " CMAKE_C_FLAGS_RELEASE "${C_COLORIZATION} ${CMAKE_C_FLAGS_RELEASE} ${RELEASE_FLAGS} ${RELEASE_C_FLAGS_CLANG} ${RELEASE_C_FLAGS_GCC} ${ARCH_FLAG} ${PIC_FLAG}")
@@ -1130,7 +1115,7 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "TARGET_ARCH: " ${TARGET_ARCH})
+message(STATUS "OF_PLATFORM: " ${OF_PLATFORM})
 message(STATUS "OF_COTIRE: " ${OF_COTIRE})
 message(STATUS "OF_STATIC: " ${OF_STATIC})
 
