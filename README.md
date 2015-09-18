@@ -69,6 +69,15 @@ cd build
 cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release
 xcodebuild -configuration Release
 ```
+On Raspberry Pi, you should select the appropriate PLATFORM_VARIANT with : 
+
+	cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DPLATFORM_VARIANT=rpi
+
+or 
+
+	cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DPLATFORM_VARIANT=rpi2
+
+depending on the RPi version you are using.
 
 **NOTE**: Visual Studio is not supported anymore, [see here why](https://github.com/ofnode/of/wiki/On-removing-support-for-MSVC).
 
