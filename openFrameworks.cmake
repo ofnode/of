@@ -36,14 +36,14 @@ endif()
 
 set(RELEASE_FLAGS "
   ${RELEASE_FLAGS}
-    -g1
+  -g1
 ")
 
 set(DEBUG_FLAGS "
   ${DEBUG_FLAGS}
-    -Winline
-    -fno-omit-frame-pointer
-    -fno-optimize-sibling-calls
+  -Winline
+  -fno-omit-frame-pointer
+  -fno-optimize-sibling-calls
 ")
 
 #// GCC specific flags /////////////////////////////////////////////////////////
@@ -82,18 +82,18 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
   set(RELEASE_C_FLAGS_CLANG "
     ${RELEASE_C_FLAGS_CLANG}
-      -Wno-switch
-      -Wno-c++11-narrowing
-      -Wno-ignored-attributes
-      -Wno-deprecated-register
+    -Wno-switch
+    -Wno-c++11-narrowing
+    -Wno-ignored-attributes
+    -Wno-deprecated-register
   ")
 
   set(DEBUG_C_FLAGS_CLANG "
     ${DEBUG_C_FLAGS_CLANG}
-      -Wno-switch
-      -Wno-c++11-narrowing
-      -Wno-ignored-attributes
-      -Wno-deprecated-register
+    -Wno-switch
+    -Wno-c++11-narrowing
+    -Wno-ignored-attributes
+    -Wno-deprecated-register
   ")
 
 endif()
@@ -102,18 +102,18 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
   set(RELEASE_CXX_FLAGS_CLANG "
     ${RELEASE_CXX_FLAGS_CLANG}
-      -Wno-switch
-      -Wno-c++11-narrowing
-      -Wno-ignored-attributes
-      -Wno-deprecated-register
+    -Wno-switch
+    -Wno-c++11-narrowing
+    -Wno-ignored-attributes
+    -Wno-deprecated-register
   ")
 
   set(DEBUG_CXX_FLAGS_CLANG "
     ${DEBUG_CXX_FLAGS_CLANG}
-      -Wno-switch
-      -Wno-c++11-narrowing
-      -Wno-ignored-attributes
-      -Wno-deprecated-register
+    -Wno-switch
+    -Wno-c++11-narrowing
+    -Wno-ignored-attributes
+    -Wno-deprecated-register
   ")
 
 endif()

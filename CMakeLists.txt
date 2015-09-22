@@ -35,13 +35,13 @@ endif()
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
 set(RELEASE_FLAGS "
-    -Wno-deprecated-declarations
+  -Wno-deprecated-declarations
 ")
 
 set(DEBUG_FLAGS "
-    -fno-omit-frame-pointer
-    -fno-optimize-sibling-calls
-    -Wno-deprecated-declarations
+  -fno-omit-frame-pointer
+  -fno-optimize-sibling-calls
+  -Wno-deprecated-declarations
 ")
 
 #// GCC specific flags /////////////////////////////////////////////////////////
@@ -74,33 +74,33 @@ endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
-set(RELEASE_C_FLAGS_CLANG "
+  set(RELEASE_C_FLAGS_CLANG "
     -Wno-switch
     -Wno-ignored-attributes
     -Wno-deprecated-register
-")
+  ")
 
-set(DEBUG_C_FLAGS_CLANG "
+  set(DEBUG_C_FLAGS_CLANG "
     -Wno-switch
     -Wno-ignored-attributes
     -Wno-deprecated-register
-")
+  ")
 
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
-set(RELEASE_CXX_FLAGS_CLANG "
+  set(RELEASE_CXX_FLAGS_CLANG "
     -Wno-switch
     -Wno-ignored-attributes
     -Wno-deprecated-register
-")
+  ")
 
-set(DEBUG_CXX_FLAGS_CLANG "
+  set(DEBUG_CXX_FLAGS_CLANG "
     -Wno-switch
     -Wno-ignored-attributes
     -Wno-deprecated-register
-")
+  ")
 
 endif()
 
@@ -175,9 +175,9 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
 )
 
 if(CMAKE_SYSTEM MATCHES Windows)
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+  list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/videoinput"
-)
+  )
 endif()
 
 #// Source files ///////////////////////////////////////////////////////////////
