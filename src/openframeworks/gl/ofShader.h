@@ -162,9 +162,17 @@ private:
 	GLuint program;
 	bool bLoaded;
 
-	map<GLenum, GLuint> shaders;
-	map<GLenum, string> shaderSource;
-	mutable map<string, GLint> uniformLocations;
+	struct Shader{
+		GLenum type;
+		GLuint id;
+		std::string source;
+		std::string expandedSource;
+		std::string sourcePath;
+	};
+
+	map<GLenum, Shader> shaders;
+	map<string, GLint> uniformsCache;
+	mutable map<string, GLint> attributesBindingsCache;
 
 	void checkProgramInfoLog(GLuint program);
 	bool checkProgramLinkStatus(GLuint program);
@@ -182,7 +190,9 @@ private:
     static string parseForIncludes( const string& source, vector<string>& included, int level = 0, const string& sourceDirectoryPath = "");
 	
 	void checkAndCreateProgram();
-	
-
+#ifdef TARGET_ANDROID
+	void unloadGL();
+	void reloadGL();
+#endif
 };
 
