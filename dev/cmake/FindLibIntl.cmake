@@ -16,15 +16,15 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
-# 
+#
 # 1. Redistributions of source code must retain the copyright
 #    notice, this list of conditions and the following disclaimer.
 # 2. Redistributions in binary form must reproduce the copyright
 #    notice, this list of conditions and the following disclaimer in the
 #    documentation and/or other materials provided with the distribution.
-# 3. The name of the author may not be used to endorse or promote products 
+# 3. The name of the author may not be used to endorse or promote products
 #    derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
 # IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -40,7 +40,12 @@ if(LIBINTL_INCLUDE_DIR AND LIBINTL_LIB_FOUND)
   set(Libintl_FIND_QUIETLY TRUE)
 endif(LIBINTL_INCLUDE_DIR AND LIBINTL_LIB_FOUND)
 
-find_path(LIBINTL_INCLUDE_DIR libintl.h)
+find_path(LIBINTL_INCLUDE_DIR
+          NAMES
+            libintl.h
+          PATHS
+            /usr/local/opt/gettext/include
+            )
 
 set(LIBINTL_LIB_FOUND FALSE)
 
@@ -52,7 +57,12 @@ if(LIBINTL_INCLUDE_DIR)
     set(LIBINTL_LIBRARIES)
     set(LIBINTL_LIB_FOUND TRUE)
   else (LIBINTL_LIBC_HAS_DGETTEXT)
-    find_library(LIBINTL_LIBRARIES NAMES intl libintl )
+    find_library(LIBINTL_LIBRARIES
+                  NAMES
+                    intl
+                    libintl
+                  PATHS
+                    /usr/local/opt/gettext/lib)
     if(LIBINTL_LIBRARIES)
       set(LIBINTL_LIB_FOUND TRUE)
     endif(LIBINTL_LIBRARIES)
@@ -64,4 +74,3 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Libintl  DEFAULT_MSG  LIBINTL_INCLUDE_DIR  LIBINTL_LIB_FOUND)
 
 mark_as_advanced(LIBINTL_INCLUDE_DIR  LIBINTL_LIBRARIES  LIBINTL_LIBC_HAS_DGETTEXT  LIBINTL_LIB_FOUND)
-
