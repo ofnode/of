@@ -54,7 +54,7 @@ Step 3: Compile
 
 For Linux, OS X and Windows:
 
-```bash
+```
 mkdir build
 cd build
 cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++

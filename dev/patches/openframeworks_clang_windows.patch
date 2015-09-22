@@ -1,62 +1,15 @@
---- a/gl/ofShader.cpp
-+++ b/gl/ofShader.cpp
-@@ -97,7 +97,7 @@
- shaders(mom.shaders){
- 	if(mom.bLoaded){
- 		retainProgram(program);
--		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it){
-+		for(auto it = shaders.begin(); it != shaders.end(); ++it){
- 			GLuint shader = it->second;
- 			retainShader(shader);
- 		}
-@@ -117,7 +117,7 @@
- 	shaders = mom.shaders;
- 	if(mom.bLoaded){
- 		retainProgram(program);
--		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it){
-+		for(auto it = shaders.begin(); it != shaders.end(); ++it){
- 			GLuint shader = it->second;
- 			retainShader(shader);
- 		}
-@@ -311,7 +311,7 @@
- 
- //--------------------------------------------------------------
- string ofShader::getShaderSource(GLenum type)  const{
--	unordered_map<GLenum,string>::const_iterator source = shaderSource.find(type);
-+	auto source = shaderSource.find(type);
- 	if ( source != shaderSource.end()) {
- 		return source->second;
- 	} else {
-@@ -525,7 +525,7 @@
- //--------------------------------------------------------------
- void ofShader::unload() {
- 	if(bLoaded) {
--		for(unordered_map<GLenum, GLuint>::const_iterator it = shaders.begin(); it != shaders.end(); ++it) {
-+		for(auto it = shaders.begin(); it != shaders.end(); ++it) {
- 			GLuint shader = it->second;
- 			if(shader) {
- 				ofLogVerbose("ofShader") << "unload(): detaching and deleting " << nameForType(it->first) << " shader from program " << program;
-@@ -981,7 +981,7 @@
- 
- //--------------------------------------------------------------
- GLuint ofShader::getShader(GLenum type) const{
--	unordered_map<GLenum,GLuint>::const_iterator shader = shaders.find(type);
-+	auto shader = shaders.find(type);
- 	if(shader!=shaders.end()){
- 		return shader->second;
- 	}else{
 --- a/gl/ofShader.h
 +++ b/gl/ofShader.h
-@@ -162,9 +162,9 @@
- 	GLuint program;
- 	bool bLoaded;
+@@ -170,9 +170,9 @@
+ 		std::string sourcePath;
+ 	};
  
--	unordered_map<GLenum, GLuint> shaders;
--	unordered_map<GLenum, string> shaderSource;
--	mutable unordered_map<string, GLint> uniformLocations;
-+	map<GLenum, GLuint> shaders;
-+	map<GLenum, string> shaderSource;
-+	mutable map<string, GLint> uniformLocations;
+-	unordered_map<GLenum, Shader> shaders;
+-	unordered_map<string, GLint> uniformsCache;
+-	mutable unordered_map<string, GLint> attributesBindingsCache;
++	map<GLenum, Shader> shaders;
++	map<string, GLint> uniformsCache;
++	mutable map<string, GLint> attributesBindingsCache;
  
  	void checkProgramInfoLog(GLuint program);
  	bool checkProgramLinkStatus(GLuint program);
