@@ -97,3 +97,12 @@ Licenses
 --------
 
 See `licenses` folder. OF **can** be used for commercial applications **without** disclosing their source code. OF statically links to libraries which allow that for commercial use. OF **does not** use GPL-licensed libraries. FreeImage, FreeType and Cairo are dual licensed, thus OF uses FIPL, FTL and MPL respectively. GTK+ 3, GLib, ALSA, OpenAL Soft, mpg123, libsndfile, Gstreamer, udev and libusb are licensed under LGPL v2.1 or higher which allow dynamic linking to closed source applications and OF dynamically links to them.
+
+Special thanks
+--------------
+
+In alphabetical order:
+
+[@aspeteRakete](https://github.com/aspeteRakete) for creating OS X version and continuous support of the project!
+[@avilleret](https://github.com/avilleret) for creating Raspberry Pi 2 version!
+[@GuidoSchmidt](https://github.com/GuidoSchmidt) for pull requests!
