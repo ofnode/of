@@ -104,5 +104,7 @@ Special thanks
 In alphabetical order:
 
 [@aspeteRakete](https://github.com/aspeteRakete) for creating OS X version and continuous support of the project!
+
 [@avilleret](https://github.com/avilleret) for creating Raspberry Pi 2 version!
+
 [@GuidoSchmidt](https://github.com/GuidoSchmidt) for pull requests!
