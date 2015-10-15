@@ -428,6 +428,8 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
+    set(ENV{OPENSSL_ROOT_DIR} "/usr/local/opt/openssl")
+    find_package(OpenSSL REQUIRED)
     find_package(Boost REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
@@ -446,6 +448,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
         ${FONTCONFIG_INCLUDE_DIRS}
+        ${OPENSSL_INCLUDE_DIR}
     )
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
@@ -828,6 +831,7 @@ if(NOT OF_STATIC)
       ${CMAKE_THREAD_LIBS_INIT}
   )
 
+
   if(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${WINMM_LIB}
@@ -883,4 +887,3 @@ endif()
 message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
 message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
 message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
-
