@@ -569,7 +569,9 @@ static void _glewInfo_GL_VERSION_4_5 (void)
   glewPrintExt("GL_VERSION_4_5", GLEW_VERSION_4_5, GLEW_VERSION_4_5, GLEW_VERSION_4_5);
 
   glewInfoFunc("glGetGraphicsResetStatus", glGetGraphicsResetStatus == NULL);
+  glewInfoFunc("glGetnCompressedTexImage", glGetnCompressedTexImage == NULL);
   glewInfoFunc("glGetnTexImage", glGetnTexImage == NULL);
+  glewInfoFunc("glGetnUniformdv", glGetnUniformdv == NULL);
 }
 
 #endif /* GL_VERSION_4_5 */
@@ -5716,6 +5718,15 @@ static void _glewInfo_GL_KHR_texture_compression_astc_ldr (void)
 
 #endif /* GL_KHR_texture_compression_astc_ldr */
 
+#ifdef GL_KHR_texture_compression_astc_sliced_3d
+
+static void _glewInfo_GL_KHR_texture_compression_astc_sliced_3d (void)
+{
+  glewPrintExt("GL_KHR_texture_compression_astc_sliced_3d", GLEW_KHR_texture_compression_astc_sliced_3d, glewIsSupported("GL_KHR_texture_compression_astc_sliced_3d"), glewGetExtension("GL_KHR_texture_compression_astc_sliced_3d"));
+}
+
+#endif /* GL_KHR_texture_compression_astc_sliced_3d */
+
 #ifdef GL_KTX_buffer_region
 
 static void _glewInfo_GL_KTX_buffer_region (void)
@@ -10658,6 +10669,9 @@ static void glewInfo (void)
 #ifdef GL_KHR_texture_compression_astc_ldr
   _glewInfo_GL_KHR_texture_compression_astc_ldr();
 #endif /* GL_KHR_texture_compression_astc_ldr */
+#ifdef GL_KHR_texture_compression_astc_sliced_3d
+  _glewInfo_GL_KHR_texture_compression_astc_sliced_3d();
+#endif /* GL_KHR_texture_compression_astc_sliced_3d */
 #ifdef GL_KTX_buffer_region
   _glewInfo_GL_KTX_buffer_region();
 #endif /* GL_KTX_buffer_region */
@@ -11781,10 +11795,10 @@ GLboolean glewCreateContext (struct createParams* params)
     int contextAttrs[20];
     int i;
 
-    extern GLenum GLEWAPIENTRY wglewContextInit();
-    wglewContextInit();
+    wglewInit();
 
-    if (!wglewGetExtension("WGL_ARB_create_context_profile"))
+    /* Intel HD 3000 has WGL_ARB_create_context, but not WGL_ARB_create_context_profile */
+    if (!wglewGetExtension("WGL_ARB_create_context"))
       return GL_TRUE;
 
     i = 0;
@@ -11954,9 +11968,9 @@ GLboolean glewCreateContext (struct createParams *params)
     int contextAttrs[20];
     int nelems, i;
 
-    glxewContextInit();
+    glxewInit();
 
-    if (!glxewGetExtension("GLX_ARB_create_context_profile"))
+    if (!glxewGetExtension("GLX_ARB_create_context"))
       return GL_TRUE;
 
     if (glXQueryContext(dpy, oldCtx, GLX_FBCONFIG_ID, &FBConfigAttrs[1]))

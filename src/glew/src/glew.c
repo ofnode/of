@@ -613,7 +613,9 @@ PFNGLBLENDFUNCIPROC __glewBlendFunci = NULL;
 PFNGLMINSAMPLESHADINGPROC __glewMinSampleShading = NULL;
 
 PFNGLGETGRAPHICSRESETSTATUSPROC __glewGetGraphicsResetStatus = NULL;
+PFNGLGETNCOMPRESSEDTEXIMAGEPROC __glewGetnCompressedTexImage = NULL;
 PFNGLGETNTEXIMAGEPROC __glewGetnTexImage = NULL;
+PFNGLGETNUNIFORMDVPROC __glewGetnUniformdv = NULL;
 
 PFNGLTBUFFERMASK3DFXPROC __glewTbufferMask3DFX = NULL;
 
@@ -3373,6 +3375,7 @@ GLboolean __GLEW_KHR_robust_buffer_access_behavior = GL_FALSE;
 GLboolean __GLEW_KHR_robustness = GL_FALSE;
 GLboolean __GLEW_KHR_texture_compression_astc_hdr = GL_FALSE;
 GLboolean __GLEW_KHR_texture_compression_astc_ldr = GL_FALSE;
+GLboolean __GLEW_KHR_texture_compression_astc_sliced_3d = GL_FALSE;
 GLboolean __GLEW_KTX_buffer_region = GL_FALSE;
 GLboolean __GLEW_MESAX_texture_stack = GL_FALSE;
 GLboolean __GLEW_MESA_pack_invert = GL_FALSE;
@@ -3980,7 +3983,9 @@ static GLboolean _glewInit_GL_VERSION_4_5 (GLEW_CONTEXT_ARG_DEF_INIT)
   GLboolean r = GL_FALSE;
 
   r = ((glGetGraphicsResetStatus = (PFNGLGETGRAPHICSRESETSTATUSPROC)glewGetProcAddress((const GLubyte*)"glGetGraphicsResetStatus")) == NULL) || r;
+  r = ((glGetnCompressedTexImage = (PFNGLGETNCOMPRESSEDTEXIMAGEPROC)glewGetProcAddress((const GLubyte*)"glGetnCompressedTexImage")) == NULL) || r;
   r = ((glGetnTexImage = (PFNGLGETNTEXIMAGEPROC)glewGetProcAddress((const GLubyte*)"glGetnTexImage")) == NULL) || r;
+  r = ((glGetnUniformdv = (PFNGLGETNUNIFORMDVPROC)glewGetProcAddress((const GLubyte*)"glGetnUniformdv")) == NULL) || r;
 
   return r;
 }
@@ -10731,6 +10736,9 @@ GLenum GLEWAPIENTRY glewContextInit (GLEW_CONTEXT_ARG_DEF_LIST)
 #ifdef GL_KHR_texture_compression_astc_ldr
   GLEW_KHR_texture_compression_astc_ldr = _glewSearchExtension("GL_KHR_texture_compression_astc_ldr", extStart, extEnd);
 #endif /* GL_KHR_texture_compression_astc_ldr */
+#ifdef GL_KHR_texture_compression_astc_sliced_3d
+  GLEW_KHR_texture_compression_astc_sliced_3d = _glewSearchExtension("GL_KHR_texture_compression_astc_sliced_3d", extStart, extEnd);
+#endif /* GL_KHR_texture_compression_astc_sliced_3d */
 #ifdef GL_KTX_buffer_region
   GLEW_KTX_buffer_region = _glewSearchExtension("GL_KTX_buffer_region", extStart, extEnd);
   if (glewExperimental || GLEW_KTX_buffer_region) GLEW_KTX_buffer_region = !_glewInit_GL_KTX_buffer_region(GLEW_CONTEXT_ARG_VAR_INIT);
@@ -12081,7 +12089,11 @@ GLboolean GLEWAPIENTRY wglewGetExtension (const char* name)
   return _glewSearchExtension(name, start, end);
 }
 
+#ifdef GLEW_MX
 GLenum GLEWAPIENTRY wglewContextInit (WGLEW_CONTEXT_ARG_DEF_LIST)
+#else
+GLenum GLEWAPIENTRY wglewInit (WGLEW_CONTEXT_ARG_DEF_LIST)
+#endif
 {
   GLboolean crippled;
   const GLubyte* extStart;
@@ -13086,7 +13098,11 @@ GLboolean glxewGetExtension (const char* name)
   return _glewSearchExtension(name, start, end);
 }
 
+#ifdef GLEW_MX
 GLenum glxewContextInit (GLXEW_CONTEXT_ARG_DEF_LIST)
+#else
+GLenum glxewInit (GLXEW_CONTEXT_ARG_DEF_LIST)
+#endif
 {
   int major, minor;
   const GLubyte* extStart;
@@ -13384,9 +13400,9 @@ const GLubyte * GLEWAPIENTRY glewGetString (GLenum name)
   static const GLubyte* _glewString[] =
   {
     (const GLubyte*)NULL,
-    (const GLubyte*)"1.12.0",
+    (const GLubyte*)"1.13.0",
     (const GLubyte*)"1",
-    (const GLubyte*)"12",
+    (const GLubyte*)"13",
     (const GLubyte*)"0"
   };
   const size_t max_string = sizeof(_glewString)/sizeof(*_glewString) - 1;
@@ -13399,21 +13415,15 @@ GLboolean glewExperimental = GL_FALSE;
 
 #if !defined(GLEW_MX)
 
-#if defined(_WIN32)
-extern GLenum GLEWAPIENTRY wglewContextInit (void);
-#elif !defined(__ANDROID__) && !defined(__native_client__) && !defined(__HAIKU__) && (!defined(__APPLE__) || defined(GLEW_APPLE_GLX))
-extern GLenum GLEWAPIENTRY glxewContextInit (void);
-#endif /* _WIN32 */
-
 GLenum GLEWAPIENTRY glewInit (void)
 {
   GLenum r;
   r = glewContextInit();
   if ( r != 0 ) return r;
 #if defined(_WIN32)
-  return wglewContextInit();
+  return wglewInit();
 #elif !defined(__ANDROID__) && !defined(__native_client__) && !defined(__HAIKU__) && (!defined(__APPLE__) || defined(GLEW_APPLE_GLX)) /* _UNIX */
-  return glxewContextInit();
+  return glxewInit();
 #else
   return r;
 #endif /* _WIN32 */
@@ -16295,6 +16305,13 @@ GLboolean GLEWAPIENTRY glewIsSupported (const char* name)
         if (_glewStrSame3(&pos, &len, (const GLubyte*)"texture_compression_astc_ldr", 28))
         {
           ret = GLEW_KHR_texture_compression_astc_ldr;
+          continue;
+        }
+#endif
+#ifdef GL_KHR_texture_compression_astc_sliced_3d
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"texture_compression_astc_sliced_3d", 34))
+        {
+          ret = GLEW_KHR_texture_compression_astc_sliced_3d;
           continue;
         }
 #endif

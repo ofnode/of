@@ -462,7 +462,9 @@ int ofAppGLFWWindow::getCurrentMonitor(){
 		glfwGetMonitorPos(monitors[iC], &xM, &yM);
 		const GLFWvidmode * desktopMode = glfwGetVideoMode(monitors[iC]);
 		ofRectangle monitorRect(xM, yM, desktopMode->width, desktopMode->height);
-		if (monitorRect.inside(xW, yW)){
+		bool bPointMatch = xW >= monitorRect.getMinX() && yW >= monitorRect.getMinY() && xW < monitorRect.getMaxX() && yW < monitorRect.getMaxY();
+		//		if (monitorRect.inside(xW, yW)){
+		if( bPointMatch ) {
 			return iC;
 			break;
 		}
@@ -961,7 +963,7 @@ void ofAppGLFWWindow::entry_cb(GLFWwindow *windowP_, int entered) {
 void ofAppGLFWWindow::scroll_cb(GLFWwindow* windowP_, double x, double y) {
 	ofAppGLFWWindow * instance = setCurrent(windowP_);
 	rotateMouseXY(instance->orientation, instance->getWidth(), instance->getHeight(), x, y);
-	instance->events().notifyMouseScrolled(x, y);
+	instance->events().notifyMouseScrolled(instance->events().getMouseX(), instance->events().getMouseY(), x, y);
 }
 
 //------------------------------------------------------------
