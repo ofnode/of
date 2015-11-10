@@ -27,9 +27,7 @@ See [Architecture](https://github.com/ofnode/of/wiki/Architecture) wiki page for
 Step 1: Clone
 -------------
 
-Run `git clone https://github.com/ofnode/of --depth 1 --no-single-branch` in a terminal.
-
-Run `git submodule update --init --recursive` to clone the examples.
+Run `git clone https://github.com/ofnode/of --depth 1 --no-single-branch` to clone repo.
 
 Step 2: Prepare
 ---------------
@@ -84,6 +82,13 @@ Templates
 ### [ofLiveApp](https://github.com/ofnode/ofLiveApp)
 ### [ofxAddon](https://github.com/ofnode/ofxAddon)
 
+
+Examples
+--------
+
+Run `git submodule update --init --recursive` from the repo folder to clone the examples.
+
+<img src="https://i.imgur.com/9iSw2rB.png">
 
 Issues
 ------
