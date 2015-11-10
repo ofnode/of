@@ -12,8 +12,6 @@ libgtk-3-dev              \
 libboost-filesystem-dev   \
 libboost-system-dev       \
 libudev-dev               \
-clang-3.5                 \
-llvm-3.5                  \
 cmake                     \
 ninja-build               \
 libcairo2-dev             \

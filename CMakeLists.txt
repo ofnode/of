@@ -710,6 +710,13 @@ if(NOT OF_STATIC)
   find_package(Freetype REQUIRED)
   find_package(Boost COMPONENTS filesystem system REQUIRED)
 
+  if(CMAKE_SYSTEM MATCHES Linux AND OF_VIDEO)
+    find_package(UDev REQUIRED)
+    find_package(Glib REQUIRED)
+    find_package(GStreamer REQUIRED)
+    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+  endif()
+
   if(CMAKE_SYSTEM MATCHES Windows)
     find_library(WINMM_LIB winmm)
     find_library(GDI32_LIB gdi32)
@@ -831,6 +838,17 @@ if(NOT OF_STATIC)
       ${CMAKE_THREAD_LIBS_INIT}
   )
 
+  if(CMAKE_SYSTEM MATCHES Linux AND OF_VIDEO)
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+      ${UDEV_LIBRARIES}
+      ${GLIB_LIBRARIES}
+      ${GTK3_LIBRARIES}
+      ${GSTREAMER_LIBRARIES}
+      ${GSTREAMER_APP_LIBRARIES}
+      ${GSTREAMER_BASE_LIBRARIES}
+      ${GSTREAMER_VIDEO_LIBRARIES}
+    )
+  endif()
 
   if(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_LIBRARIES

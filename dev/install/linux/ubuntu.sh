@@ -2,6 +2,7 @@
 # Tested on Ubuntu 14.04
 
 sudo apt-get update
+
 sudo apt-get -y install   \
 git                       \
 gdb                       \
@@ -11,7 +12,6 @@ libgtk-3-dev              \
 libboost-filesystem-dev   \
 libboost-system-dev       \
 libudev-dev               \
-clang-3.6                 \
 cmake                     \
 ninja-build               \
 libcairo2-dev             \
@@ -38,10 +38,6 @@ gstreamer1.0-plugins-ugly \
 libgstreamer1.0-dev       \
 libgstreamer-plugins-base1.0-dev
 
-sudo rm -f /usr/bin/clang   && sudo ln -s /usr/bin/clang-3.6   /usr/bin/clang
-sudo rm -f /usr/bin/clang++ && sudo ln -s /usr/bin/clang++-3.6 /usr/bin/clang++
-sudo rm -f /usr/bin/llvm-symbolizer && sudo ln -s /usr/bin/llvm-symbolizer-3.6 /usr/bin/llvm-symbolizer
-
 # Use gold linker
 sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
 
@@ -50,4 +46,9 @@ sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
 
 # Reinstall Mesa if CMake can't find OpenGL headers and libraries
 #sudo apt-get -y install --reinstall libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev
+
+# Uncomment lines below to set Clang 3.6 as default (change version if needed)
+#sudo rm -f /usr/bin/clang   && sudo ln -s /usr/bin/clang-3.6   /usr/bin/clang
+#sudo rm -f /usr/bin/clang++ && sudo ln -s /usr/bin/clang++-3.6 /usr/bin/clang++
+#sudo rm -f /usr/bin/llvm-symbolizer && sudo ln -s /usr/bin/llvm-symbolizer-3.6 /usr/bin/llvm-symbolizer
 

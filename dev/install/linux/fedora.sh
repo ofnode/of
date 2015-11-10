@@ -25,8 +25,6 @@ gtk3-devel              \
 boost-devel             \
 boost-static            \
 libudev-devel           \
-clang                   \
-clang-analyzer          \
 cmake                   \
 ninja-build             \
 cairo-devel             \

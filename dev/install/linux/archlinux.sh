@@ -17,8 +17,6 @@ libxrandr          \
 libxi              \
 gtk3               \
 boost              \
-clang              \
-clang-analyzer     \
 cmake              \
 ninja              \
 cairo              \

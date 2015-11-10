@@ -57,14 +57,14 @@ For Linux, OS X and Windows:
 ```
 mkdir build
 cd build
-cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++
+cmake .. -G Ninja
 ninja
 ```
 
 For Raspberry Pi 2, pass `-DOF_PLATFORM=armv7` flag:
 
 ```
-cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DOF_PLATFORM=armv7
+cmake .. -G Ninja -DOF_PLATFORM=armv7
 ```
 
 Also, you can generate project files for IDEs, Xcode example:
