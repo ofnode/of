@@ -863,18 +863,7 @@ function(ofxaddon OFXADDON)
 
     set(OFXADDON_DIR ${OFXADDON})
 
-    if(OFXADDON STREQUAL ofx3DModelLoader)
-        set(OFXADDON_DIR "${OF_ROOT_DIR}/addons/ofx3DModelLoader")
-        set(OFXSOURCES
-            "${OFXADDON_DIR}/src/3DS/model3DS.cpp"
-            "${OFXADDON_DIR}/src/3DS/texture3DS.cpp"
-            "${OFXADDON_DIR}/src/ofx3dModelLoader.cpp"
-        )
-        include_directories("${OFXADDON_DIR}/src")
-        include_directories("${OFXADDON_DIR}/src/3DS")
-
-
-    elseif(OFXADDON STREQUAL ofxAccelerometer)
+    if(OFXADDON STREQUAL ofxAccelerometer)
         message(FATAL_ERROR "${OFXADDON} is not supported yet.")
 
 
@@ -945,10 +934,6 @@ function(ofxaddon OFXADDON)
         include_directories(${LIBUSB_1_INCLUDE_DIRS})
         set(OPENFRAMEWORKS_LIBRARIES
           ${OPENFRAMEWORKS_LIBRARIES} ${LIBUSB_1_LIBRARIES} PARENT_SCOPE)
-
-
-    elseif(OFXADDON STREQUAL ofxMultiTouch)
-        message(FATAL_ERROR "${OFXADDON} is not supported yet.")
 
 
     elseif(OFXADDON STREQUAL ofxNetwork)

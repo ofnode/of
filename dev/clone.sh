@@ -17,32 +17,32 @@ function setup() {
 mkdir -p src
 cd src
 
-# v 3.17.0 release
+# v 3.17.0
 setup freeimage 398373e https://github.com/ofnode/freeimage
 
-# v 1.12.0 master
-setup glew 4c40805 https://github.com/nigels-com/glew
+# v 1.13.0
+setup glew f0067bb https://github.com/nigels-com/glew
 
-# v 3.1.0 release
-setup glfw 7f7307b https://github.com/arturoc/glfw
+# v 3.1.0
+setup glfw 7f7307b https://github.com/ofnode/glfw
 
-# v 1.7.0 master
+# v 1.7.0
 setup poco 04caf94 https://github.com/pocoproject/poco
 
-# v 4.1.1 release
+# v 4.1.1
 setup rtaudio 22c00ec https://github.com/thestk/rtaudio
 
-# v 0.9.0 master
-setup openFrameworks bee5181 https://github.com/openframeworks/openFrameworks
+# v 0.9.0
+setup openFrameworks f26cbce https://github.com/openframeworks/openFrameworks
 
-# v 1.0.1 master
-setup libtess2 24e4bdd https://github.com/memononen/libtess2
+# v 1.0.1
+setup libtess2 24e4bdd https://github.com/ofnode/libtess2
 
-# v none master
-setup videoInput 3815d73 https://github.com/ofTheo/videoInput
+# v 1.0.0
+setup videoInput 97fc512 https://github.com/ofnode/videoInput
 
-# v 1.3.0 release
-setup kissfft 7d00183 https://github.com/itdaniher/kissfft
+# v 1.3.0
+setup kissfft 7d00183 https://github.com/ofnode/kissfft
 
 # Remove Windows style line endings
 sed -i  's/\r//' "$OF/src/rtaudio/RtAudio.cpp"

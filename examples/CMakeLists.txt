@@ -51,7 +51,6 @@ endfunction(example)
 #// OFXADDONS //////////////////////////////////////////////////////////////////
 
 
-ofxaddon(ofx3DModelLoader)
 # TODO: ofxAccelerometer
 # TODO: ofxAndroid
 ofxaddon(ofxAssimpModelLoader)
@@ -59,7 +58,6 @@ ofxaddon(ofxAssimpModelLoader)
 ofxaddon(ofxGui)
 # TODO: ofxiOS
 ofxaddon(ofxKinect)
-# TODO: ofxMultiTouch
 ofxaddon(ofxNetwork)
 ofxaddon(ofxOpenCv)
 ofxaddon(ofxOsc)

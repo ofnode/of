@@ -1,6 +1,6 @@
 --- a/gl/ofShader.h
 +++ b/gl/ofShader.h
-@@ -170,9 +170,9 @@
+@@ -171,9 +171,9 @@
  		std::string sourcePath;
  	};
  
