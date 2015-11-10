@@ -30,12 +30,12 @@ install:
 script:
   - mkdir build;
     cd build;
-    cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++;
+    cmake .. -G Ninja;
     ninja && 
     cd ../examples;
     mkdir build;
     cd build;
-    cmake .. -G Ninja -DCMAKE_CXX_COMPILER=clang++;
+    cmake .. -G Ninja;
     ninja
 git:
   depth: 1
