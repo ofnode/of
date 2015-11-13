@@ -356,8 +356,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
     else()
       message(STATUS "Using static Cairo")
       set(CAIRO_LIBRARIES
+        -Wl,--start-group
         ${PIXMAN_LIB}
         ${CAIRO_LIB}
+        -Wl,--end-group
       )
     endif()
 
@@ -368,27 +370,25 @@ if(CMAKE_SYSTEM MATCHES Linux)
       message(STATUS "Using static OpenSSL")
       find_library(DL_LIB dl)
       set(OPENSSL_LIBRARIES
+        -Wl,--start-group
         ${CRYPTO_LIB}
         ${SSL_LIB}
         ${DL_LIB}
+        -Wl,--end-group
       )
     endif()
 
-    if(FREETYPE_LIB MATCHES FREETYPE_LIB-NOTFOUND)
-      message(STATUS "Using dynamic FreeType")
+    if(FONTCONFIG_LIB MATCHES FONTCONFIG_LIB-NOTFOUND OR
+         FREETYPE_LIB MATCHES   FREETYPE_LIB-NOTFOUND)
+      message(STATUS "Using dynamic Fontconfig and FreeType")
     else()
-      message(STATUS "Using static FreeType")
+      message(STATUS "Using static Fontconfig and FreeType")
+      set(FONTCONFIG_LIBRARIES "")
       set(FREETYPE_LIBRARIES
-        ${FREETYPE_LIB}
-      )
-    endif()
-
-    if(FONTCONFIG_LIB MATCHES FONTCONFIG_LIB-NOTFOUND)
-      message(STATUS "Using dynamic Fontconfig")
-    else()
-      message(STATUS "Using static Fontconfig")
-      set(FONTCONFIG_LIBRARIES
+        -Wl,--start-group
         ${FONTCONFIG_LIB}
+        ${FREETYPE_LIB}
+        -Wl,--end-group
       )
     endif()
 
