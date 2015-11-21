@@ -154,13 +154,21 @@ set(OPENFRAMEWORKS_INCLUDE_DIRS
     "${OF_ROOT_DIR}/src/openframeworks/utils"
     "${OF_ROOT_DIR}/src/openframeworks/video"
 
-    "${OF_ROOT_DIR}/src/freeimage"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Half"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Iex"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmImf"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/IlmThread"
-    "${OF_ROOT_DIR}/src/freeimage/OpenEXR/Imath"
+    "${OF_ROOT_DIR}/src/freeimage/Source"
+    "${OF_ROOT_DIR}/src/freeimage/Source/DeprecationManager"
+    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG"
+    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG"
+    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG"
+    "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite"
+    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4"
+    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP"
+    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR"
+    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Half"
+    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Iex"
+    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IexMath"
+    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf"
+    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmThread"
+    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath"
 
     "${OF_ROOT_DIR}/src/glew"
     "${OF_ROOT_DIR}/src/glew/include"
@@ -616,7 +624,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
     set(OPENFRAMEWORKS_DEFINITIONS
-        -D_WIN32_WINNT=0x0501
         -DOF_USING_MPG123
         -DOF_SOUNDSTREAM_RTAUDIO
         -DOF_SOUND_PLAYER_OPENAL
@@ -753,8 +760,24 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC
 )
 
+list(APPEND OPENFRAMEWORKS_DEFINITIONS
+    -DNO_LCMS
+    -DOPJ_STATIC
+    -DLIBRAW_NODLL
+    -DDISABLE_PERF_MEASUREMENT
+)
+
+if(CMAKE_SYSTEM MATCHES Linux)
+list(APPEND OPENFRAMEWORKS_DEFINITIONS
+    -D__ANSI__
+)
+endif()
+
 if(CMAKE_SYSTEM MATCHES Windows)
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
+    -DWIN32
+    -DWINVER=0x0500
+    -D_WIN32_WINNT=0x0501
     -D_UNICODE
     -DUNICODE
 )
