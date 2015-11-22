@@ -1173,6 +1173,8 @@ if(NOT OF_STATIC)
   )
   endif()
 
+  find_package(ZLIB REQUIRED)
+
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${OPENAL_LIBRARY}
       ${ZLIB_LIBRARIES}
@@ -1230,6 +1232,7 @@ if(NOT OF_STATIC)
 
   if(CMAKE_SYSTEM MATCHES Darwin)
     list(APPEND OPENFRAMEWORKS_LIBRARIES
+      "-framework OpenAL"
       "-framework OpenGL"
       "-framework Cocoa"
       "-framework IOKit"

@@ -610,6 +610,7 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     # Frameworks
     list(APPEND OPENFRAMEWORKS_LIBRARIES
+        "-framework OpenAL"
         "-framework OpenGL"
         "-framework Cocoa"
         "-framework IOKit"
