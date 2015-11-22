@@ -793,8 +793,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(OpenGL REQUIRED)
     endif()
 
-    find_package(Boost REQUIRED)
     find_package(Freetype REQUIRED)
+    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIRS}
@@ -875,12 +875,12 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
     set(ENV{OPENSSL_ROOT_DIR} "/usr/local/opt/openssl")
-    find_package(OpenSSL REQUIRED)
-    find_package(Boost REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
+    find_package(OpenSSL REQUIRED)
     find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
+    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     # Hardcode FreeType path, see issue #15
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
@@ -891,10 +891,10 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${CAIRO_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
+        ${OPENSSL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
         ${FONTCONFIG_INCLUDE_DIRS}
-        ${OPENSSL_INCLUDE_DIR}
     )
 
 elseif(CMAKE_SYSTEM MATCHES Windows)
@@ -919,11 +919,11 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
-    find_package(Boost REQUIRED)
     find_package(OpenAL REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
+    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIRS}
