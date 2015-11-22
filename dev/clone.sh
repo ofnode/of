@@ -17,9 +17,6 @@ function setup() {
 mkdir -p src
 cd src
 
-# v 3.17.0
-setup freeimage 398373e https://github.com/ofnode/freeimage
-
 # v 1.13.0
 setup glew f0067bb https://github.com/nigels-com/glew
 
@@ -43,6 +40,14 @@ setup videoInput 97fc512 https://github.com/ofnode/videoInput
 
 # v 1.3.0
 setup kissfft 7d00183 https://github.com/ofnode/kissfft
+
+# v 3.17.0
+rm -rf freeimage
+if [ ! -f FreeImage3170.zip ]; then
+  wget http://downloads.sourceforge.net/freeimage/FreeImage3170.zip
+fi
+unzip -q FreeImage3170.zip
+mv FreeImage freeimage
 
 # Remove Windows style line endings
 sed -i  's/\r//' "$OF/src/rtaudio/RtAudio.cpp"

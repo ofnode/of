@@ -1,0 +1,33 @@
+--- a/graphics/ofCairoRenderer.cpp
++++ b/graphics/ofCairoRenderer.cpp
+@@ -1375,10 +1375,18 @@
+ 	return cr;
+ }
+ 
++void ofCairoRenderer::setCairoContext(cairo_t * _cr){
++  cr = _cr;
++}
++
+ cairo_surface_t * ofCairoRenderer::getCairoSurface(){
+ 	return surface;
+ }
+ 
++void ofCairoRenderer::setCairoSurface(cairo_surface_t * _surface){
++  surface = _surface;
++}
++
+ ofPixels & ofCairoRenderer::getImageSurfacePixels(){
+ 	if(type!=IMAGE){
+ 		ofLogError("ofCairoRenderer") << "getImageSurfacePixels(): can only get pixels from image surface";
+--- a/graphics/ofCairoRenderer.h
++++ b/graphics/ofCairoRenderer.h
+@@ -157,7 +157,9 @@ public:
+ 
+ 	// cairo specifics
+ 	cairo_t * getCairoContext();
++	void setCairoContext(cairo_t * cr);
+ 	cairo_surface_t * getCairoSurface();
++	void setCairoSurface(cairo_surface_t * surface);
+ 	ofPixels & getImageSurfacePixels();
+ 	ofBuffer & getContentBuffer();
+ 

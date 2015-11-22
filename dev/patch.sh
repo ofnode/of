@@ -13,6 +13,10 @@ function apply() {
 
 #-------------------------------------------------------------------------------
 
+cd "$OF/src/freeimage"
+
+apply freeimage.patch
+
 cd "$OF/src/glfw"
 
 apply glfw_cmake.patch
@@ -33,10 +37,11 @@ apply videoinput.patch
 cd "$OF/src/openframeworks"
 
 apply openframeworks.patch
-apply openframeworks_modules.patch
-apply openframeworks_clang_windows.patch
 apply openframeworks_osx.patch
 apply openframeworks_gles.patch
+apply openframeworks_modules.patch
+apply openframeworks_clang_windows.patch
+apply openframeworks_cairo_render_feature.patch
 
 cd "$OF/src/rtaudio"
 
