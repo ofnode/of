@@ -51,6 +51,7 @@ mv FreeImage freeimage
 
 # Remove Windows style line endings
 sed -i  's/\r//' "$OF/src/rtaudio/RtAudio.cpp"
+sed -i  's/\r//' "$OF/src/freeimage/Source/LibRawLite/internal/defines.h"
 
 echo    "auto/" > "$OF/src/glew/.gitignore"
 rm      "$OF/src/poco/.gitignore"

@@ -1,11 +1,103 @@
---- a/Source/FreeImage/Plugin.cpp
-+++ b/Source/FreeImage/Plugin.cpp
-@@ -273,7 +273,7 @@
- 			s_plugins->AddNode(InitRAW);
- 			s_plugins->AddNode(InitWEBP);
- #if !(defined(_MSC_VER) && (_MSC_VER <= 1310))
--			s_plugins->AddNode(InitJXR);
-+			//s_plugins->AddNode(InitJXR);
- #endif // unsupported by MS Visual Studio 2003 !!!
- 			
- 			// external plugin initialization
+--- a/Source/FreeImage.h
++++ b/Source/FreeImage.h
+@@ -3,7 +3,7 @@
+ //
+ // Design and implementation by
+ // - Floris van den Berg (flvdberg@wxs.nl)
+-// - Hervé Drolon (drolon@infonie.fr)
++// - Herve Drolon (drolon@infonie.fr)
+ //
+ // Contributors:
+ // - see changes log named 'Whatsnew.txt', see header of each .h and .cpp file
+@@ -150,22 +150,22 @@ FI_STRUCT (FIMULTIBITMAP) { void *data; };
+ #ifndef _MSC_VER
+ // define portable types for 32-bit / 64-bit OS
+ #include <inttypes.h>
+-typedef int32_t BOOL;
+-typedef uint8_t BYTE;
+-typedef uint16_t WORD;
+-typedef uint32_t DWORD;
+-typedef int32_t LONG;
+-typedef int64_t INT64;
+-typedef uint64_t UINT64;
++#define BOOL int32_t
++#define BYTE uint8_t
++#define WORD uint16_t
++#define DWORD uint32_t
++#define LONG int32_t
++#define INT64 int64_t
++#define UINT64 uint64_t
+ #else
+ // MS is not C99 ISO compliant
+-typedef long BOOL;
+-typedef unsigned char BYTE;
+-typedef unsigned short WORD;
+-typedef unsigned long DWORD;
+-typedef long LONG;
+-typedef signed __int64 INT64;
+-typedef unsigned __int64 UINT64;
++#define BOOL long
++#define BYTE unsigned char
++#define WORD unsigned short
++#define DWORD unsigned long
++#define LONG long
++#define INT64 signed __int64
++#define UINT64 unsigned __int64
+ #endif // _MSC_VER
+ 
+ #if (defined(_WIN32) || defined(__WIN32__))
+--- a/Source/LibRawLite/internal/defines.h
++++ b/Source/LibRawLite/internal/defines.h
+@@ -55,7 +55,9 @@ it under the terms of the one of three licenses as you choose:
+ #include <sys/utime.h>
+ #include <winsock2.h>
+ #pragma comment(lib, "ws2_32.lib")
++#if _MSC_VER < 1900
+ #define snprintf _snprintf
++#endif
+ #define strcasecmp stricmp
+ #define strncasecmp strnicmp
+ #line 85 "dcraw/dcraw.c"
+--- a/Source/LibTIFF4/tif_config.h
++++ b/Source/LibTIFF4/tif_config.h
+@@ -81,7 +81,9 @@ If your big endian system isn't being detected, add an OS specific check
+ #endif // BYTE_ORDER
+ 
+ #ifdef _WIN32
++#if _MSC_VER < 1900
+ #define snprintf _snprintf
++#endif
+ #define lfind _lfind
+ #endif // _WIN32
+ 
+--- a/Source/OpenEXR/IlmImf/ImfOptimizedPixelReading.h
++++ b/Source/OpenEXR/IlmImf/ImfOptimizedPixelReading.h
+@@ -70,7 +70,7 @@ EXR_FORCEINLINE
+ bool
+ isPointerSSEAligned (const void* EXR_RESTRICT pPointer)
+ {
+-    unsigned long trailingBits = ((unsigned long)pPointer) & 15;
++    unsigned long trailingBits = ((intptr_t)pPointer) & 15;
+     return trailingBits == 0;
+ }
+ 
+--- a/Source/OpenEXR/IlmImf/ImfSystemSpecific.h
++++ b/Source/OpenEXR/IlmImf/ImfSystemSpecific.h
+@@ -54,7 +54,7 @@ static bool GLOBAL_SYSTEM_LITTLE_ENDIAN =
+ 
+ #ifdef IMF_HAVE_SSE2
+ 
+-#ifdef __GNUC__
++#if defined(__GNUC__) && !defined(__MINGW32__)
+ // Causes issues on certain gcc versions
+ //#define EXR_FORCEINLINE inline __attribute__((always_inline))
+ #define EXR_FORCEINLINE inline
+@@ -73,7 +73,7 @@ static void EXRFreeAligned(void* ptr)
+     free(ptr);
+ }
+ 
+-#elif defined _MSC_VER
++#elif defined(_MSC_VER) || defined(__MINGW32__)
+ 
+ #define EXR_FORCEINLINE __forceinline
+ #define EXR_RESTRICT __restrict

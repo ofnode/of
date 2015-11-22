@@ -16,6 +16,7 @@ function apply() {
 cd "$OF/src/freeimage"
 
 apply freeimage.patch
+apply freeimage_plugin.patch
 
 cd "$OF/src/glfw"
 

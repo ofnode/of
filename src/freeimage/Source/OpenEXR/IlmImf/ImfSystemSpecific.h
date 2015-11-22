@@ -54,7 +54,7 @@ static bool GLOBAL_SYSTEM_LITTLE_ENDIAN =
 
 #ifdef IMF_HAVE_SSE2
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__MINGW32__)
 // Causes issues on certain gcc versions
 //#define EXR_FORCEINLINE inline __attribute__((always_inline))
 #define EXR_FORCEINLINE inline
@@ -73,7 +73,7 @@ static void EXRFreeAligned(void* ptr)
     free(ptr);
 }
 
-#elif defined _MSC_VER
+#elif defined(_MSC_VER) || defined(__MINGW32__)
 
 #define EXR_FORCEINLINE __forceinline
 #define EXR_RESTRICT __restrict

@@ -1,0 +1,11 @@
+--- a/Source/FreeImage/Plugin.cpp
++++ b/Source/FreeImage/Plugin.cpp
+@@ -273,7 +273,7 @@
+ 			s_plugins->AddNode(InitRAW);
+ 			s_plugins->AddNode(InitWEBP);
+ #if !(defined(_MSC_VER) && (_MSC_VER <= 1310))
+-			s_plugins->AddNode(InitJXR);
++			//s_plugins->AddNode(InitJXR);
+ #endif // unsupported by MS Visual Studio 2003 !!!
+ 			
+ 			// external plugin initialization
