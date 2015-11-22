@@ -304,7 +304,7 @@ if(OF_VIDEO)
   endif()
 endif(OF_VIDEO)
 
-list(APPEND OPENFRAMEWORKS_SOURCES
+set(FREEIMAGE_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/DeprecationManager/Deprecated.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/DeprecationManager/DeprecationMgr.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/BitmapAccess.cpp"
@@ -395,9 +395,7 @@ list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/TagConversion.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/TagLib.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/XTIFF.cpp"
-)
 
-list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jaricom.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcapimin.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcapistd.c"
@@ -445,9 +443,7 @@ list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jquant2.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jutils.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/transupp.c"
-)
 
-list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/bio.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/cio.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/dwt.c"
@@ -467,9 +463,7 @@ list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/t2.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/tcd.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/tgt.c"
-)
 
-list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/png.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngerror.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngget.c"
@@ -485,18 +479,14 @@ list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngwrite.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngwtran.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngwutil.c"
-)
 
-list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/internal/dcraw_common.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/internal/dcraw_fileio.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/internal/demosaic_packs.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/src/libraw_c_api.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/src/libraw_cxx.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/src/libraw_datastream.cpp"
-)
 
-list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_aux.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_close.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_codec.c"
@@ -533,9 +523,7 @@ list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_warning.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_write.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_zip.c"
-)
 
-list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/dec.alpha.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/dec.buffer.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/dec.frame.c"
@@ -610,9 +598,7 @@ list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/mux/mux.muxinternal.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/mux/mux.muxread.c"
     "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/demux/demux.demux.c"
-)
 
-list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/b44ExpLogTable.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfAcesFile.cpp"
     "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfAttribute.cpp"
@@ -721,12 +707,12 @@ list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IexMath/IexMathFpu.cpp"
 )
 
-list(APPEND OPENFRAMEWORKS_SOURCES
+set(KISSFFT_SOURCES
     "${OF_ROOT_DIR}/src/kissfft/tools/kiss_fftr.c"
     "${OF_ROOT_DIR}/src/kissfft/kiss_fft.c"
 )
 
-list(APPEND OPENFRAMEWORKS_SOURCES
+set(LIBTESS2_SOURCES
     "${OF_ROOT_DIR}/src/libtess2/Source/bucketalloc.c"
     "${OF_ROOT_DIR}/src/libtess2/Source/priorityq.c"
     "${OF_ROOT_DIR}/src/libtess2/Source/sweep.c"
@@ -737,19 +723,19 @@ list(APPEND OPENFRAMEWORKS_SOURCES
 )
 
 if(CMAKE_SYSTEM MATCHES Windows)
-list(APPEND OPENFRAMEWORKS_SOURCES
+set(VIDEOINPUT_SOURCES
   "${OF_ROOT_DIR}/src/videoinput/videoInput.cpp"
 )
 endif()
 
 if(OF_AUDIO)
-list(APPEND OPENFRAMEWORKS_SOURCES
+set(RTAUDIO_SOURCES
     "${OF_ROOT_DIR}/src/rtaudio/RtAudio.cpp"
 )
 endif()
 
 if(OF_PLATFORM MATCHES x86)
-list(APPEND OPENFRAMEWORKS_SOURCES
+set(GLEW_SOURCES
     "${OF_ROOT_DIR}/src/glew/src/glew.c"
 )
 endif()
@@ -1109,6 +1095,12 @@ endif()
 add_library(
     openFrameworks ${LIB_MODE}
     ${OPENFRAMEWORKS_SOURCES}
+    ${VIDEOINPUT_SOURCES}
+    ${FREEIMAGE_SOURCES}
+    ${LIBTESS2_SOURCES}
+    ${KISSFFT_SOURCES}
+    ${RTAUDIO_SOURCES}
+    ${GLEW_SOURCES}
 )
 
 target_compile_definitions(
