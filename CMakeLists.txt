@@ -839,11 +839,13 @@ if(CMAKE_SYSTEM MATCHES Linux)
     else()
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
 
+      find_package(UDev REQUIRED)
       find_package(Glib REQUIRED)
       find_package(GStreamer REQUIRED)
       pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+        ${UDEV_INCLUDE_DIR}
         ${GLIB_INCLUDE_DIRS}
         ${GTK3_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
@@ -1177,6 +1179,7 @@ if(NOT OF_STATIC)
 
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${ALSA_LIBRARY}
+      ${UDEV_LIBRARIES}
       ${GLIB_LIBRARIES}
       ${GTK3_LIBRARIES}
       ${OPENAL_LIBRARY}
