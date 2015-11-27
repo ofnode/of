@@ -18,3 +18,56 @@
  			WSAEventSelect( i->second->impl_->Socket(), event, FD_READ ); // note that this makes the socket non-blocking which is why we can safely call RecieveFrom() on all sockets below
  			events[j] = event;
  		}
+--- a/ofxVectorGraphics/src/ofxVectorGraphics.cpp
++++ b/ofxVectorGraphics/src/ofxVectorGraphics.cpp
+@@ -308,28 +308,33 @@
+ 			
+ 		float	xpos, ypos;
+ 
++		ofMesh mesh;
++
+ 		if(!bFill){
+ 	
+-			glBegin(GL_LINE_STRIP);
+-				for(int i = 0; i < arcResolution; i++){
+-					xpos	= cos(angle) * radius;
+-					ypos	= sin(angle) * radius; 
+-					glVertex2f(x + xpos, y + ypos);						
+-					angle += step;
+-				}
+-			glEnd();
++			mesh.setMode(OF_PRIMITIVE_LINE_STRIP);
++
++			for(int i = 0; i < arcResolution; i++){
++				xpos = cos(angle) * radius;
++				ypos = sin(angle) * radius;
++				mesh.addVertex(ofVec3f(x + xpos, y + ypos, 0));
++				angle += step;
++			}
+ 		
+ 		}else{
+-			glBegin(GL_TRIANGLE_STRIP);
+-				for(int i = 0; i < arcResolution; i++){
+-					xpos	= cos(angle) * radius;
+-					ypos	= sin(angle) * radius; 
+-					glVertex2f(x + xpos, y + ypos);						
+-					glVertex2f(x, y);														
+-					angle += step;
+-				}
+-			glEnd();
++
++			mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
++
++			for(int i = 0; i < arcResolution; i++){
++				xpos = cos(angle) * radius;
++				ypos = sin(angle) * radius;
++				mesh.addVertex(ofVec3f(x + xpos, y + ypos, 0));
++				mesh.addVertex(ofVec3f(x, y, 0));
++				angle += step;
++			}
+ 		}
++
++		mesh.draw();
+ 	}
+ 	if(bRecord){
+ 		
