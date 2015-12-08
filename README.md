@@ -59,10 +59,11 @@ cmake .. -G Ninja
 ninja
 ```
 
-For Raspberry Pi 2, pass `-DOF_PLATFORM=armv7` flag:
+For Raspberry Pi 2, pass `-DOF_PLATFORM=armv7` and `-j3` flags to `cmake` and `ninja` respectively:
 
 ```
 cmake .. -G Ninja -DOF_PLATFORM=armv7
+ninja -j3
 ```
 
 Also, you can generate project files for IDEs, Xcode example:
