@@ -35,7 +35,7 @@ script:
     cd ../examples;
     mkdir build;
     cd build;
-    cmake .. -G Ninja;
+    cmake .. -G Ninja -DBUILD_ALL=OFF -DofExamples=ON;
     ninja
 git:
   depth: 1
