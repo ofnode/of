@@ -308,33 +308,28 @@ void ofxVectorGraphics::arc(float x, float y, float radius, float offsetAngleDeg
 			
 		float	xpos, ypos;
 
-		ofMesh mesh;
-
 		if(!bFill){
 	
-			mesh.setMode(OF_PRIMITIVE_LINE_STRIP);
-
-			for(int i = 0; i < arcResolution; i++){
-				xpos = cos(angle) * radius;
-				ypos = sin(angle) * radius;
-				mesh.addVertex(ofVec3f(x + xpos, y + ypos, 0));
-				angle += step;
-			}
+			glBegin(GL_LINE_STRIP);
+				for(int i = 0; i < arcResolution; i++){
+					xpos	= cos(angle) * radius;
+					ypos	= sin(angle) * radius; 
+					glVertex2f(x + xpos, y + ypos);						
+					angle += step;
+				}
+			glEnd();
 		
 		}else{
-
-			mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
-
-			for(int i = 0; i < arcResolution; i++){
-				xpos = cos(angle) * radius;
-				ypos = sin(angle) * radius;
-				mesh.addVertex(ofVec3f(x + xpos, y + ypos, 0));
-				mesh.addVertex(ofVec3f(x, y, 0));
-				angle += step;
-			}
+			glBegin(GL_TRIANGLE_STRIP);
+				for(int i = 0; i < arcResolution; i++){
+					xpos	= cos(angle) * radius;
+					ypos	= sin(angle) * radius; 
+					glVertex2f(x + xpos, y + ypos);						
+					glVertex2f(x, y);														
+					angle += step;
+				}
+			glEnd();
 		}
-
-		mesh.draw();
 	}
 	if(bRecord){
 		
