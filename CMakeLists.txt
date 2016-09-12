@@ -839,19 +839,23 @@ if(CMAKE_SYSTEM MATCHES Linux)
     if(NOT OF_VIDEO)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_VIDEO)
     else()
-      list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
 
       find_package(UDev REQUIRED)
       find_package(Glib REQUIRED)
       find_package(GStreamer REQUIRED)
-      pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${UDEV_INCLUDE_DIR}
         ${GLIB_INCLUDE_DIRS}
-        ${GTK3_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
       )
+
+      if ( OF_GTK )
+        list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
+        pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+        list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS ${GTK3_INCLUDE_DIRS} )
+        list(APPEND OPENFRAMEWORKS_LIBRARIES ${GTK3_LIBRARIES} )
+      endif()
     endif()
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
@@ -1154,7 +1158,6 @@ if(NOT OF_STATIC)
       ${ALSA_LIBRARY}
       ${UDEV_LIBRARIES}
       ${GLIB_LIBRARIES}
-      ${GTK3_LIBRARIES}
       ${OPENAL_LIBRARY}
       ${ZLIB_LIBRARIES}
       ${CAIRO_LIBRARIES}
@@ -1225,6 +1228,7 @@ message(STATUS "OF_STATIC: " ${OF_STATIC})
 if(CMAKE_SYSTEM MATCHES Linux)
 message(STATUS "OF_AUDIO: " ${OF_AUDIO})
 message(STATUS "OF_VIDEO: " ${OF_VIDEO})
+message(STATUS "OF_GTK: " ${OF_GTK})
 endif()
 
 message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})

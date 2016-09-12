@@ -15,6 +15,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
   set(OF_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
   set(OF_VIDEO ON CACHE BOOL "Compile video features of openFrameworks")
+  set(OF_GTK   ON CACHE BOOL "Compile with GTK3 (may conficts with Qt).")
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
@@ -495,29 +496,33 @@ if(CMAKE_SYSTEM MATCHES Linux)
     if(NOT OF_VIDEO)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_VIDEO)
     else()
-      list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
 
       find_package(UDev REQUIRED)
       find_package(Glib REQUIRED)
       find_package(GStreamer REQUIRED)
-      pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${UDEV_INCLUDE_DIR}
         ${GLIB_INCLUDE_DIRS}
-        ${GTK3_INCLUDE_DIRS}
         ${GSTREAMER_INCLUDE_DIRS}
       )
 
       list(APPEND OPENFRAMEWORKS_LIBRARIES
         ${UDEV_LIBRARIES}
         ${GLIB_LIBRARIES}
-        ${GTK3_LIBRARIES}
         ${GSTREAMER_LIBRARIES}
         ${GSTREAMER_APP_LIBRARIES}
         ${GSTREAMER_BASE_LIBRARIES}
         ${GSTREAMER_VIDEO_LIBRARIES}
       )
+
+      if ( OF_GTK )
+        list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
+        pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+        list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS ${GTK3_INCLUDE_DIRS} )
+        list(APPEND OPENFRAMEWORKS_LIBRARIES ${GTK3_LIBRARIES} )
+      endif()
+
     endif()
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
@@ -1136,6 +1141,7 @@ message(STATUS "OF_STATIC: " ${OF_STATIC})
 if(CMAKE_SYSTEM MATCHES Linux)
 message(STATUS "OF_AUDIO: " ${OF_AUDIO})
 message(STATUS "OF_VIDEO: " ${OF_VIDEO})
+message(STATUS "OF_GTK: " ${OF_GTK})
 endif()
 
 if(CMAKE_SYSTEM MATCHES Windows)
