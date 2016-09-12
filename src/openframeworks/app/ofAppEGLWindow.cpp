@@ -707,7 +707,7 @@ bool ofAppEGLWindow::createSurface() {
 			eglSurface, // read surface
 			eglContext);
 
-	if((unsigned int)eglContext == EGL_FALSE) {
+	if(eglContext == EGL_FALSE) {
 		EGLint error = eglGetError();
 		ofLogError("ofAppEGLWindow") << "createSurface(): couldn't making current surface: " << eglErrorString(error);
 		return false;

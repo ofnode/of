@@ -4,11 +4,7 @@
 #include "ofEvents.h"
 #include "ofBaseTypes.h"
 
-class ofBaseApp
-#ifndef TARGET_NO_SOUND
-: public ofBaseSoundInput, public ofBaseSoundOutput
-#endif
-{
+class ofBaseApp : public ofBaseSoundInput, public ofBaseSoundOutput{
 
 	public:
         ofBaseApp() {

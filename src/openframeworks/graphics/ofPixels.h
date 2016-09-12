@@ -65,6 +65,7 @@ public:
 	ofPixels_();
 	~ofPixels_();
 	ofPixels_(const ofPixels_<PixelType> & mom);
+	ofPixels_(ofPixels_<PixelType> && mom);
 
 	template<typename SrcType>
 	ofPixels_(const ofPixels_<SrcType> & mom);
@@ -115,6 +116,7 @@ public:
 	void clear();
 
 	ofPixels_<PixelType>& operator=(const ofPixels_<PixelType> & mom);
+	ofPixels_<PixelType>& operator=(ofPixels_<PixelType> && mom);
 
 	template<typename SrcType>
 	ofPixels_<PixelType>& operator=(const ofPixels_<SrcType> & mom);
@@ -540,15 +542,15 @@ private:
 	template<typename SrcType>
 	void copyFrom( const ofPixels_<SrcType>& mom );
 	
-	PixelType * pixels;
-	int 	width;
-	int 	height;
+	PixelType * pixels = nullptr;
+	int 	width = 0;
+	int 	height = 0;
 
 	//int 	channels; // 1, 3, 4 channels per pixel (grayscale, rgb, rgba)
-	int 	pixelsSize;
-	bool	bAllocated;
-	bool	pixelsOwner;			// if set from external data don't delete it
-	ofPixelFormat pixelFormat;
+	int 	pixelsSize = 0;
+	bool	bAllocated = false;
+	bool	pixelsOwner = true;			// if set from external data don't delete it
+	ofPixelFormat pixelFormat = OF_PIXELS_UNKNOWN;
 
 };
 
@@ -987,16 +989,16 @@ inline int ofPixels_<PixelType>::Line::getLineNum() const{
 template<typename PixelType>
 inline ofPixels_<PixelType> ofPixels_<PixelType>::Line::asPixels(){
 	ofPixels_<PixelType> pixels;
-	pixels.setFromExternalPixels(_begin,stride,1,pixelFormat);
-	return pixels;
+	pixels.setFromExternalPixels(_begin,stride/componentsPerPixel,1,pixelFormat);
+	return std::move(pixels);
 }
 
 //----------------------------------------------------------------------
 template<typename PixelType>
 inline const ofPixels_<PixelType> ofPixels_<PixelType>::Line::asPixels() const{
 	ofPixels_<PixelType> pixels;
-	pixels.setFromExternalPixels(_begin,stride,1,pixelFormat);
-	return pixels;
+	pixels.setFromExternalPixels(_begin,stride/componentsPerPixel,1,pixelFormat);
+	return std::move(pixels);
 }
 
 //----------------------------------------------------------------------

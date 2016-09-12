@@ -327,7 +327,6 @@ void ofBaseMaterial::uploadMatrices(const ofShader & shader,ofGLProgrammableRend
 	shader.setUniformMatrix4f("normalMatrix",normalMatrix);
 }
 
-#ifndef TARGET_NO_SOUND
 
 void ofBaseSoundInput::audioIn( ofSoundBuffer& buffer ){
 	audioIn(&buffer[0], buffer.getNumFrames(), buffer.getNumChannels(), buffer.getDeviceID(), buffer.getTickCount());
@@ -353,5 +352,3 @@ void ofBaseSoundOutput::audioOut( float * output, int bufferSize, int nChannels,
 void ofBaseSoundOutput::audioOut( float * output, int bufferSize, int nChannels ){
 	audioRequested(output, bufferSize, nChannels);
 }
-
-#endif // #ifndef TARGET_NO_SOUND

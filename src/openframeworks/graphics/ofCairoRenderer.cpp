@@ -928,6 +928,7 @@ void ofCairoRenderer::viewport(ofRectangle v){
 void ofCairoRenderer::viewport(float x, float y, float width, float height, bool invertY){
 	if(width < 0) width = originalViewport.width;
 	if(height < 0) height = originalViewport.height;
+	cout << "setting viewport to:" << width << ", " << height << endl;
 
 	if (invertY){
 		y = -y;
@@ -1375,16 +1376,8 @@ cairo_t * ofCairoRenderer::getCairoContext(){
 	return cr;
 }
 
-void ofCairoRenderer::setCairoContext(cairo_t * _cr){
-  cr = _cr;
-}
-
 cairo_surface_t * ofCairoRenderer::getCairoSurface(){
 	return surface;
-}
-
-void ofCairoRenderer::setCairoSurface(cairo_surface_t * _surface){
-  surface = _surface;
 }
 
 ofPixels & ofCairoRenderer::getImageSurfacePixels(){

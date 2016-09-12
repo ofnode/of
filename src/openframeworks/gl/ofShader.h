@@ -25,6 +25,8 @@ public:
 	~ofShader();
 	ofShader(const ofShader & shader);
 	ofShader & operator=(const ofShader & shader);
+    ofShader(ofShader && shader);
+    ofShader & operator=(ofShader && shader);
 	
 	bool load(string shaderName);
 	bool load(string vertName, string fragName, string geomName="");
@@ -171,9 +173,9 @@ private:
 		std::string sourcePath;
 	};
 
-	map<GLenum, Shader> shaders;
-	map<string, GLint> uniformsCache;
-	mutable map<string, GLint> attributesBindingsCache;
+	unordered_map<GLenum, Shader> shaders;
+	unordered_map<string, GLint> uniformsCache;
+	mutable unordered_map<string, GLint> attributesBindingsCache;
 
 	void checkProgramInfoLog(GLuint program);
 	bool checkProgramLinkStatus(GLuint program);

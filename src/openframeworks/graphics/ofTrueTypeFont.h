@@ -71,6 +71,12 @@ public:
 	/// \brief Destroy the ofTrueTypeFont.
 	virtual ~ofTrueTypeFont();
 
+    ofTrueTypeFont(const ofTrueTypeFont& mom);
+    ofTrueTypeFont & operator=(const ofTrueTypeFont& mom);
+
+    ofTrueTypeFont(ofTrueTypeFont&& mom);
+    ofTrueTypeFont & operator=(ofTrueTypeFont&& mom);
+
 	/// \name Load Font
 	/// \{
 				
@@ -96,7 +102,7 @@ public:
                   bool _bFullCharacterSet=true,
                   bool makeContours=false,
                   float simplifyAmt=0.3f,
-                  int dpi=0);
+				  int dpi=0);
 
 	OF_DEPRECATED_MSG("Use load instead",bool loadFont(string filename,
                   int fontsize,
@@ -104,7 +110,7 @@ public:
                   bool _bFullCharacterSet=false,
                   bool makeContours=false,
                   float simplifyAmt=0.3f,
-                  int dpi=0));
+				  int dpi=0));
 	
 	/// \brief Has the font been loaded successfully?
 	/// \returns true if the font was loaded.
@@ -135,7 +141,7 @@ public:
 
 	/// \}
 	/// \name Font Size
-	/// \{
+	/// \{
 
 	/// \brief Returns the size of the font.
 	/// \returns Size of font, set when font was loaded.
@@ -256,7 +262,7 @@ public:
 	const ofMesh & getStringMesh(const std::string& s, float x, float y, bool vflip=true) const;
 	const ofTexture & getFontTexture() const;
 
-	/// \}
+	/// \}
 	
 protected:
 	/// \cond INTERNAL
@@ -304,7 +310,7 @@ private:
 	friend void ofUnloadAllFontTextures();
 	friend void ofReloadAllFontTextures();
 #endif
-	FT_Face		face;
+    std::shared_ptr<FT_FaceRec_> face;
 	void		unloadTextures();
 	void		reloadTextures();
 	static bool	initLibraries();
