@@ -17,6 +17,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
   set(OF_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
   set(OF_VIDEO ON CACHE BOOL "Compile video features of openFrameworks")
+  set(OF_GTK   ON CACHE BOOL "Compile with GTK3 (may conficts with Qt).")
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
