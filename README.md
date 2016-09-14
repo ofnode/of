@@ -1,4 +1,4 @@
-CMake [openFrameworks](https://github.com/openframeworks/openFrameworks) 0.9.0
+CMake [openFrameworks](https://github.com/openframeworks/openFrameworks) 0.9.3
 ==============================================================================
 
 ![](http://i.imgur.com/wKDVkN6.png)
