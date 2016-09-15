@@ -31,7 +31,7 @@ script:
   - mkdir build;
     cd build;
     cmake .. -G Ninja;
-    ninja && 
+    travis_wait ninja &&
     cd ../examples;
     mkdir build;
     cd build;
