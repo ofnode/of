@@ -4,7 +4,7 @@
 //-------------------------------
 #define OF_VERSION_MAJOR 0
 #define OF_VERSION_MINOR 9
-#define OF_VERSION_PATCH 3
+#define OF_VERSION_PATCH 6
 #define OF_VERSION_PRE_RELEASE "stable"
 
 //-------------------------------
@@ -256,8 +256,11 @@ typedef TESSindex ofIndexType;
 		//on 10.6 and below we can use the old grabber
 		#ifndef MAC_OS_X_VERSION_10_7
 			#define OF_VIDEO_CAPTURE_QUICKTIME
-		#else
+		//if we are below 10.12 or targeting below 10.12 we use QTKit
+		#elif !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_12
 			#define OF_VIDEO_CAPTURE_QTKIT
+		#else
+			#define OF_VIDEO_CAPTURE_AVF
         #endif
 
 	#elif defined (TARGET_WIN32)
@@ -357,7 +360,7 @@ typedef TESSindex ofIndexType;
 // on c++11, this is a workaround that bug
 #ifndef HAS_TLS
 	#if __clang__
-		#if __has_feature(cxx_thread_local) && !defined(__MINGW64__) && !defined(__MINGW32__)
+		#if __has_feature(cxx_thread_local) && !defined(__MINGW64__) && !defined(__MINGW32__) && !defined(TARGET_OF_IOS)
 			#define HAS_TLS 1
 		#endif
     #elif !defined(TARGET_WIN32) || _MSC_VER
