@@ -1,10 +1,11 @@
 language: c++
 compiler: clang
-sudo: false
+sudo: true
 matrix:
   include:
     - os: linux
       dist: trusty
+      sudo: required
       env: TARGET="linux"
       addons:
         apt:
@@ -13,38 +14,18 @@ matrix:
           packages:
           - gcc-4.9
           - g++-4.9
-          - ninja-build
-          - libcairo2-dev
-          - libusb-1.0-0-dev
-          - libssl-dev
-          - libfreetype6-dev
-          - libfontconfig1-dev
-          - libglu1-mesa-dev
-          - libmpg123-dev
-          - libopenal-dev
-          - libassimp-dev
-          - libopencv-dev
-          - libtbb-dev
-          - libasound2-dev
-          - libsndfile1-dev
-          - gstreamer1.0-x
-          - gstreamer1.0-alsa
-          - gstreamer1.0-libav
-          - gstreamer1.0-pulseaudio
-          - gstreamer1.0-plugins-base
-          - gstreamer1.0-plugins-good
-          - gstreamer1.0-plugins-bad
-          - gstreamer1.0-plugins-ugly
-          - libgstreamer1.0-dev
-          - libgstreamer-plugins-base1.0-dev
     - os: osx
+      sudo: required
       compiler: clang
       env: TARGET="osx"
   exclude:
     - compiler: clang
 install:
+  - if [ "$TARGET" == "linux" ]; then
+      dev/install/linux/ubuntu.sh > /dev/null;
+    fi
   - if [ "$TARGET" == "osx" ]; then
-      travis_wait 30 dev/install/osx/homebrew.sh > /dev/null;
+      dev/install/osx/homebrew.sh > /dev/null;
     fi
 script:
   - mkdir build;
