@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/sh
+
+set -v
 
 brew update
 
