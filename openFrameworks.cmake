@@ -1108,7 +1108,7 @@ function(ofxaddon OFXADDON)
             set(OFXHEADER_DIRS ${OFXHEADER_DIRS} ${OFXHEADER_DIR})
         endforeach()
 
-        include_directories(${OFXHEADER_DIRS})
+        include_directories("${OFXHEADER_DIRS}")
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs")
 
