@@ -1,42 +1,49 @@
 language: c++
 compiler: clang
-sudo: true
+
+osx_image: xcode8.2
+dist: trusty
+sudo: required
+
 matrix:
-  include:
-    - os: linux
-      dist: trusty
-      sudo: required
-      env: TARGET="linux"
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - gcc-4.9
-          - g++-4.9
-    - os: osx
-      sudo: required
-      compiler: clang
-      env: TARGET="osx"
   exclude:
-    - compiler: clang
-install:
-  - if [ "$TARGET" == "linux" ]; then
-      dev/install/linux/ubuntu.sh > /dev/null;
-    fi
-  - if [ "$TARGET" == "osx" ]; then
-      travis_wait 30 dev/install/osx/homebrew.sh;
-    fi
+    - os: linux
+    - os: osx
+
+  include:
+  - os: linux
+    env: BUILD_TYPE=Debug OF_STATIC=0
+  - os: linux
+    env: BUILD_TYPE=Debug OF_STATIC=1
+  - os: linux
+    env: BUILD_TYPE=Release OF_STATIC=0
+  - os: linux
+    env: BUILD_TYPE=Release OF_STATIC=1
+
+  - os: osx
+    env: BUILD_TYPE=Debug OF_STATIC=0
+  - os: osx
+    env: BUILD_TYPE=Debug OF_STATIC=1
+  - os: osx
+    env: BUILD_TYPE=Release OF_STATIC=0
+  - os: osx
+    env: BUILD_TYPE=Release OF_STATIC=1
+
+#  - os: linux
+#    env: BUILD_TYPE=Debug TARGET=Coverage
+
+  - os: linux
+    env: BUILD_TYPE=Release TARGET=Examples
+
+  - os: osx
+    env: BUILD_TYPE=Release TARGET=Examples
+
+before_install:
+- travis_wait 30 "./travis/deps.sh"
+
 script:
-  - mkdir build;
-    cd build;
-    cmake .. -G Ninja;
-    travis_wait ninja &&
-    cd ../examples;
-    mkdir build;
-    cd build;
-    cmake .. -G Ninja -DBUILD_ALL=OFF -DofExamples=ON;
-    ninja
+- travis_wait 30 "./travis/build.sh"
+
 git:
   depth: 1
   submodules: true

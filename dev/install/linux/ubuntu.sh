@@ -1,9 +1,11 @@
 #!/bin/bash
 # Tested on Ubuntu 14.04
 
-sudo apt-get update
+sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1397BC53640DB551
+sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+sudo apt-get update -qq
 
-sudo apt-get -y install   \
+sudo apt-get -qq install   \
 git                       \
 gdb                       \
 pkg-config                \
@@ -36,7 +38,10 @@ gstreamer1.0-plugins-good \
 gstreamer1.0-plugins-bad  \
 gstreamer1.0-plugins-ugly \
 libgstreamer1.0-dev       \
-libgstreamer-plugins-base1.0-dev
+libgstreamer-plugins-base1.0-dev \
+g++-6 \
+gcovr \
+lcov
 
 # Use gold linker
 sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
