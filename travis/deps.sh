@@ -12,25 +12,3 @@ case "$TRAVIS_OS_NAME" in
     $TRAVIS_BUILD_DIR/dev/install/osx/homebrew.sh
   ;;
 esac
-
-
-# build of
-mkdir build-of;
-pushd build-of;
-if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-  export CC=gcc-6
-  export CXX=g++-6
-fi
-case "$BUILD_TYPE" in
-  Debug)
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DOF_STATIC=$OF_STATIC ../of
-    ;;
-  Release)
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DOF_STATIC=$OF_STATIC ../of
-    ;;
-  Coverage)
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DOF_COVERAGE=1 ../of
-    ;;
-esac
-cmake --build . -- -j2
-popd
