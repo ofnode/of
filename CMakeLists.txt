@@ -788,10 +788,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
       )
     endif()
 
-    pkg_check_modules(CAIRO REQUIRED cairo)
+    find_package(Cairo REQUIRED)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
     if(OF_PLATFORM MATCHES armv7)
+    # TODO change that to point to /opt/vc/include directory
     find_package(OpenGLES REQUIRED)
     else()
     find_package(OpenGL REQUIRED)
@@ -810,15 +811,17 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     if(OF_PLATFORM MATCHES armv7)
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${EGL_INCLUDE_DIR}
+        #${EGL_INCLUDE_DIR}
         ${OPENGLES2_INCLUDE_DIR}
+        "${RPI_ROOT_PATH}/usr/include/arm-linux-gnueabihf" # needed when crosscompiling
       )
       # Assuming Raspberry Pi 2 and Raspbian
+      # TODO : use FIND_LIBRARY instead of adding directory directly
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        /opt/vc/include
-        /opt/vc/include/IL
-        /opt/vc/include/interface/vcos/pthreads
-        /opt/vc/include/interface/vmcs_host/linux
+        ${RPI_ROOT_PATH}/opt/vc/include
+        ${RPI_ROOT_PATH}/opt/vc/include/IL
+        ${RPI_ROOT_PATH}/opt/vc/include/interface/vcos/pthreads
+        ${RPI_ROOT_PATH}/opt/vc/include/interface/vmcs_host/linux
       )
     endif()
 
@@ -843,6 +846,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     else()
 
       find_package(UDev REQUIRED)
+      # FIXME : glib and Gstreamer are found in /usr/* instead of RPI_ROOT_PATH when CMAKE_CROSSCOMPILING
       find_package(Glib REQUIRED)
       find_package(GStreamer REQUIRED)
 
