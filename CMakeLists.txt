@@ -112,6 +112,9 @@ endif()
 set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 find_package(PkgConfig REQUIRED)
+message(STATUS "PKG_CONFIG_PATH: " $ENV{PKG_CONFIG_PATH})
+message(STATUS "PKG_CONFIG_LIBDIR: "  $ENV{PKG_CONFIG_LIBDIR})
+message(STATUS "PKG_CONFIG_SYSROOT_DIR: " $ENV{PKG_CONFIG_SYSROOT_DIR})
 
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
@@ -788,6 +791,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
       )
     endif()
 
+    message(STATUS "CMAKE_FIND_ROOT_PATH : " ${CMAKE_FIND_ROOT_PATH})
+    message(STATUS "PKG_CONFIG_LIBDIR : " ${PKG_CONFIG_LIBDIR})
+
     find_package(Cairo REQUIRED)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
@@ -825,6 +831,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
       )
     endif()
 
+    message(STATUS "CAIRO_INCLUDE_DIRS: " ${CAIRO_INCLUDE_DIRS})
+    message(STATUS "EGL_INCLUDE_DIR: " ${EGL_INCLUDE_DIR})
+    message(STATUS "OPENGLES2_INCLUDE_DIR: " ${OPENGLES2_INCLUDE_DIR})
+    message(STATUS "FREETYPE_INCLUDE_DIRS: " ${FREETYPE_INCLUDE_DIRS})
+
     if(NOT OF_AUDIO)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_SOUND)
     else()
@@ -850,6 +861,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
       find_package(Glib REQUIRED)
       find_package(GStreamer REQUIRED)
 
+      message(STATUS "GLIB include dir: "      ${GLIB_INCLUDE_DIRS})
+      message(STATUS "Gstreamer include dir: " ${GSTREAMER_INCLUDE_DIRS})
+
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${UDEV_INCLUDE_DIR}
         ${GLIB_INCLUDE_DIRS}
@@ -861,6 +875,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
         pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
         list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS ${GTK3_INCLUDE_DIRS} )
         list(APPEND OPENFRAMEWORKS_LIBRARIES ${GTK3_LIBRARIES} )
+
+        message(STATUS "Gtk+-3 include dir: "      ${GTK3_INCLUDE_DIRS})
+        message(STATUS "Gtk+-3 libraries: "      ${GTK3_LIBRARIES})
+
       endif()
     endif()
 

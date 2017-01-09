@@ -22,10 +22,13 @@ SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 SET(CMAKE_LIBRARY_PATH "${RPI_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/;${RPI_ROOT_PATH}/lib/arm-linux-gnueabihf/")
 
-IF (CMAKE_CROSSCOMPILING)
-  INCLUDE_DIRECTORIES(BEFORE ${CMAKE_FIND_ROOT_PATH}/include)
-  SET(ENV{PKG_CONFIG_LIBDIR} ${CMAKE_FIND_ROOT_PATH}/lib/pkgconfig/)
-ENDIF()
+# this doesn't seem to do much, at least it doesn't work on first try, we should export PKG_CONFIG_SYSROOT_DIR before running CMake
+
+message(STATUS "RPI_ROOT_PATH: " ${RPI_ROOT_PATH})
+SET(ENV{PKG_CONFIG_LIBDIR} "${RPI_ROOT_PATH}/usr/lib/pkgconfig:${RPI_ROOT_PATH}/usr/share/pkgconfig:${RPI_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/pkgconfig/")
+SET(ENV{PKG_CONFIG_SYSROOT_DIR} ${RPI_ROOT_PATH})
+message(STATUS "ENV{PKG_CONFIG_SYSROOT_DIR}: " $ENV{PKG_CONFIG_SYSROOT_DIR})
+#SET(ENV{PKG_CONFIG_SYSROOT_DIR} "/tmp/rpi/root")
 
 # rdynamic means the backtrace should work
 IF (CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -33,5 +36,5 @@ IF (CMAKE_BUILD_TYPE MATCHES "Debug")
 ENDIF()
 
 # avoids annoying and pointless warnings from gcc
-#SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -U_FORTIFY_SOURCE")
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -U_FORTIFY_SOURCE")
 #SET(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -c")
