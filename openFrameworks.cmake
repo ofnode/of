@@ -423,10 +423,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
       )
       # Assuming Raspberry Pi 2 and Raspbian
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        /opt/vc/include
-        /opt/vc/include/IL
-        /opt/vc/include/interface/vcos/pthreads
-        /opt/vc/include/interface/vmcs_host/linux
+        ${RPI_ROOT_PATH}/opt/vc/include
+        ${RPI_ROOT_PATH}/opt/vc/include/IL
+        ${RPI_ROOT_PATH}/opt/vc/include/interface/vcos/pthreads
+        ${RPI_ROOT_PATH}/opt/vc/include/interface/vmcs_host/linux
       )
     endif()
 
@@ -454,8 +454,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${OPENGLES2_LIBRARIES}
       )
       # Assuming Raspberry Pi 2 and Raspbian
+      # FIXME use find_package instead of assuming path
       list(APPEND OPENFRAMEWORKS_LIBRARIES
-        -L/opt/vc/lib
+        -L${RPI_ROOT_PATH}/opt/vc/lib
         GLESv2
         GLESv1_CM
         EGL
