@@ -794,7 +794,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     message(STATUS "CMAKE_FIND_ROOT_PATH : " ${CMAKE_FIND_ROOT_PATH})
     message(STATUS "PKG_CONFIG_LIBDIR : " ${PKG_CONFIG_LIBDIR})
 
-    find_package(Cairo REQUIRED)
+    pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
     if(OF_PLATFORM MATCHES armv7)
