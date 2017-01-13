@@ -14,15 +14,13 @@ Features
  - Generate project file for your favorite IDE with [CMake Generators](http://www.cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html#extra-generators).
  
  - Easily add [openFrameworks addons](http://ofxaddons.com) with single `ofxaddon` command.
+ - Easily cross-compile for Raspberry Pi from Ubuntu 16.04, see [wiki](https://github.com/ofnode/of/wiki/Cross-compiling-for-Raspberry-Pi) for a detailed desccription and a step by step instruction.
 
 
 Difference
 ----------
 
 The only difference is that this project targets CMake build system and stores source code of some libraries on which openFrameworks depends locally with patches applied if needed.
-
-See [Architecture](https://github.com/ofnode/of/wiki/Architecture) wiki page for details.
-
 
 Step 1: Clone
 -------------
@@ -44,8 +42,7 @@ Install required developer packages for your OS with:
 
 #### Windows:
 
-### [See wiki](https://github.com/ofnode/of/wiki/Instructions-for-Windows)
-
+### TODO - Help needed, please send PR
 
 Step 3: Compile
 ---------------
@@ -73,8 +70,7 @@ cmake .. -G Xcode -DCMAKE_BUILD_TYPE=Release
 xcodebuild -configuration Release
 ```
 
-**NOTE**: Visual Studio is not supported anymore, [see here why](https://github.com/ofnode/of/wiki/On-removing-support-for-MSVC).
-
+**NOTE**: Visual Studio is not supported anymore.
 
 Templates
 ---------
@@ -91,14 +87,6 @@ Run `git submodule update --init --recursive` from the repo folder to clone the 
 
 <img src="https://i.imgur.com/9iSw2rB.png">
 
-Issues
-------
-
-### [Known issues on Linux](https://gist.github.com/0470684110f443ce3f01)
-### [Known issues on OS X](https://gist.github.com/85bda4b8cf8016210e4a)
-### [Known issues on Windows](https://gist.github.com/9e7635b1a51f65f72062)
-
-
 Licenses
 --------
 
@@ -114,3 +102,5 @@ In alphabetical order:
 [@avilleret](https://github.com/avilleret) for creating Raspberry Pi 2 version!
 
 [@GuidoSchmidt](https://github.com/GuidoSchmidt) for pull requests!
+
+[@procedural](https://github.com/procedural) for original version.
