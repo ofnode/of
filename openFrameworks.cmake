@@ -1090,15 +1090,6 @@ function(ofxaddon OFXADDON)
             message(WARNING "ofxaddon(${OFXADDON_DIR}): the addon doesn't have src subfolder.")
         endif()
 
-        file(GLOB_RECURSE OFXHEADERS
-            "${OFXADDON_DIR}/src/*.h"
-            "${OFXADDON_DIR}/src/*.hh"
-            "${OFXADDON_DIR}/src/*.hpp"
-            "${OFXADDON_DIR}/libs/*.h"
-            "${OFXADDON_DIR}/libs/*.hh"
-            "${OFXADDON_DIR}/libs/*.hpp"
-        )
-
         file(GLOB_RECURSE OFXSOURCES
             "${OFXADDON_DIR}/src/*.c"
             "${OFXADDON_DIR}/src/*.cc"
@@ -1108,12 +1099,15 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/libs/*.cpp"
         )
 
-        foreach(OFXHEADER_PATH ${OFXHEADERS})
-            get_filename_component(OFXHEADER_DIR ${OFXHEADER_PATH} PATH)
-            set(OFXHEADER_DIRS ${OFXHEADER_DIRS} ${OFXHEADER_DIR})
+        FILE(GLOB OFXLIBSINCLUDEDIRS "${OFXADDON_DIR}/libs/*")
+
+        foreach(OFXLIBHEADER_PATH ${OFXLIBSINCLUDEDIRS})
+            if(IS_DIRECTORY "${OFXLIBHEADER_PATH}/include")
+              set(OFXLIBHEADER_PATHS ${OFXLIBHEADER_PATHS} "${OFXLIBHEADER_PATH}/include")
+            endif()
         endforeach()
 
-        include_directories("${OFXHEADER_DIRS}")
+        include_directories("${OFXLIBHEADER_PATHS}")
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs")
 
