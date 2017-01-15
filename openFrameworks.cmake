@@ -1131,6 +1131,27 @@ else()
     endfunction(cotire)
 endif()
 
+MACRO(ofSetTargetProperties)
+  set_target_properties(
+      ${PROJECT_NAME} PROPERTIES
+      MACOSX_BUNDLE_INFO_PLIST
+      "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist"
+  )
+
+  if(CMAKE_BUILD_TYPE MATCHES Debug)
+      set_target_properties( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-Debug")
+  endif()
+
+  if (CMAKE_CROSSCOMPILING)
+      set_target_properties( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME
+        "${PROJECT_NAME}-${TARGET_ARCH}-${CMAKE_BUILD_TYPE}")
+  endif()
+
+  if(OF_COTIRE)
+    cotire(${PROJECT_NAME})
+  endif()
+ENDMACRO()
+
 #// Messages ///////////////////////////////////////////////////////////////////
 
 message(STATUS "TARGET_ARCH: ${TARGET_ARCH} ${ARCH_BIT}bit")
