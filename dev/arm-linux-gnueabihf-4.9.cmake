@@ -3,6 +3,14 @@
 # It's used on the well known Raspberry Pi platform.
 #
 
+IF(NOT RPI_ROOT_PATH)
+  SET(RPI_ROOT_PATH $ENV{RPI_ROOT_PATH})
+ENDIF()
+
+IF(NOT RPI_ROOT_PATH)
+  message(FATAL_ERROR "Please set RPI_TOOL_PATH.")
+ENDIF()
+
 SET(CMAKE_SYSTEM_NAME Linux)
 SET(CMAKE_C_COMPILER ${CROSS_COMPILER_PATH}arm-linux-gnueabihf-gcc-4.9)
 SET(CMAKE_CXX_COMPILER ${CROSS_COMPILER_PATH}arm-linux-gnueabihf-g++-4.9)
