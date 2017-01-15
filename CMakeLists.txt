@@ -1248,7 +1248,7 @@ endif(NOT OF_STATIC)
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "TARGET_ARCH: ${TARGET_ARCH} ${ARCH_BIT}bit"))
+message(STATUS "TARGET_ARCH: ${TARGET_ARCH} ${ARCH_BIT}bit")
 message(STATUS "OF_STATIC: " ${OF_STATIC})
 
 if(CMAKE_SYSTEM MATCHES Linux)
