@@ -305,47 +305,46 @@ if(CMAKE_SYSTEM MATCHES Linux)
     #// Link static libs if available //////////////////////////////////////////
 
     if(OF_STATIC)
-
-    set(STATIC_LIB_PATHS
-      "/usr/lib/x86_64-linux-gnu"
-      "/usr/local/lib"
-    )
-
-    find_library(
-      ZLIB_LIB NAMES
-      libz.a
-      PATHS ${STATIC_LIB_PATHS}
-    )
-    find_library(
-      PIXMAN_LIB NAMES
-      libpixman-1.a
-      PATHS ${STATIC_LIB_PATHS}
-    )
-    find_library(
-      CAIRO_LIB NAMES
-      libcairo.a
-      PATHS ${STATIC_LIB_PATHS}
-    )
-    find_library(
-      CRYPTO_LIB NAMES
-      libcrypto.a
-      PATHS ${STATIC_LIB_PATHS}
-    )
-    find_library(
-      SSL_LIB NAMES
-      libssl.a
-      PATHS ${STATIC_LIB_PATHS}
-    )
-    find_library(
-      FREETYPE_LIB NAMES
-      libfreetype.a
-      PATHS ${STATIC_LIB_PATHS}
-    )
-    find_library(
-      FONTCONFIG_LIB NAMES
-      libfontconfig.a
-      PATHS ${STATIC_LIB_PATHS}
-    )
+      set(STATIC_LIB_PATHS
+        "/usr/lib/x86_64-linux-gnu"
+        "${RPI_ROOT_PATH}/usr/lib/arm-linux-gnueabihf"
+        "${RPI_ROOT_PATH}/usr/local/lib"
+      )
+      find_library(
+        ZLIB_LIB NAMES
+        libz.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        PIXMAN_LIB NAMES
+        libpixman-1.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        CAIRO_LIB NAMES
+        libcairo.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        CRYPTO_LIB NAMES
+        libcrypto.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        SSL_LIB NAMES
+        libssl.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        FREETYPE_LIB NAMES
+        libfreetype.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        FONTCONFIG_LIB NAMES
+        libfontconfig.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
 
     if(ZLIB_LIB MATCHES ZLIB_LIB-NOTFOUND)
       message(STATUS "Using dynamic Zlib")
@@ -1081,7 +1080,7 @@ function(ofxaddon OFXADDON)
                 string(LENGTH ${OFXADDON_DIR} LEN)
                 math(EXPR LEN2 "${LEN}+${POS}")
                 string(SUBSTRING ${CMAKE_CURRENT_LIST_DIR} 0 ${LEN2} OFXADDON_DIR)
-      else()
+            else()
                 message(FATAL_ERROR "ofxaddon(${OFXADDON_DIR}): the folder doesn't exist.")
             endif()
         endif()
