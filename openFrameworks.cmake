@@ -9,8 +9,6 @@ endif()
 set(OF_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
-set(OF_PLATFORM x86 CACHE STRING "Platform architecture. No need to be modified by default.")
-
 if(CMAKE_SYSTEM MATCHES Linux)
 
   set(OF_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
@@ -125,11 +123,10 @@ set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 find_package(PkgConfig REQUIRED)
 
-if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE Release)
-endif()
+include(TargetArch)
+target_architecture(TARGET_ARCH)
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT OF_32BIT)
+if( ( TARGET_ARCH MATCHES "x86_64" OR TARGET_ARCH MATCHES "ia64" ) AND NOT OF_32BIT)
    set(ARCH_BIT 64)
 else()
    set(ARCH_BIT 32)
@@ -219,7 +216,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    if(OF_PLATFORM MATCHES armv7)
+    if(TARGET_ARCH MATCHES armv7)
       # Assuming Raspberry Pi 2 and Raspbian
       list(APPEND OPENFRAMEWORKS_DEFINITIONS
         -DTARGET_RASPBERRY_PI
@@ -252,9 +249,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release-${OF_PLATFORM}-${ARCH_BIT}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}-${ARCH_BIT}")
     elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/debug-${OF_PLATFORM}-${ARCH_BIT}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}-${ARCH_BIT}")
     endif()
 
     if(OF_STATIC)
@@ -292,7 +289,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
-    if(OF_PLATFORM MATCHES armv7)
+    if(TARGET_ARCH MATCHES armv7)
     find_package(OpenGLES REQUIRED)
     else()
     find_package(OpenGL REQUIRED)
@@ -416,7 +413,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_INCLUDE_DIRS}
     )
 
-    if(OF_PLATFORM MATCHES armv7)
+    if(TARGET_ARCH MATCHES armv7)
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${EGL_INCLUDE_DIR}
         ${OPENGLES2_INCLUDE_DIR}
@@ -448,7 +445,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
-    if(OF_PLATFORM MATCHES armv7)
+    if(TARGET_ARCH MATCHES armv7)
       list(APPEND OPENFRAMEWORKS_LIBRARIES
         ${EGL_LIBRARIES}
         ${OPENGLES2_LIBRARIES}
@@ -537,9 +534,9 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/release-${OF_PLATFORM}-${ARCH_BIT}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}-${ARCH_BIT}")
     elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug-${OF_PLATFORM}-${ARCH_BIT}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}-${ARCH_BIT}")
     endif()
 
     if(OF_STATIC)
@@ -640,9 +637,9 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     #// Local dependencies /////////////////////////////////////////////////////
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/release-${OF_PLATFORM}-${ARCH_BIT}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/release-${TARGET_ARCH}-${ARCH_BIT}")
     elseif(CMAKE_BUILD_TYPE MATCHES Debug)
-        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug-${OF_PLATFORM}-${ARCH_BIT}")
+        set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-windows/debug-${TARGET_ARCH}-${ARCH_BIT}")
     endif()
 
     if(OF_STATIC)
@@ -814,7 +811,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   endif()
 endif()
 
-if(OF_PLATFORM MATCHES armv7)
+if(TARGET_ARCH MATCHES armv7)
     set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
 elseif(ARCH_BIT MATCHES 32)
     set(ARCH_FLAG "-m32")
@@ -1084,7 +1081,7 @@ function(ofxaddon OFXADDON)
                 string(LENGTH ${OFXADDON_DIR} LEN)
                 math(EXPR LEN2 "${LEN}+${POS}")
                 string(SUBSTRING ${CMAKE_CURRENT_LIST_DIR} 0 ${LEN2} OFXADDON_DIR)
-	    else()
+      else()
                 message(FATAL_ERROR "ofxaddon(${OFXADDON_DIR}): the folder doesn't exist.")
             endif()
         endif()
@@ -1142,7 +1139,7 @@ endif()
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "OF_PLATFORM: " ${OF_PLATFORM})
+message(STATUS "TARGET_ARCH: ${TARGET_ARCH} ${ARCH_BIT}bit")
 message(STATUS "OF_COTIRE: " ${OF_COTIRE})
 message(STATUS "OF_STATIC: " ${OF_STATIC})
 

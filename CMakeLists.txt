@@ -11,8 +11,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
-set(OF_PLATFORM x86 CACHE STRING "Platform architecture. No need to be modified by default.")
-
 if(CMAKE_SYSTEM MATCHES Linux)
 
   set(OF_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
@@ -120,7 +118,11 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT OF_32BIT)
+include(TargetArch)
+
+target_architecture(TARGET_ARCH)
+
+if( ( TARGET_ARCH MATCHES "x86_64" OR TARGET_ARCH MATCHES "ia64" ) AND NOT OF_32BIT)
    set(ARCH_BIT 64)
 else()
    set(ARCH_BIT 32)
@@ -262,7 +264,7 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofXml.cpp"
 )
 
-if(OF_PLATFORM MATCHES armv7)
+if(TARGET_ARCH MATCHES armv7)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppEGLWindow.cpp"
   )
@@ -741,7 +743,7 @@ set(RTAUDIO_SOURCES
 )
 endif()
 
-if(OF_PLATFORM MATCHES x86)
+if(TARGET_ARCH MATCHES x86)
 set(GLEW_SOURCES
     "${OF_ROOT_DIR}/src/glew/src/glew.c"
 )
@@ -752,11 +754,11 @@ endif()
 if(CMAKE_SYSTEM MATCHES Linux)
 
     if(OF_STATIC)
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${OF_PLATFORM}-${ARCH_BIT}")
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}-${ARCH_BIT}")
     else()
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${OF_PLATFORM}-${ARCH_BIT}")
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}-${ARCH_BIT}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}-${ARCH_BIT}")
     endif()
 
     set(OPENFRAMEWORKS_DEFINITIONS
@@ -767,7 +769,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    if(OF_PLATFORM MATCHES armv7)
+    if(TARGET_ARCH MATCHES armv7)
       # Assuming Raspberry Pi 2 and Raspbian
       list(APPEND OPENFRAMEWORKS_DEFINITIONS
         -DTARGET_RASPBERRY_PI
@@ -797,7 +799,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
-    if(OF_PLATFORM MATCHES armv7)
+    if(TARGET_ARCH MATCHES armv7)
     # TODO change that to point to /opt/vc/include directory
     find_package(OpenGLES REQUIRED)
     else()
@@ -815,7 +817,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_INCLUDE_DIRS}
     )
 
-    if(OF_PLATFORM MATCHES armv7)
+    if(TARGET_ARCH MATCHES armv7)
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         #${EGL_INCLUDE_DIR}
         ${OPENGLES2_INCLUDE_DIR}
@@ -887,11 +889,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     set_source_files_properties(${OPENFRAMEWORKS_SOURCES} PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
     if(OF_STATIC)
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${OF_PLATFORM}-${ARCH_BIT}")
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}-${ARCH_BIT}")
     else()
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${OF_PLATFORM}-${ARCH_BIT}")
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-osx/release-${TARGET_ARCH}-${ARCH_BIT}")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-osx/debug-${TARGET_ARCH}-${ARCH_BIT}")
     endif()
 
     set(OPENFRAMEWORKS_DEFINITIONS
@@ -931,11 +933,11 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 elseif(CMAKE_SYSTEM MATCHES Windows)
 
     if(OF_STATIC)
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${OF_PLATFORM}-${ARCH_BIT}")
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${TARGET_ARCH}-${ARCH_BIT}")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${TARGET_ARCH}-${ARCH_BIT}")
     else()
-      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${OF_PLATFORM}-${ARCH_BIT}")
-      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${OF_PLATFORM}-${ARCH_BIT}")
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-windows/release-${TARGET_ARCH}-${ARCH_BIT}")
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-windows/debug-${TARGET_ARCH}-${ARCH_BIT}")
     endif()
 
     set(OPENFRAMEWORKS_DEFINITIONS
@@ -975,7 +977,7 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC
 )
 
-if(OF_PLATFORM MATCHES x86)
+if(TARGET_ARCH MATCHES x86_64)
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DGLEW_STATIC
     -DGLEW_NO_GLU
@@ -1025,7 +1027,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   endif()
 endif()
 
-if(OF_PLATFORM MATCHES armv7)
+if(TARGET_ARCH MATCHES armv7)
     set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
 elseif(ARCH_BIT MATCHES 32)
     set(ARCH_FLAG "-m32")
@@ -1091,7 +1093,7 @@ endif()
 
 add_subdirectory(src/poco)
 
-if(OF_PLATFORM MATCHES x86)
+if(TARGET_ARCH MATCHES x86_64)
 add_subdirectory(src/glfw)
 endif()
 
@@ -1133,7 +1135,7 @@ if(NOT OF_STATIC)
       PocoXML
   )
 
-  if(OF_PLATFORM MATCHES x86)
+  if(TARGET_ARCH MATCHES x86_64)
     add_dependencies(
       openFrameworks
       glfw
@@ -1202,7 +1204,7 @@ if(NOT OF_STATIC)
       ${GSTREAMER_VIDEO_LIBRARIES}
   )
 
-  if(OF_PLATFORM MATCHES x86)
+  if(TARGET_ARCH MATCHES x86_64)
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       glfw
   )
@@ -1246,7 +1248,7 @@ endif(NOT OF_STATIC)
 
 #// Messages ///////////////////////////////////////////////////////////////////
 
-message(STATUS "OF_PLATFORM: " ${OF_PLATFORM})
+message(STATUS "TARGET_ARCH: ${TARGET_ARCH} ${ARCH_BIT}bit"))
 message(STATUS "OF_STATIC: " ${OF_STATIC})
 
 if(CMAKE_SYSTEM MATCHES Linux)
