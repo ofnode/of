@@ -1098,12 +1098,17 @@ function(ofxaddon OFXADDON)
             "${OFXADDON_DIR}/libs/*.cpp"
         )
 
-        FILE(GLOB OFXLIBSINCLUDEDIRS "${OFXADDON_DIR}/libs/*")
+        FILE(GLOB_RECURSE OFXLIBSINCLUDEDIRS LIST_DIRECTORIES true "${OFXADDON_DIR}/libs/*")
 
         foreach(OFXLIBHEADER_PATH ${OFXLIBSINCLUDEDIRS})
-            if(IS_DIRECTORY "${OFXLIBHEADER_PATH}/include")
-              set(OFXLIBHEADER_PATHS ${OFXLIBHEADER_PATHS} "${OFXLIBHEADER_PATH}/include")
+          if(IS_DIRECTORY "${OFXLIBHEADER_PATH}")
+            string(FIND "${OFXLIBHEADER_PATH}" "include" POS REVERSE)
+            string(LENGTH "${OFXLIBHEADER_PATH}" LEN)
+            math(EXPR POS2 "${LEN}-7")
+            if(POS EQUAL POS2)
+              set(OFXLIBHEADER_PATHS ${OFXLIBHEADER_PATHS} "${OFXLIBHEADER_PATH}")
             endif()
+          endif()
         endforeach()
 
         include_directories("${OFXLIBHEADER_PATHS}")
