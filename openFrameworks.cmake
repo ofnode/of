@@ -1076,7 +1076,7 @@ function(ofxaddon OFXADDON)
 
         if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/")
             string(FIND ${CMAKE_CURRENT_LIST_DIR} ${OFXADDON_DIR} POS REVERSE)
-            if(POS)
+            if(POS GREATER 0)
                 string(LENGTH ${OFXADDON_DIR} LEN)
                 math(EXPR LEN2 "${LEN}+${POS}")
                 string(SUBSTRING ${CMAKE_CURRENT_LIST_DIR} 0 ${LEN2} OFXADDON_DIR)
