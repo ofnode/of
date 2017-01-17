@@ -121,6 +121,10 @@ endif()
 
 set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Release)
+endif()
+
 find_package(PkgConfig REQUIRED)
 
 include(TargetArch)
