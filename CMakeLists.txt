@@ -743,7 +743,7 @@ set(RTAUDIO_SOURCES
 )
 endif()
 
-if(TARGET_ARCH MATCHES x86)
+if(ARCH_BIT MATCHES 64)
 set(GLEW_SOURCES
     "${OF_ROOT_DIR}/src/glew/src/glew.c"
 )
@@ -977,7 +977,7 @@ list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DPOCO_STATIC
 )
 
-if(TARGET_ARCH MATCHES x86_64)
+if(ARCH_BIT MATCHES 64)
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DGLEW_STATIC
     -DGLEW_NO_GLU
@@ -1093,7 +1093,7 @@ endif()
 
 add_subdirectory(src/poco)
 
-if(TARGET_ARCH MATCHES x86_64)
+if(ARCH_BIT MATCHES 64)
 add_subdirectory(src/glfw)
 endif()
 
@@ -1135,7 +1135,7 @@ if(NOT OF_STATIC)
       PocoXML
   )
 
-  if(TARGET_ARCH MATCHES x86_64)
+  if(ARCH_BIT MATCHES 64)
     add_dependencies(
       openFrameworks
       glfw
@@ -1204,7 +1204,7 @@ if(NOT OF_STATIC)
       ${GSTREAMER_VIDEO_LIBRARIES}
   )
 
-  if(TARGET_ARCH MATCHES x86_64)
+  if(ARCH_BIT MATCHES 64)
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       glfw
   )
