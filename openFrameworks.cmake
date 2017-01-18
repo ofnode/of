@@ -1115,7 +1115,9 @@ function(ofxaddon OFXADDON)
           endif()
         endforeach()
 
-        include_directories("${OFXLIBHEADER_PATHS}")
+        if (OFXLIBHEADER_PATHS)
+          include_directories("${OFXLIBHEADER_PATHS}")
+        endif()
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs")
 
