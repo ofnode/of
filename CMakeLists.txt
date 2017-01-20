@@ -714,7 +714,7 @@ set(FREEIMAGE_SOURCES
     "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IexMath/IexMathFpu.cpp"
 )
 
-set_source_files_properties(${FREEIMAGE_SOURCES} PROPERTIES COMPILE_FLAGS -w)
+set_source_files_properties(${FREEIMAGE_SOURCES} PROPERTIES COMPILE_FLAGS "-w -fvisibility=hidden")
 
 set(KISSFFT_SOURCES
     "${OF_ROOT_DIR}/src/kissfft/tools/kiss_fftr.c"
