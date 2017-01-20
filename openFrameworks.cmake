@@ -1111,7 +1111,9 @@ function(ofxaddon OFXADDON)
           endif()
         endforeach()
 
-        include_directories("${OFXLIBHEADER_PATHS}")
+        if (NOT "${OFXLIBHEADER_PATHS}" STREQUAL "")
+            include_directories("${OFXLIBHEADER_PATHS}")
+        endif()
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs")
 
