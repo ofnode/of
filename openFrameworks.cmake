@@ -1089,6 +1089,63 @@ function(ofxaddon OFXADDON)
             endif()
         endif()
 
+        # parse addon_config.mk
+        if(EXISTS "${OFXADDON_DIR}/addon_config.mk")
+
+          FILE(READ "${OFXADDON_DIR}/addon_config.mk" OFXADDON_CONFIG)
+
+          # Convert file contents into a CMake list (where each element in the list
+          # is one line of the file)
+          #
+          STRING(REGEX REPLACE ";" "\\\\;" OFXADDON_CONFIG "${OFXADDON_CONFIG}")
+          STRING(REGEX REPLACE "\n" ";" OFXADDON_CONFIG "${OFXADDON_CONFIG}")
+
+          foreach(line ${OFXADDON_CONFIG})
+            string(STRIP ${line} line) # strip space
+            if ( NOT((${line} MATCHES "^#"))) # strip comment
+              if (${line} MATCHES "^ADDON_NAME")
+                string(FIND ${line} "=" pos)
+                if (NOT (${pos} MATCHES "-1"))
+                  MATH(EXPR pos "${pos}+1")
+                 string(SUBSTRING ${line} ${pos} -1 ADDON_NAME)
+                endif()
+              # ADDON_DESCRIPTION
+              # ADDON_AUTHOR = Kyl
+              # ADDON_TAGS = "comp
+              # ADDON_URL = https:
+              elseif (${line} MATCHES "^ADDON_INCLUDES")
+                string(FIND ${line} "=" pos)
+                if (NOT (${pos} MATCHES "-1"))
+                  MATH(EXPR pos "${pos}+1")
+                  string(SUBSTRING ${line} ${pos} -1 ADDON_INCLUDE)
+                  string(STRIP ${ADDON_INCLUDE} ADDON_INCLUDE)
+                  include_directories(${OFXADDON_DIR}/${ADDON_INCLUDE})
+                  list(APPEND ADDON_INCLUDES ${OFXADDON_DIR}/${ADDON_INCLUDE})
+                endif()
+              elseif (${line} MATCHES "ADDON_DEPENDENCIES")
+                string(FIND ${line} "=" pos)
+                if (NOT (${pos} MATCHES "-1"))
+                  MATH(EXPR pos "${pos}+1")
+                  string(SUBSTRING ${line} ${pos} -1 ADDON_DEPENDENCIE)
+                  string(STRIP ${ADDON_DEPENDENCIE} ADDON_DEPENDENCIE)
+                  list(APPEND ADDON_DEPENDENCIES ${ADDON_DEPENDENCIE})
+                endif()
+              endif()
+              # ADDON_CFLAGS
+              # ADDON_LDFLAGS
+              # ADDON_PKG_CONFIG_LIBRARIES
+              # ADDON_FRAMEWORKS
+              # ADDON_SOURCES
+              # ADDON_DATA
+              # ADDON_LIBS_EXCLUDE
+            endif()
+          endforeach(line)
+
+          message(STATUS "ADDON_NAME: ${ADDON_NAME}")
+          message(STATUS "ADDON_INCLUDES: ${ADDON_INCLUDES}")
+          message(STATUS "ADDON_DEPENDENCIES: ${ADDON_DEPENDENCIES}")
+        endif()
+
         if(NOT (EXISTS "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/src/" OR EXISTS "${OFXADDON_DIR}/src/"))
             message(WARNING "ofxaddon(${OFXADDON_DIR}): the addon doesn't have src subfolder.")
         endif()
@@ -1120,6 +1177,10 @@ function(ofxaddon OFXADDON)
         endif()
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs")
+
+        foreach(ADDON ${ADDON_DEPENDENCIES})
+          ofxaddon(${ADDON})
+        endforeach()
 
     endif()
 
