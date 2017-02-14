@@ -1110,9 +1110,9 @@ function(ofxaddon OFXADDON)
                  string(SUBSTRING ${line} ${pos} -1 ADDON_NAME)
                 endif()
               # ADDON_DESCRIPTION
-              # ADDON_AUTHOR = Kyl
-              # ADDON_TAGS = "comp
-              # ADDON_URL = https:
+              # ADDON_AUTHOR
+              # ADDON_TAGS
+              # ADDON_URL
               elseif (${line} MATCHES "^ADDON_INCLUDES")
                 string(FIND ${line} "=" pos)
                 if (NOT (${pos} MATCHES "-1"))
