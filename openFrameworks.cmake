@@ -1090,9 +1090,9 @@ function(ofxaddon OFXADDON)
         endif()
 
         # parse addon_config.mk
-        if(EXISTS "${OFXADDON_DIR}/addon_config.mk")
+        if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/addon_config.mk")
 
-          FILE(READ "${OFXADDON_DIR}/addon_config.mk" OFXADDON_CONFIG)
+          FILE(READ "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/addon_config.mk" OFXADDON_CONFIG)
 
           # Convert file contents into a CMake list (where each element in the list
           # is one line of the file)
