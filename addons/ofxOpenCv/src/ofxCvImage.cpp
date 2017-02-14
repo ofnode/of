@@ -36,7 +36,7 @@ void ofxCvImage::allocate( int w, int h ) {
 		ofLogVerbose("ofxCvImage") << "allocate(): reallocating";
 		clear();
 	}
-	
+
 	if( w == 0 || h == 0 ){
 		ofLogError("ofxCvImage") << "allocate(): width and height are zero";
 		return;
@@ -134,7 +134,7 @@ void ofxCvImage::flagImageChanged() {
 //--------------------------------------------------------------------------------
 void ofxCvImage::setROI( int x, int y, int w, int h ) {
 	if( !bAllocated ){
-		ofLogError("ofxCvImage") << "setROI(): image not allocated";	
+		ofLogError("ofxCvImage") << "setROI(): image not allocated";
 		return;
 	}
     x = (int)ofClamp(x, 0, (int)width-1);
@@ -203,11 +203,11 @@ ofRectangle ofxCvImage::getIntersectionROI( const ofRectangle& r1, const ofRecta
                          ( ofInRange(r2y1, r1y1,r1y2) || ofInRange(r1y1, r2y1,r2y2) ) );
 
     if( bIntersect ){
-        r3x1 = MAX( r1x1, r2x1 );
-        r3y1 = MAX( r1y1, r2y1 );
+        r3x1 = std::max( r1x1, r2x1 );
+        r3y1 = std::max( r1y1, r2y1 );
 
-        r3x2 = MIN( r1x2, r2x2 );
-        r3y2 = MIN( r1y2, r2y2 );
+        r3x2 = std::min( r1x2, r2x2 );
+        r3y2 = std::min( r1y2, r2y2 );
 
         return ofRectangle( r3x1,r3y1, r3x2-r3x1,r3y2-r3y1 );
 
@@ -229,7 +229,7 @@ void  ofxCvImage::operator = ( const IplImage* mom ) {
 			<< mom->width << " " << mom->height;
 		return;
 	}
-			
+
 	if( mom->nChannels == cvImage->nChannels && mom->depth == cvImage->depth ){
 		if( !bAllocated ){ 	//lets allocate if needed
 			allocate(mom->width, mom->height);
@@ -248,7 +248,7 @@ void  ofxCvImage::operator = ( const IplImage* mom ) {
 void ofxCvImage::operator -= ( float value ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "operator-=: image not allocated";
-		return;		
+		return;
 	}
 	cvSubS( cvImage, cvScalar(value), cvImageTemp );
 	swapTemp();
@@ -259,7 +259,7 @@ void ofxCvImage::operator -= ( float value ) {
 void ofxCvImage::operator += ( float value ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "operator-=: image not allocated";
-		return;		
+		return;
 	}
 	cvAddS( cvImage, cvScalar(value), cvImageTemp );
 	swapTemp();
@@ -270,8 +270,8 @@ void ofxCvImage::operator += ( float value ) {
 //--------------------------------------------------------------------------------
 void ofxCvImage::operator -= ( ofxCvImage& mom ) {
 	if( !mom.bAllocated ){
-		ofLogError("ofxCvImage") << "operator-=: source image not allocated";	
-		return;	
+		ofLogError("ofxCvImage") << "operator-=: source image not allocated";
+		return;
 	}
 	if( !bAllocated ){
 		ofLogNotice("ofxCvImage") << "operator-=: allocating to match dimensions: "
@@ -297,8 +297,8 @@ void ofxCvImage::operator -= ( ofxCvImage& mom ) {
 //--------------------------------------------------------------------------------
 void ofxCvImage::operator += ( ofxCvImage& mom ) {
 	if( !mom.bAllocated ){
-		ofLogError("ofxCvImage") << "operator+=: source image not allocated";	
-		return;	
+		ofLogError("ofxCvImage") << "operator+=: source image not allocated";
+		return;
 	}
 	if( !bAllocated ){
 		ofLogNotice("ofxCvImage") << "operator+=: allocating to match dimensions: "
@@ -324,8 +324,8 @@ void ofxCvImage::operator += ( ofxCvImage& mom ) {
 //--------------------------------------------------------------------------------
 void ofxCvImage::operator *= ( ofxCvImage& mom ) {
 	if( !mom.bAllocated ){
-		ofLogError("ofxCvImage") << "operator*=: mom needs to be allocated";	
-		return;	
+		ofLogError("ofxCvImage") << "operator*=: mom needs to be allocated";
+		return;
 	}
 	if( !bAllocated ){
 		ofLogNotice("ofxCvImage") << "operator*=: allocating to match dimensions: "
@@ -352,8 +352,8 @@ void ofxCvImage::operator *= ( ofxCvImage& mom ) {
 //--------------------------------------------------------------------------------
 void ofxCvImage::operator &= ( ofxCvImage& mom ) {
 	if( !mom.bAllocated ){
-		ofLogError("ofxCvImage") << "operator&=: source image not allocated";	
-		return;	
+		ofLogError("ofxCvImage") << "operator&=: source image not allocated";
+		return;
 	}
 	if( !bAllocated ){
 		ofLogNotice("ofxCvImage") << "operator&=: allocating to match dimensions: "
@@ -418,7 +418,7 @@ void ofxCvImage::draw(const ofRectangle & rect) const{
 //--------------------------------------------------------------------------------
 void ofxCvImage::updateTexture(){
 	if(!bAllocated) {
-		ofLogWarning("ofxCvImage") << "updateTexture(): image not allocated";	
+		ofLogWarning("ofxCvImage") << "updateTexture(): image not allocated";
 	} else if(bUseTexture ) {
 		if( bTextureDirty ) {
 			tex.loadData( getPixels() );
@@ -499,7 +499,7 @@ void ofxCvImage::resetAnchor(){
 void ofxCvImage::dilate() {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "dilate(): image not allocated";
-		return;		
+		return;
 	}
 	cvDilate( cvImage, cvImageTemp, 0, 1 );
 	swapTemp();
@@ -510,7 +510,7 @@ void ofxCvImage::dilate() {
 void ofxCvImage::erode() {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "erode(): image not allocated";
-		return;		
+		return;
 	}
 	cvErode( cvImage, cvImageTemp, 0, 1 );
 	swapTemp();
@@ -521,7 +521,7 @@ void ofxCvImage::erode() {
 void ofxCvImage::blur( int value ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "blur(): image not allocated";
-		return;		
+		return;
 	}
     if( value % 2 == 0 ) {
         ofLogNotice("ofxCvImage") << "blur(): value " << value << " not odd, adding 1";
@@ -536,7 +536,7 @@ void ofxCvImage::blur( int value ) {
 void ofxCvImage::blurGaussian( int value ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "blurGaussian(): image not allocated";
-		return;		
+		return;
 	}
     if( value % 2 == 0 ) {
         ofLogNotice("ofxCvImage") << "blurGaussian(): value " << value << " not odd, adding 1";
@@ -551,7 +551,7 @@ void ofxCvImage::blurGaussian( int value ) {
 void ofxCvImage::invert(){
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "invert(): image not allocated";
-		return;		
+		return;
 	}
     cvNot(cvImage, cvImage);
     flagImageChanged();
@@ -566,8 +566,8 @@ void ofxCvImage::invert(){
 void ofxCvImage::mirror( bool bFlipVertically, bool bFlipHorizontally ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "mirror(): image not allocated";
-		return;		
-	}	
+		return;
+	}
 	int flipMode = 0;
 
 	if( bFlipVertically && !bFlipHorizontally ) flipMode = 0;
@@ -584,8 +584,8 @@ void ofxCvImage::mirror( bool bFlipVertically, bool bFlipHorizontally ) {
 void ofxCvImage::translate( float x, float y ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "translate(): image not allocated";
-		return;		
-	}	
+		return;
+	}
     transform( 0, 0,0, 1,1, x,y );
     flagImageChanged();
 }
@@ -594,7 +594,7 @@ void ofxCvImage::translate( float x, float y ) {
 void ofxCvImage::rotate( float angle, float centerX, float centerY ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "rotate(): image not allocated";
-		return;		
+		return;
 	}
     transform( angle, centerX, centerY, 1,1, 0,0 );
     flagImageChanged();
@@ -604,7 +604,7 @@ void ofxCvImage::rotate( float angle, float centerX, float centerY ) {
 void ofxCvImage::scale( float scaleX, float scaleY ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "scale(): image not allocated";
-		return;		
+		return;
 	}
     transform( 0, 0,0, scaleX,scaleY, 0,0 );
     flagImageChanged();
@@ -617,9 +617,9 @@ void ofxCvImage::transform( float angle, float centerX, float centerY,
 
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "transform(): image not allocated";
-		return;		
-	}	
-													
+		return;
+	}
+
     float sina = sin(angle * DEG_TO_RAD);
     float cosa = cos(angle * DEG_TO_RAD);
     CvMat*  transmat = cvCreateMat( 2,3, CV_32F );
@@ -642,11 +642,11 @@ void ofxCvImage::undistort( float radialDistX, float radialDistY,
                             float tangentDistX, float tangentDistY,
                             float focalX, float focalY,
                             float centerX, float centerY ){
-							
+
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "undistort(): image not allocated";
-		return;		
-	}							
+		return;
+	}
     float camIntrinsics[] = { focalX, 0, centerX, 0, focalY, centerY, 0, 0, 1 };
     float distortionCoeffs[] = { radialDistX, radialDistY, tangentDistX, tangentDistY };
 	CvMat _a = cvMat( 3, 3, CV_32F, (void*)camIntrinsics );
@@ -661,8 +661,8 @@ void ofxCvImage::undistort( float radialDistX, float radialDistY,
 void ofxCvImage::remap( IplImage* mapX, IplImage* mapY ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "remap(): image not allocated";
-		return;		
-	}	
+		return;
+	}
     cvRemap( cvImage, cvImageTemp, mapX, mapY );
 	swapTemp();
     flagImageChanged();
@@ -683,7 +683,7 @@ void ofxCvImage::remap( IplImage* mapX, IplImage* mapY ) {
 void ofxCvImage::warpPerspective( const ofPoint& A, const ofPoint& B, const ofPoint& C, const ofPoint& D ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "warpPerspective(): image not allocated";
-		return;		
+		return;
 	}
     // compute matrix for perspectival warping (homography)
     CvPoint2D32f cvsrc[4];
@@ -720,16 +720,16 @@ void ofxCvImage::warpPerspective( const ofPoint& A, const ofPoint& B, const ofPo
 
 //--------------------------------------------------------------------------------
 void ofxCvImage::warpIntoMe( ofxCvImage& mom, const ofPoint src[4], const ofPoint dst[4] ){
-    
+
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "warpIntoMe(): image not allocated";
-		return;		
+		return;
 	}
 	if( !mom.bAllocated ){
 		ofLogError("ofxCvImage") << "warpIntoMe(): source image not allocated";
-		return;		
+		return;
 	}
-		
+
 	if( mom.getCvImage()->nChannels == cvImage->nChannels &&
         mom.getCvImage()->depth == cvImage->depth ) {
 
@@ -763,9 +763,9 @@ void ofxCvImage::warpIntoMe( ofxCvImage& mom, const ofPoint src[4], const ofPoin
 int ofxCvImage::countNonZeroInRegion( int x, int y, int w, int h ) {
 	if( !bAllocated ){
 		ofLogError("ofxCvImage") << "countNonZeroInRegion(): image not allocated";
-		return 0;		
+		return 0;
 	}
-	
+
     //TODO: test this method
 
 	if (w == 0 || h == 0) return 0;
