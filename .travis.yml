@@ -39,7 +39,7 @@ matrix:
       env: BUILD_TYPE=Release TARGET=Examples
 
   allow_failures:
-    - env: "TARGET=Examples"
+    - env: "BUILD_TYPE=Release TARGET=Examples"
 
 before_install:
 - travis_wait 30 "./travis/deps.sh"
