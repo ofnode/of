@@ -11,32 +11,32 @@ matrix:
     - os: osx
 
   include:
-  - os: linux
-    env: BUILD_TYPE=Debug OF_STATIC=0
-  - os: linux
-    env: BUILD_TYPE=Debug OF_STATIC=1
-  - os: linux
-    env: BUILD_TYPE=Release OF_STATIC=0
-  - os: linux
-    env: BUILD_TYPE=Release OF_STATIC=1
+    - os: linux
+      env: BUILD_TYPE=Debug OF_STATIC=0
+    - os: linux
+      env: BUILD_TYPE=Debug OF_STATIC=1
+    - os: linux
+      env: BUILD_TYPE=Release OF_STATIC=0
+    - os: linux
+      env: BUILD_TYPE=Release OF_STATIC=1
 
-  - os: osx
-    env: BUILD_TYPE=Debug OF_STATIC=0
-  - os: osx
-    env: BUILD_TYPE=Debug OF_STATIC=1
-  - os: osx
-    env: BUILD_TYPE=Release OF_STATIC=0
-  - os: osx
-    env: BUILD_TYPE=Release OF_STATIC=1
+    - os: osx
+      env: BUILD_TYPE=Debug OF_STATIC=0
+    - os: osx
+      env: BUILD_TYPE=Debug OF_STATIC=1
+    - os: osx
+      env: BUILD_TYPE=Release OF_STATIC=0
+    - os: osx
+      env: BUILD_TYPE=Release OF_STATIC=1
 
-#  - os: linux
-#    env: BUILD_TYPE=Debug TARGET=Coverage
+  #  - os: linux
+  #    env: BUILD_TYPE=Debug TARGET=Coverage
 
-  - os: linux
-    env: BUILD_TYPE=Release TARGET=Examples
+    - os: linux
+      env: BUILD_TYPE=Release TARGET=Examples
 
-  - os: osx
-    env: BUILD_TYPE=Release TARGET=Examples
+    - os: osx
+      env: BUILD_TYPE=Release TARGET=Examples
 
   allow_failures:
     - env: "TARGET=Examples"
