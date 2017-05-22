@@ -1177,17 +1177,46 @@ function(ofxaddon OFXADDON)
                     string(SUBSTRING ${line} ${pos} -1 ADDON_LIB)
                     string(STRIP ${ADDON_LIB} ADDON_LIB)
                     list(APPEND ADDON_LIBS ${ADDON_LIB})
-                  endif()  
+                  endif()
+                elseif (${line} MATCHES "ADDON_CPPFLAGS")
+                  string(FIND ${line} "=" pos)
+                  if (NOT (${pos} MATCHES "-1"))
+                    MATH(EXPR pos "${pos}+1")
+                    string(SUBSTRING ${line} ${pos} -1 ADDON_CPPFLAG)
+                    string(STRIP ${ADDON_CPPFLAG} ADDON_CPPFLAG)
+                    list(APPEND ADDON_CPPFLAGS ${ADDON_CPPFLAG})
+                  endif()
+                elseif (${line} MATCHES "ADDON_CFLAGS")
+                  string(FIND ${line} "=" pos)
+                  if (NOT (${pos} MATCHES "-1"))
+                    MATH(EXPR pos "${pos}+1")
+                    string(SUBSTRING ${line} ${pos} -1 ADDON_CFLAG)
+                    string(STRIP ${ADDON_CFLAG} ADDON_CFLAG)
+                    list(APPEND ADDON_CFLAGS ${ADDON_CFLAG})
+                  endif()
+                elseif (${line} MATCHES "ADDON_LDFLAGS")
+                  string(FIND ${line} "=" pos)
+                  if (NOT (${pos} MATCHES "-1"))
+                    MATH(EXPR pos "${pos}+1")
+                    string(SUBSTRING ${line} ${pos} -1 ADDON_LDFLAG)
+                    string(STRIP ${ADDON_LDFLAG} ADDON_LDFLAG)
+                    list(APPEND ADDON_LDFLAGS ${ADDON_LDFLAG})
+                  endif()
+                elseif (${line} MATCHES "ADDON_LIBS")
+                  string(FIND ${line} "=" pos)
+                  if (NOT (${pos} MATCHES "-1"))
+                    MATH(EXPR pos "${pos}+1")
+                    string(SUBSTRING ${line} ${pos} -1 ADDON_LIB)
+                    string(STRIP ${ADDON_LIB} ADDON_LIB)
+                    list(APPEND ADDON_LIBS ${ADDON_LIB})
+                  endif()
                 endif()                        
               endif()
             endforeach(line)
-
                             # ADDON_DESCRIPTION
                             # ADDON_AUTHOR
                             # ADDON_TAGS
                             # ADDON_URL
-                            # ADDON_CFLAGS
-                            # ADDON_LDFLAGS
                             # ADDON_PKG_CONFIG_LIBRARIES
                             # ADDON_FRAMEWORKS
                             # ADDON_SOURCES
@@ -1254,6 +1283,15 @@ function(ofxaddon OFXADDON)
         if (OFXLIBHEADER_PATHS)
           include_directories("${OFXLIBHEADER_PATHS}")
         endif()
+
+        if ( NOT("${ADDON_LIBS}" MATCHES "") )
+            target_link_libraries(${CMAKE_PROJECT_NAME} ${ADDON_LIBS})
+        endif()
+
+        SET( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${ADDON_CFLAGS}" )
+        SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${ADDON_CPPFLAGS}" )
+        SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${ADDON_LDFLAGS}" )
+
         include_directories("${OFXADDON_DIR}/src")
         include_directories("${OFXADDON_DIR}/libs")
 
@@ -1264,6 +1302,10 @@ function(ofxaddon OFXADDON)
         message(STATUS "ADDON_DEPENDENCIES: ${ADDON_DEPENDENCIES}")
         message(STATUS "ADDON_INCLUDES_EXCLUDE: ${ADDON_INCLUDES_EXCLUDE}")
         message(STATUS "ADDON_SOURCES_EXCLUDE: ${ADDON_SOURCES_EXCLUDE}")
+        message(STATUS "ADDON_LIBS: ${ADDON_LIBS}")
+        message(STATUS "ADDON_CFLAGS: ${ADDON_CFLAGS}")
+        message(STATUS "ADDON_CPPFLAGS: ${ADDON_CPPFLAGS}")
+        message(STATUS "ADDON_LDFLAGS: ${ADDON_LDFLAGS}")
         message(STATUS "ADDON_LIBS: ${ADDON_LIBS}")
 
         foreach(ADDON ${ADDON_DEPENDENCIES})
