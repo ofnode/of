@@ -1108,17 +1108,17 @@ function(ofxaddon OFXADDON)
         # parse addon_config.mk
         if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/addon_config.mk")
 
-          FILE(READ "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/addon_config.mk" OFXADDON_CONFIG)
+            FILE(READ "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/addon_config.mk" OFXADDON_CONFIG)
 
-          # Convert file contents into a CMake list (where each element in the list
-          # is one line of the file)
-          #
-          STRING(REGEX REPLACE ";" "\\\\;" OFXADDON_CONFIG "${OFXADDON_CONFIG}")
-          STRING(REGEX REPLACE "\n" ";" OFXADDON_CONFIG "${OFXADDON_CONFIG}")
+            # Convert file contents into a CMake list (where each element in the list
+            # is one line of the file)
+            #
+            STRING(REGEX REPLACE ";" "\\\\;" OFXADDON_CONFIG "${OFXADDON_CONFIG}")
+            STRING(REGEX REPLACE "\n" ";" OFXADDON_CONFIG "${OFXADDON_CONFIG}")
 
             set(ADDON_CONFIG_SCOPE)
-          foreach(line ${OFXADDON_CONFIG})
-            string(STRIP ${line} line) # strip space
+            foreach(line ${OFXADDON_CONFIG})
+              string(STRIP ${line} line) # strip space
               if ( ${line} MATCHES "[a-zA-Z1-9]*:" ) # get addon_config.mk scope
                 set(ADDON_CONFIG_SCOPE ${line})
               elseif ( NOT((${line} MATCHES "^#"))) # strip comment
@@ -1126,50 +1126,50 @@ function(ofxaddon OFXADDON)
                 if ( NOT((${ADDON_CONFIG_SCOPE} MATCHES "${ADDON_CONFIG_TARGET}:") OR (${ADDON_CONFIG_SCOPE} MATCHES "meta:") OR (${ADDON_CONFIG_SCOPE} MATCHES "common:")))
                   # do nothing if not in a relevant scope
                 elseif (${line} MATCHES "^ADDON_NAME")
-                string(FIND ${line} "=" pos)
-                if (NOT (${pos} MATCHES "-1"))
-                  MATH(EXPR pos "${pos}+1")
-                 string(SUBSTRING ${line} ${pos} -1 ADDON_NAME)
-                endif()
-                        elseif (${line} MATCHES "ADDON_INCLUDES_EXCLUDE")
-                            string(FIND ${line} "=" pos)
-                            if (NOT (${pos} MATCHES "-1"))
-                                MATH(EXPR pos "${pos}+1")
-                                string(SUBSTRING ${line} ${pos} -1 ADDON_INCLUDES_EXCLUDE_DIR)
-                                string(REPLACE "." "\." ADDON_INCLUDES_EXCLUDE_DIR ${ADDON_INCLUDES_EXCLUDE_DIR})
-                                string(REPLACE "%" ".*" ADDON_INCLUDES_EXCLUDE_DIR ${ADDON_INCLUDES_EXCLUDE_DIR})
-                                string(REPLACE "/" "\/" ADDON_INCLUDES_EXCLUDE_DIR ${ADDON_INCLUDES_EXCLUDE_DIR})
-                                string(STRIP ${ADDON_INCLUDES_EXCLUDE_DIR} ADDON_INCLUDES_EXCLUDE_DIR)
-                                list(APPEND ADDON_INCLUDES_EXCLUDE ${ADDON_INCLUDES_EXCLUDE_DIR})
-                            endif()
-                        elseif (${line} MATCHES "ADDON_SOURCES_EXCLUDE")
-                            string(FIND ${line} "=" pos)
-                            if (NOT (${pos} MATCHES "-1"))
-                                MATH(EXPR pos "${pos}+1")
-                                string(SUBSTRING ${line} ${pos} -1 ADDON_SOURCES_EXCLUDE_DIR)
-                                string(REPLACE "." "\." ADDON_SOURCES_EXCLUDE_DIR ${ADDON_SOURCES_EXCLUDE_DIR})
-                                string(REPLACE "%" ".*" ADDON_SOURCES_EXCLUDE_DIR ${ADDON_SOURCES_EXCLUDE_DIR})
-                                string(REPLACE "/" "\/" ADDON_SOURCES_EXCLUDE_DIR ${ADDON_SOURCES_EXCLUDE_DIR})
-                                string(STRIP ${ADDON_SOURCES_EXCLUDE_DIR} ADDON_SOURCES_EXCLUDE_DIR)
-                                list(APPEND ADDON_SOURCES_EXCLUDE ${ADDON_SOURCES_EXCLUDE_DIR})
-                            endif()
+                  string(FIND ${line} "=" pos)
+                  if (NOT (${pos} MATCHES "-1"))
+                    MATH(EXPR pos "${pos}+1")
+                    string(SUBSTRING ${line} ${pos} -1 ADDON_NAME)
+                  endif()
+                elseif (${line} MATCHES "ADDON_INCLUDES_EXCLUDE")
+                  string(FIND ${line} "=" pos)
+                  if (NOT (${pos} MATCHES "-1"))
+                    MATH(EXPR pos "${pos}+1")
+                    string(SUBSTRING ${line} ${pos} -1 ADDON_INCLUDES_EXCLUDE_DIR)
+                    string(REPLACE "." "\." ADDON_INCLUDES_EXCLUDE_DIR ${ADDON_INCLUDES_EXCLUDE_DIR})
+                    string(REPLACE "%" ".*" ADDON_INCLUDES_EXCLUDE_DIR ${ADDON_INCLUDES_EXCLUDE_DIR})
+                    string(REPLACE "/" "\/" ADDON_INCLUDES_EXCLUDE_DIR ${ADDON_INCLUDES_EXCLUDE_DIR})
+                    string(STRIP ${ADDON_INCLUDES_EXCLUDE_DIR} ADDON_INCLUDES_EXCLUDE_DIR)
+                    list(APPEND ADDON_INCLUDES_EXCLUDE ${ADDON_INCLUDES_EXCLUDE_DIR})
+                  endif()
+                elseif (${line} MATCHES "ADDON_SOURCES_EXCLUDE")
+                  string(FIND ${line} "=" pos)
+                  if (NOT (${pos} MATCHES "-1"))
+                    MATH(EXPR pos "${pos}+1")
+                    string(SUBSTRING ${line} ${pos} -1 ADDON_SOURCES_EXCLUDE_DIR)
+                    string(REPLACE "." "\." ADDON_SOURCES_EXCLUDE_DIR ${ADDON_SOURCES_EXCLUDE_DIR})
+                    string(REPLACE "%" ".*" ADDON_SOURCES_EXCLUDE_DIR ${ADDON_SOURCES_EXCLUDE_DIR})
+                    string(REPLACE "/" "\/" ADDON_SOURCES_EXCLUDE_DIR ${ADDON_SOURCES_EXCLUDE_DIR})
+                    string(STRIP ${ADDON_SOURCES_EXCLUDE_DIR} ADDON_SOURCES_EXCLUDE_DIR)
+                    list(APPEND ADDON_SOURCES_EXCLUDE ${ADDON_SOURCES_EXCLUDE_DIR})
+                  endif()
                 elseif (${line} MATCHES "ADDON_INCLUDES")
-                string(FIND ${line} "=" pos)
-                if (NOT (${pos} MATCHES "-1"))
-                  MATH(EXPR pos "${pos}+1")
-                  string(SUBSTRING ${line} ${pos} -1 ADDON_INCLUDE)
-                  string(STRIP ${ADDON_INCLUDE} ADDON_INCLUDE)
-                  include_directories(${OFXADDON_DIR}/${ADDON_INCLUDE})
-                  list(APPEND ADDON_INCLUDES ${OFXADDON_DIR}/${ADDON_INCLUDE})
-                endif()
-              elseif (${line} MATCHES "ADDON_DEPENDENCIES")
-                string(FIND ${line} "=" pos)
-                if (NOT (${pos} MATCHES "-1"))
-                  MATH(EXPR pos "${pos}+1")
-                  string(SUBSTRING ${line} ${pos} -1 ADDON_DEPENDENCIE)
-                  string(STRIP ${ADDON_DEPENDENCIE} ADDON_DEPENDENCIE)
-                  list(APPEND ADDON_DEPENDENCIES ${ADDON_DEPENDENCIE})
-                endif()
+                  string(FIND ${line} "=" pos)
+                  if (NOT (${pos} MATCHES "-1"))
+                    MATH(EXPR pos "${pos}+1")
+                    string(SUBSTRING ${line} ${pos} -1 ADDON_INCLUDE)
+                    string(STRIP ${ADDON_INCLUDE} ADDON_INCLUDE)
+                    include_directories(${OFXADDON_DIR}/${ADDON_INCLUDE})
+                    list(APPEND ADDON_INCLUDES ${OFXADDON_DIR}/${ADDON_INCLUDE})
+                  endif()
+                elseif (${line} MATCHES "ADDON_DEPENDENCIES")
+                  string(FIND ${line} "=" pos)
+                  if (NOT (${pos} MATCHES "-1"))
+                    MATH(EXPR pos "${pos}+1")
+                    string(SUBSTRING ${line} ${pos} -1 ADDON_DEPENDENCIE)
+                    string(STRIP ${ADDON_DEPENDENCIE} ADDON_DEPENDENCIE)
+                    list(APPEND ADDON_DEPENDENCIES ${ADDON_DEPENDENCIE})
+                  endif()
                 elseif (${line} MATCHES "ADDON_LIBS")
                   string(FIND ${line} "=" pos)
                   if (NOT (${pos} MATCHES "-1"))
@@ -1178,7 +1178,7 @@ function(ofxaddon OFXADDON)
                     string(STRIP ${ADDON_LIB} ADDON_LIB)
                     list(APPEND ADDON_LIBS ${ADDON_LIB})
                   endif()  
-              endif()
+                endif()                        
               endif()
             endforeach(line)
 
@@ -1186,28 +1186,28 @@ function(ofxaddon OFXADDON)
                             # ADDON_AUTHOR
                             # ADDON_TAGS
                             # ADDON_URL
-              # ADDON_CFLAGS
-              # ADDON_LDFLAGS
-              # ADDON_PKG_CONFIG_LIBRARIES
-              # ADDON_FRAMEWORKS
-              # ADDON_SOURCES
-              # ADDON_DATA
-              # ADDON_LIBS_EXCLUDE
+                            # ADDON_CFLAGS
+                            # ADDON_LDFLAGS
+                            # ADDON_PKG_CONFIG_LIBRARIES
+                            # ADDON_FRAMEWORKS
+                            # ADDON_SOURCES
+                            # ADDON_DATA
+                            # ADDON_LIBS_EXCLUDE
 
-        endif()
+            endif()
 
-        if(NOT (EXISTS "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/src/" OR EXISTS "${OFXADDON_DIR}/src/"))
-            message(WARNING "ofxaddon(${OFXADDON_DIR}): the addon doesn't have src subfolder.")
-        endif()
+            if(NOT (EXISTS "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}/src/" OR EXISTS "${OFXADDON_DIR}/src/"))
+                message(WARNING "ofxaddon(${OFXADDON_DIR}): the addon doesn't have src subfolder.")
+            endif()
 
-        file(GLOB_RECURSE OFXSOURCES
-            "${OFXADDON_DIR}/src/*.c"
-            "${OFXADDON_DIR}/src/*.cc"
-            "${OFXADDON_DIR}/src/*.cpp"
-            "${OFXADDON_DIR}/libs/*.c"
-            "${OFXADDON_DIR}/libs/*.cc"
-            "${OFXADDON_DIR}/libs/*.cpp"
-        )
+            file(GLOB_RECURSE OFXSOURCES
+                "${OFXADDON_DIR}/src/*.c"
+                "${OFXADDON_DIR}/src/*.cc"
+                "${OFXADDON_DIR}/src/*.cpp"
+                "${OFXADDON_DIR}/libs/*.c"
+                "${OFXADDON_DIR}/libs/*.cc"
+                "${OFXADDON_DIR}/libs/*.cpp"
+                )
 
             # Exclude sources
             set(TMP)
@@ -1224,17 +1224,17 @@ function(ofxaddon OFXADDON)
             endforeach()
             set(OFXSOURCES ${TMP})
 
-        FILE(GLOB_RECURSE OFXLIBSINCLUDEDIRS LIST_DIRECTORIES true "${OFXADDON_DIR}/libs/*")
-        foreach(OFXLIBHEADER_PATH ${OFXLIBSINCLUDEDIRS})
-          if(IS_DIRECTORY "${OFXLIBHEADER_PATH}")
-            string(FIND "${OFXLIBHEADER_PATH}" "include" POS REVERSE)
-            string(LENGTH "${OFXLIBHEADER_PATH}" LEN)
-            math(EXPR POS2 "${LEN}-7")
-            if(POS EQUAL POS2)
-              set(OFXLIBHEADER_PATHS ${OFXLIBHEADER_PATHS} "${OFXLIBHEADER_PATH}")
-            endif()
-          endif()
-        endforeach()
+            FILE(GLOB_RECURSE OFXLIBSINCLUDEDIRS LIST_DIRECTORIES true "${OFXADDON_DIR}/libs/*")
+            foreach(OFXLIBHEADER_PATH ${OFXLIBSINCLUDEDIRS})
+                if(IS_DIRECTORY "${OFXLIBHEADER_PATH}")
+                    string(FIND "${OFXLIBHEADER_PATH}" "include" POS REVERSE)
+                    string(LENGTH "${OFXLIBHEADER_PATH}" LEN)
+                    math(EXPR POS2 "${LEN}-7")
+                    if(POS EQUAL POS2)
+                        set(OFXLIBHEADER_PATHS ${OFXLIBHEADER_PATHS} "${OFXLIBHEADER_PATH}")
+                    endif()
+                endif()
+            endforeach()
 
         # Exclude includes
         set(TMP)
