@@ -1087,6 +1087,8 @@ function(ofxaddon OFXADDON)
             else()
                 message(FATAL_ERROR "ofxaddon(${OFXADDON_DIR}): the folder doesn't exist.")
             endif()
+        else()
+            set(OFXADDON_DIR "${CMAKE_CURRENT_LIST_DIR}/${OFXADDON_DIR}")
         endif()
 
         if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
