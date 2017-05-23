@@ -1119,7 +1119,7 @@ function(ofxaddon OFXADDON)
             set(ADDON_CONFIG_SCOPE)
             foreach(line ${OFXADDON_CONFIG})
               string(STRIP ${line} line) # strip space
-              if ( ${line} MATCHES "[a-zA-Z1-9]*:" ) # get addon_config.mk scope
+              if ( ${line} MATCHES "^[a-zA-Z1-9]*:$" ) # get addon_config.mk scope
                 set(ADDON_CONFIG_SCOPE ${line})
               elseif ( NOT((${line} MATCHES "^#"))) # strip comment
 
