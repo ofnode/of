@@ -1,54 +1,51 @@
 language: c++
 compiler: clang
-
 osx_image: xcode8.2
 dist: trusty
 sudo: required
-
 matrix:
   exclude:
-    - os: linux
-    - os: osx
-
+  - os: linux
+  - os: osx
   include:
-    - os: linux
-      env: BUILD_TYPE=Debug OF_STATIC=0
-    - os: linux
-      env: BUILD_TYPE=Debug OF_STATIC=1
-    - os: linux
-      env: BUILD_TYPE=Release OF_STATIC=0
-    - os: linux
-      env: BUILD_TYPE=Release OF_STATIC=1
-
-    - os: osx
-      env: BUILD_TYPE=Debug OF_STATIC=0
-    - os: osx
-      env: BUILD_TYPE=Debug OF_STATIC=1
-    - os: osx
-      env: BUILD_TYPE=Release OF_STATIC=0
-    - os: osx
-      env: BUILD_TYPE=Release OF_STATIC=1
-
-  #  - os: linux
-  #    env: BUILD_TYPE=Debug TARGET=Coverage
-
-    - os: linux
-      env: BUILD_TYPE=Release TARGET=Examples
-
-    - os: osx
-      env: BUILD_TYPE=Release TARGET=Examples
-
+  - os: linux
+    env: BUILD_TYPE=Debug OF_STATIC=0
+  - os: linux
+    env: BUILD_TYPE=Debug OF_STATIC=1
+  - os: linux
+    env: BUILD_TYPE=Release OF_STATIC=0
+  - os: linux
+    env: BUILD_TYPE=Release OF_STATIC=1
+  - os: osx
+    env: BUILD_TYPE=Debug OF_STATIC=0
+  - os: osx
+    env: BUILD_TYPE=Debug OF_STATIC=1
+  - os: osx
+    env: BUILD_TYPE=Release OF_STATIC=0
+  - os: osx
+    env: BUILD_TYPE=Release OF_STATIC=1
+  - os: linux
+    env: BUILD_TYPE=Release TARGET=Examples
+  - os: osx
+    env: BUILD_TYPE=Release TARGET=Examples
   allow_failures:
-    - env: "BUILD_TYPE=Release TARGET=Examples"
-
+  - env: BUILD_TYPE=Release TARGET=Examples
 before_install:
 - travis_wait 30 "./travis/deps.sh"
-
 script:
 - travis_wait 30 "./travis/build.sh"
-
 git:
   depth: 1
   submodules: true
 notifications:
   email: false
+deploy:
+  provider: releases
+  api_key:
+    secure: R+8QJJDAX3q+OklpsDCxi+HuQlvY0tBPNyspxmmgewhqpGzoQNo0C9lLsEy4PVYHtOjJFM/BACLYagfwJnei/v6jtf9UQqtKcUWKuzXvZOf/rP+BoJnCqp2l3R2mxu6dUoVv5CLoDF+R/VlNuVSthazp7o3YtftsXRjgpg3TsT6/V/bfQXThH/SZeB/ZpPBHDasQyEdA8srPe7XGYOmmhb3pAi3gnk4tl/JxJFAtd9t+6RytCW8bhBUMd101S+65ZRxLYw+NHUztL1wUbQqtV4HuvIJUKGNk53+/GSVsVMcP6KwRrhJxOKldIn0FiLjpY3YV9nXSN53NJC2mDLz5VMS3rqvdCyvE/qMS8yIMiXUyRZwttPnLDjOc2F6KKrV1TnzyAXxkEF7EfK5bjY3wuNML/z+IsAWPZJcXEWt50k/how4BHfvJmoMe78/0PT0ihW6Plc1wtfzohutK1kQt5/5Q2mYCfqFhOJtKHnrYA24C+MX/2QuMUSZWTaswbI75LuoMsXvWrb/HTa8sKEcD7dCmd+Zu9vv/qX1ZhKd7icQXjv/dx/XAfv1UkobNXV1s95U5IbqIwqctvCR55+sPlAMoXNJFudfnPTO31lg/xIW/ONbDeek8bx0RJvMfE2SOdBONIcM+rK/j41pbrY56RfqsTYbnTrNyR3op11TV42o=
+  before_deploy: tar -cf lib-linux.tar.gz lib-linux/
+  file: lib-linux.tar.gz
+  skip_cleanup: true
+  on:
+    repo: ofnode/of
+    tags: true
