@@ -39,11 +39,11 @@ git:
   submodules: true
 notifications:
   email: false
+before_deploy: tar -cf lib-linux.tar.gz lib-linux/
 deploy:
   provider: releases
   api_key:
     secure: R+8QJJDAX3q+OklpsDCxi+HuQlvY0tBPNyspxmmgewhqpGzoQNo0C9lLsEy4PVYHtOjJFM/BACLYagfwJnei/v6jtf9UQqtKcUWKuzXvZOf/rP+BoJnCqp2l3R2mxu6dUoVv5CLoDF+R/VlNuVSthazp7o3YtftsXRjgpg3TsT6/V/bfQXThH/SZeB/ZpPBHDasQyEdA8srPe7XGYOmmhb3pAi3gnk4tl/JxJFAtd9t+6RytCW8bhBUMd101S+65ZRxLYw+NHUztL1wUbQqtV4HuvIJUKGNk53+/GSVsVMcP6KwRrhJxOKldIn0FiLjpY3YV9nXSN53NJC2mDLz5VMS3rqvdCyvE/qMS8yIMiXUyRZwttPnLDjOc2F6KKrV1TnzyAXxkEF7EfK5bjY3wuNML/z+IsAWPZJcXEWt50k/how4BHfvJmoMe78/0PT0ihW6Plc1wtfzohutK1kQt5/5Q2mYCfqFhOJtKHnrYA24C+MX/2QuMUSZWTaswbI75LuoMsXvWrb/HTa8sKEcD7dCmd+Zu9vv/qX1ZhKd7icQXjv/dx/XAfv1UkobNXV1s95U5IbqIwqctvCR55+sPlAMoXNJFudfnPTO31lg/xIW/ONbDeek8bx0RJvMfE2SOdBONIcM+rK/j41pbrY56RfqsTYbnTrNyR3op11TV42o=
-  before_deploy: tar -cf lib-linux.tar.gz lib-linux/
   file: lib-linux.tar.gz
   skip_cleanup: true
   on:
