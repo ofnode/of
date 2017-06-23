@@ -22,6 +22,8 @@ case "$TRAVIS_OS_NAME" in
     export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"
     $CMAKE_BIN -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DOF_STATIC=$OF_STATIC -DCOTIRE=OFF ..
     $CMAKE_BIN --build . -- -j2
+    cd lib-linux
+    tar -cf ../ofnode-$TRAVIS_OS_NAME-$TRAVIS_TAG.tar.gz *
     case "$TARGET" in
       Coverage)
         gem install coveralls-lcov
@@ -49,6 +51,8 @@ case "$TRAVIS_OS_NAME" in
                -DCOTIRE=OFF \
                ..
     $CMAKE_BIN --build . -- -j2
+    cd lib-osx
+    tar -cf ../ofnode-$TRAVIS_OS_NAME-$TRAVIS_TAG.tar.gz *
     if [[ "x$TARGET" == "xExamples" ]]; then
         cd ../examples
         mkdir build
