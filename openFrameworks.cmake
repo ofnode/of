@@ -1315,6 +1315,7 @@ function(ofxaddon OFXADDON)
         message(STATUS "ADDON_LIBS: ${ADDON_LIBS}")
 
         foreach(ADDON ${ADDON_DEPENDENCIES})
+          list(REMOVE_ITEM ADDON_DEPENDENCIES ${ADDON})
           ofxaddon(${ADDON})
         endforeach()
 
