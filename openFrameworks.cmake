@@ -1340,11 +1340,19 @@ else()
 endif()
 
 MACRO(ofSetTargetProperties)
-  set_target_properties(
-      ${PROJECT_NAME} PROPERTIES
-      MACOSX_BUNDLE_INFO_PLIST
-      "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist"
-  )
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
+    set_target_properties(
+        ${PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST
+        "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist"
+    )
+  elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks-Info.plist")
+    set_target_properties(
+        ${PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST
+        "${CMAKE_CURRENT_SOURCE_DIR}/openFrameworks-Info.plist"
+    )
+  endif()
 
   if(CMAKE_BUILD_TYPE MATCHES Debug)
       set_target_properties( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-Debug")
