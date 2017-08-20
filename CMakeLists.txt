@@ -13,9 +13,10 @@ set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
-  set(OF_AUDIO ON CACHE BOOL "Compile audio features of openFrameworks")
-  set(OF_VIDEO ON CACHE BOOL "Compile video features of openFrameworks")
-  set(OF_GTK   ON CACHE BOOL "Compile with GTK3 (may conficts with Qt).")
+  set(OF_AUDIO  ON  CACHE BOOL "Compile audio features of openFrameworks")
+  set(OF_VIDEO  ON  CACHE BOOL "Compile video features of openFrameworks")
+  set(OF_GTK    ON  CACHE BOOL "Compile with GTK3 (may conficts with Qt).")
+  set(OF_GTK2   OFF CACHE BOOL "Compile with GTK2.")
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
 
@@ -882,6 +883,18 @@ if(CMAKE_SYSTEM MATCHES Linux)
         message(STATUS "Gtk+-3 libraries: "      ${GTK3_LIBRARIES})
 
       endif()
+
+      if ( OF_GTK2 )
+        list(APPEND OPENFRAMEWORKS_DEFINITIONS -DOF_USING_GTK)
+        pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
+        list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS ${GTK2_INCLUDE_DIRS} )
+        list(APPEND OPENFRAMEWORKS_LIBRARIES ${GTK2_LIBRARIES} )
+
+        message(STATUS "Gtk+-2 include dir: "      ${GTK2_INCLUDE_DIRS})
+        message(STATUS "Gtk+-2 libraries: "      ${GTK2_LIBRARIES})
+
+      endif()
+
     endif()
 
 elseif(CMAKE_SYSTEM MATCHES Darwin)
@@ -1255,6 +1268,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
 message(STATUS "OF_AUDIO: " ${OF_AUDIO})
 message(STATUS "OF_VIDEO: " ${OF_VIDEO})
 message(STATUS "OF_GTK: " ${OF_GTK})
+message(STATUS "OF_GTK2: " ${OF_GTK2})
+
 endif()
 
 message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
