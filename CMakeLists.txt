@@ -862,10 +862,25 @@ if(CMAKE_SYSTEM MATCHES Linux)
       find_package(UDev REQUIRED)
       # FIXME : glib and Gstreamer are found in /usr/* instead of RPI_ROOT_PATH when CMAKE_CROSSCOMPILING
       find_package(Glib REQUIRED)
+      message(STATUS "GLIB include dir: "      ${GLIB_INCLUDE_DIRS})
+
       find_package(GStreamer REQUIRED)
 
-      message(STATUS "GLIB include dir: "      ${GLIB_INCLUDE_DIRS})
+      if ( "${GSTREAMER_INCLUDE_DIRS}" STREQUAL "" )
+
+        PKG_CHECK_MODULES(GSTREAMER gstreamer-1.0)
+        PKG_CHECK_MODULES(GSTREAMER_BASE gstreamer-base-1.0)
+        PKG_CHECK_MODULES(GSTREAMER_VIDEO gstreamer-video-1.0)
+        PKG_CHECK_MODULES(GSTREAMER_APP gstreamer-app-1.0)
+      endif()
+
       message(STATUS "Gstreamer include dir: " ${GSTREAMER_INCLUDE_DIRS})
+
+      message(STATUS "Gstreamer lib: "       ${GSTREAMER_LIBRARIES})
+      message(STATUS "Gstreamer-app lib: "   ${GSTREAMER_APP_LIBRARIES})
+      message(STATUS "Gstreamer-base lib: "  ${GSTREAMER_BASE_LIBRARIES})
+      message(STATUS "Gstreamer-video lib: " ${GSTREAMER_VIDEO_LIBRARIES})
+
 
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${UDEV_INCLUDE_DIR}
