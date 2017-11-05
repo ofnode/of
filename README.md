@@ -67,6 +67,17 @@ xcodebuild -configuration Release
 
 **NOTE**: Visual Studio is not supported anymore.
 
+Known issues
+------------
+
+OpenFrameworks' Poco lib is not compatible with OpenSSL 1.1, this should be fixed with next release of openFrameworks 0.10.
+In the meanwhile, you have to install openssl-1.0 and tweak the cmake generation step. On Archlinux it looks like : 
+
+```
+sudo pacman -S openssl-1.0
+cmake -DOPENSSL_INCLUDE_DIR=/usr/include/openssl-1.0 .
+```
+
 Templates
 ---------
 
