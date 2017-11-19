@@ -864,7 +864,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
       find_package(Glib REQUIRED)
       message(STATUS "GLIB include dir: "      ${GLIB_INCLUDE_DIRS})
 
-      find_package(GStreamer REQUIRED)
+      find_package(GStreamer QUIET)
 
       if ( "${GSTREAMER_INCLUDE_DIRS}" STREQUAL "" )
 
