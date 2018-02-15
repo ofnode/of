@@ -622,6 +622,118 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         -L/usr/local/lib
     )
 
+    if(OF_STATIC)
+
+      set(STATIC_LIB_PATHS
+        "/usr/local/lib"
+        "/usr/lib"
+      )
+
+      find_library(
+        ZLIB_LIB NAMES
+        libz.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        CAIRO_LIB NAMES
+        libcairo.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        PIXMAN_LIB NAMES
+        libpixman-1.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        CRYPTO_LIB NAMES
+        libcrypto.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        SSL_LIB NAMES
+        libssl.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        FREETYPE_LIB NAMES
+        libfreetype.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        FONTCONFIG_LIB NAMES
+        libfontconfig.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        BZ2_STATIC_LIB NAMES
+        libbz2.a
+        PATHS ${STATIC_LIB_PATHS}
+      )
+      find_library(
+        BZ2_SHARED_LIB NAMES
+        libbz2.dylib
+        PATHS ${STATIC_LIB_PATHS}
+      )
+
+    if(ZLIB_LIB MATCHES ZLIB_LIB-NOTFOUND)
+      message(STATUS "Using dynamic Zlib")
+    else()
+      message(STATUS "Using static Zlib")
+      set(ZLIB_LIBRARIES
+        ${ZLIB_LIB}
+      )
+    endif()
+
+    if(PIXMAN_LIB MATCHES PIXMAN_LIB-NOTFOUND OR
+        CAIRO_LIB MATCHES  CAIRO_LIB-NOTFOUND)
+      message(STATUS "Using dynamic Cairo")
+    else()
+      message(STATUS "Using static Cairo")
+      set(CAIRO_LIBRARIES
+        ${PIXMAN_LIB}
+        ${CAIRO_LIB}
+      )
+    endif()
+
+    if(CRYPTO_LIB MATCHES CRYPTO_LIB-NOTFOUND OR
+          SSL_LIB MATCHES    SSL_LIB-NOTFOUND)
+      message(STATUS "Using dynamic OpenSSL")
+    else()
+      message(STATUS "Using static OpenSSL")
+      find_library(DL_LIB dl)
+      set(OPENSSL_LIBRARIES
+        ${CRYPTO_LIB}
+        ${SSL_LIB}
+        ${DL_LIB}
+      )
+    endif()
+
+    if(FONTCONFIG_LIB MATCHES FONTCONFIG_LIB-NOTFOUND OR
+         FREETYPE_LIB MATCHES   FREETYPE_LIB-NOTFOUND OR 
+         BZ2_SHARED_LIB MATCHES BZ2_SHARED_LIB-NOTFOUND)
+      message(STATUS "Using dynamic Fontconfig and FreeType")
+    else()
+      message(STATUS "Using static Fontconfig and FreeType")
+      set(FONTCONFIG_LIBRARIES "")
+      set(FREETYPE_LIBRARIES
+        ${FONTCONFIG_LIB}
+        ${FREETYPE_LIB}
+      )
+      if(BZ2_STATIC_LIB MATCHES BZ2_STATIC_LIB-NOTFOUND)
+        message(STATUS "Using shared BZ2 lib")
+        list(APPEND FREETYPE_LIBRARIES
+          ${BZ2_SHARED_LIB}
+          )
+      else()
+        message(STATUS "Using static BZ2 lib")
+        list(APPEND FREETYPE_LIBRARIES
+          ${BZ2_STATIC_LIB}
+          )
+      endif()
+    endif()
+
+    endif(OF_STATIC)
+
     list(APPEND OPENFRAMEWORKS_LIBRARIES
         ${ZLIB_LIBRARIES}
         ${CAIRO_LIBRARIES}
