@@ -952,6 +952,8 @@ endif()
 
 if(TARGET_ARCH MATCHES armv7)
     set(ARCH_FLAG "-march=armv7-a -mfpu=vfp -mfloat-abi=hard")
+elseif(TARGET_ARCH MATCHES armv6)
+    set(ARCH_FLAG "-march=armv6 -mfpu=vfp -mfloat-abi=hard")
 elseif(ARCH_BIT MATCHES 32)
     set(ARCH_FLAG "-m32")
 endif()
