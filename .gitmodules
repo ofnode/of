@@ -34,3 +34,10 @@
 [submodule "examples/addons/ofxCv"]
 	path = examples/addons/ofxCv
 	url = https://github.com/ofnode/ofxCv
+[submodule "src/glm"]
+	path = src/glm
+	url = https://github.com/g-truc/glm
+[submodule "src/FreeImage"]
+	path = src/FreeImage
+	url = https://github.com/ofnode/FreeImage
+	branch = 3.17.0-header-changes

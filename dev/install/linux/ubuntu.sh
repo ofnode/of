@@ -41,7 +41,9 @@ libgstreamer1.0-dev       \
 libgstreamer-plugins-base1.0-dev \
 g++-6 \
 gcovr \
-lcov
+lcov \
+libpugixml-dev \
+liburiparser-dev
 
 # Use gold linker
 sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
