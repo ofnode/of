@@ -1,140 +1,52 @@
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 
-if(NOT DEFINED CMAKE_MACOSX_RPATH)
-  set(CMAKE_MACOSX_RPATH 0)
-endif()
+include(${CMAKE_CURRENT_LIST_DIR}/ofnode_common.cmake)
 
 #// Options ////////////////////////////////////////////////////////////////////
 
 set(OF_COTIRE ON CACHE BOOL "Enable Cotire header precompiler")
-set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
-if(CMAKE_SYSTEM MATCHES Linux)
-
-  set(OF_AUDIO  ON  CACHE BOOL "Compile audio features of openFrameworks")
-  set(OF_VIDEO  ON  CACHE BOOL "Compile video features of openFrameworks")
-  set(OF_GTK    ON  CACHE BOOL "Compile with GTK3 (may conficts with Qt).")
-  set(OF_GTK2   OFF CACHE BOOL "Compile with GTK2.")
-
-elseif(CMAKE_SYSTEM MATCHES Darwin)
-
-  set(OF_AUDIO ON) # Do not turn off
-  set(OF_VIDEO ON) # Do not turn off
-
-elseif(CMAKE_SYSTEM MATCHES Windows)
-
-  set(OF_AUDIO ON) # Do not turn off
-  set(OF_VIDEO ON) # Do not turn off
+if(CMAKE_SYSTEM MATCHES Windows)
 
   set(OF_CONSOLE OFF CACHE BOOL "Enable console window")
-
-  set(OF_32BIT OFF CACHE BOOL "Enable compiling for 32-bit architectures")
 
 endif()
 
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
-set(RELEASE_FLAGS "
-  ${RELEASE_FLAGS}
+list(APPEND RELEASE_FLAGS 
   -g1
-")
+)
 
-set(DEBUG_FLAGS "
-  ${DEBUG_FLAGS}
+list(APPEND DEBUG_FLAGS
   -Winline
-  -fno-omit-frame-pointer
-  -fno-optimize-sibling-calls
-")
-
-#// GCC specific flags /////////////////////////////////////////////////////////
-
-if(CMAKE_C_COMPILER_ID STREQUAL GNU)
-
-  set(RELEASE_C_FLAGS_GCC "
-    ${RELEASE_C_FLAGS_GCC}
-    -Wno-psabi
-  ")
-
-  set(DEBUG_C_FLAGS_GCC "
-    ${DEBUG_C_FLAGS_GCC}
-    -Wno-psabi
-  ")
-
-endif()
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-
-  set(RELEASE_CXX_FLAGS_GCC "
-    ${RELEASE_CXX_FLAGS_GCC}
-    -Wno-psabi
-  ")
-
-  set(DEBUG_CXX_FLAGS_GCC "
-    ${DEBUG_CXX_FLAGS_GCC}
-    -Wno-psabi
-  ")
-
-endif()
+)
 
 #// Clang specific flags ///////////////////////////////////////////////////////
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
 
-  set(RELEASE_C_FLAGS_CLANG "
+  list(APPEND RELEASE_C_FLAGS_CLANG
     ${RELEASE_C_FLAGS_CLANG}
-    -Wno-switch
     -Wno-c++11-narrowing
-    -Wno-ignored-attributes
-    -Wno-deprecated-register
-  ")
+  )
 
-  set(DEBUG_C_FLAGS_CLANG "
+  list(APPEND DEBUG_C_FLAGS_CLANG
     ${DEBUG_C_FLAGS_CLANG}
-    -Wno-switch
     -Wno-c++11-narrowing
-    -Wno-ignored-attributes
-    -Wno-deprecated-register
-  ")
+  )
 
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
-  set(RELEASE_CXX_FLAGS_CLANG "
-    ${RELEASE_CXX_FLAGS_CLANG}
-    -Wno-switch
+  list(APPEND RELEASE_CXX_FLAGS_CLANG
     -Wno-c++11-narrowing
-    -Wno-ignored-attributes
-    -Wno-deprecated-register
-  ")
+  )
 
-  set(DEBUG_CXX_FLAGS_CLANG "
-    ${DEBUG_CXX_FLAGS_CLANG}
-    -Wno-switch
+  list(APPEND DEBUG_CXX_FLAGS_CLANG
     -Wno-c++11-narrowing
-    -Wno-ignored-attributes
-    -Wno-deprecated-register
-  ")
+  )
 
-endif()
-
-#// Setup //////////////////////////////////////////////////////////////////////
-
-set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
-
-if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE Release)
-endif()
-
-find_package(PkgConfig REQUIRED)
-
-include(TargetArch)
-target_architecture(TARGET_ARCH)
-
-if( ( TARGET_ARCH MATCHES "x86_64" OR TARGET_ARCH MATCHES "ia64" ) AND NOT OF_32BIT)
-   set(ARCH_BIT 64)
-else()
-   set(ARCH_BIT 32)
 endif()
 
 # Output shared libraries and executables to bin folder of your project tree
@@ -142,80 +54,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-
-set(OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/openframeworks"
-    "${OF_ROOT_DIR}/src/openframeworks/3d"
-    "${OF_ROOT_DIR}/src/openframeworks/app"
-    "${OF_ROOT_DIR}/src/openframeworks/communication"
-    "${OF_ROOT_DIR}/src/openframeworks/events"
-    "${OF_ROOT_DIR}/src/openframeworks/gl"
-    "${OF_ROOT_DIR}/src/openframeworks/graphics"
-    "${OF_ROOT_DIR}/src/openframeworks/math"
-    "${OF_ROOT_DIR}/src/openframeworks/sound"
-    "${OF_ROOT_DIR}/src/openframeworks/types"
-    "${OF_ROOT_DIR}/src/openframeworks/utils"
-    "${OF_ROOT_DIR}/src/openframeworks/video"
-
-    "${OF_ROOT_DIR}/src/freeimage/Source"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/jxrgluelib"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/encode"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/sys"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/x86"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/common"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/common/include"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Half"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Iex"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IexMath"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmThread"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath"
-
-    "${OF_ROOT_DIR}/src/glew"
-    "${OF_ROOT_DIR}/src/glew/include"
-
-    "${OF_ROOT_DIR}/src/glfw"
-    "${OF_ROOT_DIR}/src/glfw/include"
-    "${OF_ROOT_DIR}/src/glfw/include/GLFW"
-
-    "${OF_ROOT_DIR}/src/kissfft"
-    "${OF_ROOT_DIR}/src/kissfft/tools"
-
-    "${OF_ROOT_DIR}/src/libtess2"
-    "${OF_ROOT_DIR}/src/libtess2/Include"
-    "${OF_ROOT_DIR}/src/libtess2/Source"
-
-    "${OF_ROOT_DIR}/src/poco"
-    "${OF_ROOT_DIR}/src/poco/Crypto/include"
-    "${OF_ROOT_DIR}/src/poco/Foundation/include"
-    "${OF_ROOT_DIR}/src/poco/Net/include"
-    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
-    "${OF_ROOT_DIR}/src/poco/Util/include"
-    "${OF_ROOT_DIR}/src/poco/XML/include"
-    "${OF_ROOT_DIR}/src/poco/Zip/include"
-
-    "${OF_ROOT_DIR}/src/rtaudio"
-    "${OF_ROOT_DIR}/src/rtaudio/include"
-
-    "${OF_ROOT_DIR}/src/utf8cpp"
-    "${OF_ROOT_DIR}/src/utf8cpp/include"
-)
-
-if(CMAKE_SYSTEM MATCHES Windows)
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/videoinput"
-)
-endif()
 
 #// Platform-specific commands /////////////////////////////////////////////////
 

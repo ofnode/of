@@ -1,209 +1,13 @@
 project(openFrameworks)
 cmake_minimum_required(VERSION 2.8)
 
-if(NOT DEFINED CMAKE_MACOSX_RPATH)
-  set(CMAKE_MACOSX_RPATH 0)
-endif()
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
-
-#// Options ////////////////////////////////////////////////////////////////////
-
-set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
-
-if(CMAKE_SYSTEM MATCHES Linux)
-
-  set(OF_AUDIO  ON  CACHE BOOL "Compile audio features of openFrameworks")
-  set(OF_VIDEO  ON  CACHE BOOL "Compile video features of openFrameworks")
-  set(OF_GTK    ON  CACHE BOOL "Compile with GTK3 (may conficts with Qt).")
-  set(OF_GTK2   OFF CACHE BOOL "Compile with GTK2.")
-
-elseif(CMAKE_SYSTEM MATCHES Darwin)
-
-  set(OF_AUDIO ON) # Do not turn off
-  set(OF_VIDEO ON) # Do not turn off
-
-elseif(CMAKE_SYSTEM MATCHES Windows)
-
-  set(OF_AUDIO ON) # Do not turn off
-  set(OF_VIDEO ON) # Do not turn off
-
-  set(OF_32BIT OFF CACHE BOOL "Compile for 32-bit architectures")
-
-endif()
+include(ofnode_common.cmake)
 
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
-set(RELEASE_FLAGS "
-  -Wno-narrowing
+list(APPEND DEBUG_FLAGS
   -Wno-deprecated-declarations
-")
-
-set(DEBUG_FLAGS "
-  -Wno-narrowing
-  -fno-omit-frame-pointer
-  -fno-optimize-sibling-calls
-  -Wno-deprecated-declarations
-")
-
-#// GCC specific flags /////////////////////////////////////////////////////////
-
-if(CMAKE_C_COMPILER_ID STREQUAL GNU)
-
-  set(RELEASE_C_FLAGS_GCC "
-    -Wno-psabi
-  ")
-
-  set(DEBUG_C_FLAGS_GCC "
-    -Wno-psabi
-  ")
-
-endif()
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-
-  set(RELEASE_CXX_FLAGS_GCC "
-    -Wno-psabi
-  ")
-
-  set(DEBUG_CXX_FLAGS_GCC "
-    -Wno-psabi
-  ")
-
-endif()
-
-#// Clang specific flags ///////////////////////////////////////////////////////
-
-if(CMAKE_C_COMPILER_ID STREQUAL Clang)
-
-  set(RELEASE_C_FLAGS_CLANG "
-    -Wno-switch
-    -Wno-ignored-attributes
-    -Wno-deprecated-register
-  ")
-
-  set(DEBUG_C_FLAGS_CLANG "
-    -Wno-switch
-    -Wno-ignored-attributes
-    -Wno-deprecated-register
-  ")
-
-endif()
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
-
-  set(RELEASE_CXX_FLAGS_CLANG "
-    -Wno-switch
-    -Wno-ignored-attributes
-    -Wno-deprecated-register
-  ")
-
-  set(DEBUG_CXX_FLAGS_CLANG "
-    -Wno-switch
-    -Wno-ignored-attributes
-    -Wno-deprecated-register
-  ")
-
-endif()
-
-#// Setup //////////////////////////////////////////////////////////////////////
-
-set(OF_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
-
-find_package(PkgConfig REQUIRED)
-message(STATUS "PKG_CONFIG_PATH: " $ENV{PKG_CONFIG_PATH})
-message(STATUS "PKG_CONFIG_LIBDIR: "  $ENV{PKG_CONFIG_LIBDIR})
-message(STATUS "PKG_CONFIG_SYSROOT_DIR: " $ENV{PKG_CONFIG_SYSROOT_DIR})
-
-if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE Release)
-endif()
-
-include(TargetArch)
-
-target_architecture(TARGET_ARCH)
-
-if( ( TARGET_ARCH MATCHES "x86_64" OR TARGET_ARCH MATCHES "ia64" ) AND NOT OF_32BIT)
-   set(ARCH_BIT 64)
-else()
-   set(ARCH_BIT 32)
-endif()
-
-#// Include directories ////////////////////////////////////////////////////////
-
-set(OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/openframeworks"
-    "${OF_ROOT_DIR}/src/openframeworks/3d"
-    "${OF_ROOT_DIR}/src/openframeworks/app"
-    "${OF_ROOT_DIR}/src/openframeworks/communication"
-    "${OF_ROOT_DIR}/src/openframeworks/events"
-    "${OF_ROOT_DIR}/src/openframeworks/gl"
-    "${OF_ROOT_DIR}/src/openframeworks/graphics"
-    "${OF_ROOT_DIR}/src/openframeworks/math"
-    "${OF_ROOT_DIR}/src/openframeworks/sound"
-    "${OF_ROOT_DIR}/src/openframeworks/types"
-    "${OF_ROOT_DIR}/src/openframeworks/utils"
-    "${OF_ROOT_DIR}/src/openframeworks/video"
-
-    "${OF_ROOT_DIR}/src/freeimage/Source"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/jxrgluelib"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/encode"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/sys"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/x86"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/common"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/common/include"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Half"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Iex"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IexMath"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmThread"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath"
-
-    "${OF_ROOT_DIR}/src/glew"
-    "${OF_ROOT_DIR}/src/glew/include"
-
-    "${OF_ROOT_DIR}/src/glfw"
-    "${OF_ROOT_DIR}/src/glfw/include"
-    "${OF_ROOT_DIR}/src/glfw/include/GLFW"
-
-    "${OF_ROOT_DIR}/src/kissfft"
-    "${OF_ROOT_DIR}/src/kissfft/tools"
-
-    "${OF_ROOT_DIR}/src/libtess2"
-    "${OF_ROOT_DIR}/src/libtess2/Include"
-    "${OF_ROOT_DIR}/src/libtess2/Source"
-
-    "${OF_ROOT_DIR}/src/poco"
-    "${OF_ROOT_DIR}/src/poco/Crypto/include"
-    "${OF_ROOT_DIR}/src/poco/Foundation/include"
-    "${OF_ROOT_DIR}/src/poco/Net/include"
-    "${OF_ROOT_DIR}/src/poco/NetSSL_OpenSSL/include"
-    "${OF_ROOT_DIR}/src/poco/Util/include"
-    "${OF_ROOT_DIR}/src/poco/XML/include"
-    "${OF_ROOT_DIR}/src/poco/Zip/include"
-
-    "${OF_ROOT_DIR}/src/rtaudio"
-    "${OF_ROOT_DIR}/src/rtaudio/include"
-
-    "${OF_ROOT_DIR}/src/utf8cpp"
-    "${OF_ROOT_DIR}/src/utf8cpp/include"
 )
-
-if(CMAKE_SYSTEM MATCHES Windows)
-  list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    "${OF_ROOT_DIR}/src/videoinput"
-  )
-endif()
 
 #// Source files ///////////////////////////////////////////////////////////////
 
@@ -212,11 +16,12 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/3d/of3dUtils.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/3d/ofCamera.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/3d/ofEasyCam.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/3d/ofMesh.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/3d/ofNode.cpp"
 
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGlutWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppNoWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppRunner.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofBaseApp.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofMainLoop.cpp"
 
     "${OF_ROOT_DIR}/src/openframeworks/communication/ofArduino.cpp"
@@ -240,10 +45,10 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/graphics/ofBitmapFont.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/graphics/ofCairoRenderer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/graphics/ofGraphics.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofGraphicsBaseTypes.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/graphics/ofImage.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/graphics/ofPath.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/graphics/ofPixels.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/graphics/ofPolyline.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/graphics/ofRendererCollection.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/graphics/ofTessellator.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/graphics/ofTrueTypeFont.cpp"
@@ -285,7 +90,8 @@ endif()
 
 if(OF_AUDIO)
   list(APPEND OPENFRAMEWORKS_SOURCES
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofBaseSoundStream.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBaseTypes.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/sound/ofFmodSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBuffer.cpp"
@@ -311,6 +117,8 @@ if(OF_VIDEO)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationGrabber.mm"
     "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitMovieRenderer.m"
+    "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitPlayer.mm"
   )
   elseif(CMAKE_SYSTEM MATCHES Windows)
   list(APPEND OPENFRAMEWORKS_SOURCES
@@ -320,474 +128,526 @@ if(OF_VIDEO)
   endif()
 endif(OF_VIDEO)
 
+if(APPLE)
 set(FREEIMAGE_SOURCES
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/BitmapAccess.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ColorLookup.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/FreeImage.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/FreeImageIO.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/GetType.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/MemoryIO.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PixelAccess.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/J2KHelper.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/MNGHelper.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/Plugin.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginBMP.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginCUT.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginDDS.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginEXR.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginG3.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginGIF.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginHDR.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginICO.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginIFF.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginJ2K.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginJNG.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginJP2.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginJPEG.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginJXR.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginKOALA.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginMNG.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginPCD.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginPCX.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginPFM.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginPICT.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginPNG.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginPNM.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginPSD.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginRAS.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginRAW.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginSGI.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginTARGA.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginTIFF.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginWBMP.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginWebP.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginXBM.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PluginXPM.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/PSDParser.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/TIFFLogLuv.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/Conversion.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/Conversion16_555.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/Conversion16_565.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/Conversion24.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/Conversion32.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/Conversion4.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/Conversion8.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ConversionFloat.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ConversionRGB16.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ConversionRGBA16.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ConversionRGBAF.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ConversionRGBF.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ConversionType.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ConversionUINT16.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/Halftoning.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/tmoColorConvert.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/tmoDrago03.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/tmoFattal02.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/tmoReinhard05.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ToneMapping.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/LFPQuantizer.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/NNQuantizer.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/WuQuantizer.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/CacheFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/MultiPage.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImage/ZLibInterface.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/Background.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/BSplineRotate.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/Channels.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/ClassicRotate.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/Colors.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/CopyPaste.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/Display.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/Flip.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/JPEGTransform.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/MultigridPoissonSolver.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/Rescale.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/FreeImageToolkit/Resize.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/Exif.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/FIRational.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/FreeImageTag.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/IPTC.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/TagConversion.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/TagLib.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/Metadata/XTIFF.cpp"
+    "${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/decode/segdec.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/decode/strdec_x86.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/decode/strPredQuantDec.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/decode/strdec.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/decode/strInvTransform.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/decode/postprocess.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/decode/decode.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/decode/JXRTranscode.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/sys/strTransform.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/sys/adapthuff.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/sys/strcodec.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/sys/image.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/sys/perfTimerANSI.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/sys/strPredQuant.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/encode/segenc.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/encode/encode.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/encode/strPredQuantEnc.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/encode/strFwdTransform.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/encode/strenc.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/encode/strenc_x86.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/jxrgluelib/JXRMeta.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/jxrgluelib/JXRGlueJxr.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/jxrgluelib/JXRGluePFC.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/jxrgluelib/JXRGlue.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/dcraw/dcraw.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/internal/dcb_demosaicing.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngtrans.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngerror.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/example.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngrio.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngmem.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngrutil.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngrtran.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngwrite.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngtest.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngread.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngwio.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/png.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngpread.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngwutil.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngset.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngget.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibPNG/pngwtran.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/deflate.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/zutil.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/inftrees.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/gzclose.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/gzlib.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/adler32.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/gzwrite.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/compress.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/uncompr.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/infback.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/crc32.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/trees.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/gzread.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/inffast.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/ZLib/inflate.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/FreeImageC.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/jp2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/raw.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/dwt.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/function_list.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/t1.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/phix_manager.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/t1_generate_luts.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/bio.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/event.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/invert.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/mct.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/j2k.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/cio.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/tpix_manager.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/tcd.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/image.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/mqc.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/cidx_manager.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/openjpeg.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/t2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/ppix_manager.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/pi.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/tgt.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/thix_manager.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibOpenJPEG/opj_clock.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/ansi2knr.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jmemnobs.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jutils.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/rdswitch.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jmemmac.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jerror.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/example.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/wrtarga.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/transupp.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdapimin.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jfdctint.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jidctflt.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/wrjpgcom.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdmaster.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcprepct.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/wrppm.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdapistd.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jddctmgr.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdhuff.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/djpeg.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jfdctfst.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdmainct.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/wrbmp.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcapimin.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/cjpeg.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jctrans.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jmemname.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/rdjpgcom.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdsample.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jchuff.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcapistd.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdarith.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdtrans.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdpostct.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jmemansi.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/cdjpeg.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jccolor.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcmaster.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jidctint.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcsample.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/rdppm.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcarith.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdatasrc.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jfdctflt.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdmerge.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/ckconfig.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/wrrle.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdcoefct.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcdctmgr.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jpegtran.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/rdbmp.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdinput.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jmemmgr.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdatadst.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jccoefct.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/wrgif.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcomapi.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcmarker.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jquant1.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/rdgif.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/rdtarga.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcinit.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdcolor.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcparam.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/rdcolmap.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jmemdos.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/rdrle.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jidctfst.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jdmarker.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jaricom.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jquant2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibJPEG/jcmainct.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_packbits.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_close.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_warning.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_dirwrite.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_vms.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_unix.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_dirread.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_swab.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_pixarlog.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_fax3.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_read.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/mkg3states.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_wince.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_aux.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_lzma.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_jpeg.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_getimage.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_version.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_luv.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_open.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_win32.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_error.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_color.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_thunder.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_next.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_predict.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_jbig.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_dumpmode.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_print.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_extension.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_zip.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_lzw.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_flush.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_dir.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_dirinfo.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_write.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_compress.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/mkspans.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_tile.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_jpeg_12.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_codec.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_fax3sm.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_ojpeg.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibTIFF4/tif_strip.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.quant_levels.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.random.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.rescaler.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.quant_levels_dec.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.thread.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.color_cache.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.bit_writer.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.bit_reader.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.huffman_encode.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.filters.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.huffman.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/utils/utils.utils.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.cost.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.picture_rescale.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.frame.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.filter.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.histogram.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.picture_tools.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.syntax.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.quant.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.token.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.near_lossless.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.webpenc.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.analysis.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.tree.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.picture.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.picture_psnr.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.vp8l.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.config.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.picture_csp.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.iterator.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.alpha.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/enc/enc.backward_references.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.idec.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.vp8l.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.frame.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.quant.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.tree.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.vp8.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.buffer.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.webp.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.alpha.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dec/dec.io.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/mux/mux.muxinternal.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/mux/mux.muxedit.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/mux/mux.anim_encode.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/mux/mux.muxread.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.cost_sse2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.dec_neon.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.rescaler_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.filters_sse2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.enc_neon.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.alpha_processing_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.lossless_sse2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.enc.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.rescaler.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.dec_clip_tables.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.lossless.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.filters.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.cost_mips32.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.upsampling_sse2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.alpha_processing.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.argb_sse2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.cost_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.enc_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.cpu.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.cost.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.dec_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.lossless_mips32.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.yuv_mips32.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.enc_sse2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.rescaler_mips32.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.dec_mips32.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.argb.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.upsampling.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.enc_mips32.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.argb_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.upsampling_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.upsampling_neon.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.yuv_sse2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.lossless_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.filters_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.dec.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.dec_sse2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.lossless_neon.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.enc_avx2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.alpha_processing_sse2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.yuv_mips_dsp_r2.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/dsp/dsp.yuv.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibWebP/src/demux/demux.demux.c"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/src/libraw_datastream.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/src/libraw_c_api.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/src/libraw_cxx.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/internal/demosaic_packs.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/internal/dcraw_fileio.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/internal/libraw_x3f.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/internal/dcraw_common.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/internal/wf_filtering.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/internal/dht_demosaic.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/LibRawLite/internal/aahd_demosaic.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfFrameBuffer.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfConvert.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfIO.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfInputPartData.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfAcesFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfInputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTimeCode.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTiledMisc.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfScanLineInputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepFrameBuffer.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfStringVectorAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfWav.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfInputPart.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfEnvmap.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTiledOutputPart.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfHuf.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTileDescriptionAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfZipCompressor.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfRgbaYca.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTiledRgbaFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepTiledOutputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepImageStateAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfCompressor.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTestFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTileOffsets.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfBoxAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfRleCompressor.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfCompositeDeepScanLine.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfPreviewImageAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepScanLineInputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfPreviewImage.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfFramesPerSecond.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfMisc.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfMultiPartInputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfVersion.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfChromaticities.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfChannelListAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfPizCompressor.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfCompressionAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfStringAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfFastHuf.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTiledOutputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTimeCodeAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfEnvmapAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTiledInputPart.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfB44Compressor.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfOutputPart.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfChromaticitiesAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfIntAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfStandardAttributes.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfTiledInputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfHeader.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepScanLineInputPart.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfLineOrderAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepTiledInputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfRgbaFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfStdIO.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfOpaqueAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfGenericInputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfPartType.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfKeyCodeAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/dwaLookups.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepTiledInputPart.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDoubleAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfOutputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfSystemSpecific.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfOutputPartData.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfPxr24Compressor.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/b44ExpLogTable.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfChannelList.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfFloatAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfLut.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfRationalAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfVecAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfGenericOutputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfZip.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfMatrixAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfMultiPartOutputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfRle.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepScanLineOutputPart.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfThreading.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepCompositing.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfCRgbaFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDwaCompressor.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfMultiView.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepTiledOutputPart.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfRational.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfFloatVectorAttribute.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfDeepScanLineOutputFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmImf/ImfKeyCode.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Iex/IexBaseExc.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Iex/IexThrowErrnoExc.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Half/eLut.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Half/toFloat.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Half/half.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadSemaphore.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadMutexWin32.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadWin32.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThread.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadMutexPosix.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadPosix.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadSemaphorePosixCompat.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadPool.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadSemaphoreWin32.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadSemaphorePosix.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IlmThread/IlmThreadMutex.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Imath/ImathBox.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Imath/ImathMatrixAlgo.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Imath/ImathColorAlgo.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Imath/ImathFun.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Imath/ImathRandom.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Imath/ImathShear.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/Imath/ImathVec.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IexMath/IexMathFpu.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/OpenEXR/IexMath/IexMathFloatExc.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/Metadata/FIRational.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/Metadata/XTIFF.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/Metadata/TagLib.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/Metadata/TagConversion.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/Metadata/FreeImageTag.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/Metadata/IPTC.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/Metadata/Exif.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginJNG.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/TIFFLogLuv.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginXPM.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/FreeImage.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/GetType.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PixelAccess.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/Conversion32.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/Plugin.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginG3.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginPNG.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginJ2K.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginPCD.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ConversionFloat.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginEXR.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginMNG.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginXBM.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/Halftoning.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ColorLookup.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ConversionType.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginPNM.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginICO.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginKOALA.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/WuQuantizer.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/Conversion24.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ConversionRGBAF.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginTARGA.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ToneMapping.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PSDParser.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginGIF.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginPICT.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginJXR.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginCUT.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ConversionRGB16.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginTIFF.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/tmoColorConvert.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginJP2.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/Conversion16_565.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/Conversion8.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginPFM.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/Conversion.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/MemoryIO.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/tmoDrago03.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginPSD.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginPCX.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ZLibInterface.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginWBMP.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/MNGHelper.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginDDS.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginHDR.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginSGI.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ConversionRGBF.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/FreeImageIO.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginJPEG.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginRAS.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginRAW.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginWebP.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/BitmapAccess.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/MultiPage.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/J2KHelper.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/Conversion16_555.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/tmoFattal02.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ConversionUINT16.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/NNQuantizer.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/LFPQuantizer.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/tmoReinhard05.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginBMP.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/Conversion4.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/PluginIFF.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/CacheFile.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImage/ConversionRGBA16.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/Channels.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/CopyPaste.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/MultigridPoissonSolver.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/Flip.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/BSplineRotate.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/Colors.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/ClassicRotate.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/Rescale.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/Background.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/Resize.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/Display.cpp"
+"${OF_ROOT_DIR}/src/FreeImage/Source/FreeImageToolkit/JPEGTransform.cpp"
 
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jaricom.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcapimin.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcapistd.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcarith.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jccoefct.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jccolor.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcdctmgr.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jchuff.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcinit.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcmainct.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcmarker.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcmaster.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcomapi.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcparam.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcprepct.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jcsample.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jctrans.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdapimin.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdapistd.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdarith.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdatadst.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdatasrc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdcoefct.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdcolor.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jddctmgr.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdhuff.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdinput.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdmainct.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdmarker.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdmaster.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdmerge.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdpostct.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdsample.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jdtrans.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jerror.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jfdctflt.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jfdctfst.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jfdctint.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jidctflt.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jidctfst.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jidctint.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jmemmgr.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jmemnobs.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jquant1.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jquant2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/jutils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJPEG/transupp.c"
-    
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode/decode.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode/JXRTranscode.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode/postprocess.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode/segdec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode/strdec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode/strdec_x86.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode/strInvTransform.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/decode/strPredQuantDec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/encode/encode.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/encode/segenc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/encode/strenc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/encode/strenc_x86.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/encode/strFwdTransform.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/encode/strPredQuantEnc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/sys/adapthuff.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/sys/image.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/sys/perfTimerANSI.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/sys/strcodec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/sys/strPredQuant.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/image/sys/strTransform.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/jxrgluelib/JXRGlue.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/jxrgluelib/JXRGlueJxr.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/jxrgluelib/JXRGluePFC.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibJXR/jxrgluelib/JXRMeta.c"
-
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/bio.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/cio.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/dwt.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/event.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/function_list.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/image.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/invert.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/j2k.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/jp2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/mct.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/mqc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/openjpeg.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/opj_clock.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/pi.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/raw.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/t1.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/t2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/tcd.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibOpenJPEG/tgt.c"
-
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/png.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngerror.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngget.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngmem.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngpread.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngread.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngrio.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngrtran.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngrutil.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngset.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngtrans.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngwio.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngwrite.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngwtran.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibPNG/pngwutil.c"
-
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/internal/dcraw_common.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/internal/dcraw_fileio.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/internal/demosaic_packs.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/src/libraw_c_api.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/src/libraw_cxx.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibRawLite/src/libraw_datastream.cpp"
-
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_aux.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_close.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_codec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_color.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_compress.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_dir.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_dirinfo.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_dirread.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_dirwrite.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_dumpmode.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_error.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_extension.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_fax3.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_fax3sm.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_flush.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_getimage.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_jpeg.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_luv.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_lzma.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_lzw.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_next.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_ojpeg.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_open.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_packbits.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_pixarlog.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_predict.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_print.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_read.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_strip.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_swab.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_thunder.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_tile.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_version.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_warning.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_write.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibTIFF4/tif_zip.c"
-
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/tree_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/webp_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/buffer_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/idec_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/frame_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/alpha_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/vp8l_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/quant_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/io_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dec/vp8_dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/thread_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/quant_levels_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/random_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/rescaler_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/filters_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/bit_writer_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/huffman_encode_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/bit_reader_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/quant_levels_dec_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/huffman_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/utils/color_cache_utils.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/alpha_processing_sse41.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/upsampling_sse41.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/upsampling_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/enc_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_enc_neon.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/alpha_processing_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_msa.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/yuv_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/filters_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/enc_sse41.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/ssim_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/cost_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/rescaler_neon.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/yuv_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/enc_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/filters_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/enc_neon.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/rescaler_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/alpha_processing.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_neon.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/upsampling_msa.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/upsampling.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/rescaler.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/dec_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/cpu.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/dec.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/filters.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/cost_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/upsampling_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_enc_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_enc_msa.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/yuv_neon.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/rescaler_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/filters_neon.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_enc_mips32.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/enc_msa.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_enc_sse41.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/dec_mips32.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/cost_mips32.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/upsampling_neon.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/enc_mips32.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/yuv.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/rescaler_msa.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/yuv_mips32.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/dec_msa.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/rescaler_mips32.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/alpha_processing_neon.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/dec_sse41.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/dec_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/cost.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/dec_neon.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/enc_avx2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/alpha_processing_mips_dsp_r2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/ssim.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/yuv_sse41.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/filters_msa.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/dec_clip_tables.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/dsp/lossless_enc_sse2.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/mux/muxread.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/mux/muxedit.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/mux/anim_encode.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/mux/muxinternal.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/token_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/backward_references_cost_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/picture_tools_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/histogram_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/picture_psnr_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/filter_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/syntax_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/picture_rescale_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/frame_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/iterator_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/predictor_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/webp_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/alpha_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/vp8l_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/quant_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/tree_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/analysis_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/backward_references_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/picture_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/config_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/near_lossless_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/cost_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/enc/picture_csp_enc.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/demux/anim_decode.c"
-    "${OF_ROOT_DIR}/src/freeimage/Source/LibWebP/src/demux/demux.c"
-
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/b44ExpLogTable.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfAcesFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfB44Compressor.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfBoxAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfChannelList.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfChannelListAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfChromaticities.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfChromaticitiesAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfCompositeDeepScanLine.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfCompressionAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfCompressor.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfConvert.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfCRgbaFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepCompositing.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepFrameBuffer.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepImageStateAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepScanLineInputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepScanLineInputPart.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepScanLineOutputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepScanLineOutputPart.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepTiledInputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepTiledInputPart.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepTiledOutputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDeepTiledOutputPart.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDoubleAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfDwaCompressor.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfEnvmap.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfEnvmapAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfFastHuf.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfFloatAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfFloatVectorAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfFrameBuffer.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfFramesPerSecond.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfGenericInputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfGenericOutputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfHeader.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfHuf.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfInputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfInputPart.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfInputPartData.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfIntAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfIO.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfKeyCode.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfKeyCodeAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfLineOrderAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfLut.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfMatrixAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfMisc.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfMultiPartInputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfMultiPartOutputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfMultiView.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfOpaqueAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfOutputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfOutputPart.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfOutputPartData.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfPartType.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfPizCompressor.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfPreviewImage.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfPreviewImageAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfPxr24Compressor.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfRational.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfRationalAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfRgbaFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfRgbaYca.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfRle.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfRleCompressor.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfScanLineInputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfStandardAttributes.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfStdIO.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfStringAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfStringVectorAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfSystemSpecific.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTestFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfThreading.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTileDescriptionAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTiledInputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTiledInputPart.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTiledMisc.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTiledOutputFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTiledOutputPart.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTiledRgbaFile.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTileOffsets.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTimeCode.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfTimeCodeAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfVecAttribute.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfVersion.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfWav.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfZip.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmImf/ImfZipCompressor.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath/ImathBox.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath/ImathColorAlgo.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath/ImathFun.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath/ImathMatrixAlgo.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath/ImathRandom.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath/ImathShear.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Imath/ImathVec.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Iex/IexBaseExc.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Iex/IexThrowErrnoExc.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/Half/half.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmThread/IlmThread.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmThread/IlmThreadMutex.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmThread/IlmThreadPool.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IlmThread/IlmThreadSemaphore.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IexMath/IexMathFloatExc.cpp"
-    "${OF_ROOT_DIR}/src/freeimage/Source/OpenEXR/IexMath/IexMathFpu.cpp"
 )
 
+include_directories(
+    "${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/image/sys/"
+    "${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/common/include"
+    "${OF_ROOT_DIR}/src/FreeImage/Source/LibJXR/jxrgluelib"
+    )
+
 set_source_files_properties(${FREEIMAGE_SOURCES} PROPERTIES COMPILE_FLAGS "-w -fvisibility=hidden")
+endif()
+
+# add_subdirectory("${OF_ROOT_DIR}/src/libjasper")
 
 set(KISSFFT_SOURCES
     "${OF_ROOT_DIR}/src/kissfft/tools/kiss_fftr.c"
@@ -810,10 +670,12 @@ set(VIDEOINPUT_SOURCES
 )
 endif()
 
+add_subdirectory("${OF_ROOT_DIR}/src/glm")
+
 if(OF_AUDIO)
-set(RTAUDIO_SOURCES
-    "${OF_ROOT_DIR}/src/rtaudio/RtAudio.cpp"
-)
+ set(RTAUDIO_SOURCES
+     "${OF_ROOT_DIR}/src/rtaudio/RtAudio.cpp"
+ )
 endif()
 
 if(ARCH_BIT MATCHES 64)
@@ -841,6 +703,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_PLAYER_GSTREAMER
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
+
+    # TODO check for it instead of assuming it
+    set(PUGIXML_LIBRARIES pugixml)
+    set(GLUT_LIBRARIES glut)
+    set(URIPARSER_LIBRARIES uriparser)
 
     if(TARGET_ARCH MATCHES armv7)
       # Assuming Raspberry Pi 2 and Raspbian
@@ -925,6 +792,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${MPG123_INCLUDE_DIRS}
         ${SNDFILE_INCLUDE_DIR}
       )
+
+      set(FMODEX_LIBRARIES ${CMAKE_CURRENT_LIST_DIR}/src/fmodex/lib/linux64/libfmodex.so)
     endif()
 
     if(NOT OF_VIDEO)
@@ -1074,7 +943,7 @@ endif()
 
 list(APPEND OPENFRAMEWORKS_DEFINITIONS
     -DFREEIMAGE_LIB
-    -DPOCO_STATIC
+   # -DPOCO_STATIC
 )
 
 if(ARCH_BIT MATCHES 64)
@@ -1193,7 +1062,7 @@ else()
   set(LIB_MODE SHARED)
 endif()
 
-add_subdirectory(src/poco)
+# add_subdirectory(src/poco)
 
 if(ARCH_BIT MATCHES 64)
 add_subdirectory(src/glfw)
@@ -1226,16 +1095,16 @@ endif()
 
 if(NOT OF_STATIC)
 
-  add_dependencies(
-      openFrameworks
-      PocoCrypto
-      PocoFoundation
-      PocoJSON
-      PocoNet
-      PocoNetSSL
-      PocoUtil
-      PocoXML
-  )
+  # add_dependencies(
+  #     openFrameworks
+  #     PocoCrypto
+  #     PocoFoundation
+  #     PocoJSON
+  #     PocoNet
+  #     PocoNetSSL
+  #     PocoUtil
+  #     PocoXML
+  # )
 
   if(ARCH_BIT MATCHES 64)
     add_dependencies(
@@ -1258,15 +1127,15 @@ if(NOT OF_STATIC)
     )
   endif()
 
-  set(OPENFRAMEWORKS_LIBRARIES
-      PocoCrypto
-      PocoFoundation
-      PocoJSON
-      PocoNet
-      PocoNetSSL
-      PocoUtil
-      PocoXML
-  )
+  # set(OPENFRAMEWORKS_LIBRARIES
+  #     PocoCrypto
+  #     PocoFoundation
+  #     PocoJSON
+  #     PocoNet
+  #     PocoNetSSL
+  #     PocoUtil
+  #     PocoXML
+  # )
 
   if(CMAKE_SYSTEM MATCHES Windows)
   list(APPEND OPENFRAMEWORKS_LIBRARIES
@@ -1304,6 +1173,12 @@ if(NOT OF_STATIC)
       ${GSTREAMER_APP_LIBRARIES}
       ${GSTREAMER_BASE_LIBRARIES}
       ${GSTREAMER_VIDEO_LIBRARIES}
+      ${FMODEX_LIBRARIES}
+      ${PUGIXML_LIBRARIES}
+      ${URIPARSER_LIBRARIES}
+      ${GLUT_LIBRARIES}
+      freeimage
+      curl
   )
 
   if(ARCH_BIT MATCHES 64)
