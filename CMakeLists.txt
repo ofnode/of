@@ -298,12 +298,20 @@ if(OF_VIDEO)
     "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
   )
   elseif(CMAKE_SYSTEM MATCHES Darwin)
-  list(APPEND OPENFRAMEWORKS_SOURCES
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationGrabber.mm"
-    "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
-  )
+    list(APPEND OPENFRAMEWORKS_SOURCES
+      "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationPlayer.mm"
+      "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationVideoPlayer.m"
+      "${OF_ROOT_DIR}/src/openframeworks/video/ofAVFoundationGrabber.mm"
+      "${OF_ROOT_DIR}/src/openframeworks/video/ofQTKitGrabber.mm"
+    )
+
+    if(GSTREAMER_LIBRARIES)
+        list(APPEND OPENFRAMEWORKS_SOURCES
+          "${OF_ROOT_DIR}/src/openframeworks/video/ofGstUtils.cpp"
+          "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoGrabber.cpp"
+          "${OF_ROOT_DIR}/src/openframeworks/video/ofGstVideoPlayer.cpp"
+        )
+    endif()
   elseif(CMAKE_SYSTEM MATCHES Windows)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/video/ofDirectShowGrabber.cpp"
