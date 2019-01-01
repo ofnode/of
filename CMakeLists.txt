@@ -663,6 +663,10 @@ set(LIBTESS2_SOURCES
     "${OF_ROOT_DIR}/src/libtess2/Source/tess.c"
 )
 
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    "${OF_ROOT_DIR}/src/utf8cpp/include"
+)
+
 if(CMAKE_SYSTEM MATCHES Windows)
 set(VIDEOINPUT_SOURCES
   "${OF_ROOT_DIR}/src/videoinput/videoInput.cpp"
