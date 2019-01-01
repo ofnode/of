@@ -157,3 +157,16 @@ if(CMAKE_SYSTEM MATCHES Windows)
     "${OF_ROOT_DIR}/src/videoinput"
   )
 endif()
+
+if(OF_STATIC)
+  set(Boost_USE_STATIC_LIBS ON)
+endif()
+
+find_package(Boost COMPONENTS filesystem system REQUIRED)
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+    ${Boost_INCLUDE_DIRS}
+)
+list(APPEND OPENFRAMEWORKS_LIBRARIES
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+)

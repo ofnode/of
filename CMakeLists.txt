@@ -91,7 +91,6 @@ endif()
 if(OF_AUDIO)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBaseTypes.cpp"
-    "${OF_ROOT_DIR}/src/openframeworks/sound/ofFmodSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofOpenALSoundPlayer.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofRtAudioSoundStream.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBuffer.cpp"
@@ -747,11 +746,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
     endif()
 
     find_package(Freetype REQUIRED)
-    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIRS}
@@ -761,7 +758,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         #${EGL_INCLUDE_DIR}
         ${OPENGLES2_INCLUDE_DIR}
-        "${RPI_ROOT_PATH}/usr/include/arm-linux-gnueabihf" # needed when crosscompiling
       )
       # Assuming Raspberry Pi 2 and Raspbian
       # TODO : use FIND_LIBRARY instead of adding directory directly
@@ -793,7 +789,12 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${SNDFILE_INCLUDE_DIR}
       )
 
-      set(FMODEX_LIBRARIES ${CMAKE_CURRENT_LIST_DIR}/src/fmodex/lib/linux64/libfmodex.so)
+      if (NOT TARGET_ARCH MATCHES arm*)
+        list(APPEND OPENFRAMEWORKS_SOURCES
+          "${OF_ROOT_DIR}/src/openframeworks/sound/ofSoundBaseTypes.cpp"
+        )
+        set(FMODEX_LIBRARIES ${CMAKE_CURRENT_LIST_DIR}/src/fmodex/lib/linux64/libfmodex.so)
+      endif()
     endif()
 
     if(NOT OF_VIDEO)
@@ -801,7 +802,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
     else()
 
       find_package(UDev REQUIRED)
-      # FIXME : glib and Gstreamer are found in /usr/* instead of RPI_ROOT_PATH when CMAKE_CROSSCOMPILING
       find_package(Glib REQUIRED)
       message(STATUS "GLIB include dir: "      ${GLIB_INCLUDE_DIRS})
 
@@ -882,7 +882,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(OpenSSL REQUIRED)
     find_package(SndFile REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     # Hardcode FreeType path, see issue #15
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
@@ -891,7 +890,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
@@ -925,11 +923,9 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(OpenGL REQUIRED)
     find_package(MPG123 REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${CAIRO_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
@@ -1166,8 +1162,6 @@ if(NOT OF_STATIC)
       ${LIBINTL_LIBRARIES}
       ${FREETYPE_LIBRARIES}
       ${FONTCONFIG_LIBRARIES}
-      ${Boost_SYSTEM_LIBRARY}
-      ${Boost_FILESYSTEM_LIBRARY}
       ${CMAKE_THREAD_LIBS_INIT}
       ${GSTREAMER_LIBRARIES}
       ${GSTREAMER_APP_LIBRARIES}

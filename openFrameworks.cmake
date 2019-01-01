@@ -133,10 +133,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     #// Global dependencies ////////////////////////////////////////////////////
 
-    if(OF_STATIC)
-    set(Boost_USE_STATIC_LIBS ON)
-    endif()
-
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
@@ -151,7 +147,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
     find_package(OpenSSL REQUIRED)
     find_package(Threads REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     #// Link static libs if available //////////////////////////////////////////
 
@@ -256,7 +251,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${X11_INCLUDE_DIR}
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
@@ -290,8 +284,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${OPENSSL_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
-        ${Boost_SYSTEM_LIBRARY}
-        ${Boost_FILESYSTEM_LIBRARY}
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
@@ -439,7 +431,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     find_package(MPG123 REQUIRED)
     find_package(Sndfile REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     # Homebrew version
     set(OPENSSL_INCLUDE_DIR
@@ -458,7 +449,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
@@ -591,8 +581,6 @@ elseif(CMAKE_SYSTEM MATCHES Darwin)
         ${SNDFILE_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
-        ${Boost_SYSTEM_LIBRARY}
-        ${Boost_FILESYSTEM_LIBRARY}
     )
 
     # Frameworks
@@ -673,7 +661,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     find_package(Threads REQUIRED)
     find_package(LibIntl REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(Boost COMPONENTS filesystem system REQUIRED)
 
     find_library(WINMM_LIB winmm)
     find_library(GDI32_LIB gdi32)
@@ -688,7 +675,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
     list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${ZLIB_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${OPENGL_INCLUDE_DIR}
         ${MPG123_INCLUDE_DIRS}
@@ -712,8 +698,6 @@ elseif(CMAKE_SYSTEM MATCHES Windows)
         ${LIBINTL_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
-        ${Boost_SYSTEM_LIBRARY}
-        ${Boost_FILESYSTEM_LIBRARY}
         ${CMAKE_THREAD_LIBS_INIT}
     )
 
