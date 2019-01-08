@@ -170,3 +170,4 @@ list(APPEND OPENFRAMEWORKS_LIBRARIES
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
 )
+message(STATUS "Boost include dir ${Boost_INCLUDE_DIRS}")

@@ -18,7 +18,6 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/3d/ofEasyCam.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/3d/ofNode.cpp"
 
-    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGlutWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppNoWindow.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppRunner.cpp"
     "${OF_ROOT_DIR}/src/openframeworks/app/ofBaseApp.cpp"
@@ -78,13 +77,14 @@ set(OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/utils/ofXml.cpp"
 )
 
-if(TARGET_ARCH MATCHES armv7)
+if(TARGET_ARCH MATCHES arm*)
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppEGLWindow.cpp"
   )
 else()
   list(APPEND OPENFRAMEWORKS_SOURCES
     "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGLFWWindow.cpp"
+    "${OF_ROOT_DIR}/src/openframeworks/app/ofAppGlutWindow.cpp"
   )
 endif()
 
@@ -712,7 +712,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
     set(GLUT_LIBRARIES glut)
     set(URIPARSER_LIBRARIES uriparser)
 
-    if(TARGET_ARCH MATCHES armv7)
+    if(TARGET_ARCH MATCHES arm*)
       # Assuming Raspberry Pi 2 and Raspbian
       list(APPEND OPENFRAMEWORKS_DEFINITIONS
         -DTARGET_RASPBERRY_PI
@@ -730,10 +730,24 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOMX
         -DOMX_SKIP64BIT
         -DUSE_EXTERNAL_OMX
-        -DHAVE_LIBBCM_HOST
-        -DUSE_EXTERNAL_LIBBCM_HOST
         -DUSE_VCHIQ_ARM
       )
+
+      find_path(BCMHOST_INCLUDE_DIRS
+        bcm_host.h
+        PATHS 
+        /opt/vc/include
+        /opt/cross-pi-gcc/opt/vc/include
+        )
+
+      if(BCBHOST_INCLUDE_DIRS)
+        list(APPEND OPENFRAMEWORKS_DEFINITIONS
+            -DHAVE_LIBBCM_HOST
+            -DUSE_EXTERNAL_LIBBCM_HOST
+        )  
+      endif()
+
+      message(STATUS "BCM include dir ${BCMHOST_INCLUDE_DIRS}")
     endif()
 
     message(STATUS "CMAKE_FIND_ROOT_PATH : " ${CMAKE_FIND_ROOT_PATH})
@@ -742,11 +756,12 @@ if(CMAKE_SYSTEM MATCHES Linux)
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
-    if(TARGET_ARCH MATCHES armv7)
+    if(TARGET_ARCH MATCHES arm*)
     # TODO change that to point to /opt/vc/include directory
-    find_package(OpenGLES REQUIRED)
+      find_package(OpenGLES REQUIRED)
+      message(STATUS "OpenGLES include dir : ${OPENGLES2_INCLUDE_DIR}")
     else()
-    find_package(OpenGL REQUIRED)
+      find_package(OpenGL REQUIRED)
     endif()
 
     find_package(Freetype REQUIRED)
@@ -756,27 +771,14 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${OPENGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIRS}
+        ${OPENGLES2_INCLUDE_DIR}
+        ${BCMHOST_INCLUDE_DIRS}
     )
 
-    if(TARGET_ARCH MATCHES armv7)
-      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        #${EGL_INCLUDE_DIR}
-        ${OPENGLES2_INCLUDE_DIR}
-      )
-      # Assuming Raspberry Pi 2 and Raspbian
-      # TODO : use FIND_LIBRARY instead of adding directory directly
-      list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-        ${RPI_ROOT_PATH}/opt/vc/include
-        ${RPI_ROOT_PATH}/opt/vc/include/IL
-        ${RPI_ROOT_PATH}/opt/vc/include/interface/vcos/pthreads
-        ${RPI_ROOT_PATH}/opt/vc/include/interface/vmcs_host/linux
-      )
-    endif()
-
-    message(STATUS "CAIRO_INCLUDE_DIRS: " ${CAIRO_INCLUDE_DIRS})
-    message(STATUS "EGL_INCLUDE_DIR: " ${EGL_INCLUDE_DIR})
-    message(STATUS "OPENGLES2_INCLUDE_DIR: " ${OPENGLES2_INCLUDE_DIR})
-    message(STATUS "FREETYPE_INCLUDE_DIRS: " ${FREETYPE_INCLUDE_DIRS})
+    message(STATUS "CAIRO_INCLUDE_DIRS: ${CAIRO_INCLUDE_DIRS}")
+    message(STATUS "EGL_INCLUDE_DIR:  ${EGL_INCLUDE_DIR}")
+    message(STATUS "OPENGLES2_INCLUDE_DIR: ${OPENGLES2_INCLUDE_DIR}")
+    message(STATUS "FREETYPE_INCLUDE_DIRS: ${FREETYPE_INCLUDE_DIRS}")
 
     if(NOT OF_AUDIO)
       list(APPEND OPENFRAMEWORKS_DEFINITIONS -DTARGET_NO_SOUND)
@@ -807,7 +809,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
       find_package(UDev REQUIRED)
       find_package(Glib REQUIRED)
-      message(STATUS "GLIB include dir: "      ${GLIB_INCLUDE_DIRS})
+      message(STATUS "GLIB include dir:      ${GLIB_INCLUDE_DIRS}")
 
       find_package(GStreamer QUIET)
 
@@ -821,10 +823,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
       message(STATUS "Gstreamer include dir: " ${GSTREAMER_INCLUDE_DIRS})
 
-      message(STATUS "Gstreamer lib: "       ${GSTREAMER_LIBRARIES})
-      message(STATUS "Gstreamer-app lib: "   ${GSTREAMER_APP_LIBRARIES})
-      message(STATUS "Gstreamer-base lib: "  ${GSTREAMER_BASE_LIBRARIES})
-      message(STATUS "Gstreamer-video lib: " ${GSTREAMER_VIDEO_LIBRARIES})
+      message(STATUS "Gstreamer lib:        ${GSTREAMER_LIBRARIES}")
+      message(STATUS "Gstreamer-app lib:    ${GSTREAMER_APP_LIBRARIES}")
+      message(STATUS "Gstreamer-base lib:   ${GSTREAMER_BASE_LIBRARIES}")
+      message(STATUS "Gstreamer-video lib:  ${GSTREAMER_VIDEO_LIBRARIES}")
 
 
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
@@ -839,8 +841,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
         list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS ${GTK3_INCLUDE_DIRS} )
         list(APPEND OPENFRAMEWORKS_LIBRARIES ${GTK3_LIBRARIES} )
 
-        message(STATUS "Gtk+-3 include dir: "      ${GTK3_INCLUDE_DIRS})
-        message(STATUS "Gtk+-3 libraries: "      ${GTK3_LIBRARIES})
+        message(STATUS "Gtk+-3 include dir:       ${GTK3_INCLUDE_DIRS}")
+        message(STATUS "Gtk+-3 libraries:         ${GTK3_LIBRARIES}")
 
       endif()
 
