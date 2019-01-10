@@ -1,4 +1,9 @@
+# Prepare sysroot
 
+1. download packages (without installing them) on a fresh raspbian scretch installation (enter commands in the raspberry pi console) :
+
+
+```
     sudo aptitude --download-only install \
 	xorg-dev                  \
 	libgtk-3-dev              \
@@ -41,37 +46,79 @@
 	libglib2.0-0 \
 	libfreeimage-dev \
     freeglut3-dev \
-    freeglut3
+    freeglut3 \
+    libx11-6 \
+	libxext6 \
+	libssl1.1 \
+```
 
-extract all deb into a sysroot folder :
+You might need to re-run the above command with 
 
+
+2. extract all deb into a sysroot folder (enter commands in the raspberry pi console) :
+
+
+```
     mkdir ~/sysroot
     cd ~/sysroot
     for deb in /var/cache/apt/archives/*.deb; do dpkg-deb -xv $deb .; done
-  
-use rsync to transfert the sysroot
+```
 
+3. use rsync to transfert the sysroot to the host (enter commands in the host console)
+
+```
     mkdir ~/ofnode
     cd ofnode
     rsync -avz pi@raspberrypi.local:~/sysroot .
+```
 
-update links
+4. update links
 
+```
     pushd sysroot/usr/lib/arm-linux-gnueabihf
     ln -fs  ../../../lib/arm-linux-gnueabihf/libz.so.1 libz.so
     ln -fs  ../../../lib/arm-linux-gnueabihf/libglib-2.0.so.0 libglib-2.0.so
     popd
+```
 
-add standards includes : 
+5. add standards includes : 
 
+```
     pushd sysroot/usr
     rsync -avz pi@raspberrypi.local:/usr/include .
     popd
+```
 
-add opt/vc directory (for RPi specific header/lib)
+6. add opt/vc directory (for RPi specific header/lib)
 
+```
     pushd sysroot
     mkdir opt
     cd opt
     rsync -avz pi@raspberrypi.local:/opt/vc .
     popd
+```
+
+# Get ofnode itself
+
+    git clone --depth=1 https://github.com/ofnode/of.git
+    git clone --depth=1 https://github.com/ofnode/ofApp.git
+
+# Get a cross crompiler toolchain 
+
+# Build it 
+
+then you could configure and build with the following :
+
+     mkdir build-of-rpi
+     pushd build-of-rpi
+     cmake ../of -DCMAKE_TOOLCHAIN_FILE=../of/dev/arm-linux-gnueabihf.cmake -GNinja -DCMAKE_SYSROOT=`realpath "${PWD}/../sysroot"`
+     ninja
+
+and build test empty app
+
+     mkdir build-ofApp-rpi
+     pushd build-ofApp-rpi
+     cmake ../of -DCMAKE_TOOLCHAIN_FILE=../of/dev/arm-linux-gnueabihf.cmake -GNinja -DCMAKE_SYSROOT=`realpath "${PWD}/../sysroot"`
+     ninja
+
