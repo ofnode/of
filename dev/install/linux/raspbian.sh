@@ -35,7 +35,10 @@ gstreamer1.0-plugins-good \
 gstreamer1.0-plugins-bad  \
 gstreamer1.0-plugins-ugly \
 libgstreamer1.0-dev       \
-libgstreamer-plugins-base1.0-dev
+libgstreamer-plugins-base1.0-dev \
+libcurl4-openssl-dev \
+liburiparser-dev \
+libpugixml-dev
 
 # Use gold linker
 sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld

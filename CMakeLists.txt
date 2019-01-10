@@ -707,11 +707,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DOF_VIDEO_CAPTURE_GSTREAMER
     )
 
-    # TODO check for it instead of assuming it
-    set(PUGIXML_LIBRARIES pugixml)
-    set(GLUT_LIBRARIES glut)
-    set(URIPARSER_LIBRARIES uriparser)
-
     if(TARGET_ARCH MATCHES arm*)
       # Assuming Raspberry Pi 2 and Raspbian
       list(APPEND OPENFRAMEWORKS_DEFINITIONS
@@ -740,7 +735,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         /opt/cross-pi-gcc/opt/vc/include
         )
 
-      if(BCBHOST_INCLUDE_DIRS)
+      if(BCMHOST_INCLUDE_DIRS)
         list(APPEND OPENFRAMEWORKS_DEFINITIONS
             -DHAVE_LIBBCM_HOST
             -DUSE_EXTERNAL_LIBBCM_HOST
@@ -755,6 +750,12 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+    pkg_check_modules(CURL REQUIRED libcurl)
+    pkg_check_modules(URIPARSER REQUIRED liburiparser)
+
+    find_package(FreeImage REQUIRED)
+    find_package(PugiXML REQUIRED)
+    find_package(GLUT REQUIRED)
 
     if(TARGET_ARCH MATCHES arm*)
     # TODO change that to point to /opt/vc/include directory
@@ -771,8 +772,12 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${OPENGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIRS}
+        ${CURL_INCLUDE_DIRS}
+        ${URIPARSER_INCLUDE_DIRS}
         ${OPENGLES2_INCLUDE_DIR}
         ${BCMHOST_INCLUDE_DIRS}
+        ${FREEIMAGE_INCLUDE_PATH}
+        ${PUGIXML_INCLUDE_DIRS}
     )
 
     message(STATUS "CAIRO_INCLUDE_DIRS: ${CAIRO_INCLUDE_DIRS}")
@@ -1177,8 +1182,8 @@ if(NOT OF_STATIC)
       ${PUGIXML_LIBRARIES}
       ${URIPARSER_LIBRARIES}
       ${GLUT_LIBRARIES}
-      freeimage
-      curl
+      ${FREEIMAGE_LIBRARIES}
+      ${CURL_LIBRARIES}
   )
 
   if(ARCH_BIT MATCHES 64)

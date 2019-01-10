@@ -171,3 +171,10 @@ list(APPEND OPENFRAMEWORKS_LIBRARIES
     ${Boost_FILESYSTEM_LIBRARY}
 )
 message(STATUS "Boost include dir ${Boost_INCLUDE_DIRS}")
+
+# "${CMAKE_SYSROOT}/usr/include" is not added to include directories
+# see https://gitlab.kitware.com/cmake/cmake/issues/17966
+# and it seems to be a bug in crosscompiler
+# see https://github.com/abhiTronix/raspberry-pi-cross-compilers/issues/3
+unset(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES)
+unset(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES)

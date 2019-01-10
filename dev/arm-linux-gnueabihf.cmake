@@ -9,9 +9,17 @@ SET(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
 SET(CMAKE_ASM_COMPILER arm-linux-gnueabihf-gcc)
 SET(CMAKE_SYSTEM_PROCESSOR arm)
 
-# search for programs in the build host directories
-SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+# using relative path to sysroot doesn't work, 
+# please set CMAKE_SYSROOT by command line argument
+# SET(CMAKE_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../../sysroot")
 
+SET(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
+SET(ENV{PKG_CONFIG_DIR} ${CMAKE_SYSROOT})   
+SET(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/pkgconfig:${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig:${CMAKE_SYSROOT}/opt/vc/lib/pkgconfig")
+SET(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
+
+# don't search for program in the target sysroot since we can't run it
+SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 SET(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
