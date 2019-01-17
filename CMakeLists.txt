@@ -698,62 +698,11 @@ if(CMAKE_SYSTEM MATCHES Linux)
       set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}-${ARCH_BIT}")
       set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}-${ARCH_BIT}")
     endif()
-
-    set(OPENFRAMEWORKS_DEFINITIONS
-        -DOF_USING_MPG123
-        -DOF_SOUND_PLAYER_OPENAL
-        -DOF_SOUNDSTREAM_RTAUDIO
-        -DOF_VIDEO_PLAYER_GSTREAMER
-        -DOF_VIDEO_CAPTURE_GSTREAMER
-    )
-
-    if(TARGET_ARCH MATCHES arm*)
-      # Assuming Raspberry Pi 2 and Raspbian
-      list(APPEND OPENFRAMEWORKS_DEFINITIONS
-        -DTARGET_RASPBERRY_PI
-        -DUSE_DISPMANX_TRANSFORM_T
-        -DSTANDALONE
-        -DPIC
-        -D_REENTRANT
-        -D_LARGEFILE64_SOURCE
-        -D_FILE_OFFSET_BITS=64
-        -D_FORTIFY_SOURCE
-        -D__STDC_CONSTANT_MACROS
-        -D__STDC_LIMIT_MACROS
-        -DTARGET_POSIX
-        -DHAVE_LIBOPENMAX=2
-        -DOMX
-        -DOMX_SKIP64BIT
-        -DUSE_EXTERNAL_OMX
-        -DUSE_VCHIQ_ARM
-      )
-
-      find_path(BCMHOST_INCLUDE_DIRS
-        bcm_host.h
-        PATHS 
-        /opt/vc/include
-        /opt/cross-pi-gcc/opt/vc/include
-        )
-
-      if(BCMHOST_INCLUDE_DIRS)
-        list(APPEND OPENFRAMEWORKS_DEFINITIONS
-            -DHAVE_LIBBCM_HOST
-            -DUSE_EXTERNAL_LIBBCM_HOST
-        )  
-      endif()
-
-      message(STATUS "BCM include dir ${BCMHOST_INCLUDE_DIRS}")
-    endif()
-
-    message(STATUS "CMAKE_FIND_ROOT_PATH : " ${CMAKE_FIND_ROOT_PATH})
-    message(STATUS "PKG_CONFIG_LIBDIR : " ${PKG_CONFIG_LIBDIR})
-
+ 
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
-    pkg_check_modules(CURL REQUIRED libcurl)
     pkg_check_modules(URIPARSER REQUIRED liburiparser)
 
-    find_package(FreeImage REQUIRED)
     find_package(PugiXML REQUIRED)
     find_package(GLUT REQUIRED)
 
@@ -772,10 +721,8 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${OPENGL_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIRS}
         ${FONTCONFIG_INCLUDE_DIRS}
-        ${CURL_INCLUDE_DIRS}
         ${URIPARSER_INCLUDE_DIRS}
         ${OPENGLES2_INCLUDE_DIR}
-        ${BCMHOST_INCLUDE_DIRS}
         ${FREEIMAGE_INCLUDE_PATH}
         ${PUGIXML_INCLUDE_DIRS}
     )
@@ -816,15 +763,10 @@ if(CMAKE_SYSTEM MATCHES Linux)
       find_package(Glib REQUIRED)
       message(STATUS "GLIB include dir:      ${GLIB_INCLUDE_DIRS}")
 
-      find_package(GStreamer QUIET)
-
-      if ( "${GSTREAMER_INCLUDE_DIRS}" STREQUAL "" )
-
-        PKG_CHECK_MODULES(GSTREAMER gstreamer-1.0)
-        PKG_CHECK_MODULES(GSTREAMER_BASE gstreamer-base-1.0)
-        PKG_CHECK_MODULES(GSTREAMER_VIDEO gstreamer-video-1.0)
-        PKG_CHECK_MODULES(GSTREAMER_APP gstreamer-app-1.0)
-      endif()
+      pkg_check_modules(GSTREAMER gstreamer-1.0)
+      pkg_check_modules(GSTREAMER_BASE gstreamer-base-1.0)
+      pkg_check_modules(GSTREAMER_VIDEO gstreamer-video-1.0)
+      pkg_check_modules(GSTREAMER_APP gstreamer-app-1.0)
 
       message(STATUS "Gstreamer include dir: " ${GSTREAMER_INCLUDE_DIRS})
 
@@ -832,7 +774,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
       message(STATUS "Gstreamer-app lib:    ${GSTREAMER_APP_LIBRARIES}")
       message(STATUS "Gstreamer-base lib:   ${GSTREAMER_BASE_LIBRARIES}")
       message(STATUS "Gstreamer-video lib:  ${GSTREAMER_VIDEO_LIBRARIES}")
-
 
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${UDEV_INCLUDE_DIR}
@@ -1182,8 +1123,6 @@ if(NOT OF_STATIC)
       ${PUGIXML_LIBRARIES}
       ${URIPARSER_LIBRARIES}
       ${GLUT_LIBRARIES}
-      ${FREEIMAGE_LIBRARIES}
-      ${CURL_LIBRARIES}
   )
 
   if(ARCH_BIT MATCHES 64)

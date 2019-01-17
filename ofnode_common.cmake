@@ -2,6 +2,13 @@ if(NOT DEFINED CMAKE_MACOSX_RPATH)
   set(CMAKE_MACOSX_RPATH 0)
 endif()
 
+# "${CMAKE_SYSROOT}/usr/include" is not added to include directories
+# see https://gitlab.kitware.com/cmake/cmake/issues/17966
+# and it seems to be a bug in crosscompiler
+# see https://github.com/abhiTronix/raspberry-pi-cross-compilers/issues/3
+unset(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES)
+unset(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES)
+
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/dev/cmake")
 set(OF_STATIC OFF CACHE BOOL "Link openFrameworks libraries statically")
 
@@ -162,19 +169,83 @@ if(OF_STATIC)
   set(Boost_USE_STATIC_LIBS ON)
 endif()
 
-find_package(Boost COMPONENTS filesystem system REQUIRED)
-list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-    ${Boost_INCLUDE_DIRS}
-)
-list(APPEND OPENFRAMEWORKS_LIBRARIES
-    ${Boost_SYSTEM_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-)
-message(STATUS "Boost include dir ${Boost_INCLUDE_DIRS}")
 
-# "${CMAKE_SYSROOT}/usr/include" is not added to include directories
-# see https://gitlab.kitware.com/cmake/cmake/issues/17966
-# and it seems to be a bug in crosscompiler
-# see https://github.com/abhiTronix/raspberry-pi-cross-compilers/issues/3
-unset(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES)
-unset(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES)
+if(CMAKE_SYSTEM MATCHES Linux)
+
+  set(OPENFRAMEWORKS_DEFINITIONS
+      -DOF_USING_MPG123
+      -DOF_SOUND_PLAYER_OPENAL
+      -DOF_SOUNDSTREAM_RTAUDIO
+      -DOF_VIDEO_PLAYER_GSTREAMER
+      -DOF_VIDEO_CAPTURE_GSTREAMER
+  )
+
+ if(TARGET_ARCH MATCHES arm*)
+    # Assuming Raspberry Pi 2 and Raspbian
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+      -DTARGET_RASPBERRY_PI
+      -DUSE_DISPMANX_TRANSFORM_T
+      -DSTANDALONE
+      -DPIC
+      -D_REENTRANT
+      -D_LARGEFILE64_SOURCE
+      -D_FILE_OFFSET_BITS=64
+      -D_FORTIFY_SOURCE
+      -D__STDC_CONSTANT_MACROS
+      -D__STDC_LIMIT_MACROS
+      -DTARGET_POSIX
+      -DHAVE_LIBOPENMAX=2
+      -DOMX
+      -DOMX_SKIP64BIT
+      -DUSE_EXTERNAL_OMX
+      -DUSE_VCHIQ_ARM
+    )
+
+    pkg_check_modules(BCMHOST REQUIRED bcm_host)
+
+    list(APPEND OPENFRAMEWORKS_DEFINITIONS
+        -DHAVE_LIBBCM_HOST
+        -DUSE_EXTERNAL_LIBBCM_HOST
+    ) 
+
+    find_package(FreeImage REQUIRED)
+
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+              ${FREEIMAGE_INCLUDE_PATH}
+    )
+    
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+      ${FREEIMAGE_LIBRARIES}
+    )
+
+
+    message(STATUS "BCM include dir ${BCMHOST_INCLUDE_DIRS}")
+    message(STATUS "BCM lib ${BCMHOST_LIBRARIES}")
+
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+              ${BCMHOST_INCLUDE_DIRS}
+    )
+    
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+      ${BCMHOST_LIBRARIES}
+    )
+
+    link_directories(${CMAKE_SYSROOT}/opt/vc/lib)
+  endif()
+
+  pkg_check_modules(CURL REQUIRED libcurl)
+
+  find_package(Boost COMPONENTS filesystem system REQUIRED)
+
+  list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+      ${Boost_INCLUDE_DIRS}
+      ${CURL_INCLUDE_DIRS}
+  )
+  list(APPEND OPENFRAMEWORKS_LIBRARIES
+      ${Boost_SYSTEM_LIBRARY}
+      ${Boost_FILESYSTEM_LIBRARY}
+      ${CURL_LIBRARIES}
+  )
+  message(STATUS "Boost include dir ${Boost_INCLUDE_DIRS}")
+
+endif()

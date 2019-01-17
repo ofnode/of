@@ -59,15 +59,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
-    set(OPENFRAMEWORKS_DEFINITIONS
-        -DOF_USING_MPG123
-        -DOF_SOUND_PLAYER_OPENAL
-        -DOF_SOUNDSTREAM_RTAUDIO
-        -DOF_VIDEO_PLAYER_GSTREAMER
-        -DOF_VIDEO_CAPTURE_GSTREAMER
-    )
-
-    if(TARGET_ARCH MATCHES armv7)
+    if(TARGET_ARCH MATCHES arm*)
       # Assuming Raspberry Pi 2 and Raspbian
       list(APPEND OPENFRAMEWORKS_DEFINITIONS
         -DTARGET_RASPBERRY_PI
@@ -95,9 +87,15 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
     # The folder of executable will be
     # search path for shared libraries
-    set(OPENFRAMEWORKS_LIBRARIES
+    list(INSERT OPENFRAMEWORKS_LIBRARIES 0
         -Wl,-rpath,'$$ORIGIN'
     )
+
+    if(CMAKE_CROSSCOMPILING)
+      list(INSERT OPENFRAMEWORKS_LIBRARIES 0
+        -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib:${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf:${CMAKE_SYSROOT}/lib:${CMAKE_SYSROOT}/lib/arm-linux-gnueabihf:${CMAKE_SYSROOT}/opt/vc/lib
+      )
+    endif(CMAKE_CROSSCOMPILING)
 
     if(CMAKE_BUILD_TYPE MATCHES Release)
         set(OF_LIB_DIR "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}-${ARCH_BIT}")
@@ -136,10 +134,14 @@ if(CMAKE_SYSTEM MATCHES Linux)
     pkg_check_modules(CAIRO REQUIRED cairo)
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 
-    if(TARGET_ARCH MATCHES armv7)
-    find_package(OpenGLES REQUIRED)
+    if(TARGET_ARCH MATCHES arm*)
+      find_package(OpenGLES REQUIRED)
+      message(STATUS "EGL include dir : ${EGL_INCLUDE_DIR}")
+      message(STATUS "OpenGLES2 include dir : ${OPENGLES2_INCLUDE_DIR}")
+      message(STATUS "EGL library : ${EGL_LIBRARIES}")
+      message(STATUS "OpenGLES2 library : ${OPENGLES2_LIBRARIES}")
     else()
-    find_package(OpenGL REQUIRED)
+      find_package(OpenGL REQUIRED)
     endif()
 
     find_package(X11 REQUIRED)
@@ -257,7 +259,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FONTCONFIG_INCLUDE_DIRS}
     )
 
-    if(TARGET_ARCH MATCHES armv7)
+    if(TARGET_ARCH MATCHES arm*)
       list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
         ${EGL_INCLUDE_DIR}
         ${OPENGLES2_INCLUDE_DIR}
@@ -285,28 +287,16 @@ if(CMAKE_SYSTEM MATCHES Linux)
         ${FREETYPE_LIBRARIES}
         ${FONTCONFIG_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
+        pugixml
+        glut
+        uriparser
+        Xmu
     )
 
-    if(TARGET_ARCH MATCHES armv7)
+    if(TARGET_ARCH MATCHES arm*)
       list(APPEND OPENFRAMEWORKS_LIBRARIES
         ${EGL_LIBRARIES}
         ${OPENGLES2_LIBRARIES}
-      )
-      # Assuming Raspberry Pi 2 and Raspbian
-      # FIXME use find_package instead of assuming path
-      list(APPEND OPENFRAMEWORKS_LIBRARIES
-        -L${RPI_ROOT_PATH}/opt/vc/lib
-        GLESv2
-        GLESv1_CM
-        EGL
-        openmaxil
-        bcm_host
-        vcos
-        vchiq_arm
-        pcre
-        rt
-        X11
-        dl
       )
     endif()
 
@@ -339,17 +329,14 @@ if(CMAKE_SYSTEM MATCHES Linux)
 
       find_package(UDev REQUIRED)
       find_package(Glib REQUIRED)
-      find_package(GStreamer REQUIRED)
 
-      if ( "${GSTREAMER_INCLUDE_DIRS}" STREQUAL "" )
-        PKG_CHECK_MODULES(GSTREAMER gstreamer-1.0)
-        PKG_CHECK_MODULES(GSTREAMER_BASE gstreamer-base-1.0)
-        PKG_CHECK_MODULES(GSTREAMER_VIDEO gstreamer-video-1.0)
-        PKG_CHECK_MODULES(GSTREAMER_APP gstreamer-app-1.0)
-      endif()
+      pkg_check_modules(GSTREAMER gstreamer-1.0)
+      pkg_check_modules(GSTREAMER_BASE gstreamer-base-1.0)
+      pkg_check_modules(GSTREAMER_VIDEO gstreamer-video-1.0)
+      pkg_check_modules(GSTREAMER_APP gstreamer-app-1.0)
 
       message(STATUS "Gstreamer include dir: " ${GSTREAMER_INCLUDE_DIRS})
-
+      message(STATUS "Gstreamer lib: "       ${GSTREAMER_LIBRARY})
       message(STATUS "Gstreamer lib: "       ${GSTREAMER_LIBRARIES})
       message(STATUS "Gstreamer-app lib: "   ${GSTREAMER_APP_LIBRARIES})
       message(STATUS "Gstreamer-base lib: "  ${GSTREAMER_BASE_LIBRARIES})
@@ -364,6 +351,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
       list(APPEND OPENFRAMEWORKS_LIBRARIES
         ${UDEV_LIBRARIES}
         ${GLIB_LIBRARIES}
+        ${GSTREAMER_LIBRARY}
         ${GSTREAMER_LIBRARIES}
         ${GSTREAMER_APP_LIBRARIES}
         ${GSTREAMER_BASE_LIBRARIES}
@@ -1357,3 +1345,4 @@ message(STATUS "CMAKE_BUILD_TYPE: "      ${CMAKE_BUILD_TYPE})
 message(STATUS "CMAKE_C_COMPILER_ID: "   ${CMAKE_C_COMPILER_ID})
 message(STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
 
+message(STATUS "OPENFRAMEWORKS_LIBRARIES : ${OPENFRAMEWORKS_LIBRARIES}")
