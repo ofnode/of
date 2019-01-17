@@ -28,3 +28,6 @@ SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 IF (CMAKE_BUILD_TYPE MATCHES "Debug")
    add_definitions(-rdynamic)
 ENDIF()
+
+SET(CMAKE_LIBRARY_PATH "${CMAKE_SYSROOT}/usr/lib;${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/;${CMAKE_SYSROOT}/lib/;${CMAKE_SYSROOT}/lib/arm-linux-gnueabihf/")
+
