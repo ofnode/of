@@ -50,6 +50,32 @@
     libx11-6 \
 	libxext6 \
 	libssl1.1 \
+	libselinux1 \
+	libpcre3 \
+	libmount1\
+	liblzma5 \
+	libxau6 \
+	libffi6 \
+	libxdmcp6 \
+	libbsd0 \
+	libblkid1 \
+	libdbus-1-3 \
+	libdrm2 \
+	libsystemd0 \
+	libuuid1 \
+	liblz4-1 \
+	libgcrypt20 \
+	libgpg-error0 \
+	libusb-1.0 \
+	libjpeg62-turbo \
+	libcurl3 \
+	libxml2 \
+	libnghttp2-14 \
+	libidn2-0 \
+	librtmp1 \
+	
+
+
 ```
 
 You might need to re-run the above command with 
@@ -69,7 +95,7 @@ You might need to re-run the above command with
 ```
     mkdir ~/ofnode
     cd ofnode
-    rsync -avz pi@raspberrypi.local:~/sysroot .
+    rsync -hvrPtl pi@raspberrypi.local:~/sysroot .
 ```
 
 4. update links
@@ -85,7 +111,7 @@ You might need to re-run the above command with
 
 ```
     pushd sysroot/usr
-    rsync -avz pi@raspberrypi.local:/usr/include .
+    rsync -hvrPtl pi@raspberrypi.local:/usr/include .
     popd
 ```
 
@@ -95,7 +121,7 @@ You might need to re-run the above command with
     pushd sysroot
     mkdir opt
     cd opt
-    rsync -avz pi@raspberrypi.local:/opt/vc .
+    rsync -hvrPtl pi@raspberrypi.local:/opt/vc .
     popd
 ```
 
@@ -119,6 +145,6 @@ and build test empty app
 
      mkdir build-ofApp-rpi
      pushd build-ofApp-rpi
-     cmake ../of -DCMAKE_TOOLCHAIN_FILE=../of/dev/arm-linux-gnueabihf.cmake -GNinja -DCMAKE_SYSROOT=`realpath "${PWD}/../sysroot"`
+     cmake ../ofApp -DCMAKE_TOOLCHAIN_FILE=../of/dev/arm-linux-gnueabihf.cmake -GNinja -DCMAKE_SYSROOT=`realpath "${PWD}/../sysroot"`
      ninja
 
