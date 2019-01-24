@@ -681,12 +681,6 @@ if(OF_AUDIO)
  )
 endif()
 
-if(ARCH_BIT MATCHES 64)
-set(GLEW_SOURCES
-    "${OF_ROOT_DIR}/src/glew/src/glew.c"
-)
-endif()
-
 #// Platform-specific commands /////////////////////////////////////////////////
 
 if(CMAKE_SYSTEM MATCHES Linux)
@@ -1024,7 +1018,6 @@ add_library(
     ${LIBTESS2_SOURCES}
     ${KISSFFT_SOURCES}
     ${RTAUDIO_SOURCES}
-    ${GLEW_SOURCES}
 )
 
 target_compile_definitions(
