@@ -209,7 +209,7 @@ enum ofTargetPlatform{
 		#define GL_GLEXT_PROTOTYPES
 		#include <GL/glew.h>
 		#include <GL/gl.h>
-		#include <GL/glext.h>
+// 		#include <GL/glext.h> // see https://forum.openframeworks.cc/t/arch-linux-compilation-error-after-updating-the-system/31097/11
 	#endif
 
 	// for some reason, this isn't defined at compile time,
