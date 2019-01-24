@@ -208,17 +208,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
         -DUSE_EXTERNAL_LIBBCM_HOST
     ) 
 
-    find_package(FreeImage REQUIRED)
-
-    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
-              ${FREEIMAGE_INCLUDE_PATH}
-    )
-    
-    list(APPEND OPENFRAMEWORKS_LIBRARIES
-      ${FREEIMAGE_LIBRARIES}
-    )
-
-
     message(STATUS "BCM include dir ${BCMHOST_INCLUDE_DIRS}")
     message(STATUS "BCM lib ${BCMHOST_LIBRARIES}")
 
@@ -234,18 +223,25 @@ if(CMAKE_SYSTEM MATCHES Linux)
   endif()
 
   pkg_check_modules(CURL REQUIRED libcurl)
+  pkg_check_modules(GLEW REQUIRED glew)
 
   find_package(Boost COMPONENTS filesystem system REQUIRED)
+  find_package(FreeImage REQUIRED)
 
   list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
       ${Boost_INCLUDE_DIRS}
       ${CURL_INCLUDE_DIRS}
+      ${GLEW_INCLUDE_DIRS}
+      ${FREEIMAGE_INCLUDE_PATH}
   )
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${Boost_SYSTEM_LIBRARY}
       ${Boost_FILESYSTEM_LIBRARY}
       ${CURL_LIBRARIES}
+      ${GLEW_LIBRARIES}
+      ${FREEIMAGE_LIBRARIES}
   )
   message(STATUS "Boost include dir ${Boost_INCLUDE_DIRS}")
+  message(STATUS "Glew lib : ${GLEW_LIBRARIES}")
 
 endif()
