@@ -73,6 +73,8 @@
 	libnghttp2-14 \
 	libidn2-0 \
 	librtmp1 \
+	libglew2.0 \
+	libglew-dev
 	
 
 
@@ -98,12 +100,18 @@ You might need to re-run the above command with
     rsync -hvrPtl pi@raspberrypi.local:~/sysroot .
 ```
 
-4. update links
+4. update symlinks
 
 ```
     pushd sysroot/usr/lib/arm-linux-gnueabihf
     ln -fs  ../../../lib/arm-linux-gnueabihf/libz.so.1 libz.so
     ln -fs  ../../../lib/arm-linux-gnueabihf/libglib-2.0.so.0 libglib-2.0.so
+    ln -fs  ../../../lib/arm-linux-gnueabihf/libpcre.so.3 libpcre.so
+    ln -fs  ../../../lib/arm-linux-gnueabihf/libblkid.so.1.1.0 libblkid.so
+    ln -fs  ../../../lib/arm-linux-gnueabihf/libusb-1.0.so.0.1.0 libusb-1.0.so
+    ln -fs  ../../../lib/arm-linux-gnueabihf/liblzma.so.5.2.2 liblzma.so
+	ln -fs  ../../../lib/arm-linux-gnueabihf/libexpat.so.1.6.2 libexpat.so
+	ln -fs  ../../../lib/arm-linux-gnueabihf/libdbus-1.so.3.14.15 libdbus-1.so
     popd
 ```
 
