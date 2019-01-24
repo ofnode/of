@@ -36,7 +36,10 @@ gstreamer          \
 gst-plugins-base   \
 gst-plugins-good   \
 gst-plugins-bad    \
-gst-plugins-ugly
+gst-plugins-ugly   \
+uriparser          \
+pugixml            \
+glfw
 
 # Use gold linker
 sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
