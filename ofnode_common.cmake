@@ -181,6 +181,9 @@ if(CMAKE_SYSTEM MATCHES Linux)
   )
 
  if(TARGET_ARCH MATCHES arm*)
+    # add /opt/vc... to pkgconfig search path
+    SET(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/pkgconfig:${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig:${CMAKE_SYSROOT}/opt/vc/lib/pkgconfig")
+
     # Assuming Raspberry Pi 2 and Raspbian
     list(APPEND OPENFRAMEWORKS_DEFINITIONS
       -DTARGET_RASPBERRY_PI

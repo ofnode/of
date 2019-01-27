@@ -291,6 +291,7 @@ if(CMAKE_SYSTEM MATCHES Linux)
         glut
         uriparser
         Xmu
+	dl
     )
 
     if(TARGET_ARCH MATCHES arm*)
