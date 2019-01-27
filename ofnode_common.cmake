@@ -125,7 +125,7 @@ endif()
 
 #// Include directories ////////////////////////////////////////////////////////
 
-set(OPENFRAMEWORKS_INCLUDE_DIRS
+list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
 	"${OF_ROOT_DIR}/src/fmodex/include"
 
 	"${OF_ROOT_DIR}/src/glm/include"
@@ -228,11 +228,16 @@ if(CMAKE_SYSTEM MATCHES Linux)
   find_package(Boost COMPONENTS filesystem system REQUIRED)
   find_package(FreeImage REQUIRED)
 
+  set(UTF8_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/src/utf8cpp/include)
+  set(JSON_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/src/json/include)
+
   list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
       ${Boost_INCLUDE_DIRS}
       ${CURL_INCLUDE_DIRS}
       ${GLEW_INCLUDE_DIRS}
       ${FREEIMAGE_INCLUDE_PATH}
+      ${UTF8_INCLUDE_DIRS}
+      ${JSON_INCLUDE_DIRS}
   )
   list(APPEND OPENFRAMEWORKS_LIBRARIES
       ${Boost_SYSTEM_LIBRARY}
