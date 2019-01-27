@@ -222,10 +222,19 @@ if(CMAKE_SYSTEM MATCHES Linux)
     )
 
     link_directories(${CMAKE_SYSROOT}/opt/vc/lib)
+  else()
+    pkg_check_modules(GLEW REQUIRED glew)
+
+    list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
+      ${GLEW_INCLUDE_DIRS}
+    )
+
+    list(APPEND OPENFRAMEWORKS_LIBRARIES
+      ${GLEW_LIBRARIES}
+    )
   endif()
 
   pkg_check_modules(CURL REQUIRED libcurl)
-  pkg_check_modules(GLEW REQUIRED glew)
 
   find_package(Boost COMPONENTS filesystem system REQUIRED)
   find_package(FreeImage REQUIRED)
@@ -236,7 +245,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
   list(APPEND OPENFRAMEWORKS_INCLUDE_DIRS
       ${Boost_INCLUDE_DIRS}
       ${CURL_INCLUDE_DIRS}
-      ${GLEW_INCLUDE_DIRS}
       ${FREEIMAGE_INCLUDE_PATH}
       ${UTF8_INCLUDE_DIRS}
       ${JSON_INCLUDE_DIRS}
@@ -245,7 +253,6 @@ if(CMAKE_SYSTEM MATCHES Linux)
       ${Boost_SYSTEM_LIBRARY}
       ${Boost_FILESYSTEM_LIBRARY}
       ${CURL_LIBRARIES}
-      ${GLEW_LIBRARIES}
       ${FREEIMAGE_LIBRARIES}
   )
   message(STATUS "Boost include dir ${Boost_INCLUDE_DIRS}")
