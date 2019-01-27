@@ -38,7 +38,10 @@ libgstreamer1.0-dev       \
 libgstreamer-plugins-base1.0-dev \
 libcurl4-openssl-dev \
 liburiparser-dev \
-libpugixml-dev
+libpugixml-dev \
+libfreeglut3-dev \
+libglew-dev \
+libfreeimage-dev 
 
 # Use gold linker
 sudo rm -f /usr/bin/ld && sudo ln -s /usr/bin/ld.gold /usr/bin/ld
