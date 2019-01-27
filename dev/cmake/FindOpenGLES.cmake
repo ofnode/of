@@ -74,10 +74,6 @@ else()
         PATHS /opt/vc/lib
     )
 
-    if(BRCMGLES2_LIBRARY)
-        set(OPENGLES2_FOUND TRUE)
-    endif()
-
     if(NOT BUILD_ANDROID)
         find_path(EGL_INCLUDE_DIR EGL/egl.h
             PATHS /usr/openwin/share/include
@@ -124,12 +120,12 @@ else()
         set(OPENGLES2_LIBRARIES ${OPENGLES2_LIBRARY} ${OPENGLES2_LIBRARIES})
         set(EGL_LIBRARIES ${EGL_LIBRARY} ${EGL_LIBRARIES})
         set(OPENGLES2_FOUND TRUE)
-    else()
-        if(BRCMEGL_LIBRARY AND BRCMGLES2_LIBRARY)
-            set(OPENGLES2_LIBRARIES ${BRCMGLES2_LIBRARY})
-            set(EGL_LIBRARIES ${BRCMEGL_LIBRARY})
-        endif(BRCMEGL_LIBRARY AND BRCMGLES2_LIBRARY)
     endif()
+    if(BRCMEGL_LIBRARY AND BRCMGLES2_LIBRARY)
+        set(OPENGLES2_LIBRARIES ${BRCMGLES2_LIBRARY})
+        set(EGL_LIBRARIES ${BRCMEGL_LIBRARY})
+        set(OPENGLES2_FOUND TRUE)
+    endif(BRCMEGL_LIBRARY AND BRCMGLES2_LIBRARY)
 endif()
 
 mark_as_advanced(
