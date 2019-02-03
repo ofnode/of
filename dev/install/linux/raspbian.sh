@@ -39,8 +39,6 @@ libgstreamer-plugins-base1.0-dev \
 libcurl4-openssl-dev \
 liburiparser-dev \
 libpugixml-dev \
-libfreeglut3-dev \
-libglew-dev \
 libfreeimage-dev 
 
 # Use gold linker
