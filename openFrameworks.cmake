@@ -11,6 +11,8 @@ if(CMAKE_SYSTEM MATCHES Windows)
 
 endif()
 
+set(CMAKE_INSTALL_RPATH "$ORIGIN/lib:$ORIGIN")
+
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
 list(APPEND RELEASE_FLAGS 
@@ -1322,6 +1324,27 @@ MACRO(ofSetTargetProperties)
 
   if(OF_COTIRE)
     cotire(${PROJECT_NAME})
+  endif()
+
+  install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION .
+    LIBRARY DESTINATION lib)
+
+  install(
+    DIRECTORY
+    "${CMAKE_CURRENT_LIST_DIR}/bin/data"
+    DESTINATION .)
+
+  install(FILES
+    ${OF_LIB_DIR}/libopenFrameworks.so
+    DESTINATION lib)
+
+  if(NOT TARGET_ARCH MATCHES arm*)
+    install(FILES
+      ${OF_LIB_DIR}/libglfw.so
+      ${OF_LIB_DIR}/libglfw.so.3
+      ${OF_LIB_DIR}/libglfw.so.3.1
+      DESTINATION lib)
   endif()
 ENDMACRO()
 
