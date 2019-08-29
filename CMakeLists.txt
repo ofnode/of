@@ -1009,10 +1009,6 @@ endif()
 
 # add_subdirectory(src/poco)
 
-if(ARCH_BIT MATCHES 64)
-add_subdirectory(src/glfw)
-endif()
-
 add_library(
     openFrameworks ${LIB_MODE}
     ${OPENFRAMEWORKS_SOURCES}
@@ -1049,13 +1045,6 @@ if(NOT OF_STATIC)
   #     PocoUtil
   #     PocoXML
   # )
-
-  if(ARCH_BIT MATCHES 64)
-    add_dependencies(
-      openFrameworks
-      glfw
-    )
-  endif()
 
   if(CMAKE_SYSTEM MATCHES Windows)
     add_dependencies(
