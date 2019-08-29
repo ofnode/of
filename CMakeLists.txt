@@ -685,6 +685,9 @@ endif()
 
 if(CMAKE_SYSTEM MATCHES Linux)
 
+    include_directories("${CMAKE_CURRENT_LIST_DIR}/src/glfw/include")
+
+
     if(OF_STATIC)
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OF_ROOT_DIR}/lib-linux/release-${TARGET_ARCH}-${ARCH_BIT}")
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   "${OF_ROOT_DIR}/lib-linux/debug-${TARGET_ARCH}-${ARCH_BIT}")
