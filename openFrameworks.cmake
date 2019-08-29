@@ -11,7 +11,7 @@ if(CMAKE_SYSTEM MATCHES Windows)
 
 endif()
 
-set(CMAKE_INSTALL_RPATH "$ORIGIN/lib:$ORIGIN")
+set(CMAKE_BUILD_WITH_INSTALL_RPATH "$ORIGIN/lib:$ORIGIN")
 
 #// GCC and Clang flags ////////////////////////////////////////////////////////
 
@@ -1131,6 +1131,7 @@ function(ofxaddon OFXADDON)
                     MATH(EXPR pos "${pos}+1")
                     string(SUBSTRING ${line} ${pos} -1 ADDON_DEPENDENCIE)
                     string(STRIP ${ADDON_DEPENDENCIE} ADDON_DEPENDENCIE)
+                    string(REPLACE " " ";" ADDON_DEPENDENCIE ${ADDON_DEPENDENCIE})
                     list(APPEND ADDON_DEPENDENCIES ${ADDON_DEPENDENCIE})
                   endif()
                 elseif (${line} MATCHES "ADDON_LIBS")

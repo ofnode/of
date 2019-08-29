@@ -698,7 +698,7 @@ bool ofTrueTypeFont::load(const std::filesystem::path& filename, int fontSize, b
 }
 
 bool ofTrueTypeFont::load(const ofTrueTypeFontSettings & _settings){
-	#if defined(TARGET_ANDROID)
+  #if defined(TARGET_ANDROID)
 	ofAddListener(ofxAndroidEvents().unloadGL,this,&ofTrueTypeFont::unloadTextures);
 	ofAddListener(ofxAndroidEvents().reloadGL,this,&ofTrueTypeFont::reloadTextures);
 	#endif
